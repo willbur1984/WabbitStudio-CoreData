@@ -27,6 +27,7 @@
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
 		79129119160ABD5100ADFAB5 /* WCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextView.m; sourceTree = "<group>"; };
+		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -63,6 +64,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		79710682160B5C4700C4951A /* Headers */ = {
+			isa = PBXGroup;
+			children = (
+				79710684160B5CAD00C4951A /* WCDefines.h */,
+			);
+			name = Headers;
+			sourceTree = "<group>";
+		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
@@ -102,6 +111,7 @@
 		79968CAF1608DB7A00F139BC /* WabbitCode */ = {
 			isa = PBXGroup;
 			children = (
+				79710682160B5C4700C4951A /* Headers */,
 				79968CD91608E96100F139BC /* Categories */,
 				79968CCF1608E06900F139BC /* Classes */,
 				79968CD01608E07500F139BC /* Xibs */,
