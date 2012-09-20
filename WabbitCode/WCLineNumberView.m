@@ -37,7 +37,8 @@
 		[self setRuleThickness:newThickness];
 }
 
-static const CGFloat kStringMarginRight = 5;
+static const CGFloat kStringMarginLeftRight = 4;
+static const CGFloat kDefaultThickness = 30;
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
     [[NSColor WC_colorWithHexadecimalString:@"f1f1f1"] setFill];
@@ -53,6 +54,7 @@ static const CGFloat kStringMarginRight = 5;
     NSRange glyphRange = [self.textView.layoutManager glyphRangeForBoundingRect:self.textView.visibleRect inTextContainer:self.textView.textContainer];
     NSRange charRange = [self.textView.layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
     NSUInteger lineNumber, lineStartIndex, numberOfLines = self.lineStartIndexes.count;
+    NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
     
     charRange.length++;
     
@@ -64,9 +66,9 @@ static const CGFloat kStringMarginRight = 5;
             NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
             
             if (numberOfLineRects) {
-                NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber];
+                NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
                 NSRect lineRect = lineRects[0];
-                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - kStringMarginRight, NSHeight(lineRect));
+                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
                 
                 [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
             }
@@ -78,16 +80,33 @@ static const CGFloat kStringMarginRight = 5;
 }
 
 - (CGFloat)requiredThickness {
-    return 30;
+    NSUInteger lineCount = self.lineStartIndexes.count;
+    NSMutableString *sampleString = [NSMutableString string];
+    NSUInteger digits = (NSUInteger)log10(lineCount) + 1;
+	NSUInteger i;
+	
+    for (i = 0; i < digits; i++)
+        [sampleString appendString:@"8"];
+    
+    NSSize stringSize = [sampleString sizeWithAttributes:@{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]] }];
+	
+	return ceil(MAX(kDefaultThickness, stringSize.width + (kStringMarginLeftRight * 2)));
 }
 
 - (id)initWithTextView:(NSTextView *)textView; {
+    NSAssert(textView.enclosingScrollView, @"text view must have an enclosing scroll view!");
+    
     if (!(self = [super initWithScrollView:textView.enclosingScrollView orientation:NSVerticalRuler]))
         return nil;
     
     [self setClientView:textView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_didProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:textView.textStorage];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:textView.textStorage];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:textView];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewFrameDidChangeNotification object:textView.enclosingScrollView.contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewBoundsDidChangeNotification object:textView.enclosingScrollView.contentView];
     
     [self setLineStartIndexes:[NSMutableArray arrayWithObject:@0]];
     [self setLineNumberToRecalculateFrom:0];
@@ -96,7 +115,10 @@ static const CGFloat kStringMarginRight = 5;
     return self;
 }
 
-- (NSDictionary *)stringAttributesForLineNumber:(NSUInteger)lineNumber; {
+- (NSDictionary *)stringAttributesForLineNumber:(NSUInteger)lineNumber selectedLineRange:(NSRange)selectedLineRange; {
+    if (NSLocationInRange([[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue], selectedLineRange))
+        return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]], NSForegroundColorAttributeName : [NSColor blackColor], NSParagraphStyleAttributeName : [NSParagraphStyle WC_rightAlignedParagraphStyle] };
+    
     return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]], NSForegroundColorAttributeName : [NSColor WC_colorWithHexadecimalString:@"929292"], NSParagraphStyleAttributeName : [NSParagraphStyle WC_rightAlignedParagraphStyle] };
 }
 
@@ -135,7 +157,7 @@ static const CGFloat kStringMarginRight = 5;
     return _lineStartIndexes;
 }
 
-- (void)_didProcessEditing:(NSNotification *)note {
+- (void)_textStorageDidProcessEditing:(NSNotification *)note {
     if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
         return;
     
@@ -143,6 +165,13 @@ static const CGFloat kStringMarginRight = 5;
     
     [self setLineNumberToRecalculateFrom:lineNumber];
     [self setShouldRecalculateLineStartIndexes:YES];
+    [self setNeedsDisplay:YES];
+}
+
+- (void)_textViewDidChangeSelection:(NSNotification *)note {
+    [self setNeedsDisplay:YES];
+}
+- (void)_viewFrameDidChange:(NSNotification *)note {
     [self setNeedsDisplay:YES];
 }
 

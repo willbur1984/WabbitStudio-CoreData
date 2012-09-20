@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
+		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
 		79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
 		79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB21608DB7A00F139BC /* InfoPlist.strings */; };
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
@@ -24,6 +25,8 @@
 /* Begin PBXFileReference section */
 		79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSParagraphStyle+WCExtensions.h"; sourceTree = "<group>"; };
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
+		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
+		79129119160ABD5100ADFAB5 /* WCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextView.m; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -126,6 +129,8 @@
 				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
 				79968CD51608E91100F139BC /* WCLineNumberView.h */,
 				79968CD61608E91100F139BC /* WCLineNumberView.m */,
+				79129118160ABD5100ADFAB5 /* WCTextView.h */,
+				79129119160ABD5100ADFAB5 /* WCTextView.m */,
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
 			);
@@ -226,6 +231,7 @@
 				79968CDC1608E97400F139BC /* NSColor+WCExtensions.m in Sources */,
 				79968CEF1608FB6500F139BC /* NSArray+WCExtensions.m in Sources */,
 				79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */,
+				7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
