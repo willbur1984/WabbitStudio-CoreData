@@ -15,6 +15,7 @@
 #import "NSColor+WCExtensions.h"
 #import "NSArray+WCExtensions.h"
 #import "NSParagraphStyle+WCExtensions.h"
+#import "WCDefines.h"
 
 @interface WCLineNumberView ()
 @property (readonly,nonatomic) NSTextView *textView;
@@ -27,7 +28,20 @@
 @end
 
 @implementation WCLineNumberView
-
+#pragma mark *** Subclass Overrides ***
+#pragma mark NSResponder
+- (void)mouseDown:(NSEvent *)theEvent {
+    NSUInteger lineNumber = [self lineNumberForPoint:[self convertPoint:theEvent.locationInWindow fromView:nil]];
+    
+    if (lineNumber == NSNotFound)
+        return;
+    
+    NSUInteger lineStartIndex = [[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue];
+    NSRange lineRange = [self.textView.string lineRangeForRange:NSMakeRange(lineStartIndex, 0)];
+    
+    [self.textView setSelectedRange:lineRange];
+}
+#pragma mark NSView
 - (void)viewWillDraw {
 	[super viewWillDraw];
 	
@@ -36,7 +50,7 @@
 	if (fabs(self.ruleThickness - newThickness) > 1)
 		[self setRuleThickness:newThickness];
 }
-
+#pragma mark NSRulerView
 static const CGFloat kStringMarginLeftRight = 4;
 static const CGFloat kDefaultThickness = 30;
 
@@ -46,37 +60,11 @@ static const CGFloat kDefaultThickness = 30;
     
     NSRect dividerRect = NSMakeRect(NSMaxX(self.frame) - 1, 0, 1, NSHeight(self.frame));
     
-    if (NSIntersectsRect(dividerRect, rect)) {
-        [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
-        NSRectFill(dividerRect);
-    }
+    [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
+    NSRectFill(dividerRect);
     
-    NSRange glyphRange = [self.textView.layoutManager glyphRangeForBoundingRect:self.textView.visibleRect inTextContainer:self.textView.textContainer];
-    NSRange charRange = [self.textView.layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
-    NSUInteger lineNumber, lineStartIndex, numberOfLines = self.lineStartIndexes.count;
-    NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
-    
-    charRange.length++;
-    
-    for (lineNumber = [self.lineStartIndexes WC_lineNumberForRange:charRange]; lineNumber < numberOfLines; lineNumber++) {
-        lineStartIndex = [[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue];
-        
-        if (NSLocationInRange(lineStartIndex, charRange)) {
-            NSUInteger numberOfLineRects;
-            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
-            
-            if (numberOfLineRects) {
-                NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
-                NSRect lineRect = lineRects[0];
-                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
-                
-                [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
-            }
-        }
-        
-        if (lineStartIndex > NSMaxRange(charRange))
-			break;
-    }
+    [self drawCurrentLineHighlightInRect:rect];
+    [self drawLineNumbersInRect:rect];
 }
 
 - (CGFloat)requiredThickness {
@@ -92,9 +80,9 @@ static const CGFloat kDefaultThickness = 30;
 	
 	return ceil(MAX(kDefaultThickness, stringSize.width + (kStringMarginLeftRight * 2)));
 }
-
+#pragma mark *** Public Methods ***
 - (id)initWithTextView:(NSTextView *)textView; {
-    NSAssert(textView.enclosingScrollView, @"text view must have an enclosing scroll view!");
+    WCAssert(textView.enclosingScrollView, @"text view must have an enclosing scroll view!");
     
     if (!(self = [super initWithScrollView:textView.enclosingScrollView orientation:NSVerticalRuler]))
         return nil;
@@ -122,6 +110,95 @@ static const CGFloat kDefaultThickness = 30;
     return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSMiniControlSize]], NSForegroundColorAttributeName : [NSColor WC_colorWithHexadecimalString:@"929292"], NSParagraphStyleAttributeName : [NSParagraphStyle WC_rightAlignedParagraphStyle] };
 }
 
+- (NSUInteger)lineNumberForPoint:(NSPoint)point; {
+    NSRange glyphRange = [self.textView.layoutManager glyphRangeForBoundingRect:self.textView.visibleRect inTextContainer:self.textView.textContainer];
+    NSRange charRange = [self.textView.layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
+    NSUInteger lineNumber, lineStartIndex, numberOfLines = self.lineStartIndexes.count;
+    
+    charRange.length++;
+    
+    for (lineNumber = [self.lineStartIndexes WC_lineNumberForRange:charRange]; lineNumber < numberOfLines; lineNumber++) {
+        lineStartIndex = [[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue];
+        
+        if (NSLocationInRange(lineStartIndex, charRange)) {
+            NSUInteger numberOfLineRects;
+            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:[self.textView.string lineRangeForRange:NSMakeRange(lineStartIndex, 0)] withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+            
+            if (numberOfLineRects) {
+                NSRect lineRect = lineRects[0];
+                
+                if (numberOfLineRects > 1) {
+                    NSUInteger rectIndex;
+                    
+                    for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
+                        lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
+                }
+                
+                NSRect hitRect = NSMakeRect(NSMinX(self.bounds), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame), NSHeight(lineRect));
+                
+                if (point.y >= NSMinY(hitRect) && point.y < NSMaxY(hitRect))
+                    return lineNumber;
+            }
+        }
+        
+        if (lineStartIndex > NSMaxRange(charRange))
+			break;
+    }
+    return NSNotFound;
+}
+
+- (void)drawCurrentLineHighlightInRect:(NSRect)rect; {
+    NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
+    NSUInteger numberOfLineRects;
+    NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:selectedLineRange withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+    
+    if (numberOfLineRects) {
+        NSRect lineRect = lineRects[0];
+        
+        if (numberOfLineRects > 1) {
+            NSUInteger rectIndex;
+            
+            for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
+                lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
+        }
+        
+        NSRect drawRect = NSMakeRect(NSMinX(self.bounds), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame), NSHeight(lineRect));
+        
+        [[NSColor colorWithCalibratedWhite:0 alpha:0.25] setFill];
+        NSRectFillUsingOperation(drawRect, NSCompositeSourceOver);
+        
+        [[NSColor blackColor] setFill];
+        NSRectFill(NSMakeRect(NSMinX(drawRect), NSMinY(drawRect), NSWidth(drawRect), 1));
+        NSRectFill(NSMakeRect(NSMinX(drawRect), NSMaxY(drawRect) - 1, NSWidth(drawRect), 1));
+    }
+}
+- (void)drawLineNumbersInRect:(NSRect)rect; {
+    NSRange glyphRange = [self.textView.layoutManager glyphRangeForBoundingRect:self.textView.visibleRect inTextContainer:self.textView.textContainer];
+    NSRange charRange = [self.textView.layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
+    NSUInteger lineNumber, lineStartIndex, numberOfLines = self.lineStartIndexes.count;
+    NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
+    
+    for (lineNumber = [self.lineStartIndexes WC_lineNumberForRange:charRange], charRange.length++; lineNumber < numberOfLines; lineNumber++) {
+        lineStartIndex = [[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue];
+        
+        if (NSLocationInRange(lineStartIndex, charRange)) {
+            NSUInteger numberOfLineRects;
+            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+            
+            if (numberOfLineRects) {
+                NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
+                NSRect lineRect = lineRects[0];
+                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
+                
+                [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
+            }
+        }
+        
+        if (lineStartIndex > NSMaxRange(charRange))
+			break;
+    }
+}
+#pragma mark *** Private Methods ***
 - (void)_calculateLineStartIndexes; {
 	[self _calculateLineStartIndexesStartingAtLineNumber:0];
 }
@@ -143,7 +220,7 @@ static const CGFloat kDefaultThickness = 30;
 	if (contentEnd < lineEnd)
 		[_lineStartIndexes addObject:@(characterIndex)];
 }
-
+#pragma mark Properties
 - (NSTextView *)textView {
     return (NSTextView *)self.clientView;
 }
@@ -156,7 +233,7 @@ static const CGFloat kDefaultThickness = 30;
 	}
     return _lineStartIndexes;
 }
-
+#pragma mark Notifications
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
     if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
         return;

@@ -19,4 +19,9 @@
 
 - (NSDictionary *)stringAttributesForLineNumber:(NSUInteger)lineNumber selectedLineRange:(NSRange)selectedLineRange;
 
+- (NSUInteger)lineNumberForPoint:(NSPoint)point;
+
+- (void)drawCurrentLineHighlightInRect:(NSRect)rect;
+- (void)drawLineNumbersInRect:(NSRect)rect;
+
 @end
