@@ -52,6 +52,7 @@
 }
 #pragma mark NSRulerView
 static const CGFloat kStringMarginLeftRight = 4;
+static const CGFloat kStringMarginTop = 1;
 static const CGFloat kDefaultThickness = 30;
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
@@ -162,12 +163,12 @@ static const CGFloat kDefaultThickness = 30;
                 lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
         }
         
-        NSRect drawRect = NSMakeRect(NSMinX(self.bounds), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame), NSHeight(lineRect));
+        NSRect drawRect = NSMakeRect(NSMinX(self.bounds), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - 1, NSHeight(lineRect));
         
         [[NSColor colorWithCalibratedWhite:0 alpha:0.25] setFill];
         NSRectFillUsingOperation(drawRect, NSCompositeSourceOver);
         
-        [[NSColor blackColor] setFill];
+        [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
         NSRectFill(NSMakeRect(NSMinX(drawRect), NSMinY(drawRect), NSWidth(drawRect), 1));
         NSRectFill(NSMakeRect(NSMinX(drawRect), NSMaxY(drawRect) - 1, NSWidth(drawRect), 1));
     }
@@ -188,7 +189,7 @@ static const CGFloat kDefaultThickness = 30;
             if (numberOfLineRects) {
                 NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
                 NSRect lineRect = lineRects[0];
-                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
+                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
                 
                 [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
             }
