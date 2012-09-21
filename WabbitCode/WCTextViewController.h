@@ -17,4 +17,6 @@
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 
+- (IBAction)showToolTip:(id)sender;
+
 @end

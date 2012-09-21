@@ -14,6 +14,7 @@
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
 		7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */; };
 		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
+		7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */; };
 		79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
 		79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB21608DB7A00F139BC /* InfoPlist.strings */; };
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
@@ -42,6 +43,8 @@
 		7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextView+WCExtensions.m"; sourceTree = "<group>"; };
 		7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSyntaxHighlighter.h; sourceTree = "<group>"; };
 		7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSyntaxHighlighter.m; sourceTree = "<group>"; };
+		7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCToolTipWindow.h; sourceTree = "<group>"; };
+		7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCToolTipWindow.m; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -163,6 +166,8 @@
 				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
 				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
 				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
+				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
+				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -270,6 +275,7 @@
 				7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */,
 				7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */,
 				7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */,
+				7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

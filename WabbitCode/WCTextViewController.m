@@ -53,4 +53,8 @@
     return self;
 }
 
+- (IBAction)showToolTip:(id)sender; {
+    [self.textView showToolTip:nil];
+}
+
 @end

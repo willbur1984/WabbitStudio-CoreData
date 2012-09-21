@@ -13,6 +13,7 @@
 
 #import "WCTextView.h"
 #import "NSTextView+WCExtensions.h"
+#import "WCToolTipWindow.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -61,6 +62,17 @@
     if (stillSelectingFlag) {
         [self.enclosingScrollView.verticalRulerView setNeedsDisplay:YES];
     }
+}
+
+- (IBAction)showToolTip:(id)sender; {
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:self.selectedRange.location];
+    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+    
+    lineFragmentRect.origin.x += glyphLocation.x;
+    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+    
+    [[WCToolTipWindow sharedInstance] showString:[self.string substringWithRange:self.selectedRange] atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
 }
 
 - (void)_highlightMatchingBrace; {

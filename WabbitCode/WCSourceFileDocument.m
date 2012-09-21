@@ -16,6 +16,7 @@
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
 @property (strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
 @property (strong,nonatomic) WCTextViewController *textViewController;
+
 @end
 
 @implementation WCSourceFileDocument
@@ -67,6 +68,10 @@
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     return [self.textStorage.string writeToURL:url atomically:YES encoding:self.stringEncoding error:outError];
+}
+
+- (IBAction)showToolTip:(id)sender; {
+    [self.textViewController showToolTip:nil];
 }
 
 @end

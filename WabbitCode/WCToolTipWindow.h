@@ -1,8 +1,8 @@
 //
-//  WCTextView.h
+//  WCToolTipWindow.h
 //  WabbitStudio
 //
-//  Created by William Towe on 9/19/12.
+//  Created by William Towe on 9/21/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,8 +13,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface WCTextView : NSTextView
+@interface WCToolTipWindow : NSWindow
 
-- (IBAction)showToolTip:(id)sender;
++ (WCToolTipWindow *)sharedInstance;
+
+- (void)showString:(NSString *)string atPoint:(NSPoint)point;
+- (void)showAttributedString:(NSAttributedString *)attributedString atPoint:(NSPoint)point;
 
 @end
