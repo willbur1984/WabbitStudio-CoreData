@@ -45,6 +45,7 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
         return;
     
     static NSRegularExpression *kCommentRegex, *kMultilineCommentRegex, *kStringRegex, *kPreProcessorRegex, *kNumberRegex, *kBinaryNumberRegex, *kHexadecimalNumberRegex, *kDirectiveRegex, *kRegisterRegex, *kConditionalRegisterRegex, *kOperationalCodeRegex;
+    static NSRegularExpression *kLabelRegex, *kEquateRegex, *kDefineRegex, *kMacroRegex;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         kCommentRegex = [[NSRegularExpression alloc] initWithPattern:@";+.*" options:0 error:NULL];
@@ -59,6 +60,11 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
         kRegisterRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:\\baf')|(?:\\b(?:ixh|iyh|ixl|iyl|sp|af|pc|bc|de|hl|ix|iy|a|f|b|c|d|e|h|l|r|i)\\b)" options:0 error:NULL];
         kConditionalRegisterRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:call|jp|jr|ret)\\s+(nz|nv|nc|po|pe|c|p|m|n|z|v)\\b" options:0 error:NULL];
         kOperationalCodeRegex = [[NSRegularExpression alloc] initWithPattern:@"\\b(?:adc|add|and|bit|call|ccf|cpdr|cpd|cpir|cpi|cpl|cp|daa|dec|di|djnz|ei|exx|ex|halt|im|inc|indr|ind|inir|ini|in|jp|jr|lddr|ldd|ldir|ldi|ld|neg|nop|or|otdr|otir|outd|outi|out|pop|push|res|reti|retn|ret|rla|rlca|rlc|rld|rl|rra|rrca|rrc|rrd|rr|rst|sbc|scf|set|sla|sll|sra|srl|sub|xor)\\b" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+        
+        kLabelRegex = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z0-9_!?]+" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+        kEquateRegex = [[NSRegularExpression alloc] initWithPattern:@"^([A-Za-z0-9_!?]+)(?:(?:\\s*=)|(?:\\s+\\.(?:equ|EQU))|(?:\\s+(?:equ|EQU)))" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+        kDefineRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#define|DEFINE)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
+        kMacroRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#macro|MACRO)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
     });
     
     [self.textStorage beginEditing];
@@ -97,8 +103,28 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:result.range];
     }];
     
+    [kLabelRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        if (result.range.length == 1 &&
+            [self.textStorage.string characterAtIndex:result.range.location] == '_')
+            return;
+        
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:result.range];
+    }];
+    
+    [kEquateRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:[result rangeAtIndex:1]];
+    }];
+    
+    [kDefineRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:[result rangeAtIndex:1]];
+    }];
+    
     [kStringRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor purpleColor] range:result.range];
+    }];
+    
+    [kMacroRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:[result rangeAtIndex:1]];
     }];
     
     [kCommentRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
