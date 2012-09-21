@@ -51,7 +51,7 @@
 		[self setRuleThickness:newThickness];
 }
 #pragma mark NSRulerView
-static const CGFloat kStringMarginLeftRight = 4;
+static const CGFloat kStringMarginLeftRight = 3;
 static const CGFloat kStringMarginTop = 1;
 static const CGFloat kDefaultThickness = 30;
 

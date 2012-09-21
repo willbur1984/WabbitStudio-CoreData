@@ -8,13 +8,14 @@
 
 #import "WCSourceFileDocument.h"
 #import "WCLineNumberView.h"
+#import "WCTextViewController.h"
+#import "WCSyntaxHighlighter.h"
 
 @interface WCSourceFileDocument ()
-@property (assign,nonatomic) IBOutlet NSTextView *textView;
-
-@property (strong) NSTextStorage *textStorage;
-@property (assign) NSStringEncoding stringEncoding;
-@property (readonly,nonatomic) NSDictionary *defaultAttributes;
+@property (strong,nonatomic) NSTextStorage *textStorage;
+@property (assign,nonatomic) NSStringEncoding stringEncoding;
+@property (strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
+@property (strong,nonatomic) WCTextViewController *textViewController;
 @end
 
 @implementation WCSourceFileDocument
@@ -24,7 +25,8 @@
         return nil;
     
     [self setStringEncoding:NSUTF8StringEncoding];
-    [self setTextStorage:[[NSTextStorage alloc] initWithString:@"" attributes:self.defaultAttributes]];
+    [self setTextStorage:[[NSTextStorage alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]]];
+    [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     
     return self;
 }
@@ -36,22 +38,14 @@
 - (void)windowControllerDidLoadNib:(NSWindowController *)windowController {
     [super windowControllerDidLoadNib:windowController];
     
-    [self.textView setTypingAttributes:self.defaultAttributes];
-    [self.textView.layoutManager replaceTextStorage:self.textStorage];
-    
-    WCLineNumberView *lineNumberView = [[WCLineNumberView alloc] initWithTextView:self.textView];
-    
-    [self.textView.enclosingScrollView setVerticalRulerView:lineNumberView];
-    [self.textView.enclosingScrollView setHasHorizontalRuler:NO];
-    [self.textView.enclosingScrollView setHasVerticalRuler:YES];
-    [self.textView.enclosingScrollView setRulersVisible:YES];
-}
-
-+ (BOOL)canConcurrentlyReadDocumentsOfType:(NSString *)typeName {
-    return YES;
+    [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
+    [self.textViewController.view setFrame:[windowController.window.contentView bounds]];
+    [windowController.window.contentView addSubview:self.textViewController.view];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
+    [self.undoManager disableUndoRegistration];
+    
     NSStringEncoding usedEncoding = NSUTF8StringEncoding;
     NSString *string = [NSString stringWithContentsOfURL:url encoding:usedEncoding error:outError];
     
@@ -63,17 +57,16 @@
     }
     
     [self setStringEncoding:usedEncoding];
-    [self setTextStorage:[[NSTextStorage alloc] initWithString:string attributes:self.defaultAttributes]];
+    [self setTextStorage:[[NSTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
+    [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
+    
+    [self.undoManager enableUndoRegistration];
     
     return YES;
 }
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     return [self.textStorage.string writeToURL:url atomically:YES encoding:self.stringEncoding error:outError];
-}
-
-- (NSDictionary *)defaultAttributes {
-    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13] };
 }
 
 @end

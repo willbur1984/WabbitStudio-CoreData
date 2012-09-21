@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
+		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
+		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
+		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
+		7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */; };
+		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
 		79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
 		79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB21608DB7A00F139BC /* InfoPlist.strings */; };
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
@@ -28,6 +33,15 @@
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
 		79129119160ABD5100ADFAB5 /* WCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextView.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
+		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
+		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
+		7973D6D6160CF83A004EDE62 /* WCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextViewController.h; sourceTree = "<group>"; };
+		7973D6D7160CF83A004EDE62 /* WCTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextViewController.m; sourceTree = "<group>"; };
+		7973D6DA160CF8DF004EDE62 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCTextView.xib; sourceTree = "<group>"; };
+		7973D6DC160CFC7B004EDE62 /* NSTextView+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSTextView+WCExtensions.h"; sourceTree = "<group>"; };
+		7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSTextView+WCExtensions.m"; sourceTree = "<group>"; };
+		7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSyntaxHighlighter.h; sourceTree = "<group>"; };
+		7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSyntaxHighlighter.m; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -143,6 +157,12 @@
 				79129119160ABD5100ADFAB5 /* WCTextView.m */,
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
+				7973D6D2160CF7F4004EDE62 /* WCViewController.h */,
+				7973D6D3160CF7F4004EDE62 /* WCViewController.m */,
+				7973D6D6160CF83A004EDE62 /* WCTextViewController.h */,
+				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
+				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
+				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -152,6 +172,7 @@
 			children = (
 				79968CBE1608DB7A00F139BC /* WCSourceFileDocument.xib */,
 				79968CC11608DB7A00F139BC /* WCMainMenu.xib */,
+				7973D6D9160CF8DF004EDE62 /* WCTextView.xib */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -165,6 +186,8 @@
 				79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */,
 				79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */,
 				79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */,
+				7973D6DC160CFC7B004EDE62 /* NSTextView+WCExtensions.h */,
+				7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -224,6 +247,7 @@
 				79968CBA1608DB7A00F139BC /* Credits.rtf in Resources */,
 				79968CC01608DB7A00F139BC /* WCSourceFileDocument.xib in Resources */,
 				79968CC31608DB7A00F139BC /* WCMainMenu.xib in Resources */,
+				7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,12 +266,24 @@
 				79968CEF1608FB6500F139BC /* NSArray+WCExtensions.m in Sources */,
 				79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */,
 				7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */,
+				7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */,
+				7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */,
+				7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */,
+				7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		7973D6D9160CF8DF004EDE62 /* WCTextView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7973D6DA160CF8DF004EDE62 /* en */,
+			);
+			name = WCTextView.xib;
+			sourceTree = "<group>";
+		};
 		79968CB21608DB7A00F139BC /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
