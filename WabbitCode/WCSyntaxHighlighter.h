@@ -21,4 +21,21 @@
 
 + (NSDictionary *)defaultAttributes;
 
++ (NSRegularExpression *)commentRegex;
++ (NSRegularExpression *)multilineCommentRegex;
++ (NSRegularExpression *)stringRegex;
++ (NSRegularExpression *)preProcessorRegex;
++ (NSRegularExpression *)numberRegex;
++ (NSRegularExpression *)binaryNumberRegex;
++ (NSRegularExpression *)hexadecimalNumberRegex;
++ (NSRegularExpression *)directiveRegex;
++ (NSRegularExpression *)registerRegex;
++ (NSRegularExpression *)conditionalRegisterRegex;
++ (NSRegularExpression *)operationalCodeRegex;
+
++ (NSRegularExpression *)labelRegex;
++ (NSRegularExpression *)equateRegex;
++ (NSRegularExpression *)defineRegex;
++ (NSRegularExpression *)macroRegex;
+
 @end

@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7903F1AD160E3AB7000D3F3D /* WCSymbolScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */; };
+		7903F1B1160E3D62000D3F3D /* WCScanSymbolsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */; };
+		7903F1B8160E5FB5000D3F3D /* Symbols.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */; };
+		7903F1C7160E6BB8000D3F3D /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1C6160E6BB8000D3F3D /* Symbol.m */; };
+		7903F1CA160E6BB9000D3F3D /* Define.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1C9160E6BB9000D3F3D /* Define.m */; };
+		7903F1CD160E6BB9000D3F3D /* Macro.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1CC160E6BB9000D3F3D /* Macro.m */; };
+		7903F1D0160E6BB9000D3F3D /* Equate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1CF160E6BB9000D3F3D /* Equate.m */; };
+		7903F1D3160E6BB9000D3F3D /* Label.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1D2160E6BB9000D3F3D /* Label.m */; };
+		7903F1D7160E7F74000D3F3D /* NSString+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */; };
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
@@ -29,6 +38,23 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7903F1AB160E3AB7000D3F3D /* WCSymbolScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolScanner.h; sourceTree = "<group>"; };
+		7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolScanner.m; sourceTree = "<group>"; };
+		7903F1AF160E3D62000D3F3D /* WCScanSymbolsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCScanSymbolsOperation.h; sourceTree = "<group>"; };
+		7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCScanSymbolsOperation.m; sourceTree = "<group>"; };
+		7903F1B7160E5FB5000D3F3D /* Symbols.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Symbols.xcdatamodel; sourceTree = "<group>"; };
+		7903F1C5160E6BB8000D3F3D /* Symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Symbol.h; sourceTree = "<group>"; };
+		7903F1C6160E6BB8000D3F3D /* Symbol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Symbol.m; sourceTree = "<group>"; };
+		7903F1C8160E6BB9000D3F3D /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
+		7903F1C9160E6BB9000D3F3D /* Define.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Define.m; sourceTree = "<group>"; };
+		7903F1CB160E6BB9000D3F3D /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
+		7903F1CC160E6BB9000D3F3D /* Macro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Macro.m; sourceTree = "<group>"; };
+		7903F1CE160E6BB9000D3F3D /* Equate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equate.h; sourceTree = "<group>"; };
+		7903F1CF160E6BB9000D3F3D /* Equate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Equate.m; sourceTree = "<group>"; };
+		7903F1D1160E6BB9000D3F3D /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
+		7903F1D2160E6BB9000D3F3D /* Label.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Label.m; sourceTree = "<group>"; };
+		7903F1D5160E7F74000D3F3D /* NSString+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+WCExtensions.h"; sourceTree = "<group>"; };
+		7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+WCExtensions.m"; sourceTree = "<group>"; };
 		79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSParagraphStyle+WCExtensions.h"; sourceTree = "<group>"; };
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
@@ -81,6 +107,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7903F1B5160E5F72000D3F3D /* Symbols */ = {
+			isa = PBXGroup;
+			children = (
+				7903F1AB160E3AB7000D3F3D /* WCSymbolScanner.h */,
+				7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */,
+				7903F1AF160E3D62000D3F3D /* WCScanSymbolsOperation.h */,
+				7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */,
+				7903F1D4160E794B000D3F3D /* Model */,
+			);
+			name = Symbols;
+			sourceTree = "<group>";
+		};
+		7903F1D4160E794B000D3F3D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7903F1D1160E6BB9000D3F3D /* Label.h */,
+				7903F1D2160E6BB9000D3F3D /* Label.m */,
+				7903F1CE160E6BB9000D3F3D /* Equate.h */,
+				7903F1CF160E6BB9000D3F3D /* Equate.m */,
+				7903F1CB160E6BB9000D3F3D /* Macro.h */,
+				7903F1CC160E6BB9000D3F3D /* Macro.m */,
+				7903F1C8160E6BB9000D3F3D /* Define.h */,
+				7903F1C9160E6BB9000D3F3D /* Define.m */,
+				7903F1C5160E6BB8000D3F3D /* Symbol.h */,
+				7903F1C6160E6BB8000D3F3D /* Symbol.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		79710682160B5C4700C4951A /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -145,6 +200,7 @@
 				79968CB51608DB7A00F139BC /* main.m */,
 				79968CB71608DB7A00F139BC /* WabbitCode-Prefix.pch */,
 				79968CB81608DB7A00F139BC /* Credits.rtf */,
+				7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -166,6 +222,7 @@
 				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
 				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
 				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
+				7903F1B5160E5F72000D3F3D /* Symbols */,
 				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
 				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
 			);
@@ -193,6 +250,8 @@
 				79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */,
 				7973D6DC160CFC7B004EDE62 /* NSTextView+WCExtensions.h */,
 				7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */,
+				7903F1D5160E7F74000D3F3D /* NSString+WCExtensions.h */,
+				7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -276,6 +335,15 @@
 				7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */,
 				7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */,
 				7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */,
+				7903F1AD160E3AB7000D3F3D /* WCSymbolScanner.m in Sources */,
+				7903F1B1160E3D62000D3F3D /* WCScanSymbolsOperation.m in Sources */,
+				7903F1B8160E5FB5000D3F3D /* Symbols.xcdatamodeld in Sources */,
+				7903F1C7160E6BB8000D3F3D /* Symbol.m in Sources */,
+				7903F1CA160E6BB9000D3F3D /* Define.m in Sources */,
+				7903F1CD160E6BB9000D3F3D /* Macro.m in Sources */,
+				7903F1D0160E6BB9000D3F3D /* Equate.m in Sources */,
+				7903F1D3160E6BB9000D3F3D /* Label.m in Sources */,
+				7903F1D7160E7F74000D3F3D /* NSString+WCExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +488,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7903F1B7160E5FB5000D3F3D /* Symbols.xcdatamodel */,
+			);
+			currentVersion = 7903F1B7160E5FB5000D3F3D /* Symbols.xcdatamodel */;
+			path = Symbols.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 79968C9A1608DB4600F139BC /* Project object */;
 }

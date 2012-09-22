@@ -44,66 +44,43 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
     if (!range.length)
         return;
     
-    static NSRegularExpression *kCommentRegex, *kMultilineCommentRegex, *kStringRegex, *kPreProcessorRegex, *kNumberRegex, *kBinaryNumberRegex, *kHexadecimalNumberRegex, *kDirectiveRegex, *kRegisterRegex, *kConditionalRegisterRegex, *kOperationalCodeRegex;
-    static NSRegularExpression *kLabelRegex, *kEquateRegex, *kDefineRegex, *kMacroRegex;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        kCommentRegex = [[NSRegularExpression alloc] initWithPattern:@";+.*" options:0 error:NULL];
-        //kMultilineCommentRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)|(?:#comment.*)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
-        kMultilineCommentRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
-        kStringRegex = [[NSRegularExpression alloc] initWithPattern:@"\".*?\"" options:0 error:NULL];
-        kPreProcessorRegex = [[NSRegularExpression alloc] initWithPattern:@"#(?:define|defcont|elif|else|endif|endmacro|if|ifdef|ifndef|import|include|macro|undef|undefine)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
-        kNumberRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:^|(?<=[^$%]\\b))[0-9]+\\b" options:0 error:NULL];
-        kBinaryNumberRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:%[01]+\\b)|(?:(?:^|(?<=[^$%]\\b))[01]+(?:b|B)\\b)" options:0 error:NULL];
-        kHexadecimalNumberRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:\\$[A-Fa-f0-9]+\\b)|(?:(?:^|(?<=[^$%]\\b))[0-9a-fA-F]+(?:h|H)\\b)" options:0 error:NULL];
-        kDirectiveRegex = [[NSRegularExpression alloc] initWithPattern:@"\\.(?:db|dw|end|org|byte|word|fill|block|addinstr|echo|error|list|nolist|equ|show|option|seek)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
-        kRegisterRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:\\baf')|(?:\\b(?:ixh|iyh|ixl|iyl|sp|af|pc|bc|de|hl|ix|iy|a|f|b|c|d|e|h|l|r|i)\\b)" options:0 error:NULL];
-        kConditionalRegisterRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:call|jp|jr|ret)\\s+(nz|nv|nc|po|pe|c|p|m|n|z|v)\\b" options:0 error:NULL];
-        kOperationalCodeRegex = [[NSRegularExpression alloc] initWithPattern:@"\\b(?:adc|add|and|bit|call|ccf|cpdr|cpd|cpir|cpi|cpl|cp|daa|dec|di|djnz|ei|exx|ex|halt|im|inc|indr|ind|inir|ini|in|jp|jr|lddr|ldd|ldir|ldi|ld|neg|nop|or|otdr|otir|outd|outi|out|pop|push|res|reti|retn|ret|rla|rlca|rlc|rld|rl|rra|rrca|rrc|rrd|rr|rst|sbc|scf|set|sla|sll|sra|srl|sub|xor)\\b" options:NSRegularExpressionAnchorsMatchLines error:NULL];
-        
-        kLabelRegex = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z0-9_!?]+" options:NSRegularExpressionAnchorsMatchLines error:NULL];
-        kEquateRegex = [[NSRegularExpression alloc] initWithPattern:@"^([A-Za-z0-9_!?]+)(?:(?:\\s*=)|(?:\\s+\\.(?:equ|EQU))|(?:\\s+(?:equ|EQU)))" options:NSRegularExpressionAnchorsMatchLines error:NULL];
-        kDefineRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#define|DEFINE)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
-        kMacroRegex = [[NSRegularExpression alloc] initWithPattern:@"(?:#macro|MACRO)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
-    });
-    
     [self.textStorage beginEditing];
     
     [self.textStorage addAttributes:[self.class defaultAttributes] range:range];
     
-    [kOperationalCodeRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter operationalCodeRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:result.range];
     }];
     
-    [kRegisterRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter registerRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:result.range];
     }];
     
-    [kConditionalRegisterRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter conditionalRegisterRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:1 blue:1 alpha:1] range:result.range];
     }];
     
-    [kNumberRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter numberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:result.range];
     }];
     
-    [kBinaryNumberRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter binaryNumberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.75 blue:0.75 alpha:1] range:result.range];
     }];
     
-    [kHexadecimalNumberRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter hexadecimalNumberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor magentaColor] range:result.range];
     }];
     
-    [kDirectiveRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter directiveRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:result.range];
     }];
     
-    [kPreProcessorRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter preProcessorRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:result.range];
     }];
     
-    [kLabelRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         if (result.range.length == 1 &&
             [self.textStorage.string characterAtIndex:result.range.location] == '_')
             return;
@@ -111,27 +88,27 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:result.range];
     }];
     
-    [kEquateRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:[result rangeAtIndex:1]];
     }];
     
-    [kDefineRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:[result rangeAtIndex:1]];
     }];
     
-    [kStringRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor purpleColor] range:result.range];
-    }];
-    
-    [kMacroRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:[result rangeAtIndex:1]];
     }];
     
-    [kCommentRegex enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter stringRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor purpleColor] range:result.range];
+    }];
+    
+    [[WCSyntaxHighlighter commentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1] range:result.range];
     }];
     
-    [kMultilineCommentRegex enumerateMatchesInString:self.textStorage.string options:0 range:NSMakeRange(0, self.textStorage.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+    [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:NSMakeRange(0, self.textStorage.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttributes:@{NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kMultilineCommentAttributeName : @true} range:result.range];
         
         if (NSMaxRange(result.range) > NSMaxRange(range))
@@ -143,6 +120,128 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
 
 + (NSDictionary *)defaultAttributes; {
     return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false};
+}
+
++ (NSRegularExpression *)commentRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@";+.*" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)multilineCommentRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)stringRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"\".*?\"" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)preProcessorRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:define|defcont|elif|else|endif|endmacro|if|ifdef|ifndef|import|include|macro|undef|undefine)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)numberRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:^|(?<=[^$%]\\b))[0-9]+\\b" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)binaryNumberRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:%[01]+\\b)|(?:(?:^|(?<=[^$%]\\b))[01]+(?:b|B)\\b)" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)hexadecimalNumberRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:\\$[A-Fa-f0-9]+\\b)|(?:(?:^|(?<=[^$%]\\b))[0-9a-fA-F]+(?:h|H)\\b)" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)directiveRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"\\.(?:db|dw|end|org|byte|word|fill|block|addinstr|echo|error|list|nolist|equ|show|option|seek)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)registerRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:\\baf')|(?:\\b(?:ixh|iyh|ixl|iyl|sp|af|pc|bc|de|hl|ix|iy|a|f|b|c|d|e|h|l|r|i)\\b)" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)conditionalRegisterRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:call|jp|jr|ret)\\s+(nz|nv|nc|po|pe|c|p|m|n|z|v)\\b" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)operationalCodeRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"\\b(?:adc|add|and|bit|call|ccf|cpdr|cpd|cpir|cpi|cpl|cp|daa|dec|di|djnz|ei|exx|ex|halt|im|inc|indr|ind|inir|ini|in|jp|jr|lddr|ldd|ldir|ldi|ld|neg|nop|or|otdr|otir|outd|outi|out|pop|push|res|reti|retn|ret|rla|rlca|rlc|rld|rl|rra|rrca|rrc|rrd|rr|rst|sbc|scf|set|sla|sll|sra|srl|sub|xor)\\b" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    });
+    return retval;
+}
+
++ (NSRegularExpression *)labelRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"^[A-Za-z0-9_!?]+" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)equateRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"^([A-Za-z0-9_!?]+)(?:(?:\\s*=)|(?:\\s+\\.(?:equ|EQU))|(?:\\s+(?:equ|EQU)))" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)defineRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#define|DEFINE)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)macroRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#macro|MACRO)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
+    });
+    return retval;
 }
 
 - (void)textStorageDidProcessEditing:(NSNotification *)note {

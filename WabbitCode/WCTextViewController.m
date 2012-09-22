@@ -16,7 +16,8 @@
 #import "WCLineNumberView.h"
 #import "WCSyntaxHighlighter.h"
 
-@interface WCTextViewController ()
+@interface WCTextViewController () <WCTextViewDelegate>
+
 @property (assign,nonatomic) IBOutlet WCTextView *textView;
 
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -42,6 +43,12 @@
     [self.textView.enclosingScrollView setHasHorizontalRuler:NO];
     [self.textView.enclosingScrollView setHasVerticalRuler:YES];
     [self.textView.enclosingScrollView setRulersVisible:YES];
+    
+    [self.textView setDelegate:self];
+}
+
+- (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
+    return [self.delegate symbolScannerForTextViewController:self];
 }
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
@@ -51,10 +58,6 @@
     [self setTextStorage:textStorage];
     
     return self;
-}
-
-- (IBAction)showToolTip:(id)sender; {
-    [self.textView showToolTip:nil];
 }
 
 @end

@@ -10,11 +10,14 @@
 #import "WCLineNumberView.h"
 #import "WCTextViewController.h"
 #import "WCSyntaxHighlighter.h"
+#import "WCSymbolScanner.h"
 
-@interface WCSourceFileDocument ()
+@interface WCSourceFileDocument () <WCTextViewControllerDelegate>
+
 @property (strong,nonatomic) NSTextStorage *textStorage;
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
 @property (strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
+@property (strong,nonatomic) WCSymbolScanner *symbolScanner;
 @property (strong,nonatomic) WCTextViewController *textViewController;
 
 @end
@@ -28,6 +31,7 @@
     [self setStringEncoding:NSUTF8StringEncoding];
     [self setTextStorage:[[NSTextStorage alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
+    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     
     return self;
 }
@@ -40,6 +44,7 @@
     [super windowControllerDidLoadNib:windowController];
     
     [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
+    [self.textViewController setDelegate:self];
     [self.textViewController.view setFrame:[windowController.window.contentView bounds]];
     [windowController.window.contentView addSubview:self.textViewController.view];
 }
@@ -60,6 +65,7 @@
     [self setStringEncoding:usedEncoding];
     [self setTextStorage:[[NSTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
+    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     
     [self.undoManager enableUndoRegistration];
     
@@ -70,8 +76,8 @@
     return [self.textStorage.string writeToURL:url atomically:YES encoding:self.stringEncoding error:outError];
 }
 
-- (IBAction)showToolTip:(id)sender; {
-    [self.textViewController showToolTip:nil];
+- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
+    return self.symbolScanner;
 }
 
 @end

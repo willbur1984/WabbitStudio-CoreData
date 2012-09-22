@@ -13,10 +13,18 @@
 
 #import "WCViewController.h"
 
+@protocol WCTextViewControllerDelegate;
+
 @interface WCTextViewController : WCViewController
+
+@property (weak,nonatomic) id <WCTextViewControllerDelegate> delegate;
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 
-- (IBAction)showToolTip:(id)sender;
+@end
 
+@class WCSymbolScanner;
+
+@protocol WCTextViewControllerDelegate <NSObject>
+- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
 @end

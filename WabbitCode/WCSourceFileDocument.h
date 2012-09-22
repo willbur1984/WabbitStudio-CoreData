@@ -10,6 +10,4 @@
 
 @interface WCSourceFileDocument : NSDocument
 
-- (IBAction)showToolTip:(id)sender;
-
 @end

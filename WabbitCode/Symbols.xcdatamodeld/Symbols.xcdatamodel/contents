@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Define" representedClassName="Define" parentEntity="Symbol" syncable="YES">
+        <attribute name="arguments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Equate" representedClassName="Equate" parentEntity="Symbol" syncable="YES">
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Label" representedClassName="Label" parentEntity="Symbol" syncable="YES"/>
+    <entity name="Macro" representedClassName="Macro" syncable="YES">
+        <attribute name="arguments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Symbol" representedClassName="Symbol" isAbstract="YES" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Symbol" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Label" positionX="160" positionY="192" width="128" height="45"/>
+        <element name="Equate" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="Define" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Macro" positionX="160" positionY="192" width="128" height="75"/>
+    </elements>
+</model>

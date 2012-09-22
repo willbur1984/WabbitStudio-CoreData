@@ -14,12 +14,29 @@
 #import "WCTextView.h"
 #import "NSTextView+WCExtensions.h"
 #import "WCToolTipWindow.h"
+#import "WCSymbolScanner.h"
+#import "WCDefines.h"
+#import "NSString+WCExtensions.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
 @end
 
 @implementation WCTextView
+
++ (NSMenu *)defaultMenu {
+    NSMenu *retval = [[NSMenu alloc] initWithTitle:@""];
+    
+    [retval addItemWithTitle:NSLocalizedString(@"Cut", nil) action:@selector(cut:) keyEquivalent:@""];
+    [retval addItemWithTitle:NSLocalizedString(@"Copy", nil) action:@selector(copy:) keyEquivalent:@""];
+    [retval addItemWithTitle:NSLocalizedString(@"Paste", nil) action:@selector(paste:) keyEquivalent:@""];
+    [retval addItem:[NSMenuItem separatorItem]];
+    
+    [retval addItemWithTitle:NSLocalizedString(@"Jump to Definition", nil) action:@selector(jumpToDefinitionAction:) keyEquivalent:@""];
+    [retval addItem:[NSMenuItem separatorItem]];
+    
+    return retval;
+}
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (!(self = [super initWithCoder:aDecoder]))
@@ -64,7 +81,50 @@
     }
 }
 
+@dynamic delegate;
+- (id<WCTextViewDelegate>)delegate {
+    return (id<WCTextViewDelegate>)[super delegate];
+}
+- (void)setDelegate:(id<WCTextViewDelegate>)delegate {
+    [super setDelegate:delegate];
+}
+
+- (IBAction)jumpToDefinitionAction:(id)sender; {
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
+    
+    if (symbolRange.location == NSNotFound) {
+        NSBeep();
+        return;
+    }
+    
+    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextView:self];
+    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:symbolRange]];
+    
+    if (!symbols.count) {
+        NSBeep();
+        return;
+    }
+    
+    Symbol *symbol = symbols.lastObject;
+    
+    [self setSelectedRange:symbol.rangeValue];
+    [self scrollRangeToVisible:self.selectedRange];
+}
+
 - (IBAction)showToolTip:(id)sender; {
+    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextView:self];
+    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:self.selectedRange]];
+    
+    if (!symbols.count)
+        return;
+    
+    NSMutableString *string = [NSMutableString stringWithCapacity:0];
+    
+    for (Symbol *symbol in symbols)
+        [string appendFormat:@"%@ - %@\n",symbol.name,symbol.range];
+    
+    [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
+    
     NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:self.selectedRange.location];
     NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
     NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
@@ -72,7 +132,7 @@
     lineFragmentRect.origin.x += glyphLocation.x;
     lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
     
-    [[WCToolTipWindow sharedInstance] showString:[self.string substringWithRange:self.selectedRange] atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
+    [[WCToolTipWindow sharedInstance] showString:string atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
 }
 
 - (void)_highlightMatchingBrace; {
