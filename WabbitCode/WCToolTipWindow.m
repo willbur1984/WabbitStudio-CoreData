@@ -16,7 +16,7 @@
 
 @interface WCToolTipWindow ()
 @property (strong,nonatomic) NSTextField *textField;
-@property (strong,nonatomic) NSDate *displayDate;
+@property (strong,nonatomic) NSDate *orderedFrontDate;
 @property (readonly,nonatomic) NSDictionary *defaultAttributes;
 @property (weak,nonatomic) id eventMonitor;
 @end
@@ -65,6 +65,9 @@
     
     [self showAttributedString:[[NSAttributedString alloc] initWithString:string attributes:self.defaultAttributes] atPoint:point];
 }
+
+static const NSTimeInterval kDismissThreshold = 1.5;
+
 - (void)showAttributedString:(NSAttributedString *)attributedString atPoint:(NSPoint)point; {
     WCAssert(attributedString,@"attributed tooltip string cannot be nil!");
     
@@ -86,19 +89,35 @@
     [self setAlphaValue:1];
     [self orderFront:nil];
     
+    [self setOrderedFrontDate:[NSDate date]];
+    
     __block typeof (self) blockSelf = self;
     
-    id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSKeyDownMask handler:^NSEvent *(NSEvent *event) {
+    id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
+        BOOL shouldDismiss = NO;
         
-        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-            [context setDuration:0.5];
+        switch (event.type) {
+            case NSMouseMoved:
+                if ([[NSDate date] timeIntervalSinceDate:self.orderedFrontDate] > kDismissThreshold) {
+                    shouldDismiss = YES;
+                }
+                break;
+            default:
+                shouldDismiss = YES;
+                break;
+        }
+        
+        if (shouldDismiss) {
+            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+                [context setDuration:0.3];
+                
+                [blockSelf.animator setAlphaValue:0];
+            } completionHandler:^{
+                [blockSelf orderOut:nil];
+            }];
             
-            [blockSelf.animator setAlphaValue:0];
-        } completionHandler:^{
-            [blockSelf orderOut:nil];
-        }];
-        
-        [blockSelf setEventMonitor:nil];
+            [blockSelf setEventMonitor:nil];
+        }
         
         return event;
     }];
