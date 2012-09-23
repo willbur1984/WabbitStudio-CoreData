@@ -21,7 +21,6 @@ typedef enum {
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * range;
 @property (nonatomic, retain) NSNumber * type;
-
-@property (readonly,nonatomic) NSRange rangeValue;
+@property (nonatomic, retain) NSNumber * location;
 
 @end

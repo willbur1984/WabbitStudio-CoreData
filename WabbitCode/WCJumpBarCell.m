@@ -1,5 +1,5 @@
 //
-//  WCSymbolScanner.h
+//  WCJumpBarCell.m
 //  WabbitStudio
 //
 //  Created by William Towe on 9/22/12.
@@ -11,24 +11,14 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "Symbol.h"
+#import "WCJumpBarCell.h"
+#import "WCJumpBarComponentCell.h"
+#import "WCDefines.h"
 
-extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
+@implementation WCJumpBarCell
 
-@interface WCSymbolScanner : NSObject
-
-@property (readonly,weak,nonatomic) NSTextStorage *textStorage;
-@property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
-
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
-
-- (void)scanSymbols;
-
-- (id)symbolForRange:(NSRange)range;
-- (NSArray *)symbolsWithName:(NSString *)name;
-- (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
-
-+ (NSRegularExpression *)symbolRegex;
++ (Class)pathComponentCellClass {
+    return [WCJumpBarComponentCell class];
+}
 
 @end

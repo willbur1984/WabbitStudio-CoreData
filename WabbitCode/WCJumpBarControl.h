@@ -1,5 +1,5 @@
 //
-//  WCSymbolScanner.h
+//  WCJumpBarControl.h
 //  WabbitStudio
 //
 //  Created by William Towe on 9/22/12.
@@ -11,24 +11,23 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <Cocoa/Cocoa.h>
 #import "Symbol.h"
 
-extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
+@protocol WCJumpBarControlDataSource;
 
-@interface WCSymbolScanner : NSObject
+@interface WCJumpBarControl : NSPathControl
 
-@property (readonly,weak,nonatomic) NSTextStorage *textStorage;
-@property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (assign,nonatomic) id <WCJumpBarControlDataSource> dataSource;
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
+- (void)reloadPathComponentCells;
+- (void)reloadSymbolPathComponentCell;
 
-- (void)scanSymbols;
+@end
 
-- (id)symbolForRange:(NSRange)range;
-- (NSArray *)symbolsWithName:(NSString *)name;
-- (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
+@class WCJumpBarComponentCell;
 
-+ (NSRegularExpression *)symbolRegex;
-
+@protocol WCJumpBarControlDataSource <NSObject>
+- (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
+- (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
 @end

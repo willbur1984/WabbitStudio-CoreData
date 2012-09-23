@@ -57,7 +57,7 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
     }];
     
     [[WCSyntaxHighlighter conditionalRegisterRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:1 blue:1 alpha:1] range:result.range];
+        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:1 blue:1 alpha:1] range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter numberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {

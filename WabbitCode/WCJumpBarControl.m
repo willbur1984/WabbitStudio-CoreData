@@ -1,5 +1,5 @@
 //
-//  WCSymbolScanner.h
+//  WCJumpBarControl.m
 //  WabbitStudio
 //
 //  Created by William Towe on 9/22/12.
@@ -11,24 +11,40 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-#import "Symbol.h"
+#import "WCJumpBarControl.h"
+#import "WCJumpBarCell.h"
 
-extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
+@implementation WCJumpBarControl
 
-@interface WCSymbolScanner : NSObject
++ (Class)cellClass {
+    return [WCJumpBarCell class];
+}
 
-@property (readonly,weak,nonatomic) NSTextStorage *textStorage;
-@property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (!(self = [super initWithCoder:aDecoder]))
+        return nil;
+    
+    [self setRefusesFirstResponder:YES];
+    [self.cell setEditable:NO];
+    
+    return self;
+}
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
+- (void)setDataSource:(id<WCJumpBarControlDataSource>)dataSource {
+    _dataSource = dataSource;
+    
+    [self reloadPathComponentCells];
+}
 
-- (void)scanSymbols;
+- (void)reloadPathComponentCells; {
+    [self setPathComponentCells:[self.dataSource jumpBarComponentCellsForJumpBarControl:self]];
+}
+- (void)reloadSymbolPathComponentCell; {
+    NSMutableArray *temp = [self.pathComponentCells mutableCopy];
 
-- (id)symbolForRange:(NSRange)range;
-- (NSArray *)symbolsWithName:(NSString *)name;
-- (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
-
-+ (NSRegularExpression *)symbolRegex;
+    [temp replaceObjectAtIndex:temp.count - 1 withObject:[self.dataSource symbolPathComponentCellForJumpBarControl:self]];
+    
+    [self setPathComponentCells:temp];
+}
 
 @end

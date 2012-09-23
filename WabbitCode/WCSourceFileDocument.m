@@ -79,5 +79,8 @@
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
     return self.symbolScanner;
 }
+- (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
+    return self.fileURL;
+}
 
 @end

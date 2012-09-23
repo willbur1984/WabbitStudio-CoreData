@@ -58,18 +58,52 @@
     [self didChangeValueForKey:@"isExecuting"];
     
     [self.managedObjectContext performBlock:^{
-        [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:self.managedObjectContext];
-            
-            [entity setType:@(SymbolTypeLabel)];
-            [entity setRange:NSStringFromRange(result.range)];
-            [entity setName:[self.string substringWithRange:result.range]];
-        }];
-        
         [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
             
             [entity setType:@(SymbolTypeEquate)];
+            [entity setLocation:@(result.range.location)];
+            [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
+            [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+        }];
+        
+        [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            if (result.range.length == 1 &&
+                [self.string characterAtIndex:result.range.location] == '_')
+                return;
+            
+            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
+            
+            [fetchRequest setResultType:NSCountResultType];
+            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %lu",result.range.location]];
+            
+            NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+            
+            if ([fetchResult.lastObject unsignedIntegerValue] > 0)
+                return;
+            
+            Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:self.managedObjectContext];
+            
+            [entity setType:@(SymbolTypeLabel)];
+            [entity setLocation:@(result.range.location)];
+            [entity setRange:NSStringFromRange(result.range)];
+            [entity setName:[self.string substringWithRange:result.range]];
+        }];
+        
+        [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:self.managedObjectContext];
+            
+            [entity setType:@(SymbolTypeDefine)];
+            [entity setLocation:@(result.range.location)];
+            [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
+            [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+        }];
+        
+        [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:self.managedObjectContext];
+            
+            [entity setType:@(SymbolTypeMacro)];
+            [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
             [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
         }];

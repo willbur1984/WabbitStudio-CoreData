@@ -15,10 +15,16 @@
 #import "WCTextView.h"
 #import "WCLineNumberView.h"
 #import "WCSyntaxHighlighter.h"
+#import "WCJumpBarControl.h"
+#import "WCDefines.h"
+#import "WCJumpBarComponentCell.h"
+#import "WCSymbolScanner.h"
+#import "WCSymbolImageManager.h"
 
-@interface WCTextViewController () <WCTextViewDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource>
 
 @property (assign,nonatomic) IBOutlet WCTextView *textView;
+@property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 
 @property (weak,nonatomic) NSTextStorage *textStorage;
 @end
@@ -32,8 +38,6 @@
 - (void)loadView {
     [super loadView];
     
-    [self.view setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-    
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
@@ -45,6 +49,49 @@
     [self.textView.enclosingScrollView setRulersVisible:YES];
     
     [self.textView setDelegate:self];
+    [self.jumpBarControl setDataSource:self];
+}
+
+- (void)textViewDidChangeSelection:(NSNotification *)note {
+    [self.jumpBarControl reloadSymbolPathComponentCell];
+}
+
+- (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
+    NSURL *fileURL = [self.delegate fileURLForTextViewController:self];
+    NSArray *pathComponents = fileURL.pathComponents;
+    NSString *currentPath = @"";
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:pathComponents.count];
+    
+    for (NSString *pathComponent in pathComponents) {
+        currentPath = [currentPath stringByAppendingPathComponent:pathComponent];
+        
+        WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:pathComponent];
+        
+        [cell setImage:[[NSWorkspace sharedWorkspace] iconForFile:currentPath]];
+        
+        [retval addObject:cell];
+    }
+    
+    [retval addObject:[self symbolPathComponentCellForJumpBarControl:jumpBarControl]];
+    
+    return retval;
+}
+- (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
+    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
+    Symbol *symbol = [symbolScanner symbolForRange:self.textView.selectedRange];
+    WCJumpBarComponentCell *cell;
+    
+    if (!symbol) {
+        cell = [[WCJumpBarComponentCell alloc] initTextCell:NSLocalizedString(@"No Selection", nil)];
+        
+        return cell;
+    }
+    
+    cell = [[WCJumpBarComponentCell alloc] initTextCell:symbol.name];
+    
+    [cell setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+    
+    return cell;
 }
 
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
@@ -58,6 +105,20 @@
     [self setTextStorage:textStorage];
     
     return self;
+}
+
+- (void)setDelegate:(id<WCTextViewControllerDelegate>)delegate {
+    _delegate = delegate;
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
+    
+    if (_delegate) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForTextViewController:self]];
+    }
+}
+
+- (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
+    [self.jumpBarControl reloadSymbolPathComponentCell];
 }
 
 @end

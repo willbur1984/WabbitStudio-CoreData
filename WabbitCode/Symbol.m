@@ -14,10 +14,6 @@
 @dynamic name;
 @dynamic range;
 @dynamic type;
-
-@dynamic rangeValue;
-- (NSRange)rangeValue {
-    return NSRangeFromString(self.range);
-}
+@dynamic location;
 
 @end

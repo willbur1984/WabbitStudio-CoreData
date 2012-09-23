@@ -1,8 +1,8 @@
 //
-//  WCSymbolScanner.h
+//  WCSymbolImageManager.h
 //  WabbitStudio
 //
-//  Created by William Towe on 9/22/12.
+//  Created by William Towe on 9/23/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -14,21 +14,11 @@
 #import <Foundation/Foundation.h>
 #import "Symbol.h"
 
-extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
+@interface WCSymbolImageManager : NSObject
 
-@interface WCSymbolScanner : NSObject
++ (WCSymbolImageManager *)sharedManager;
 
-@property (readonly,weak,nonatomic) NSTextStorage *textStorage;
-@property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
-
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
-
-- (void)scanSymbols;
-
-- (id)symbolForRange:(NSRange)range;
-- (NSArray *)symbolsWithName:(NSString *)name;
-- (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
-
-+ (NSRegularExpression *)symbolRegex;
+- (NSImage *)imageForSymbol:(Symbol *)symbol;
+- (NSImage *)imageForSymbolType:(SymbolType)symbolType;
 
 @end

@@ -10,12 +10,22 @@
 		7903F1AD160E3AB7000D3F3D /* WCSymbolScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */; };
 		7903F1B1160E3D62000D3F3D /* WCScanSymbolsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */; };
 		7903F1B8160E5FB5000D3F3D /* Symbols.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */; };
-		7903F1C7160E6BB8000D3F3D /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1C6160E6BB8000D3F3D /* Symbol.m */; };
 		7903F1CA160E6BB9000D3F3D /* Define.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1C9160E6BB9000D3F3D /* Define.m */; };
-		7903F1CD160E6BB9000D3F3D /* Macro.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1CC160E6BB9000D3F3D /* Macro.m */; };
 		7903F1D0160E6BB9000D3F3D /* Equate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1CF160E6BB9000D3F3D /* Equate.m */; };
 		7903F1D3160E6BB9000D3F3D /* Label.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1D2160E6BB9000D3F3D /* Label.m */; };
 		7903F1D7160E7F74000D3F3D /* NSString+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */; };
+		7903F1DA160EAEF6000D3F3D /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1D9160EAEF6000D3F3D /* Symbol.m */; };
+		7903F1DD160EB4C9000D3F3D /* WCJumpBarControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1DC160EB4C9000D3F3D /* WCJumpBarControl.m */; };
+		7903F1E0160EB797000D3F3D /* WCJumpBarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1DF160EB797000D3F3D /* WCJumpBarCell.m */; };
+		7903F1E3160EB89A000D3F3D /* WCJumpBarComponentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */; };
+		7903F1EA160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png in Resources */ = {isa = PBXBuildFile; fileRef = 7903F1E6160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png */; };
+		7903F1EB160EBF3B000D3F3D /* GCJumpBarAccessorySeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7903F1E7160EBF3B000D3F3D /* GCJumpBarAccessorySeparator@2x.png */; };
+		7903F1EC160EBF3B000D3F3D /* GCJumpBarSeparator.png in Resources */ = {isa = PBXBuildFile; fileRef = 7903F1E8160EBF3B000D3F3D /* GCJumpBarSeparator.png */; };
+		7903F1ED160EBF3B000D3F3D /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7903F1E9160EBF3B000D3F3D /* GCJumpBarSeparator@2x.png */; };
+		7903F1F3160F735D000D3F3D /* WCJumpBarBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */; };
+		7903F1F6160FAE08000D3F3D /* WCSymbolImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */; };
+		7903F1FA160FB323000D3F3D /* NSBezierPath+StrokeExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */; };
+		7903F1FE160FB810000D3F3D /* Macro.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1FD160FB810000D3F3D /* Macro.m */; };
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
@@ -43,18 +53,35 @@
 		7903F1AF160E3D62000D3F3D /* WCScanSymbolsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCScanSymbolsOperation.h; sourceTree = "<group>"; };
 		7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCScanSymbolsOperation.m; sourceTree = "<group>"; };
 		7903F1B7160E5FB5000D3F3D /* Symbols.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Symbols.xcdatamodel; sourceTree = "<group>"; };
-		7903F1C5160E6BB8000D3F3D /* Symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Symbol.h; sourceTree = "<group>"; };
-		7903F1C6160E6BB8000D3F3D /* Symbol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Symbol.m; sourceTree = "<group>"; };
 		7903F1C8160E6BB9000D3F3D /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
 		7903F1C9160E6BB9000D3F3D /* Define.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Define.m; sourceTree = "<group>"; };
-		7903F1CB160E6BB9000D3F3D /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
-		7903F1CC160E6BB9000D3F3D /* Macro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Macro.m; sourceTree = "<group>"; };
 		7903F1CE160E6BB9000D3F3D /* Equate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equate.h; sourceTree = "<group>"; };
 		7903F1CF160E6BB9000D3F3D /* Equate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Equate.m; sourceTree = "<group>"; };
 		7903F1D1160E6BB9000D3F3D /* Label.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Label.h; sourceTree = "<group>"; };
 		7903F1D2160E6BB9000D3F3D /* Label.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Label.m; sourceTree = "<group>"; };
 		7903F1D5160E7F74000D3F3D /* NSString+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+WCExtensions.h"; sourceTree = "<group>"; };
 		7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+WCExtensions.m"; sourceTree = "<group>"; };
+		7903F1D8160EAEF6000D3F3D /* Symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Symbol.h; sourceTree = "<group>"; };
+		7903F1D9160EAEF6000D3F3D /* Symbol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Symbol.m; sourceTree = "<group>"; };
+		7903F1DB160EB4C9000D3F3D /* WCJumpBarControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpBarControl.h; sourceTree = "<group>"; };
+		7903F1DC160EB4C9000D3F3D /* WCJumpBarControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpBarControl.m; sourceTree = "<group>"; };
+		7903F1DE160EB796000D3F3D /* WCJumpBarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpBarCell.h; sourceTree = "<group>"; };
+		7903F1DF160EB797000D3F3D /* WCJumpBarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpBarCell.m; sourceTree = "<group>"; };
+		7903F1E1160EB89A000D3F3D /* WCJumpBarComponentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpBarComponentCell.h; sourceTree = "<group>"; };
+		7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpBarComponentCell.m; sourceTree = "<group>"; };
+		7903F1E4160EB928000D3F3D /* WCGeometry.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCGeometry.h; sourceTree = "<group>"; };
+		7903F1E6160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GCJumpBarAccessorySeparator.png; sourceTree = "<group>"; };
+		7903F1E7160EBF3B000D3F3D /* GCJumpBarAccessorySeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarAccessorySeparator@2x.png"; sourceTree = "<group>"; };
+		7903F1E8160EBF3B000D3F3D /* GCJumpBarSeparator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GCJumpBarSeparator.png; sourceTree = "<group>"; };
+		7903F1E9160EBF3B000D3F3D /* GCJumpBarSeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarSeparator@2x.png"; sourceTree = "<group>"; };
+		7903F1F1160F735C000D3F3D /* WCJumpBarBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpBarBackgroundView.h; sourceTree = "<group>"; };
+		7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpBarBackgroundView.m; sourceTree = "<group>"; };
+		7903F1F4160FAE07000D3F3D /* WCSymbolImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolImageManager.h; sourceTree = "<group>"; };
+		7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolImageManager.m; sourceTree = "<group>"; };
+		7903F1F8160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+StrokeExtensions.h"; sourceTree = "<group>"; };
+		7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+StrokeExtensions.m"; sourceTree = "<group>"; };
+		7903F1FC160FB810000D3F3D /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
+		7903F1FD160FB810000D3F3D /* Macro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Macro.m; sourceTree = "<group>"; };
 		79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSParagraphStyle+WCExtensions.h"; sourceTree = "<group>"; };
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
@@ -122,24 +149,54 @@
 		7903F1D4160E794B000D3F3D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */,
+				7903F1FB160FB7F8000D3F3D /* Classes */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		7903F1E5160EBF1F000D3F3D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7903F1E6160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png */,
+				7903F1E7160EBF3B000D3F3D /* GCJumpBarAccessorySeparator@2x.png */,
+				7903F1E8160EBF3B000D3F3D /* GCJumpBarSeparator.png */,
+				7903F1E9160EBF3B000D3F3D /* GCJumpBarSeparator@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		7903F1F7160FB2BA000D3F3D /* External */ = {
+			isa = PBXGroup;
+			children = (
+				7903F1F8160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.h */,
+				7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */,
+			);
+			name = External;
+			sourceTree = "<group>";
+		};
+		7903F1FB160FB7F8000D3F3D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
 				7903F1D1160E6BB9000D3F3D /* Label.h */,
 				7903F1D2160E6BB9000D3F3D /* Label.m */,
 				7903F1CE160E6BB9000D3F3D /* Equate.h */,
 				7903F1CF160E6BB9000D3F3D /* Equate.m */,
-				7903F1CB160E6BB9000D3F3D /* Macro.h */,
-				7903F1CC160E6BB9000D3F3D /* Macro.m */,
 				7903F1C8160E6BB9000D3F3D /* Define.h */,
 				7903F1C9160E6BB9000D3F3D /* Define.m */,
-				7903F1C5160E6BB8000D3F3D /* Symbol.h */,
-				7903F1C6160E6BB8000D3F3D /* Symbol.m */,
+				7903F1D8160EAEF6000D3F3D /* Symbol.h */,
+				7903F1D9160EAEF6000D3F3D /* Symbol.m */,
+				7903F1FC160FB810000D3F3D /* Macro.h */,
+				7903F1FD160FB810000D3F3D /* Macro.m */,
 			);
-			name = Model;
+			name = Classes;
 			sourceTree = "<group>";
 		};
 		79710682160B5C4700C4951A /* Headers */ = {
 			isa = PBXGroup;
 			children = (
 				79710684160B5CAD00C4951A /* WCDefines.h */,
+				7903F1E4160EB928000D3F3D /* WCGeometry.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -186,6 +243,7 @@
 				79710682160B5C4700C4951A /* Headers */,
 				79968CD91608E96100F139BC /* Categories */,
 				79968CCF1608E06900F139BC /* Classes */,
+				7903F1E5160EBF1F000D3F3D /* Resources */,
 				79968CD01608E07500F139BC /* Xibs */,
 				79968CB01608DB7A00F139BC /* Supporting Files */,
 			);
@@ -200,7 +258,6 @@
 				79968CB51608DB7A00F139BC /* main.m */,
 				79968CB71608DB7A00F139BC /* WabbitCode-Prefix.pch */,
 				79968CB81608DB7A00F139BC /* Credits.rtf */,
-				7903F1B6160E5FB5000D3F3D /* Symbols.xcdatamodeld */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -208,6 +265,10 @@
 		79968CCF1608E06900F139BC /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
+				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
+				7903F1F4160FAE07000D3F3D /* WCSymbolImageManager.h */,
+				7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */,
 				79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */,
 				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
 				79968CD51608E91100F139BC /* WCLineNumberView.h */,
@@ -222,9 +283,15 @@
 				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
 				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
 				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
+				7903F1DB160EB4C9000D3F3D /* WCJumpBarControl.h */,
+				7903F1DC160EB4C9000D3F3D /* WCJumpBarControl.m */,
+				7903F1DE160EB796000D3F3D /* WCJumpBarCell.h */,
+				7903F1DF160EB797000D3F3D /* WCJumpBarCell.m */,
+				7903F1E1160EB89A000D3F3D /* WCJumpBarComponentCell.h */,
+				7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */,
+				7903F1F1160F735C000D3F3D /* WCJumpBarBackgroundView.h */,
+				7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */,
 				7903F1B5160E5F72000D3F3D /* Symbols */,
-				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
-				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -252,6 +319,7 @@
 				7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */,
 				7903F1D5160E7F74000D3F3D /* NSString+WCExtensions.h */,
 				7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */,
+				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -312,6 +380,10 @@
 				79968CC01608DB7A00F139BC /* WCSourceFileDocument.xib in Resources */,
 				79968CC31608DB7A00F139BC /* WCMainMenu.xib in Resources */,
 				7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */,
+				7903F1EA160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png in Resources */,
+				7903F1EB160EBF3B000D3F3D /* GCJumpBarAccessorySeparator@2x.png in Resources */,
+				7903F1EC160EBF3B000D3F3D /* GCJumpBarSeparator.png in Resources */,
+				7903F1ED160EBF3B000D3F3D /* GCJumpBarSeparator@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,12 +410,18 @@
 				7903F1AD160E3AB7000D3F3D /* WCSymbolScanner.m in Sources */,
 				7903F1B1160E3D62000D3F3D /* WCScanSymbolsOperation.m in Sources */,
 				7903F1B8160E5FB5000D3F3D /* Symbols.xcdatamodeld in Sources */,
-				7903F1C7160E6BB8000D3F3D /* Symbol.m in Sources */,
 				7903F1CA160E6BB9000D3F3D /* Define.m in Sources */,
-				7903F1CD160E6BB9000D3F3D /* Macro.m in Sources */,
 				7903F1D0160E6BB9000D3F3D /* Equate.m in Sources */,
 				7903F1D3160E6BB9000D3F3D /* Label.m in Sources */,
 				7903F1D7160E7F74000D3F3D /* NSString+WCExtensions.m in Sources */,
+				7903F1DA160EAEF6000D3F3D /* Symbol.m in Sources */,
+				7903F1DD160EB4C9000D3F3D /* WCJumpBarControl.m in Sources */,
+				7903F1E0160EB797000D3F3D /* WCJumpBarCell.m in Sources */,
+				7903F1E3160EB89A000D3F3D /* WCJumpBarComponentCell.m in Sources */,
+				7903F1F3160F735D000D3F3D /* WCJumpBarBackgroundView.m in Sources */,
+				7903F1F6160FAE08000D3F3D /* WCSymbolImageManager.m in Sources */,
+				7903F1FA160FB323000D3F3D /* NSBezierPath+StrokeExtensions.m in Sources */,
+				7903F1FE160FB810000D3F3D /* Macro.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

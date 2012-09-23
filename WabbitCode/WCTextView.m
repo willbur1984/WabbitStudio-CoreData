@@ -107,13 +107,20 @@
     
     Symbol *symbol = symbols.lastObject;
     
-    [self setSelectedRange:symbol.rangeValue];
+    [self setSelectedRange:NSRangeFromString(symbol.range)];
     [self scrollRangeToVisible:self.selectedRange];
 }
 
 - (IBAction)showToolTip:(id)sender; {
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
+    
+    if (symbolRange.location == NSNotFound) {
+        NSBeep();
+        return;
+    }
+    
     WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextView:self];
-    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:self.selectedRange]];
+    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:symbolRange]];
     
     if (!symbols.count)
         return;
