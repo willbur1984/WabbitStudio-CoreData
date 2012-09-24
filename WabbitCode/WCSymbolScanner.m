@@ -72,17 +72,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu",range.location]];
-    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"range" ascending:YES comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-        NSRange range1 = NSRangeFromString(obj1);
-        NSRange range2 = NSRangeFromString(obj2);
-        
-        if (range1.location < range2.location)
-            return NSOrderedAscending;
-        else if (range1.location > range2.location)
-            return NSOrderedDescending;
-        else
-            return NSOrderedSame;
-    }]]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
 }
@@ -90,17 +80,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",name]];
-    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"range" ascending:YES comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-        NSRange range1 = NSRangeFromString(obj1);
-        NSRange range2 = NSRangeFromString(obj2);
-        
-        if (range1.location < range2.location)
-            return NSOrderedAscending;
-        else if (range1.location > range2.location)
-            return NSOrderedDescending;
-        else
-            return NSOrderedSame;
-    }]]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
@@ -108,17 +88,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.type == %i AND self.name ==[cd] %@",type,name]];
-    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"range" ascending:YES comparator:^NSComparisonResult(NSString *obj1, NSString *obj2) {
-        NSRange range1 = NSRangeFromString(obj1);
-        NSRange range2 = NSRangeFromString(obj2);
-        
-        if (range1.location < range2.location)
-            return NSOrderedAscending;
-        else if (range1.location > range2.location)
-            return NSOrderedDescending;
-        else
-            return NSOrderedSame;
-    }]]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }

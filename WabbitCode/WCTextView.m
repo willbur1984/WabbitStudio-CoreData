@@ -17,6 +17,9 @@
 #import "WCSymbolScanner.h"
 #import "WCDefines.h"
 #import "NSString+WCExtensions.h"
+#import "WCCompletionString.h"
+#import "WCArgumentPlaceholderCell.h"
+#import "Macro.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -78,6 +81,63 @@
     // hack to update our line number ruler view while selecting with the mouse :(
     if (stillSelectingFlag) {
         [self.enclosingScrollView.verticalRulerView setNeedsDisplay:YES];
+    }
+}
+
+- (NSRange)rangeForUserCompletion {
+    NSRange range = [super rangeForUserCompletion];
+    
+    if (range.location != NSNotFound)
+        return [self.string WC_symbolRangeForRange:range];
+    
+    return range;
+}
+
+- (void)insertCompletion:(NSString *)word forPartialWordRange:(NSRange)charRange movement:(NSInteger)movement isFinal:(BOOL)flag {
+    if (flag && movement != NSCancelTextMovement) {
+        Symbol *symbol = [(WCCompletionString *)word symbol];
+        NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:symbol.name attributes:self.typingAttributes];
+        
+        if (symbol.type.intValue == SymbolTypeMacro) {
+            NSArray *arguments = [[(Macro *)symbol arguments] componentsSeparatedByString:@","];
+            
+            if (arguments.count) {
+                NSMutableAttributedString *argumentString = [[NSMutableAttributedString alloc] initWithString:@"(" attributes:self.typingAttributes];
+                
+                [arguments enumerateObjectsUsingBlock:^(NSString *argument, NSUInteger argumentIndex, BOOL *stop) {
+                    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                    
+                    [attachment setAttachmentCell:[[WCArgumentPlaceholderCell alloc] initTextCell:[argument stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
+                    
+                    [argumentString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+                    
+                    if (argumentIndex == arguments.count - 1)
+                        [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@")" attributes:self.typingAttributes]];
+                    else
+                        [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@"," attributes:self.typingAttributes]];
+                }];
+                
+                [string appendAttributedString:argumentString];
+            }
+        }
+        
+        if ([self shouldChangeTextInRange:charRange replacementString:string.string]) {
+            [self.textStorage replaceCharactersInRange:charRange withAttributedString:string];
+            [self didChangeText];
+            
+            NSRange lineRange = [self.string lineRangeForRange:charRange];
+            
+            [self.textStorage enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(charRange.location, NSMaxRange(lineRange) - charRange.location) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(id value, NSRange range, BOOL *stop) {
+                if (value) {
+                    id cell = [(NSTextAttachment *)value attachmentCell];
+                    
+                    if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
+                        [self setSelectedRange:range];
+                        *stop = YES;
+                    }
+                }
+            }];
+        }
     }
 }
 

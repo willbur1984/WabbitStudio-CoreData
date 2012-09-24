@@ -20,6 +20,8 @@
 #import "WCJumpBarComponentCell.h"
 #import "WCSymbolScanner.h"
 #import "WCSymbolImageManager.h"
+#import "WCCompletionString.h"
+#import "WCArgumentPlaceholderCell.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource>
 
@@ -30,7 +32,7 @@
 @end
 
 @implementation WCTextViewController
-
+#pragma mark *** Subclass Overrides ***
 - (NSString *)nibName {
     return @"WCTextView";
 }
@@ -51,11 +53,51 @@
     [self.textView setDelegate:self];
     [self.jumpBarControl setDataSource:self];
 }
-
+#pragma mark NSTextViewDelegate
 - (void)textViewDidChangeSelection:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
 }
 
+- (NSArray *)textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    if (charRange.length)
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",[textView.string substringWithRange:charRange]]];
+    
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)], [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES] ]];
+    
+    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
+    NSArray *symbols = [symbolScanner.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:symbols.count];
+    
+    for (Symbol *symbol in symbols) {
+        WCCompletionString *string = [[WCCompletionString alloc] initWithSymbol:symbol];
+        
+        [retval addObject:string];
+    }
+    
+    return retval;
+}
+
+- (void)textView:(NSTextView *)textView clickedOnCell:(id<NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
+    if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
+        [textView setSelectedRange:NSMakeRange(charIndex, 1)];
+    }
+}
+- (void)textView:(NSTextView *)textView doubleClickedOnCell:(id<NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
+    if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
+        WCArgumentPlaceholderCell *placeholderCell = (WCArgumentPlaceholderCell *)cell;
+        
+        [textView insertText:placeholderCell.stringValue replacementRange:NSMakeRange(charIndex, 1)];
+        [textView setSelectedRange:NSMakeRange(charIndex, placeholderCell.stringValue.length)];
+    }
+}
+
+#pragma mark WCTextViewDelegate
+- (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
+    return [self.delegate symbolScannerForTextViewController:self];
+}
+#pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     NSURL *fileURL = [self.delegate fileURLForTextViewController:self];
     NSArray *pathComponents = fileURL.pathComponents;
@@ -92,10 +134,6 @@
     [cell setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
     
     return cell;
-}
-
-- (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
-    return [self.delegate symbolScannerForTextViewController:self];
 }
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {

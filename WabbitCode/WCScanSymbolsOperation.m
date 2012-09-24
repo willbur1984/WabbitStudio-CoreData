@@ -106,6 +106,14 @@
             [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
             [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+            
+            NSRange lineRange = [self.string lineRangeForRange:result.range];
+            NSRange parensRange = NSMakeRange(NSMaxRange(result.range), NSMaxRange(lineRange) - NSMaxRange(result.range));
+            NSString *parensString = [self.string substringWithRange:parensRange];
+            NSTextCheckingResult *parensResult = [[NSRegularExpression regularExpressionWithPattern:@"^\\((.+?)\\)" options:0 error:NULL] firstMatchInString:parensString options:0 range:NSMakeRange(0, parensRange.length)];
+            
+            if (parensResult)
+                [entity setArguments:[parensString substringWithRange:[parensResult rangeAtIndex:1]]];
         }];
         
         [self.managedObjectContext save:NULL];
