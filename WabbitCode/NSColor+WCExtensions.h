@@ -17,4 +17,6 @@
 
 + (NSColor *)WC_colorWithHexadecimalString:(NSString *)string;
 
+- (CGColorRef)WC_CGColorCreate;
+
 @end

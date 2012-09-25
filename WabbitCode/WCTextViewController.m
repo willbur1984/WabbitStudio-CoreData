@@ -51,32 +51,14 @@
     [self.textView.enclosingScrollView setRulersVisible:YES];
     
     [self.textView setDelegate:self];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
+    
     [self.jumpBarControl setDataSource:self];
 }
 #pragma mark NSTextViewDelegate
 - (void)textViewDidChangeSelection:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
-}
-
-- (NSArray *)textView:(NSTextView *)textView completions:(NSArray *)words forPartialWordRange:(NSRange)charRange indexOfSelectedItem:(NSInteger *)index {
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
-    
-    if (charRange.length)
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",[textView.string substringWithRange:charRange]]];
-    
-    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)], [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES] ]];
-    
-    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
-    NSArray *symbols = [symbolScanner.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:symbols.count];
-    
-    for (Symbol *symbol in symbols) {
-        WCCompletionString *string = [[WCCompletionString alloc] initWithSymbol:symbol];
-        
-        [retval addObject:string];
-    }
-    
-    return retval;
 }
 
 - (void)textView:(NSTextView *)textView clickedOnCell:(id<NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
@@ -157,6 +139,38 @@
 
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
+}
+- (void)_textStorageDidProcessEditing:(NSNotification *)note {
+    if (self.textView.window.firstResponder != self.textView)
+        return;
+    else if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
+        return;
+    else if ([self.textView.undoManager isRedoing] ||
+        [self.textView.undoManager isUndoing] ||
+        [note.object changeInLength] != 1) {
+        
+        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
+        return;
+    }
+    
+    static NSCharacterSet *kLegalCharacters;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableCharacterSet *temp = [[NSCharacterSet letterCharacterSet] mutableCopy];
+        
+        [temp formUnionWithCharacterSet:[NSCharacterSet decimalDigitCharacterSet]];
+        [temp formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"_!?.#"]];
+        
+        kLegalCharacters = [temp copy];
+    });
+    
+    if (![kLegalCharacters characterIsMember:[self.textView.string characterAtIndex:[note.object editedRange].location]]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
+        return;
+    }
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
+    [self.textView performSelector:@selector(complete:) withObject:nil afterDelay:0.35];
 }
 
 @end

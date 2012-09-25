@@ -15,6 +15,10 @@
 
 @interface NSString (WCExtensions)
 
++ (NSString *)WC_UUIDString;
+
 - (NSRange)WC_symbolRangeForRange:(NSRange)range;
+
+- (NSUInteger)WC_lineNumberForRange:(NSRange)range;
 
 @end

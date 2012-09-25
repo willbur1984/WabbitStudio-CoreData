@@ -16,6 +16,15 @@
 
 @implementation NSString (WCExtensions)
 
++ (NSString *)WC_UUIDString; {
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *retval = (__bridge_transfer NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+    
+    CFRelease(uuid);
+    
+    return retval;
+}
+
 - (NSRange)WC_symbolRangeForRange:(NSRange)range; {
     __block NSRange retval = NSMakeRange(NSNotFound, 0);
     
@@ -24,6 +33,21 @@
             retval = result.range;
             *stop = YES;
         }
+    }];
+    
+    return retval;
+}
+
+- (NSUInteger)WC_lineNumberForRange:(NSRange)range; {
+    __block NSUInteger retval = 0;
+    
+    [self enumerateSubstringsInRange:NSMakeRange(0, self.length) options:NSStringEnumerationByLines|NSStringEnumerationSubstringNotRequired usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+        if (NSLocationInRange(range.location, enclosingRange)) {
+            *stop = YES;
+            return;
+        }
+        
+        retval++;
     }];
     
     return retval;

@@ -50,8 +50,6 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     [self.managedObjectContext setUndoManager:nil];
     
-    [self scanSymbols];
-    
     return self;
 }
 
@@ -59,6 +57,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.managedObjectContext reset];
     
     WCScanSymbolsOperation *operation = [[WCScanSymbolsOperation alloc] initWithSymbolScanner:self];
+    
     __block typeof (self) blockSelf = self;
     
     [operation setCompletionBlock:^{
@@ -93,6 +92,17 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
+- (NSArray *)symbolsWithPrefix:(NSString *)prefix; {    
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    if (prefix.length)
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",prefix]];
+    
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)], [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES]]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+
 + (NSRegularExpression *)symbolRegex; {
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
@@ -100,6 +110,12 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
         retval = [[NSRegularExpression alloc] initWithPattern:@"[A-Za-z0-9_!?.]+" options:0 error:NULL];
     });
     return retval;
+}
+
+- (void)setDelegate:(id<WCSymbolScannerDelegate>)delegate {
+    _delegate = delegate;
+    
+    [self scanSymbols];
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {

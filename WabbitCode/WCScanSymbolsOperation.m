@@ -14,17 +14,20 @@
 #import "WCScanSymbolsOperation.h"
 #import "WCSymbolScanner.h"
 #import "WCSyntaxHighlighter.h"
+#import "NSString+WCExtensions.h"
 #import "WCDefines.h"
 #import "Label.h"
 #import "Equate.h"
 #import "Define.h"
 #import "Macro.h"
+#import "File.h"
 
 @interface WCScanSymbolsOperation ()
 @property (copy,nonatomic) NSString *string;
 @property (strong) NSManagedObjectContext *managedObjectContext;
 @property (assign,getter = isExecuting) BOOL executing;
 @property (assign,getter = isFinished) BOOL finished;
+@property (copy,nonatomic) NSURL *fileURL;
 @end
 
 @implementation WCScanSymbolsOperation
@@ -34,6 +37,7 @@
         return nil;
     
     [self setString:symbolScanner.textStorage.string];
+    [self setFileURL:[symbolScanner.delegate fileURLForSymbolScanner:symbolScanner]];
     [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType]];
     [self.managedObjectContext setParentContext:symbolScanner.managedObjectContext];
     [self.managedObjectContext setUndoManager:nil];
@@ -58,6 +62,11 @@
     [self didChangeValueForKey:@"isExecuting"];
     
     [self.managedObjectContext performBlock:^{
+        File *file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+        
+        [file setIdentifier:[NSString WC_UUIDString]];
+        [file setPath:self.fileURL.path];
+        
         [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
             
@@ -65,6 +74,8 @@
             [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
             [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+            [entity setFile:file];
         }];
         
         [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -88,6 +99,8 @@
             [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange(result.range)];
             [entity setName:[self.string substringWithRange:result.range]];
+            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+            [entity setFile:file];
         }];
         
         [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -97,6 +110,8 @@
             [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
             [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+            [entity setFile:file];
         }];
         
         [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -106,6 +121,8 @@
             [entity setLocation:@(result.range.location)];
             [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
             [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+            [entity setFile:file];
             
             NSRange lineRange = [self.string lineRangeForRange:result.range];
             NSRange parensRange = NSMakeRange(NSMaxRange(result.range), NSMaxRange(lineRange) - NSMaxRange(result.range));

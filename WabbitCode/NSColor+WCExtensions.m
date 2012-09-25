@@ -56,4 +56,19 @@
     return nil;
 }
 
+- (CGColorRef)WC_CGColorCreate; {
+    NSColor *color = [self colorUsingColorSpaceName:NSDeviceRGBColorSpace];
+    
+    CGFloat components[4];
+    
+    [color getRed:&components[0] green:&components[1] blue:&components[2] alpha:&components[3]];
+    
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorRef retval = CGColorCreate(colorSpace, components);
+    
+    CGColorSpaceRelease(colorSpace);
+    
+    return retval;
+}
+
 @end

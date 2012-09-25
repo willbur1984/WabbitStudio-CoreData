@@ -11,8 +11,9 @@
 #import "WCTextViewController.h"
 #import "WCSyntaxHighlighter.h"
 #import "WCSymbolScanner.h"
+#import "WCDefines.h"
 
-@interface WCSourceFileDocument () <WCTextViewControllerDelegate>
+@interface WCSourceFileDocument () <WCTextViewControllerDelegate,WCSymbolScannerDelegate>
 
 @property (strong,nonatomic) NSTextStorage *textStorage;
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
@@ -32,6 +33,7 @@
     [self setTextStorage:[[NSTextStorage alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
+    [self.symbolScanner setDelegate:self];
     
     return self;
 }
@@ -66,6 +68,7 @@
     [self setTextStorage:[[NSTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
+    [self.symbolScanner setDelegate:self];
     
     [self.undoManager enableUndoRegistration];
     
@@ -80,6 +83,10 @@
     return self.symbolScanner;
 }
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
+    return self.fileURL;
+}
+
+- (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {
     return self.fileURL;
 }
 
