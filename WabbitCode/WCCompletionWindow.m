@@ -66,7 +66,6 @@
     [self.scrollView setHasVerticalScroller:YES];
     [self.scrollView setAutohidesScrollers:YES];
     [self.scrollView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-    [self.scrollView setScrollerStyle:NSScrollerStyleOverlay];
     [self setContentView:self.scrollView];
 
     [self setTableView:[[WCTableView alloc] initWithFrame:NSZeroRect]];
@@ -139,6 +138,7 @@
         return;
     
     [self setTextView:textView];
+    [self.textView.window addChildWindow:self ordered:NSWindowAbove];
     
     NSRange completionRange = self.textView.rangeForUserCompletion;
     NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:(completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange]];
@@ -243,6 +243,13 @@
 }
 
 - (void)hideCompletionWindow; {
+    [self.textView.window removeChildWindow:self];
+    [self setTextView:nil];
+    [self setEventMonitor:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
+    
     __block typeof (self) blockSelf = self;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
@@ -253,12 +260,6 @@
         [blockSelf orderOut:nil];
         [blockSelf setCompletionItems:nil];
     }];
-    
-    [self setTextView:nil];
-    [self setEventMonitor:nil];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
 }
 #pragma mark *** Private Methods ***
 - (void)_insertSymbol:(Symbol *)symbol; {

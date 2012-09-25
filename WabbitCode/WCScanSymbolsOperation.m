@@ -62,10 +62,20 @@
     [self didChangeValueForKey:@"isExecuting"];
     
     [self.managedObjectContext performBlock:^{
-        File *file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
         
-        [file setIdentifier:[NSString WC_UUIDString]];
+        File *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+        
+        if (!file) {
+            file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+            
+            [file setIdentifier:[NSString WC_UUIDString]];
+        }
+        
         [file setPath:self.fileURL.path];
+        
+        for (Symbol *symbol in file.symbols)
+            [self.managedObjectContext deleteObject:symbol];
         
         [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
@@ -86,7 +96,7 @@
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
             
             [fetchRequest setResultType:NSCountResultType];
-            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %lu",result.range.location]];
+            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %@",@(result.range.location)]];
             
             NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
             
