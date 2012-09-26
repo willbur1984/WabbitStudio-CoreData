@@ -68,14 +68,14 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     __block typeof (self) blockSelf = self;
     
     [operation setCompletionBlock:^{
-        WCLog();
-        
         [blockSelf setScanning:NO];
         
         [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:blockSelf];
         
-        if (blockSelf.needsToScan)
+        if (blockSelf.needsToScan) {
+            [blockSelf setNeedsToScan:NO];
             [blockSelf scanSymbols];
+        }
     }];
     
     [self.operationQueue addOperation:operation];
@@ -130,6 +130,13 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     _delegate = delegate;
     
     [self scanSymbols];
+}
+- (NSArray *)symbolsSortedByLocation {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {

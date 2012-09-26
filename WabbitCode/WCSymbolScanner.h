@@ -24,6 +24,7 @@ extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
 
 @property (readonly,weak,nonatomic) NSTextStorage *textStorage;
 @property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly,nonatomic) NSArray *symbolsSortedByLocation;
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 
