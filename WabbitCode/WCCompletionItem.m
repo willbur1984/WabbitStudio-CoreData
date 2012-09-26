@@ -55,7 +55,7 @@
         }
     }
     
-    [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
+    [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),symbol.file.path.lastPathComponent,symbol.lineNumber.longValue + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
     
     [self setDisplayString:string];
     

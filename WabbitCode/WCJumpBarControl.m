@@ -20,6 +20,7 @@
 
 @property (strong,nonatomic) NSMenu *contextualMenu;
 @property (strong,nonatomic) WCJumpBarComponentCell *clickedJumpBarComponentCell;
+@property (strong,nonatomic) NSMutableDictionary *toolTipTagsToStrings;
 
 @end
 
@@ -34,16 +35,44 @@
         return nil;
     
     [self setRefusesFirstResponder:YES];
-    [self.cell setEditable:NO];
     [self setTarget:self];
     [self setAction:@selector(_jumpBarControlAction:)];
     [self setContextualMenu:[[NSMenu alloc] initWithTitle:@""]];
     [self.contextualMenu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]]];
     [self.contextualMenu setDelegate:self];
+    [self setToolTipTagsToStrings:[NSMutableDictionary dictionaryWithCapacity:0]];
     
     return self;
 }
 
+- (void)updateTrackingAreas {
+    [super updateTrackingAreas];
+    
+    if (self.toolTipTagsToStrings.count) {
+        for (NSNumber *tag in self.toolTipTagsToStrings.allKeys)
+            [self removeToolTip:tag.integerValue];
+        
+        [self.toolTipTagsToStrings removeAllObjects];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(jumpBarControl:toolTipForPathComponentCell:atIndex:)]) {
+        [self.pathComponentCells enumerateObjectsUsingBlock:^(WCJumpBarComponentCell *cell, NSUInteger cellIndex, BOOL *stop) {
+            NSString *toolTip = [self.delegate jumpBarControl:self toolTipForPathComponentCell:cell atIndex:cellIndex];
+            
+            if (toolTip) {
+                NSRect cellRect = [self.cell rectOfPathComponentCell:cell withFrame:self.bounds inView:self];
+                NSToolTipTag tag = [self addToolTipRect:cellRect owner:self userData:NULL];
+                
+                [self.toolTipTagsToStrings setObject:toolTip forKey:@(tag)];
+            }
+        }];
+    }
+}
+#pragma mark NSToolTipOwner
+- (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)data {
+    return [self.toolTipTagsToStrings objectForKey:@(tag)];
+}
+#pragma mark NSMenuDelegate
 - (NSInteger)numberOfItemsInMenu:(NSMenu *)menu {
     return [self.delegate jumpBarControl:self numberOfItemsInMenuForPathComponentCell:self.clickedJumpBarComponentCell];
 }
@@ -57,30 +86,37 @@
     
     return YES;
 }
-
+#pragma mark *** Public Methods ***
+- (void)reloadPathComponentCells; {
+    NSMutableArray *cells = [NSMutableArray arrayWithArray:[self.dataSource jumpBarComponentCellsForJumpBarControl:self]];
+    
+    [cells addObject:[self.dataSource symbolPathComponentCellForJumpBarControl:self]];
+    
+    [self setPathComponentCells:cells];
+}
+- (void)reloadSymbolPathComponentCell; {
+    NSMutableArray *temp = [self.pathComponentCells mutableCopy];
+    
+    [temp replaceObjectAtIndex:temp.count - 1 withObject:[self.dataSource symbolPathComponentCellForJumpBarControl:self]];
+    
+    [self setPathComponentCells:temp];
+}
+#pragma mark Properties
 - (void)setDataSource:(id<WCJumpBarControlDataSource>)dataSource {
     _dataSource = dataSource;
     
     [self reloadPathComponentCells];
 }
+
 - (id<WCJumpBarControlDelegate>)delegate {
     return (id<WCJumpBarControlDelegate>)[super delegate];
 }
 - (void)setDelegate:(id<WCJumpBarControlDelegate>)delegate {
     [super setDelegate:delegate];
 }
+#pragma mark *** Private Methods ***
 
-- (void)reloadPathComponentCells; {
-    [self setPathComponentCells:[self.dataSource jumpBarComponentCellsForJumpBarControl:self]];
-}
-- (void)reloadSymbolPathComponentCell; {
-    NSMutableArray *temp = [self.pathComponentCells mutableCopy];
-
-    [temp replaceObjectAtIndex:temp.count - 1 withObject:[self.dataSource symbolPathComponentCellForJumpBarControl:self]];
-    
-    [self setPathComponentCells:temp];
-}
-
+#pragma mark Actions
 - (IBAction)_jumpBarControlAction:(WCJumpBarControl *)sender {
     WCJumpBarComponentCell *cell = (WCJumpBarComponentCell *)sender.clickedPathComponentCell;
     

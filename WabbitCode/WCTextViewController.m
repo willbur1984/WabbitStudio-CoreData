@@ -23,6 +23,7 @@
 #import "WCArgumentPlaceholderCell.h"
 #import "Symbol.h"
 #import "NSArray+WCExtensions.h"
+#import "File.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate>
 
@@ -86,23 +87,13 @@
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     NSURL *fileURL = [self.delegate fileURLForTextViewController:self];
-    NSArray *pathComponents = fileURL.pathComponents;
-    NSString *currentPath = @"";
-    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:pathComponents.count];
+    WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
+    NSImage *image;
     
-    for (NSString *pathComponent in pathComponents) {
-        currentPath = [currentPath stringByAppendingPathComponent:pathComponent];
-        
-        WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:pathComponent];
-        
-        [cell setImage:[[NSWorkspace sharedWorkspace] iconForFile:currentPath]];
-        
-        [retval addObject:cell];
-    }
+    if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL])
+        [cell setImage:image];
     
-    [retval addObject:[self symbolPathComponentCellForJumpBarControl:jumpBarControl]];
-    
-    return retval;
+    return @[ cell ];
 }
 - (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
@@ -118,6 +109,7 @@
     cell = [[WCJumpBarComponentCell alloc] initTextCell:symbol.name];
     
     [cell setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+    [cell setRepresentedObject:symbol];
     
     return cell;
 }
@@ -151,6 +143,17 @@
     
     [self.textView setSelectedRange:NSRangeFromString(symbol.range)];
     [self.textView scrollRangeToVisible:self.textView.selectedRange];
+}
+
+- (NSString *)jumpBarControl:(WCJumpBarControl *)jumpBarControl toolTipForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell atIndex:(NSUInteger)index {
+    if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell) {
+        Symbol *symbol = pathComponentCell.representedObject;
+        
+        if (symbol)
+            return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.longValue];
+        return nil;
+    }
+    return [self.delegate fileURLForTextViewController:self].path;
 }
 
 #pragma mark *** Public Methods ***

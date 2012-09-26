@@ -15,10 +15,24 @@
 #import "WCJumpBarComponentCell.h"
 #import "WCDefines.h"
 
+@interface WCJumpBarCell ()
+
+@end
+
 @implementation WCJumpBarCell
 
 + (Class)pathComponentCellClass {
     return [WCJumpBarComponentCell class];
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (!(self = [super initWithCoder:aDecoder]))
+        return nil;
+    
+    [self setEditable:NO];
+    [self setSelectable:NO];
+    
+    return self;
 }
 
 @end
