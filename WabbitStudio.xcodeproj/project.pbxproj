@@ -25,7 +25,6 @@
 		7903F1F6160FAE08000D3F3D /* WCSymbolImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */; };
 		7903F1FA160FB323000D3F3D /* NSBezierPath+StrokeExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */; };
 		7903F1FE160FB810000D3F3D /* Macro.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1FD160FB810000D3F3D /* Macro.m */; };
-		7903F204160FD713000D3F3D /* WCCompletionString.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F203160FD712000D3F3D /* WCCompletionString.m */; };
 		7903F207160FDE9E000D3F3D /* WCArgumentPlaceholderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */; };
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
@@ -87,8 +86,6 @@
 		7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+StrokeExtensions.m"; sourceTree = "<group>"; };
 		7903F1FC160FB810000D3F3D /* Macro.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macro.h; sourceTree = "<group>"; };
 		7903F1FD160FB810000D3F3D /* Macro.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Macro.m; sourceTree = "<group>"; };
-		7903F202160FD712000D3F3D /* WCCompletionString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionString.h; sourceTree = "<group>"; };
-		7903F203160FD712000D3F3D /* WCCompletionString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionString.m; sourceTree = "<group>"; };
 		7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCArgumentPlaceholderCell.h; sourceTree = "<group>"; };
 		7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCArgumentPlaceholderCell.m; sourceTree = "<group>"; };
 		79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSParagraphStyle+WCExtensions.h"; sourceTree = "<group>"; };
@@ -307,8 +304,6 @@
 				79129119160ABD5100ADFAB5 /* WCTextView.m */,
 				7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */,
 				7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */,
-				7903F202160FD712000D3F3D /* WCCompletionString.h */,
-				7903F203160FD712000D3F3D /* WCCompletionString.m */,
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
 				7973D6D2160CF7F4004EDE62 /* WCViewController.h */,
@@ -455,7 +450,6 @@
 				7903F1F6160FAE08000D3F3D /* WCSymbolImageManager.m in Sources */,
 				7903F1FA160FB323000D3F3D /* NSBezierPath+StrokeExtensions.m in Sources */,
 				7903F1FE160FB810000D3F3D /* Macro.m in Sources */,
-				7903F204160FD713000D3F3D /* WCCompletionString.m in Sources */,
 				7903F207160FDE9E000D3F3D /* WCArgumentPlaceholderCell.m in Sources */,
 				79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */,
 				79C92CEA1611136900BB6CDC /* File.m in Sources */,

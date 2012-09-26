@@ -20,7 +20,6 @@
 #import "WCJumpBarComponentCell.h"
 #import "WCSymbolScanner.h"
 #import "WCSymbolImageManager.h"
-#import "WCCompletionString.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "Symbol.h"
 #import "NSArray+WCExtensions.h"

@@ -17,7 +17,6 @@
 #import "WCSymbolScanner.h"
 #import "WCDefines.h"
 #import "NSString+WCExtensions.h"
-#import "WCCompletionString.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "Macro.h"
 #import "WCCompletionWindow.h"
