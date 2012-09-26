@@ -16,14 +16,27 @@
 @implementation WCJumpBarBackgroundView
 
 - (void)drawRect:(NSRect)dirtyRect {
-    NSGradient *gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:174.0/255.0 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:211.0/255.0 alpha:1.0]];
+    static NSGradient *gradient, *keyGradient;
+    static NSColor *fillColor, *keyFillColor;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:209.0/255.0 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:244.0/255.0 alpha:1.0]];
+        keyGradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:174.0/255.0 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:211.0/255.0 alpha:1.0]];
+        keyFillColor = [NSColor colorWithCalibratedWhite:67.0/255.0 alpha:1.0];
+        fillColor = [NSColor colorWithCalibratedWhite:109.0/255.0 alpha:1.0];
+    });
     
-    [gradient drawInRect:self.bounds angle:90];
     
-    [[NSColor colorWithCalibratedWhite:67.0/255.0 alpha:1.0] setFill];
+    if (self.window.isKeyWindow) {
+        [keyGradient drawInRect:self.bounds angle:90];
+        [keyFillColor setFill];
+    }
+    else {
+        [gradient drawInRect:self.bounds angle:90];
+        [fillColor setFill];
+    }
+    
     NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMinY(self.bounds), NSWidth(self.bounds), 1));
-    
-    [super drawRect:dirtyRect];
 }
 
 @end

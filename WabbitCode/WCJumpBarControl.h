@@ -14,11 +14,12 @@
 #import <Cocoa/Cocoa.h>
 #import "Symbol.h"
 
-@protocol WCJumpBarControlDataSource;
+@protocol WCJumpBarControlDataSource,WCJumpBarControlDelegate;
 
 @interface WCJumpBarControl : NSPathControl
 
 @property (assign,nonatomic) id <WCJumpBarControlDataSource> dataSource;
+@property (assign,nonatomic) id <WCJumpBarControlDelegate> delegate;
 
 - (void)reloadPathComponentCells;
 - (void)reloadSymbolPathComponentCell;
@@ -30,4 +31,15 @@
 @protocol WCJumpBarControlDataSource <NSObject>
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
 - (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
+@end
+
+@protocol WCJumpBarControlDelegate <NSPathControlDelegate>
+@required
+- (BOOL)jumpBarControl:(WCJumpBarControl *)jumpBarControl shouldPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
+- (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl numberOfItemsInMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl updateItem:(NSMenuItem *)item atIndex:(NSInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
+@optional
+- (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl highlightedItemIndexForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl menuDidCloseForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl didSelectItem:(NSMenuItem *)item atIndex:(NSUInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;;
 @end

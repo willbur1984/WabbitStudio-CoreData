@@ -22,13 +22,17 @@
 #import "WCSymbolImageManager.h"
 #import "WCCompletionString.h"
 #import "WCArgumentPlaceholderCell.h"
+#import "Symbol.h"
+#import "NSArray+WCExtensions.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate>
 
 @property (assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 
 @property (weak,nonatomic) NSTextStorage *textStorage;
+
+@property (strong,nonatomic) NSArray *jumpBarControlMenuSymbols;
 @end
 
 @implementation WCTextViewController
@@ -55,6 +59,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
     
     [self.jumpBarControl setDataSource:self];
+    [self.jumpBarControl setDelegate:self];
 }
 #pragma mark NSTextViewDelegate
 - (void)textViewDidChangeSelection:(NSNotification *)note {
@@ -117,7 +122,39 @@
     
     return cell;
 }
+#pragma mark WCJumpBarControlDelegate
+- (BOOL)jumpBarControl:(WCJumpBarControl *)jumpBarControl shouldPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    return (jumpBarControl.pathComponentCells.lastObject == pathComponentCell);
+}
+- (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl numberOfItemsInMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    if (!self.jumpBarControlMenuSymbols) {
+        WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
+        
+        [self setJumpBarControlMenuSymbols:symbolScanner.symbolsSortedByLocation];
+    }
+    return self.jumpBarControlMenuSymbols.count;
+}
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl updateItem:(NSMenuItem *)item atIndex:(NSInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
+    
+    [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+    [item setTitle:symbol.name];
+}
 
+- (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl highlightedItemIndexForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    return [self.jumpBarControlMenuSymbols WC_symbolIndexForRange:self.textView.selectedRange];
+}
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl menuDidCloseForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    [self setJumpBarControlMenuSymbols:nil];
+}
+- (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl didSelectItem:(NSMenuItem *)item atIndex:(NSUInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
+    
+    [self.textView setSelectedRange:NSRangeFromString(symbol.range)];
+    [self.textView scrollRangeToVisible:self.textView.selectedRange];
+}
+
+#pragma mark *** Public Methods ***
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
     if (!(self = [super init]))
         return nil;
