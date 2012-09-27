@@ -17,5 +17,6 @@
 
 - (NSUInteger)WC_lineNumberForRange:(NSRange)range;
 - (NSUInteger)WC_symbolIndexForRange:(NSRange)range;
+- (NSRange)WC_rangeForRange:(NSRange)range;
 
 @end

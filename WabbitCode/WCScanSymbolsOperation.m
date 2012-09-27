@@ -15,6 +15,7 @@
 #import "WCSymbolScanner.h"
 #import "WCSyntaxHighlighter.h"
 #import "NSString+WCExtensions.h"
+#import "NSArray+WCExtensions.h"
 #import "WCDefines.h"
 #import "Label.h"
 #import "Equate.h"
@@ -77,12 +78,10 @@
         for (Symbol *symbol in file.symbols)
             [self.managedObjectContext deleteObject:symbol];
         
+        NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
         NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
         
-        [[WCSyntaxHighlighter commentRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            [comments addObject:[NSValue valueWithRange:result.range]];
-        }];
-        [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [commentRegex enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             [comments addObject:[NSValue valueWithRange:result.range]];
         }];
         
@@ -98,6 +97,11 @@
         }];
         
         [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSRange commentRange = [comments WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, commentRange))
+                return;
+            
             Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
             
             [entity setType:@(SymbolTypeEquate)];
@@ -111,6 +115,11 @@
         [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             if (result.range.length == 1 &&
                 [self.string characterAtIndex:result.range.location] == '_')
+                return;
+            
+            NSRange commentRange = [comments WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, commentRange))
                 return;
             
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
@@ -134,6 +143,11 @@
         }];
         
         [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSRange commentRange = [comments WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, commentRange))
+                return;
+            
             Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:self.managedObjectContext];
             
             [entity setType:@(SymbolTypeDefine)];
@@ -145,6 +159,11 @@
         }];
         
         [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSRange commentRange = [comments WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, commentRange))
+                return;
+            
             Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:self.managedObjectContext];
             
             [entity setType:@(SymbolTypeMacro)];

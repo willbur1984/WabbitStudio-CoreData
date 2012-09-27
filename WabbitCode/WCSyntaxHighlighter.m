@@ -134,7 +134,7 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#comment.*?#endcomment" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
     });
     return retval;
 }

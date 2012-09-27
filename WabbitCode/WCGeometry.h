@@ -36,6 +36,8 @@ static inline NSRect WC_NSRectCenterY(NSRect rectToCenter, NSRect inRect) {
 static const NSSize WC_NSSmallSize = {16,16};
 static const NSSize WC_NSMediumSize = {24,24};
 
+static const NSRange WC_NSNotFoundRange = {NSNotFound,0};
+
 #endif
 
 #endif

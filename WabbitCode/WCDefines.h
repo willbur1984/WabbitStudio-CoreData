@@ -48,6 +48,7 @@
 
 #define WCLogNSRect(rectToLog) WCLogObject(NSStringFromRect(rectToLog))
 #define WCLogNSPoint(pointToLog) WCLogObject(NSStringFromPoint(pointToLog))
+#define WCLogNSRange(rangeToLog) WCLogObject(NSStringFromRange(rangeToLog))
 
 #ifdef DEBUG
 

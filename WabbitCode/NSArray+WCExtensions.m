@@ -13,6 +13,7 @@
 
 #import "NSArray+WCExtensions.h"
 #import "Symbol.h"
+#import "WCGeometry.h"
 
 @implementation NSArray (WCExtensions)
 
@@ -48,6 +49,23 @@
             return middle;
     }
     return left;
+}
+
+- (NSRange)WC_rangeForRange:(NSRange)range; {
+    NSUInteger left = 0, right = self.count, middle, lineStartIndex;
+    
+    while ((right - left) > 1) {
+        middle = (right + left) / 2;
+        lineStartIndex = [[self objectAtIndex:middle] rangeValue].location;
+        
+        if (range.location < lineStartIndex)
+            right = middle;
+        else if (range.location > lineStartIndex)
+            left = middle;
+        else
+            return [[self objectAtIndex:middle] rangeValue];
+    }
+    return (self.count) ? [[self objectAtIndex:left] rangeValue] : WC_NSNotFoundRange;
 }
 
 @end
