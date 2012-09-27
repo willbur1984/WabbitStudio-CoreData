@@ -64,7 +64,7 @@ static const CGFloat kDefaultThickness = 30;
     [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
     NSRectFill(dividerRect);
     
-    [self drawCurrentLineHighlightInRect:rect];
+    //[self drawCurrentLineHighlightInRect:rect];
     [self drawLineNumbersInRect:rect];
 }
 
