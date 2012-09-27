@@ -24,19 +24,29 @@
 #import "Symbol.h"
 #import "NSArray+WCExtensions.h"
 #import "File.h"
+#import "NSURL+WCExtensions.h"
+#import "WCGeometry.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,NSMenuDelegate>
 
 @property (assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
+@property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
 
 @property (weak,nonatomic) NSTextStorage *textStorage;
 
 @property (strong,nonatomic) NSArray *jumpBarControlMenuSymbols;
+
+@property (strong,nonatomic) NSArray *recentFileURLs;
+@property (weak,nonatomic) NSMenu *recentFilesMenu;
 @end
 
 @implementation WCTextViewController
 #pragma mark *** Subclass Overrides ***
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (NSString *)nibName {
     return @"WCTextView";
 }
@@ -44,6 +54,7 @@
 - (void)loadView {
     [super loadView];
     
+    // text view
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
@@ -58,9 +69,73 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
     
+    // jump bar control
     [self.jumpBarControl setDataSource:self];
     [self.jumpBarControl setDelegate:self];
+    
+    // related files pop up button
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@"org.revsoft.text-view-controller.related-files-menu"];
+    NSMenuItem *actionItem = [menu addItemWithTitle:@"" action:NULL keyEquivalent:@""];
+    
+    [actionItem setImage:[NSImage imageNamed:NSImageNameActionTemplate]];
+    [actionItem setHidden:YES];
+    
+    NSMenuItem *recentFilesItem = [menu addItemWithTitle:NSLocalizedString(@"Recent Files", nil) action:NULL keyEquivalent:@""];
+    NSMenu *recentFilesMenu = [[NSMenu alloc] initWithTitle:@"org.revsoft.text-view-controller.related-files.recent-files-menu"];
+    
+    [self setRecentFilesMenu:recentFilesMenu];
+    [self.recentFilesMenu setDelegate:self];
+    [recentFilesItem setSubmenu:self.recentFilesMenu];
+    
+    [self.relatedFilesPopUpButton setMenu:menu];
 }
+
+#pragma mark NSMenuDelegate
+- (NSInteger)numberOfItemsInMenu:(NSMenu *)menu {
+    if (menu == self.recentFilesMenu) {
+        if (!self.recentFileURLs) {
+            [self setRecentFileURLs:[[NSDocumentController sharedDocumentController] recentDocumentURLs]];
+        }
+        return self.recentFileURLs.count;
+    }
+    return 0;
+}
+- (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(NSInteger)index shouldCancel:(BOOL)shouldCancel {
+    if (menu == self.recentFilesMenu) {
+        NSURL *recentURL = [self.recentFileURLs objectAtIndex:index];
+        
+        [item setTitle:recentURL.lastPathComponent];
+        [item setImage:[recentURL WC_effectiveIcon]];
+        [item.image setSize:WC_NSSmallSize];
+        [item setTarget:self];
+        [item setTag:index];
+        [item setAction:@selector(_recentFilesMenuItemAction:)];
+    }
+    return YES;
+}
+
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(__autoreleasing id *)target action:(SEL *)action {
+    *target = nil;
+    *action = NULL;
+    return NO;
+}
+- (void)menu:(NSMenu *)menu willHighlightItem:(NSMenuItem *)item {
+    if (menu == self.recentFilesMenu) {
+        NSMenuItem *highlightedItem = menu.highlightedItem;
+        
+        [highlightedItem setRepresentedObject:nil];
+        
+        if (item) {
+            NSURL *recentURL = [self.recentFileURLs objectAtIndex:item.tag];
+            
+            [item setRepresentedObject:recentURL];
+        }
+    }
+}
+- (void)menuDidClose:(NSMenu *)menu {
+    [self setRecentFileURLs:nil];
+}
+
 #pragma mark NSTextViewDelegate
 - (void)textViewDidChangeSelection:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
@@ -175,7 +250,17 @@
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForTextViewController:self]];
     }
 }
+#pragma mark *** Private Methods ***
 
+#pragma mark Actions
+- (IBAction)_recentFilesMenuItemAction:(NSMenuItem *)sender {
+    NSURL *recentURL = sender.representedObject;
+    
+    if (recentURL)
+        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:recentURL display:YES completionHandler:nil];
+}
+
+#pragma mark Notifications
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
 }

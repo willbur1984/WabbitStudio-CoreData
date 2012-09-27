@@ -86,6 +86,12 @@
     
     return YES;
 }
+
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(__autoreleasing id *)target action:(SEL *)action {
+    *target = nil;
+    *action = NULL;
+    return NO;
+}
 #pragma mark *** Public Methods ***
 - (void)reloadPathComponentCells; {
     NSMutableArray *cells = [NSMutableArray arrayWithArray:[self.dataSource jumpBarComponentCellsForJumpBarControl:self]];
