@@ -15,6 +15,18 @@
 
 @implementation WCJumpBarBackgroundView
 
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
+    [super viewWillMoveToWindow:newWindow];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
+    
+    if (newWindow) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:newWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidResignKey:) name:NSWindowDidResignKeyNotification object:newWindow];
+    }
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
     static NSGradient *gradient, *keyGradient;
     static NSColor *fillColor, *keyFillColor;
@@ -37,6 +49,13 @@
     }
     
     NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMinY(self.bounds), NSWidth(self.bounds), 1));
+}
+
+- (void)_windowDidBecomeKey:(NSNotification *)note {
+    [self setNeedsDisplay:YES];
+}
+- (void)_windowDidResignKey:(NSNotification *)note {
+    [self setNeedsDisplay:YES];
 }
 
 @end

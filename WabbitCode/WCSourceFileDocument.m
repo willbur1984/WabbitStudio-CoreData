@@ -7,19 +7,17 @@
 //
 
 #import "WCSourceFileDocument.h"
-#import "WCLineNumberView.h"
-#import "WCTextViewController.h"
 #import "WCSyntaxHighlighter.h"
 #import "WCSymbolScanner.h"
 #import "WCDefines.h"
+#import "WCSourceFileWindowController.h"
 
-@interface WCSourceFileDocument () <WCTextViewControllerDelegate,WCSymbolScannerDelegate>
+@interface WCSourceFileDocument () <WCSymbolScannerDelegate>
 
 @property (strong,nonatomic) NSTextStorage *textStorage;
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
-@property (strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
-@property (strong,nonatomic) WCSymbolScanner *symbolScanner;
-@property (strong,nonatomic) WCTextViewController *textViewController;
+@property (readwrite,strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
+@property (readwrite,strong,nonatomic) WCSymbolScanner *symbolScanner;
 
 @end
 
@@ -38,17 +36,10 @@
     return self;
 }
 
-- (NSString *)windowNibName {
-    return @"WCSourceFileDocument";
-}
-
-- (void)windowControllerDidLoadNib:(NSWindowController *)windowController {
-    [super windowControllerDidLoadNib:windowController];
+- (void)makeWindowControllers {
+    WCSourceFileWindowController *windowController = [[WCSourceFileWindowController alloc] initWithTextStorage:self.textStorage];
     
-    [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
-    [self.textViewController setDelegate:self];
-    [self.textViewController.view setFrame:[windowController.window.contentView bounds]];
-    [windowController.window.contentView addSubview:self.textViewController.view];
+    [self addWindowController:windowController];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
@@ -77,13 +68,6 @@
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     return [self.textStorage.string writeToURL:url atomically:YES encoding:self.stringEncoding error:outError];
-}
-
-- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
-    return self.symbolScanner;
-}
-- (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
-    return self.fileURL;
 }
 
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {

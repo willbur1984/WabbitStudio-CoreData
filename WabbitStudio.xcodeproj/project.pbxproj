@@ -29,6 +29,7 @@
 		793D23021613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */; };
 		793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */; };
 		793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23061613E2C000742605 /* NSURL+WCExtensions.m */; };
+		793D2364161511C700742605 /* WCSourceFileWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D2363161511C700742605 /* WCSourceFileWindowController.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -40,7 +41,7 @@
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
 		79968CBA1608DB7A00F139BC /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB81608DB7A00F139BC /* Credits.rtf */; };
 		79968CBD1608DB7A00F139BC /* WCSourceFileDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */; };
-		79968CC01608DB7A00F139BC /* WCSourceFileDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79968CBE1608DB7A00F139BC /* WCSourceFileDocument.xib */; };
+		79968CC01608DB7A00F139BC /* WCSourceFileWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79968CBE1608DB7A00F139BC /* WCSourceFileWindow.xib */; };
 		79968CC31608DB7A00F139BC /* WCMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79968CC11608DB7A00F139BC /* WCMainMenu.xib */; };
 		79968CCE1608E05F00F139BC /* WCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CCD1608E05F00F139BC /* WCAppDelegate.m */; };
 		79968CD71608E91100F139BC /* WCLineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CD61608E91100F139BC /* WCLineNumberView.m */; };
@@ -95,6 +96,8 @@
 		793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarSeparator@2x.png"; sourceTree = "<group>"; };
 		793D23051613E2C000742605 /* NSURL+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+WCExtensions.h"; sourceTree = "<group>"; };
 		793D23061613E2C000742605 /* NSURL+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+WCExtensions.m"; sourceTree = "<group>"; };
+		793D2362161511C600742605 /* WCSourceFileWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSourceFileWindowController.h; sourceTree = "<group>"; };
+		793D2363161511C700742605 /* WCSourceFileWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSourceFileWindowController.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -119,7 +122,7 @@
 		79968CB91608DB7A00F139BC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCSourceFileDocument.h; sourceTree = "<group>"; };
 		79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WCSourceFileDocument.m; sourceTree = "<group>"; };
-		79968CBF1608DB7A00F139BC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCSourceFileDocument.xib; sourceTree = "<group>"; };
+		79968CBF1608DB7A00F139BC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCSourceFileWindow.xib; sourceTree = "<group>"; };
 		79968CC21608DB7A00F139BC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCMainMenu.xib; sourceTree = "<group>"; };
 		79968CCC1608E05F00F139BC /* WCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCAppDelegate.h; sourceTree = "<group>"; };
 		79968CCD1608E05F00F139BC /* WCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCAppDelegate.m; sourceTree = "<group>"; };
@@ -313,6 +316,8 @@
 				7973D6D3160CF7F4004EDE62 /* WCViewController.m */,
 				7973D6D6160CF83A004EDE62 /* WCTextViewController.h */,
 				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
+				793D2362161511C600742605 /* WCSourceFileWindowController.h */,
+				793D2363161511C700742605 /* WCSourceFileWindowController.m */,
 				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
 				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
 				7903F1DB160EB4C9000D3F3D /* WCJumpBarControl.h */,
@@ -331,7 +336,7 @@
 		79968CD01608E07500F139BC /* Xibs */ = {
 			isa = PBXGroup;
 			children = (
-				79968CBE1608DB7A00F139BC /* WCSourceFileDocument.xib */,
+				79968CBE1608DB7A00F139BC /* WCSourceFileWindow.xib */,
 				79968CC11608DB7A00F139BC /* WCMainMenu.xib */,
 				7973D6D9160CF8DF004EDE62 /* WCTextView.xib */,
 			);
@@ -411,7 +416,7 @@
 			files = (
 				79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */,
 				79968CBA1608DB7A00F139BC /* Credits.rtf in Resources */,
-				79968CC01608DB7A00F139BC /* WCSourceFileDocument.xib in Resources */,
+				79968CC01608DB7A00F139BC /* WCSourceFileWindow.xib in Resources */,
 				79968CC31608DB7A00F139BC /* WCMainMenu.xib in Resources */,
 				7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */,
 				7903F1EA160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png in Resources */,
@@ -462,6 +467,7 @@
 				79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */,
 				79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */,
 				793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */,
+				793D2364161511C700742605 /* WCSourceFileWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,12 +498,12 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		79968CBE1608DB7A00F139BC /* WCSourceFileDocument.xib */ = {
+		79968CBE1608DB7A00F139BC /* WCSourceFileWindow.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				79968CBF1608DB7A00F139BC /* en */,
 			);
-			name = WCSourceFileDocument.xib;
+			name = WCSourceFileWindow.xib;
 			sourceTree = "<group>";
 		};
 		79968CC11608DB7A00F139BC /* WCMainMenu.xib */ = {

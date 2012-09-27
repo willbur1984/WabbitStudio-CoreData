@@ -77,6 +77,26 @@
         for (Symbol *symbol in file.symbols)
             [self.managedObjectContext deleteObject:symbol];
         
+        NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
+        
+        [[WCSyntaxHighlighter commentRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [comments addObject:[NSValue valueWithRange:result.range]];
+        }];
+        [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [comments addObject:[NSValue valueWithRange:result.range]];
+        }];
+        
+        [comments sortUsingComparator:^NSComparisonResult(NSValue *obj1, NSValue *obj2) {
+            NSRange range1 = obj1.rangeValue;
+            NSRange range2 = obj2.rangeValue;
+            
+            if (range1.location < range2.location)
+                return NSOrderedAscending;
+            else if (range1.location > range2.location)
+                return NSOrderedDescending;
+            return NSOrderedSame;
+        }];
+        
         [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
             

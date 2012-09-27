@@ -196,6 +196,17 @@
     [self setAlphaValue:1];
     [self orderFront:nil];
     
+    static NSCharacterSet *kLegalCharacters;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSMutableCharacterSet *temp = [[NSCharacterSet letterCharacterSet] mutableCopy];
+        
+        [temp formUnionWithCharacterSet:[NSCharacterSet decimalDigitCharacterSet]];
+        [temp formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"_!?.#"]];
+        
+        kLegalCharacters = [temp copy];
+    });
+    
     __block typeof (self) blockSelf = self;
     
     id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
@@ -215,6 +226,11 @@
                         [blockSelf.tableView keyDown:event];
                         return nil;
                     default:
+                        if ((event.modifierFlags & NSControlKeyMask) || (event.modifierFlags & NSCommandKeyMask))
+                            [blockSelf hideCompletionWindow];
+                        else if ([event.charactersIgnoringModifiers rangeOfCharacterFromSet:kLegalCharacters].location == NSNotFound) {
+                            [blockSelf hideCompletionWindow];
+                        }
                         return event;
                 }
             }
@@ -228,7 +244,7 @@
                 }
                 break;
             case NSScrollWheel:
-                // TODO: reposition the window underneath the text
+                [blockSelf hideCompletionWindow];
                 break;
             default:
                 break;
@@ -315,6 +331,7 @@
     
     [self hideCompletionWindow];
 }
+
 #pragma mark Properties
 - (void)setCompletionItems:(NSArray *)completionItems {
     _completionItems = completionItems;
