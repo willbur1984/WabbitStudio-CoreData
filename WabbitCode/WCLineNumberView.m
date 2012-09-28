@@ -94,8 +94,8 @@ static const CGFloat kDefaultThickness = 30;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:textView];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewFrameDidChangeNotification object:textView.enclosingScrollView.contentView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewBoundsDidChangeNotification object:textView.enclosingScrollView.contentView];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewFrameDidChangeNotification object:textView.enclosingScrollView.contentView];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewFrameDidChange:) name:NSViewBoundsDidChangeNotification object:textView.enclosingScrollView.contentView];
     
     [self setLineStartIndexes:[NSMutableArray arrayWithObject:@0]];
     [self setLineNumberToRecalculateFrom:0];
