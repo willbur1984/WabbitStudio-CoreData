@@ -178,6 +178,7 @@ static const CGFloat kDefaultThickness = 30;
     NSRange charRange = [self.textView.layoutManager characterRangeForGlyphRange:glyphRange actualGlyphRange:NULL];
     NSUInteger lineNumber, lineStartIndex, numberOfLines = self.lineStartIndexes.count;
     NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
+    CGFloat lastLineRectY = -1;
     
     for (lineNumber = [self.lineStartIndexes WC_lineNumberForRange:charRange], charRange.length++; lineNumber < numberOfLines; lineNumber++) {
         lineStartIndex = [[self.lineStartIndexes objectAtIndex:lineNumber] unsignedIntegerValue];
@@ -187,11 +188,16 @@ static const CGFloat kDefaultThickness = 30;
             NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
             
             if (numberOfLineRects) {
-                NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
                 NSRect lineRect = lineRects[0];
-                NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
                 
-                [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
+                if (NSMinY(lineRect) != lastLineRectY) {
+                    NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
+                    NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
+                    
+                    [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
+                }
+                
+                lastLineRectY = NSMinY(lineRect);
             }
         }
         

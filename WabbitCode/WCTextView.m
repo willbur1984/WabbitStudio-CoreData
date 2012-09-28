@@ -20,6 +20,7 @@
 #import "WCArgumentPlaceholderCell.h"
 #import "Macro.h"
 #import "WCCompletionWindow.h"
+#import "WCTextStorage.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -75,6 +76,26 @@
 }
 
 - (void)setSelectedRanges:(NSArray *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelectingFlag {
+    if (!stillSelectingFlag && ([ranges count] == 1)) {
+        NSRange range = [[ranges objectAtIndex:0] rangeValue];
+		
+        if ((range.location < self.textStorage.length) && ([[ranges objectAtIndex:0] rangeValue].length == 0)) {
+            id attribute = [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location effectiveRange:NULL];
+			
+            if (attribute && [attribute boolValue]) {
+                NSRange effectiveRange;
+                
+                [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:NSMakeRange(0, self.textStorage.length)];
+				
+                if (range.location != effectiveRange.location) {
+                    range.location = ((affinity == NSSelectionAffinityUpstream) ? effectiveRange.location : NSMaxRange(effectiveRange));
+                    [super setSelectedRange:range];
+                    return;
+                }
+            }
+        }
+    }
+    
     [super setSelectedRanges:ranges affinity:affinity stillSelecting:stillSelectingFlag];
     
     // hack to update our line number ruler view while selecting with the mouse :(
@@ -119,6 +140,14 @@
     
     [self setSelectedRange:NSRangeFromString(symbol.range)];
     [self scrollRangeToVisible:self.selectedRange];
+}
+
+- (IBAction)foldAction:(id)sender; {
+    [(WCTextStorage *)self.textStorage foldRange:self.selectedRange];
+}
+- (IBAction)unfoldAction:(id)sender; {
+    if (![(WCTextStorage *)self.textStorage unfoldRange:self.selectedRange effectiveRange:NULL])
+        NSBeep();
 }
 
 - (IBAction)showToolTip:(id)sender; {

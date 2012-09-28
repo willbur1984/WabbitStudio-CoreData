@@ -11,10 +11,11 @@
 #import "WCSymbolScanner.h"
 #import "WCDefines.h"
 #import "WCSourceFileWindowController.h"
+#import "WCTextStorage.h"
 
 @interface WCSourceFileDocument () <WCSymbolScannerDelegate>
 
-@property (strong,nonatomic) NSTextStorage *textStorage;
+@property (strong,nonatomic) WCTextStorage *textStorage;
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
 @property (readwrite,strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
 @property (readwrite,strong,nonatomic) WCSymbolScanner *symbolScanner;
@@ -28,7 +29,7 @@
         return nil;
     
     [self setStringEncoding:NSUTF8StringEncoding];
-    [self setTextStorage:[[NSTextStorage alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]]];
+    [self setTextStorage:[[WCTextStorage alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     [self.symbolScanner setDelegate:self];
@@ -56,7 +57,7 @@
     }
     
     [self setStringEncoding:usedEncoding];
-    [self setTextStorage:[[NSTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
+    [self setTextStorage:[[WCTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     [self.symbolScanner setDelegate:self];

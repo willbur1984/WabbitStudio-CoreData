@@ -14,12 +14,13 @@
 #import "WCSourceFileWindowController.h"
 #import "WCSourceFileDocument.h"
 #import "WCTextViewController.h"
+#import "WCTextStorage.h"
 
 @interface WCSourceFileWindowController () <WCTextViewControllerDelegate>
 
 @property (readonly,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (strong,nonatomic) WCTextViewController *textViewController;
-@property (weak,nonatomic) NSTextStorage *textStorage;
+@property (weak,nonatomic) WCTextStorage *textStorage;
 
 @end
 
@@ -48,7 +49,7 @@
     return self.sourceFileDocument.undoManager;
 }
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage; {
+- (id)initWithTextStorage:(WCTextStorage *)textStorage; {
     if (!(self = [super initWithWindowNibName:self.windowNibName]))
         return nil;
     

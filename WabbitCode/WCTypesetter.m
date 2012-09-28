@@ -1,8 +1,8 @@
 //
-//  WCTextViewController.h
+//  WCTypesetter.m
 //  WabbitStudio
 //
-//  Created by William Towe on 9/21/12.
+//  Created by William Towe on 9/28/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,23 +11,30 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "WCViewController.h"
+#import "WCTypesetter.h"
+#import "WCTextStorage.h"
 
-@class WCTextStorage;
-@protocol WCTextViewControllerDelegate;
+@implementation WCTypesetter
 
-@interface WCTextViewController : WCViewController
+- (NSTypesetterControlCharacterAction)actionForControlCharacterAtIndex:(NSUInteger)charIndex {
+	id attributeValue = [self.attributedString attribute:WCTextStorageFoldAttributeName atIndex:charIndex effectiveRange:NULL];
+	
+	if ([attributeValue boolValue])
+		return NSTypesetterZeroAdvancementAction;
+	
+    return [super actionForControlCharacterAtIndex:charIndex];
+}
 
-@property (assign,nonatomic) id <WCTextViewControllerDelegate> delegate;
+- (NSUInteger)layoutParagraphAtPoint:(NSPointPointer)lineFragmentOrigin {
+    NSUInteger result;
+	
+    [(WCTextStorage *)self.attributedString setFolding:YES];
+    
+    result = [super layoutParagraphAtPoint:lineFragmentOrigin];
+    
+    [(WCTextStorage *)self.attributedString setFolding:NO];
+	
+    return result;
+}
 
-- (id)initWithTextStorage:(WCTextStorage *)textStorage;
-
-@end
-
-@class WCSymbolScanner;
-
-@protocol WCTextViewControllerDelegate <NSObject>
-- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
-- (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController;
-- (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
 @end

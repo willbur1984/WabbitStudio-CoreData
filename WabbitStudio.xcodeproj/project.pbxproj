@@ -30,6 +30,11 @@
 		793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */; };
 		793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23061613E2C000742605 /* NSURL+WCExtensions.m */; };
 		793D2364161511C700742605 /* WCSourceFileWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D2363161511C700742605 /* WCSourceFileWindowController.m */; };
+		793D236A161554BD00742605 /* WCTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D2369161554BB00742605 /* WCTextStorage.m */; };
+		793D236D161557D100742605 /* WCLayoutManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D236C161557D100742605 /* WCLayoutManager.m */; };
+		793D23701615584F00742605 /* WCTypesetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D236F1615584D00742605 /* WCTypesetter.m */; };
+		793D23731615597B00742605 /* WCGlyphGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23721615597A00742605 /* WCGlyphGenerator.m */; };
+		793D237616155C4200742605 /* WCFoldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D237516155C4000742605 /* WCFoldCell.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -98,6 +103,16 @@
 		793D23061613E2C000742605 /* NSURL+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+WCExtensions.m"; sourceTree = "<group>"; };
 		793D2362161511C600742605 /* WCSourceFileWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSourceFileWindowController.h; sourceTree = "<group>"; };
 		793D2363161511C700742605 /* WCSourceFileWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSourceFileWindowController.m; sourceTree = "<group>"; };
+		793D2368161554BB00742605 /* WCTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextStorage.h; sourceTree = "<group>"; };
+		793D2369161554BB00742605 /* WCTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextStorage.m; sourceTree = "<group>"; };
+		793D236B161557D000742605 /* WCLayoutManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCLayoutManager.h; sourceTree = "<group>"; };
+		793D236C161557D100742605 /* WCLayoutManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCLayoutManager.m; sourceTree = "<group>"; };
+		793D236E1615584C00742605 /* WCTypesetter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTypesetter.h; sourceTree = "<group>"; };
+		793D236F1615584D00742605 /* WCTypesetter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTypesetter.m; sourceTree = "<group>"; };
+		793D23711615597900742605 /* WCGlyphGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCGlyphGenerator.h; sourceTree = "<group>"; };
+		793D23721615597A00742605 /* WCGlyphGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGlyphGenerator.m; sourceTree = "<group>"; };
+		793D237416155C3F00742605 /* WCFoldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldCell.h; sourceTree = "<group>"; };
+		793D237516155C4000742605 /* WCFoldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldCell.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -304,12 +319,22 @@
 				7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */,
 				79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */,
 				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
+				793D2368161554BB00742605 /* WCTextStorage.h */,
+				793D2369161554BB00742605 /* WCTextStorage.m */,
+				793D236B161557D000742605 /* WCLayoutManager.h */,
+				793D236C161557D100742605 /* WCLayoutManager.m */,
+				793D236E1615584C00742605 /* WCTypesetter.h */,
+				793D236F1615584D00742605 /* WCTypesetter.m */,
+				793D23711615597900742605 /* WCGlyphGenerator.h */,
+				793D23721615597A00742605 /* WCGlyphGenerator.m */,
 				79968CD51608E91100F139BC /* WCLineNumberView.h */,
 				79968CD61608E91100F139BC /* WCLineNumberView.m */,
 				79129118160ABD5100ADFAB5 /* WCTextView.h */,
 				79129119160ABD5100ADFAB5 /* WCTextView.m */,
 				7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */,
 				7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */,
+				793D237416155C3F00742605 /* WCFoldCell.h */,
+				793D237516155C4000742605 /* WCFoldCell.m */,
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
 				7973D6D2160CF7F4004EDE62 /* WCViewController.h */,
@@ -468,6 +493,11 @@
 				79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */,
 				793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */,
 				793D2364161511C700742605 /* WCSourceFileWindowController.m in Sources */,
+				793D236A161554BD00742605 /* WCTextStorage.m in Sources */,
+				793D236D161557D100742605 /* WCLayoutManager.m in Sources */,
+				793D23701615584F00742605 /* WCTypesetter.m in Sources */,
+				793D23731615597B00742605 /* WCGlyphGenerator.m in Sources */,
+				793D237616155C4200742605 /* WCFoldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

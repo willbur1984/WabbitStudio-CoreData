@@ -21,6 +21,9 @@
 
 - (IBAction)jumpToDefinitionAction:(id)sender;
 
+- (IBAction)foldAction:(id)sender;
+- (IBAction)unfoldAction:(id)sender;
+
 - (IBAction)showToolTip:(id)sender;
 
 @end

@@ -26,6 +26,8 @@
 #import "File.h"
 #import "NSURL+WCExtensions.h"
 #import "WCGeometry.h"
+#import "WCLayoutManager.h"
+#import "WCTextStorage.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,NSMenuDelegate>
 
@@ -33,7 +35,7 @@
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 @property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
 
-@property (weak,nonatomic) NSTextStorage *textStorage;
+@property (weak,nonatomic) WCTextStorage *textStorage;
 
 @property (strong,nonatomic) NSArray *jumpBarControlMenuSymbols;
 
@@ -55,6 +57,7 @@
     [super loadView];
     
     // text view
+    [self.textView.textContainer replaceLayoutManager:[[WCLayoutManager alloc] init]];
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
@@ -68,6 +71,8 @@
     [self.textView setDelegate:self];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidFold:) name:WCTextStorageDidFoldNotification object:self.textStorage];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidUnfold:) name:WCTextStorageDidUnfoldNotification object:self.textStorage];
     
     // jump bar control
     [self.jumpBarControl setDataSource:self];
@@ -236,7 +241,7 @@
 }
 
 #pragma mark *** Public Methods ***
-- (id)initWithTextStorage:(NSTextStorage *)textStorage; {
+- (id)initWithTextStorage:(WCTextStorage *)textStorage; {
     if (!(self = [super init]))
         return nil;
     
@@ -299,6 +304,12 @@
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
     [self.textView performSelector:@selector(complete:) withObject:nil afterDelay:0.35];
+}
+- (void)_textStorageDidFold:(NSNotification *)note {
+    [self.textView setNeedsDisplay:YES];
+}
+- (void)_textStorageDidUnfold:(NSNotification *)note {
+    [self.textView setNeedsDisplay:YES];
 }
 
 @end

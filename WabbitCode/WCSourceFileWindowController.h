@@ -13,8 +13,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class WCTextStorage;
+
 @interface WCSourceFileWindowController : NSWindowController
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
+- (id)initWithTextStorage:(WCTextStorage *)textStorage;
 
 @end
