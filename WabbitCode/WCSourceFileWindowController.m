@@ -44,6 +44,9 @@
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.fileURL;
 }
+- (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController {
+    return self.sourceFileDocument.undoManager;
+}
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
     if (!(self = [super initWithWindowNibName:self.windowNibName]))

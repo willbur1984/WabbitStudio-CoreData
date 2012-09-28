@@ -28,4 +28,5 @@
 @protocol WCTextViewControllerDelegate <NSObject>
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController;
+- (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
 @end

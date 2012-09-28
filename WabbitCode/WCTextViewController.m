@@ -155,6 +155,10 @@
     }
 }
 
+- (NSUndoManager *)undoManagerForTextView:(NSTextView *)view {
+    return [self.delegate undoManagerForTextViewController:self];
+}
+
 #pragma mark WCTextViewDelegate
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
     return [self.delegate symbolScannerForTextViewController:self];
