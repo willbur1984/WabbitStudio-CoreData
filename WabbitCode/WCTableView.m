@@ -13,14 +13,36 @@
 
 #import "WCTableView.h"
 #import "WCGeometry.h"
+#import "WCDefines.h"
 
 @implementation WCTableView
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if (self.numberOfRows == 0) {
+    if (self.numberOfRows == 0 && self.emptyString.length) {
+        static NSTextStorage *textStorage;
+        static NSLayoutManager *layoutManager;
+        static NSTextContainer *textContainer;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            textStorage = [[NSTextStorage alloc] initWithString:@"" attributes:@{ NSFontAttributeName : [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]], NSForegroundColorAttributeName : [NSColor darkGrayColor] }];
+            layoutManager = [[NSLayoutManager alloc] init];
+            
+            [textStorage addLayoutManager:layoutManager];
+            
+            textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+            
+            [layoutManager addTextContainer:textContainer];
+        });
         
+        [textStorage replaceCharactersInRange:NSMakeRange(0, textStorage.length) withString:self.emptyString];
+        [layoutManager ensureLayoutForCharacterRange:NSMakeRange(0, textStorage.length)];
+        
+        NSRect drawRect = [layoutManager usedRectForTextContainer:textContainer];
+        NSRect centerRect = WC_NSRectCenter(drawRect, self.bounds);
+        
+        [layoutManager drawGlyphsForGlyphRange:[layoutManager glyphRangeForCharacterRange:NSMakeRange(0, textStorage.length) actualCharacterRange:NULL] atPoint:centerRect.origin];
     }
 }
 

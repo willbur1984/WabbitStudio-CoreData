@@ -84,12 +84,7 @@
 }
 
 - (NSRange)rangeForUserCompletion {
-    NSRange range = [super rangeForUserCompletion];
-    
-    if (range.location != NSNotFound)
-        return [self.string WC_symbolRangeForRange:range];
-    
-    return range;
+    return [self.string WC_symbolRangeForRange:[super rangeForUserCompletion]];
 }
 
 - (IBAction)complete:(id)sender {

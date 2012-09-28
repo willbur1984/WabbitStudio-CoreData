@@ -33,6 +33,10 @@ static inline NSRect WC_NSRectCenterY(NSRect rectToCenter, NSRect inRect) {
     return retval;
 }
 
+static inline BOOL WC_NSLocationInOrEqualToRange(NSUInteger loc, NSRange range) {
+	return (loc - range.location <= range.length);
+}
+
 static const NSSize WC_NSSmallSize = {16,16};
 static const NSSize WC_NSMediumSize = {24,24};
 

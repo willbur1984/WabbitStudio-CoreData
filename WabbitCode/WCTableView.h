@@ -15,4 +15,6 @@
 
 @interface WCTableView : NSTableView
 
+@property (copy,nonatomic) NSString *emptyString;
+
 @end

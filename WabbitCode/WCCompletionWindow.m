@@ -27,7 +27,7 @@
 
 @interface WCCompletionWindow () <NSTableViewDataSource,NSTableViewDelegate>
 
-@property (strong,nonatomic) NSTableView *tableView;
+@property (strong,nonatomic) WCTableView *tableView;
 @property (strong,nonatomic) NSScrollView *scrollView;
 @property (assign,nonatomic) WCTextView *textView;
 @property (strong,nonatomic) NSArray *completionItems;
@@ -75,6 +75,7 @@
     [self.tableView setDoubleAction:@selector(_tableViewDoubleClick:)];
     [self.tableView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
     [self.tableView setBackgroundColor:[NSColor clearColor]];
+    [self.tableView setEmptyString:NSLocalizedString(@"No Completions", nil)];
     
     NSTableColumn *imageColumn = [[NSTableColumn alloc] initWithIdentifier:@"image"];
     
@@ -141,6 +142,7 @@
     [self.textView.window addChildWindow:self ordered:NSWindowAbove];
     
     NSRange completionRange = self.textView.rangeForUserCompletion;
+    
     NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:(completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange]];
     NSMutableArray *completionItems = [NSMutableArray arrayWithCapacity:symbols.count];
     
@@ -155,7 +157,8 @@
     if (numberOfRows > maximumNumberOfRows)
         numberOfRows = maximumNumberOfRows;
     
-    CGFloat minimumWidth = 150;
+    const CGFloat minimumHeight = 40;
+    CGFloat minimumWidth = 75;
     
     for (WCCompletionItem *completionItem in self.completionItems) {
         [self.textStorage replaceCharactersInRange:NSMakeRange(0, self.textStorage.length) withAttributedString:completionItem.displayString];
@@ -171,7 +174,7 @@
     
     [[self.tableView tableColumnWithIdentifier:@"name"] setWidth:minimumWidth];
     
-    [self.scrollView setFrame:NSIntegralRectWithOptions(NSMakeRect(0, 0, minimumWidth + self.tableView.intercellSpacing.width + imageColumnWidth + NSWidth(self.scrollView.verticalScroller.frame), (self.tableView.rowHeight + self.tableView.intercellSpacing.height) * numberOfRows), NSAlignAllEdgesInward)];
+    [self.scrollView setFrame:NSIntegralRectWithOptions(NSMakeRect(0, 0, minimumWidth + self.tableView.intercellSpacing.width + imageColumnWidth + NSWidth(self.scrollView.verticalScroller.frame), (numberOfRows > 0) ? (self.tableView.rowHeight + self.tableView.intercellSpacing.height) * numberOfRows : minimumHeight), NSAlignAllEdgesInward)];
     
     NSUInteger glyphIndex = [self.textView.layoutManager glyphIndexForCharacterAtIndex:(completionRange.location == NSNotFound) ? self.textView.selectedRange.location : completionRange.location];
     NSRect lineFragmentRect = [self.textView.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
@@ -225,6 +228,9 @@
                     case KEY_CODE_DOWN_ARROW:
                         [blockSelf.tableView keyDown:event];
                         return nil;
+                    case KEY_CODE_DELETE:
+                    case KEY_CODE_DELETE_FORWARD:
+                        return event;
                     default:
                         if ((event.modifierFlags & NSControlKeyMask) || (event.modifierFlags & NSCommandKeyMask))
                             [blockSelf hideCompletionWindow];
@@ -244,7 +250,10 @@
                 }
                 break;
             case NSScrollWheel:
-                [blockSelf hideCompletionWindow];
+                if (event.window != self) {
+                    [blockSelf hideCompletionWindow];
+                    return nil;
+                }
                 break;
             default:
                 break;

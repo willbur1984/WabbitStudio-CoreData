@@ -13,6 +13,7 @@
 
 #import "NSString+WCExtensions.h"
 #import "WCSymbolScanner.h"
+#import "WCGeometry.h"
 
 @implementation NSString (WCExtensions)
 
@@ -26,10 +27,10 @@
 }
 
 - (NSRange)WC_symbolRangeForRange:(NSRange)range; {
-    __block NSRange retval = NSMakeRange(NSNotFound, 0);
+    __block NSRange retval = WC_NSNotFoundRange;
     
     [[WCSymbolScanner symbolRegex] enumerateMatchesInString:self options:0 range:[self lineRangeForRange:range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if (NSLocationInRange(range.location, result.range)) {
+        if (NSLocationInRange(result.range.location, range)) {
             retval = result.range;
             *stop = YES;
         }
