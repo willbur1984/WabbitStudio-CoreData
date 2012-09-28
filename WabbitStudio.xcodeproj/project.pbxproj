@@ -35,6 +35,11 @@
 		793D23701615584F00742605 /* WCTypesetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D236F1615584D00742605 /* WCTypesetter.m */; };
 		793D23731615597B00742605 /* WCGlyphGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23721615597A00742605 /* WCGlyphGenerator.m */; };
 		793D237616155C4200742605 /* WCFoldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D237516155C4000742605 /* WCFoldCell.m */; };
+		79593663161637A80085355E /* WCFoldScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 79593662161637A80085355E /* WCFoldScanner.m */; };
+		79593666161638390085355E /* WCScanFoldsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79593665161638390085355E /* WCScanFoldsOperation.m */; };
+		795936691616384B0085355E /* Folds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 795936671616384B0085355E /* Folds.xcdatamodeld */; };
+		7959366D161639720085355E /* Fold.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366C161639720085355E /* Fold.m */; };
+		7959367016163F2B0085355E /* WCFoldMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366F16163F2B0085355E /* WCFoldMarker.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -113,6 +118,15 @@
 		793D23721615597A00742605 /* WCGlyphGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGlyphGenerator.m; sourceTree = "<group>"; };
 		793D237416155C3F00742605 /* WCFoldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldCell.h; sourceTree = "<group>"; };
 		793D237516155C4000742605 /* WCFoldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldCell.m; sourceTree = "<group>"; };
+		79593661161637A80085355E /* WCFoldScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldScanner.h; sourceTree = "<group>"; };
+		79593662161637A80085355E /* WCFoldScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldScanner.m; sourceTree = "<group>"; };
+		79593664161638390085355E /* WCScanFoldsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCScanFoldsOperation.h; sourceTree = "<group>"; };
+		79593665161638390085355E /* WCScanFoldsOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCScanFoldsOperation.m; sourceTree = "<group>"; };
+		795936681616384B0085355E /* Folds.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Folds.xcdatamodel; sourceTree = "<group>"; };
+		7959366B161639720085355E /* Fold.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Fold.h; sourceTree = "<group>"; };
+		7959366C161639720085355E /* Fold.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fold.m; sourceTree = "<group>"; };
+		7959366E16163F2B0085355E /* WCFoldMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldMarker.h; sourceTree = "<group>"; };
+		7959366F16163F2B0085355E /* WCFoldMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldMarker.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -229,6 +243,38 @@
 				79C92CEC1611136A00BB6CDC /* Symbol.m */,
 				79C92CE81611136900BB6CDC /* File.h */,
 				79C92CE91611136900BB6CDC /* File.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		7959365E161637840085355E /* Folds */ = {
+			isa = PBXGroup;
+			children = (
+				79593661161637A80085355E /* WCFoldScanner.h */,
+				79593662161637A80085355E /* WCFoldScanner.m */,
+				79593664161638390085355E /* WCScanFoldsOperation.h */,
+				79593665161638390085355E /* WCScanFoldsOperation.m */,
+				795936601616378D0085355E /* Model */,
+			);
+			name = Folds;
+			sourceTree = "<group>";
+		};
+		795936601616378D0085355E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				795936671616384B0085355E /* Folds.xcdatamodeld */,
+				7959366A161639530085355E /* Classes */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		7959366A161639530085355E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				7959366B161639720085355E /* Fold.h */,
+				7959366C161639720085355E /* Fold.m */,
+				7959366E16163F2B0085355E /* WCFoldMarker.h */,
+				7959366F16163F2B0085355E /* WCFoldMarker.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -353,6 +399,7 @@
 				7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */,
 				7903F1F1160F735C000D3F3D /* WCJumpBarBackgroundView.h */,
 				7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */,
+				7959365E161637840085355E /* Folds */,
 				7903F1B5160E5F72000D3F3D /* Symbols */,
 			);
 			name = Classes;
@@ -498,6 +545,11 @@
 				793D23701615584F00742605 /* WCTypesetter.m in Sources */,
 				793D23731615597B00742605 /* WCGlyphGenerator.m in Sources */,
 				793D237616155C4200742605 /* WCFoldCell.m in Sources */,
+				79593663161637A80085355E /* WCFoldScanner.m in Sources */,
+				79593666161638390085355E /* WCScanFoldsOperation.m in Sources */,
+				795936691616384B0085355E /* Folds.xcdatamodeld in Sources */,
+				7959366D161639720085355E /* Fold.m in Sources */,
+				7959367016163F2B0085355E /* WCFoldMarker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,6 +703,16 @@
 			);
 			currentVersion = 7903F1B7160E5FB5000D3F3D /* Symbols.xcdatamodel */;
 			path = Symbols.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		795936671616384B0085355E /* Folds.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				795936681616384B0085355E /* Folds.xcdatamodel */,
+			);
+			currentVersion = 795936681616384B0085355E /* Folds.xcdatamodel */;
+			path = Folds.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

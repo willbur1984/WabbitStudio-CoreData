@@ -26,7 +26,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 @property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (assign,nonatomic,getter = isScanning) BOOL scanning;
-@property (assign,nonatomic) BOOL needsToScan;
+@property (assign,nonatomic) BOOL scanPending;
 @end
 
 @implementation WCSymbolScanner
@@ -57,7 +57,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 
 - (void)scanSymbols; {
     if (self.isScanning) {
-        [self setNeedsToScan:YES];
+        [self setScanPending:YES];
         return;
     }
     
@@ -72,8 +72,8 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
         
         [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:blockSelf];
         
-        if (blockSelf.needsToScan) {
-            [blockSelf setNeedsToScan:NO];
+        if (blockSelf.scanPending) {
+            [blockSelf setScanPending:NO];
             [blockSelf scanSymbols];
         }
     }];
