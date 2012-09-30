@@ -19,6 +19,7 @@ extern NSString *const WCFoldScannerDidFinishScanningFoldsNotification;
 
 @property (readonly,weak,nonatomic) NSTextStorage *textStorage;
 @property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly,nonatomic) NSArray *foldsSortedByLocation;
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 

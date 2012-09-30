@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "WCFoldMarker.h"
 
 typedef enum {
-    FoldTypeMacro,
-    FoldTypeIf,
-    FoldTypeComment
+    FoldTypeComment = WCFoldMarkerTypeCommentStart,
+    FoldTypeMacro = WCFoldMarkerTypeMacroStart,
+    FoldTypeIf = WCFoldMarkerTypeIfStart
     
 } FoldType;
 
@@ -21,11 +22,14 @@ typedef enum {
 @interface Fold : NSManagedObject
 
 @property (nonatomic, retain) NSString * range;
+@property (nonatomic, retain) NSString * contentRange;
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSNumber * depth;
 @property (nonatomic, retain) NSNumber * location;
 @property (nonatomic, retain) NSSet *folds;
 @property (nonatomic, retain) Fold *fold;
+
+- (void)increaseDepth;
 @end
 
 @interface Fold (CoreDataGeneratedAccessors)

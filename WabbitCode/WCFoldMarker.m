@@ -25,4 +25,21 @@
     return self;
 }
 
++ (NSRegularExpression *)foldStartMarkerRegex {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:comment|macro|ifndef|ifdef|if)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)foldEndMarkerRegex {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:endcomment|endmacro|endif)\\b" options:NSRegularExpressionCaseInsensitive error:NULL];
+    });
+    return retval;
+}
+
 @end

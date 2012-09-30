@@ -13,6 +13,7 @@
 
 #import "WCFoldScanner.h"
 #import "WCScanFoldsOperation.h"
+#import "WCDefines.h"
 
 NSString *const WCFoldScannerDidFinishScanningFoldsNotification = @"WCFoldScannerDidFinishScanningFoldsNotification";
 
@@ -51,6 +52,8 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     [self.managedObjectContext setUndoManager:nil];
     
+    [self scanFolds];
+    
     return self;
 }
 
@@ -78,6 +81,15 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     }];
     
     [self.operationQueue addOperation:operation];
+}
+
+- (NSArray *)foldsSortedByLocation {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.fold == nil"]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
 @end

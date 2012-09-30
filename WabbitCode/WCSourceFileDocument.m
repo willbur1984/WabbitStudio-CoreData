@@ -12,6 +12,7 @@
 #import "WCDefines.h"
 #import "WCSourceFileWindowController.h"
 #import "WCTextStorage.h"
+#import "WCFoldScanner.h"
 
 @interface WCSourceFileDocument () <WCSymbolScannerDelegate>
 
@@ -19,6 +20,7 @@
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
 @property (readwrite,strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
 @property (readwrite,strong,nonatomic) WCSymbolScanner *symbolScanner;
+@property (readwrite,strong,nonatomic) WCFoldScanner *foldScanner;
 
 @end
 
@@ -33,6 +35,7 @@
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     [self.symbolScanner setDelegate:self];
+    [self setFoldScanner:[[WCFoldScanner alloc] initWithTextStorage:self.textStorage]];
     
     return self;
 }
@@ -61,6 +64,7 @@
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
     [self.symbolScanner setDelegate:self];
+    [self setFoldScanner:[[WCFoldScanner alloc] initWithTextStorage:self.textStorage]];
     
     [self.undoManager enableUndoRegistration];
     

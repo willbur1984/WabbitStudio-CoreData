@@ -30,4 +30,7 @@ typedef enum {
 
 - (id)initWithType:(WCFoldMarkerType)type range:(NSRange)range;
 
++ (NSRegularExpression *)foldStartMarkerRegex;
++ (NSRegularExpression *)foldEndMarkerRegex;
+
 @end

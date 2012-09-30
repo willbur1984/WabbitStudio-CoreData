@@ -13,10 +13,20 @@
 @implementation Fold
 
 @dynamic range;
+@dynamic contentRange;
 @dynamic type;
 @dynamic depth;
 @dynamic location;
 @dynamic folds;
 @dynamic fold;
+
+- (void)increaseDepth; {
+    [self setDepth:@(self.depth.shortValue + 1)];
+    
+    for (Fold *fold in self.folds) {
+        [fold setDepth:self.depth];
+        [fold increaseDepth];
+    }
+}
 
 @end
