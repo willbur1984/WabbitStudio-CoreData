@@ -42,6 +42,9 @@
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.symbolScanner;
 }
+- (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController {
+    return self.sourceFileDocument.foldScanner;
+}
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.fileURL;
 }

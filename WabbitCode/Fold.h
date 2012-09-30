@@ -26,6 +26,7 @@ typedef enum {
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSNumber * depth;
 @property (nonatomic, retain) NSNumber * location;
+@property (nonatomic, retain) NSNumber * endLocation;
 @property (nonatomic, retain) NSSet *folds;
 @property (nonatomic, retain) Fold *fold;
 

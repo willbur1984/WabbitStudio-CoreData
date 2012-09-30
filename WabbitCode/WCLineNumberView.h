@@ -15,12 +15,17 @@
 
 @interface WCLineNumberView : NSRulerView
 
+@property (readonly,nonatomic) NSTextView *textView;
+
+@property (readonly,strong,nonatomic) NSMutableArray *lineStartIndexes;
+
 - (id)initWithTextView:(NSTextView *)textView;
 
 - (NSDictionary *)stringAttributesForLineNumber:(NSUInteger)lineNumber selectedLineRange:(NSRange)selectedLineRange;
 
 - (NSUInteger)lineNumberForPoint:(NSPoint)point;
 
+- (void)drawBackgroundAndDividerLineInRect:(NSRect)rect;
 - (void)drawCurrentLineHighlightInRect:(NSRect)rect;
 - (void)drawLineNumbersInRect:(NSRect)rect;
 

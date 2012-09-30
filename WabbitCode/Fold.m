@@ -17,6 +17,7 @@
 @dynamic type;
 @dynamic depth;
 @dynamic location;
+@dynamic endLocation;
 @dynamic folds;
 @dynamic fold;
 

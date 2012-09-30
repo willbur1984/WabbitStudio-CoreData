@@ -18,8 +18,7 @@
 #import "WCDefines.h"
 
 @interface WCLineNumberView ()
-@property (readonly,nonatomic) NSTextView *textView;
-@property (strong,nonatomic) NSMutableArray *lineStartIndexes;
+@property (readwrite,strong,nonatomic) NSMutableArray *lineStartIndexes;
 @property (readwrite,assign,nonatomic) BOOL shouldRecalculateLineStartIndexes;
 @property (assign,nonatomic) NSUInteger lineNumberToRecalculateFrom;
 
@@ -50,20 +49,17 @@
 	if (fabs(self.ruleThickness - newThickness) > 1)
 		[self setRuleThickness:newThickness];
 }
+
+- (BOOL)isOpaque {
+    return YES;
+}
 #pragma mark NSRulerView
 static const CGFloat kStringMarginLeftRight = 3;
 static const CGFloat kStringMarginTop = 1;
 static const CGFloat kDefaultThickness = 30;
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
-    [[NSColor WC_colorWithHexadecimalString:@"f1f1f1"] setFill];
-    NSRectFill(rect);
-    
-    NSRect dividerRect = NSMakeRect(NSMaxX(self.frame) - 1, 0, 1, NSHeight(self.frame));
-    
-    [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
-    NSRectFill(dividerRect);
-    
+    [self drawBackgroundAndDividerLineInRect:rect];
     //[self drawCurrentLineHighlightInRect:rect];
     [self drawLineNumbersInRect:rect];
 }
@@ -148,6 +144,15 @@ static const CGFloat kDefaultThickness = 30;
     return NSNotFound;
 }
 
+- (void)drawBackgroundAndDividerLineInRect:(NSRect)rect; {
+    [[NSColor WC_colorWithHexadecimalString:@"f1f1f1"] setFill];
+    NSRectFill(rect);
+    
+    NSRect dividerRect = NSMakeRect(NSMaxX(rect) - 1, 0, 1, NSHeight(self.frame));
+    
+    [[NSColor WC_colorWithHexadecimalString:@"b3b3b3"] setFill];
+    NSRectFill(dividerRect);
+}
 - (void)drawCurrentLineHighlightInRect:(NSRect)rect; {
     NSRange selectedLineRange = [self.textView.string lineRangeForRange:self.textView.selectedRange];
     NSUInteger numberOfLineRects;
@@ -163,7 +168,7 @@ static const CGFloat kDefaultThickness = 30;
                 lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
         }
         
-        NSRect drawRect = NSMakeRect(NSMinX(self.bounds), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(self.frame) - 1, NSHeight(lineRect));
+        NSRect drawRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, NSWidth(rect) - 1, NSHeight(lineRect));
         
         [[NSColor colorWithCalibratedWhite:0 alpha:0.25] setFill];
         NSRectFillUsingOperation(drawRect, NSCompositeSourceOver);
@@ -192,7 +197,7 @@ static const CGFloat kDefaultThickness = 30;
                 
                 if (NSMinY(lineRect) != lastLineRectY) {
                     NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
-                    NSRect drawRect = NSMakeRect(NSMinX(self.frame), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(self.frame) - kStringMarginLeftRight, NSHeight(lineRect));
+                    NSRect drawRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(rect) - kStringMarginLeftRight, NSHeight(lineRect));
                     
                     [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
                 }

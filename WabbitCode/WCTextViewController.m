@@ -13,7 +13,7 @@
 
 #import "WCTextViewController.h"
 #import "WCTextView.h"
-#import "WCLineNumberView.h"
+#import "WCFoldView.h"
 #import "WCSyntaxHighlighter.h"
 #import "WCJumpBarControl.h"
 #import "WCDefines.h"
@@ -29,7 +29,7 @@
 #import "WCLayoutManager.h"
 #import "WCTextStorage.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,NSMenuDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,NSMenuDelegate>
 
 @property (assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
@@ -61,7 +61,9 @@
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
-    WCLineNumberView *lineNumberView = [[WCLineNumberView alloc] initWithTextView:self.textView];
+    WCFoldView *lineNumberView = [[WCFoldView alloc] initWithTextView:self.textView];
+    
+    [lineNumberView setDelegate:self];
     
     [self.textView.enclosingScrollView setVerticalRulerView:lineNumberView];
     [self.textView.enclosingScrollView setHasHorizontalRuler:NO];
@@ -168,6 +170,11 @@
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
     return [self.delegate symbolScannerForTextViewController:self];
 }
+#pragma mark WCFoldViewDelegate
+- (WCFoldScanner *)foldScannerForFoldView:(WCFoldView *)foldView {
+    return [self.delegate foldScannerForTextViewController:self];
+}
+
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     NSURL *fileURL = [self.delegate fileURLForTextViewController:self];

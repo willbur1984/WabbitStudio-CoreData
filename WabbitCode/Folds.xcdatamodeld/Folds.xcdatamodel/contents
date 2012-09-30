@@ -3,6 +3,7 @@
     <entity name="Fold" representedClassName="Fold" syncable="YES">
         <attribute name="contentRange" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="depth" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="endLocation" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="location" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -10,6 +11,6 @@
         <relationship name="folds" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Fold" inverseName="fold" inverseEntity="Fold" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Fold" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Fold" positionX="160" positionY="192" width="128" height="165"/>
     </elements>
 </model>

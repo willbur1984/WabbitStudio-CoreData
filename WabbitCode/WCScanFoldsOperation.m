@@ -93,7 +93,7 @@
             
             NSRange commentRange = [comments WC_rangeForRange:result.range];
             
-            if (NSLocationInRange(result.range.location, commentRange))
+            if (NSLocationInRange(result.range.location, commentRange) && type != WCFoldMarkerTypeCommentStart)
                 return;
             
             [foldMarkers addObject:[[WCFoldMarker alloc] initWithType:type range:result.range]];
@@ -103,7 +103,7 @@
             NSString *name = [[self.string substringWithRange:result.range] lowercaseString];
             WCFoldMarkerType type;
             
-            if ([name isEqualToString:@"#comment"])
+            if ([name isEqualToString:@"#endcomment"])
                 type = WCFoldMarkerTypeCommentEnd;
             else if ([name isEqualToString:@"#endmacro"])
                 type = WCFoldMarkerTypeMacroEnd;
@@ -112,7 +112,7 @@
             
             NSRange commentRange = [comments WC_rangeForRange:result.range];
             
-            if (NSLocationInRange(result.range.location, commentRange))
+            if (NSLocationInRange(result.range.location, commentRange) && type != WCFoldMarkerTypeCommentEnd)
                 return;
             
             [foldMarkers addObject:[[WCFoldMarker alloc] initWithType:type range:result.range]];
@@ -158,6 +158,7 @@
                         [topLevelFold setType:@(startFoldMarker.type)];
                         [topLevelFold setDepth:@0];
                         [topLevelFold setLocation:@(range.location)];
+                        [topLevelFold setEndLocation:@(NSMaxRange(range))];
                         [topLevelFold setRange:NSStringFromRange(range)];
                         [topLevelFold setContentRange:NSStringFromRange(contentRange)];
                         
@@ -191,6 +192,7 @@
                                 [topLevelFold setType:@(startFoldMarker.type)];
                                 [topLevelFold setDepth:@0];
                                 [topLevelFold setLocation:@(range.location)];
+                                [topLevelFold setEndLocation:@(NSMaxRange(range))];
                                 [topLevelFold setRange:NSStringFromRange(range)];
                                 [topLevelFold setContentRange:NSStringFromRange(contentRange)];
                                 
