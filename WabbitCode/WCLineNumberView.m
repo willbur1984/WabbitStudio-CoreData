@@ -28,6 +28,9 @@
 
 @implementation WCLineNumberView
 #pragma mark *** Subclass Overrides ***
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 #pragma mark NSResponder
 - (void)mouseDown:(NSEvent *)theEvent {
     NSUInteger lineNumber = [self lineNumberForPoint:[self convertPoint:theEvent.locationInWindow fromView:nil]];
@@ -247,7 +250,7 @@ static const CGFloat kDefaultThickness = 30;
 }
 #pragma mark Notifications
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
-    if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
+    if (!([note.object editedMask] & NSTextStorageEditedCharacters))
         return;
     
     NSUInteger lineNumber = [self.lineStartIndexes WC_lineNumberForRange:[note.object editedRange]];

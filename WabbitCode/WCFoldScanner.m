@@ -86,7 +86,7 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
 - (NSArray *)foldsForRange:(NSRange)range {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu AND self.endLocation >= %lu",NSMaxRange(range),range.location]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location < %lu AND self.endLocation > %lu",NSMaxRange(range),range.location]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"depth" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
@@ -94,10 +94,17 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
 - (Fold *)deepestFoldForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu AND self.endLocation >= %lu",NSMaxRange(range),range.location]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location < %lu AND self.endLocation > %lu",NSMaxRange(range),range.location]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"depth" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+
+- (void)_textStorageDidProcessEditing:(NSNotification *)note {
+    if (!([note.object editedMask] & NSTextStorageEditedCharacters))
+        return;
+    
+    [self scanFolds];
 }
 
 @end
