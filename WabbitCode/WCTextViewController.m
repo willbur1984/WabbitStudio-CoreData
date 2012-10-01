@@ -28,6 +28,8 @@
 #import "WCGeometry.h"
 #import "WCLayoutManager.h"
 #import "WCTextStorage.h"
+#import "WCSymbolHighlighter.h"
+#import "NSTextView+WCExtensions.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,NSMenuDelegate>
 
@@ -75,6 +77,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidFold:) name:WCTextStorageDidFoldNotification object:self.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidUnfold:) name:WCTextStorageDidUnfoldNotification object:self.textStorage];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:self.textView.enclosingScrollView.contentView];
     
     // jump bar control
     [self.jumpBarControl setDataSource:self];
@@ -317,6 +320,11 @@
 }
 - (void)_textStorageDidUnfold:(NSNotification *)note {
     [self.textView setNeedsDisplay:YES];
+}
+- (void)_viewBoundsDidChange:(NSNotification *)note {
+    WCSymbolHighlighter *symbolHighlighter = [self.delegate symbolHighlighterForTextViewController:self];
+    
+    [symbolHighlighter symbolHighlightInRange:[self.textView WC_visibleRange]];
 }
 
 @end

@@ -64,6 +64,7 @@
 		79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEF161144B600BB6CDC /* WCTableView.m */; };
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
 		79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FC76A51618029F006B9DC3 /* WCFoldView.m */; };
+		79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -175,6 +176,8 @@
 		79C92CF216114A1300BB6CDC /* WCCompletionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionItem.m; sourceTree = "<group>"; };
 		79FC76A41618029F006B9DC3 /* WCFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldView.h; sourceTree = "<group>"; };
 		79FC76A51618029F006B9DC3 /* WCFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldView.m; sourceTree = "<group>"; };
+		79FE360C161945B400DB7C6D /* WCSymbolHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolHighlighter.h; sourceTree = "<group>"; };
+		79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolHighlighter.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,6 +196,10 @@
 		7903F1B5160E5F72000D3F3D /* Symbols */ = {
 			isa = PBXGroup;
 			children = (
+				79FE360C161945B400DB7C6D /* WCSymbolHighlighter.h */,
+				79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */,
+				7903F1F4160FAE07000D3F3D /* WCSymbolImageManager.h */,
+				7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */,
 				7903F1AB160E3AB7000D3F3D /* WCSymbolScanner.h */,
 				7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */,
 				7903F1AF160E3D62000D3F3D /* WCScanSymbolsOperation.h */,
@@ -356,56 +363,14 @@
 		79968CCF1608E06900F139BC /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				79C92CEE161144B500BB6CDC /* WCTableView.h */,
-				79C92CEF161144B600BB6CDC /* WCTableView.m */,
-				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
-				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
-				79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */,
-				79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */,
-				79C92CF116114A1300BB6CDC /* WCCompletionItem.h */,
-				79C92CF216114A1300BB6CDC /* WCCompletionItem.m */,
-				7903F1F4160FAE07000D3F3D /* WCSymbolImageManager.h */,
-				7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */,
-				79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */,
-				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
-				793D2368161554BB00742605 /* WCTextStorage.h */,
-				793D2369161554BB00742605 /* WCTextStorage.m */,
-				793D236B161557D000742605 /* WCLayoutManager.h */,
-				793D236C161557D100742605 /* WCLayoutManager.m */,
-				793D236E1615584C00742605 /* WCTypesetter.h */,
-				793D236F1615584D00742605 /* WCTypesetter.m */,
-				793D23711615597900742605 /* WCGlyphGenerator.h */,
-				793D23721615597A00742605 /* WCGlyphGenerator.m */,
-				79968CD51608E91100F139BC /* WCLineNumberView.h */,
-				79968CD61608E91100F139BC /* WCLineNumberView.m */,
-				79FC76A41618029F006B9DC3 /* WCFoldView.h */,
-				79FC76A51618029F006B9DC3 /* WCFoldView.m */,
-				79129118160ABD5100ADFAB5 /* WCTextView.h */,
-				79129119160ABD5100ADFAB5 /* WCTextView.m */,
-				7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */,
-				7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */,
-				793D237416155C3F00742605 /* WCFoldCell.h */,
-				793D237516155C4000742605 /* WCFoldCell.m */,
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
-				7973D6D2160CF7F4004EDE62 /* WCViewController.h */,
-				7973D6D3160CF7F4004EDE62 /* WCViewController.m */,
-				7973D6D6160CF83A004EDE62 /* WCTextViewController.h */,
-				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
-				793D2362161511C600742605 /* WCSourceFileWindowController.h */,
-				793D2363161511C700742605 /* WCSourceFileWindowController.m */,
-				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
-				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
-				7903F1DB160EB4C9000D3F3D /* WCJumpBarControl.h */,
-				7903F1DC160EB4C9000D3F3D /* WCJumpBarControl.m */,
-				7903F1DE160EB796000D3F3D /* WCJumpBarCell.h */,
-				7903F1DF160EB797000D3F3D /* WCJumpBarCell.m */,
-				7903F1E1160EB89A000D3F3D /* WCJumpBarComponentCell.h */,
-				7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */,
-				7903F1F1160F735C000D3F3D /* WCJumpBarBackgroundView.h */,
-				7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */,
-				7959365E161637840085355E /* Folds */,
-				7903F1B5160E5F72000D3F3D /* Symbols */,
+				79FE36041619438A00DB7C6D /* Documents */,
+				79FE3606161943A000DB7C6D /* Window Controllers */,
+				79FE36051619439500DB7C6D /* View Controllers */,
+				79FE36021619435A00DB7C6D /* Windows */,
+				79FE36011619435100DB7C6D /* Views */,
+				79FE35FF1619431100DB7C6D /* Editor */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -438,6 +403,142 @@
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		79FE35FF1619431100DB7C6D /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				79FE36031619436C00DB7C6D /* Completion */,
+				79FE36081619442800DB7C6D /* Model */,
+				79FE36091619443100DB7C6D /* Layout */,
+				79FE360A1619443F00DB7C6D /* Views */,
+				79FE360B1619447800DB7C6D /* Cells */,
+			);
+			name = Editor;
+			sourceTree = "<group>";
+		};
+		79FE36011619435100DB7C6D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				79C92CEE161144B500BB6CDC /* WCTableView.h */,
+				79C92CEF161144B600BB6CDC /* WCTableView.m */,
+				79FE3607161943AF00DB7C6D /* Jump Bar */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		79FE36021619435A00DB7C6D /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
+				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
+			);
+			name = Windows;
+			sourceTree = "<group>";
+		};
+		79FE36031619436C00DB7C6D /* Completion */ = {
+			isa = PBXGroup;
+			children = (
+				79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */,
+				79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */,
+				79C92CF116114A1300BB6CDC /* WCCompletionItem.h */,
+				79C92CF216114A1300BB6CDC /* WCCompletionItem.m */,
+			);
+			name = Completion;
+			sourceTree = "<group>";
+		};
+		79FE36041619438A00DB7C6D /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */,
+				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
+			);
+			name = Documents;
+			sourceTree = "<group>";
+		};
+		79FE36051619439500DB7C6D /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7973D6D2160CF7F4004EDE62 /* WCViewController.h */,
+				7973D6D3160CF7F4004EDE62 /* WCViewController.m */,
+				7973D6D6160CF83A004EDE62 /* WCTextViewController.h */,
+				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		79FE3606161943A000DB7C6D /* Window Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				793D2362161511C600742605 /* WCSourceFileWindowController.h */,
+				793D2363161511C700742605 /* WCSourceFileWindowController.m */,
+			);
+			name = "Window Controllers";
+			sourceTree = "<group>";
+		};
+		79FE3607161943AF00DB7C6D /* Jump Bar */ = {
+			isa = PBXGroup;
+			children = (
+				7903F1DB160EB4C9000D3F3D /* WCJumpBarControl.h */,
+				7903F1DC160EB4C9000D3F3D /* WCJumpBarControl.m */,
+				7903F1DE160EB796000D3F3D /* WCJumpBarCell.h */,
+				7903F1DF160EB797000D3F3D /* WCJumpBarCell.m */,
+				7903F1E1160EB89A000D3F3D /* WCJumpBarComponentCell.h */,
+				7903F1E2160EB89A000D3F3D /* WCJumpBarComponentCell.m */,
+				7903F1F1160F735C000D3F3D /* WCJumpBarBackgroundView.h */,
+				7903F1F2160F735D000D3F3D /* WCJumpBarBackgroundView.m */,
+			);
+			name = "Jump Bar";
+			sourceTree = "<group>";
+		};
+		79FE36081619442800DB7C6D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7973D6DF160CFD57004EDE62 /* WCSyntaxHighlighter.h */,
+				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
+				793D2368161554BB00742605 /* WCTextStorage.h */,
+				793D2369161554BB00742605 /* WCTextStorage.m */,
+				7959365E161637840085355E /* Folds */,
+				7903F1B5160E5F72000D3F3D /* Symbols */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		79FE36091619443100DB7C6D /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				793D236B161557D000742605 /* WCLayoutManager.h */,
+				793D236C161557D100742605 /* WCLayoutManager.m */,
+				793D236E1615584C00742605 /* WCTypesetter.h */,
+				793D236F1615584D00742605 /* WCTypesetter.m */,
+				793D23711615597900742605 /* WCGlyphGenerator.h */,
+				793D23721615597A00742605 /* WCGlyphGenerator.m */,
+			);
+			name = Layout;
+			sourceTree = "<group>";
+		};
+		79FE360A1619443F00DB7C6D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				79968CD51608E91100F139BC /* WCLineNumberView.h */,
+				79968CD61608E91100F139BC /* WCLineNumberView.m */,
+				79FC76A41618029F006B9DC3 /* WCFoldView.h */,
+				79FC76A51618029F006B9DC3 /* WCFoldView.m */,
+				79129118160ABD5100ADFAB5 /* WCTextView.h */,
+				79129119160ABD5100ADFAB5 /* WCTextView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		79FE360B1619447800DB7C6D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */,
+				7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */,
+				793D237416155C3F00742605 /* WCFoldCell.h */,
+				793D237516155C4000742605 /* WCFoldCell.m */,
+			);
+			name = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -556,6 +657,7 @@
 				7959366D161639720085355E /* Fold.m in Sources */,
 				7959367016163F2B0085355E /* WCFoldMarker.m in Sources */,
 				79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */,
+				79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

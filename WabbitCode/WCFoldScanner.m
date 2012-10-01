@@ -31,6 +31,10 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
 
 @implementation WCFoldScanner
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (id)initWithTextStorage:(NSTextStorage *)textStorage {
     if (!(self = [super init]))
         return nil;

@@ -14,8 +14,12 @@
 #import "WCSyntaxHighlighter.h"
 #import "NSColor+WCExtensions.h"
 #import "WCDefines.h"
+#import "WCSymbolHighlighter.h"
+#import "WCSymbolScanner.h"
+#import "NSTextView+WCExtensions.h"
 
-static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeName";
+NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeName";
+NSString *const kTokenAttributeName = @"kTokenAttributeName";
 
 @interface WCSyntaxHighlighter () <NSTextStorageDelegate>
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -28,10 +32,31 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
 - (void)dealloc {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
+#pragma mark NSTextStorageDelegate
+
+- (void)textStorageDidProcessEditing:(NSNotification *)notification {
+    if (!([notification.object editedMask] & NSTextStorageEditedCharacters))
+        return;
+    
+    NSRange editedRange = [notification.object editedRange];
+    NSUInteger charIndex = editedRange.location;
+    NSRange highlightRange = editedRange;
+    
+    if (charIndex < self.textStorage.length) {
+        id attribute = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex effectiveRange:NULL];
+        
+        if ([attribute boolValue])
+            [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex longestEffectiveRange:&highlightRange inRange:NSMakeRange(0, self.textStorage.length)];
+    }
+    
+    [self performSelector:@selector(_syntaxHighlightInRangeValue:) withObject:[NSValue valueWithRange:[self.textStorage.string lineRangeForRange:highlightRange]] afterDelay:0];
+}
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
     if (!(self = [super init]))
         return nil;
+    
+    WCAssert(textStorage,@"textStorage cannot be nil!");
     
     [self setTextStorage:textStorage];
     [self syntaxHighlightInRange:NSMakeRange(0, self.textStorage.length)];
@@ -41,6 +66,8 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
 }
 
 - (void)syntaxHighlightInRange:(NSRange)range; {
+    WCLogNSRange(range);
+    
     if (!range.length)
         return;
     
@@ -49,35 +76,35 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
     [self.textStorage addAttributes:[self.class defaultAttributes] range:range];
     
     [[WCSyntaxHighlighter operationalCodeRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor blueColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter registerRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor redColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor redColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter conditionalRegisterRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:1 blue:1 alpha:1] range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:1 blue:1 alpha:1], kTokenAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter numberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor blueColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter binaryNumberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.75 blue:0.75 alpha:1] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.75 blue:0.75 alpha:1], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter hexadecimalNumberRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor magentaColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor magentaColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter directiveRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor orangeColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter preProcessorRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor brownColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -85,31 +112,31 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
             [self.textStorage.string characterAtIndex:result.range.location] == '_')
             return;
         
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1], kTokenAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor brownColor], kTokenAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1], kTokenAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter stringRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor purpleColor] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor purpleColor], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter commentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1] range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kTokenAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:NSMakeRange(0, self.textStorage.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttributes:@{NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kMultilineCommentAttributeName : @true} range:result.range];
+        [self.textStorage addAttributes:@{NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kMultilineCommentAttributeName : @true, kTokenAttributeName : @true} range:result.range];
         
         if (NSMaxRange(result.range) > NSMaxRange(range))
             *stop = YES;
@@ -119,7 +146,7 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
 }
 
 + (NSDictionary *)defaultAttributes; {
-    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false};
+    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false, kTokenAttributeName : @false};
 }
 
 + (NSRegularExpression *)commentRegex; {
@@ -244,26 +271,31 @@ static NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttri
     return retval;
 }
 
-- (void)textStorageDidProcessEditing:(NSNotification *)note {
-    if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
-        return;
+- (void)setDelegate:(id<WCSyntaxHighlighterDelegate>)delegate {
+    _delegate = delegate;
     
-    NSRange editedRange = [note.object editedRange];
-    NSUInteger charIndex = editedRange.location;
-    NSRange highlightRange = editedRange;
-    
-    if (charIndex < self.textStorage.length) {
-        id attribute = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex effectiveRange:NULL];
-        
-        if ([attribute boolValue])
-            [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex longestEffectiveRange:&highlightRange inRange:NSMakeRange(0, self.textStorage.length)];
+    if (delegate) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForSyntaxHighligher:self]];
     }
-    
-    [self performSelector:@selector(_syntaxHighlightInRangeValue:) withObject:[NSValue valueWithRange:[self.textStorage.string lineRangeForRange:highlightRange]] afterDelay:0];
 }
 
 - (void)_syntaxHighlightInRangeValue:(NSValue *)rangeValue; {
     [self syntaxHighlightInRange:rangeValue.rangeValue];
+}
+
+- (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
+    WCSymbolHighlighter *symbolHighlighter = [self.delegate symbolHighlighterForSyntaxHighlighter:self];
+    NSMutableIndexSet *visibleRanges = [NSMutableIndexSet indexSet];
+    
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+        for (NSTextContainer *textContainer in layoutManager.textContainers) {
+            [visibleRanges addIndexesInRange:[textContainer.textView WC_visibleRange]];
+        }
+    }
+    
+    [visibleRanges enumerateRangesUsingBlock:^(NSRange range, BOOL *stop) {
+        [symbolHighlighter symbolHighlightInRange:range];
+    }];
 }
 
 @end

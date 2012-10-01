@@ -24,11 +24,12 @@
 
 @end
 
-@class WCSymbolScanner,WCFoldScanner;
+@class WCSymbolScanner,WCFoldScanner,WCSymbolHighlighter;
 
 @protocol WCTextViewControllerDelegate <NSObject>
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
 - (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController;
+- (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController;
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController;
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
 @end

@@ -23,7 +23,7 @@ extern NSString *const WCTextStorageFoldRangeUserInfoKey;
 
 @interface WCTextStorage : NSTextStorage
 
-@property (weak,nonatomic) id <WCTextStorageDelegate> delegate;
+@property (assign,nonatomic) id <WCTextStorageDelegate> delegate;
 
 @property (assign,nonatomic,getter = isFolding) BOOL folding;
 - (void)foldRange:(NSRange)range;

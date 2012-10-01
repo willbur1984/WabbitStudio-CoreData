@@ -31,6 +31,10 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 
 @implementation WCSymbolScanner
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
     if (!(self = [super init]))
         return nil;
@@ -81,7 +85,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.operationQueue addOperation:operation];
 }
 
-- (id)symbolForRange:(NSRange)range; {
+- (Symbol *)symbolForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu",range.location]];
@@ -93,7 +97,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",name]];
-    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:NO] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }

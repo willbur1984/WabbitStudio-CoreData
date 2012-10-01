@@ -17,6 +17,10 @@
 
 @implementation NSArray (WCExtensions)
 
+- (id)WC_firstObject; {
+    return (self.count > 0) ? [self objectAtIndex:0] : nil;
+}
+
 - (NSUInteger)WC_lineNumberForRange:(NSRange)range; {
     NSUInteger left = 0, right = self.count, middle, lineStartIndex;
     

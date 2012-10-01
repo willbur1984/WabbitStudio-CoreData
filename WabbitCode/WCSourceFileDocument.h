@@ -8,11 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class WCSyntaxHighlighter,WCSymbolScanner,WCFoldScanner;
+@class WCSyntaxHighlighter,WCSymbolScanner,WCFoldScanner,WCSymbolHighlighter;
 
 @interface WCSourceFileDocument : NSDocument
 
 @property (readonly,strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
+@property (readonly,strong,nonatomic) WCSymbolHighlighter *symbolHighlighter;
 @property (readonly,strong,nonatomic) WCSymbolScanner *symbolScanner;
 @property (readonly,strong,nonatomic) WCFoldScanner *foldScanner;
 

@@ -45,6 +45,9 @@
 - (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.foldScanner;
 }
+- (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController {
+    return self.sourceFileDocument.symbolHighlighter;
+}
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.fileURL;
 }

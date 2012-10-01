@@ -13,7 +13,14 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const kMultilineCommentAttributeName;
+extern NSString *const kTokenAttributeName;
+
+@protocol WCSyntaxHighlighterDelegate;
+
 @interface WCSyntaxHighlighter : NSObject
+
+@property (weak,nonatomic) id <WCSyntaxHighlighterDelegate> delegate;
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 
@@ -38,4 +45,11 @@
 + (NSRegularExpression *)defineRegex;
 + (NSRegularExpression *)macroRegex;
 
+@end
+
+@class WCSymbolHighlighter,WCSymbolScanner;
+
+@protocol WCSyntaxHighlighterDelegate <NSObject>
+- (WCSymbolHighlighter *)symbolHighlighterForSyntaxHighlighter:(WCSyntaxHighlighter *)syntaxHighlighter;
+- (WCSymbolScanner *)symbolScannerForSyntaxHighligher:(WCSyntaxHighlighter *)syntaxHighlighter;
 @end

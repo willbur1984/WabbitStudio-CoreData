@@ -119,4 +119,11 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
     
     return WC_NSNotFoundRange;
 }
+
+- (id<WCTextStorageDelegate>)delegate {
+    return (id<WCTextStorageDelegate>)[super delegate];
+}
+- (void)setDelegate:(id<WCTextStorageDelegate>)delegate {
+    [super setDelegate:delegate];
+}
 @end
