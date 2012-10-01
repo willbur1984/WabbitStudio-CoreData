@@ -59,6 +59,12 @@
     return self;
 }
 #pragma mark NSResponder
+- (void)mouseExited:(NSEvent *)theEvent {
+    [super mouseExited:theEvent];
+    
+    WCLog();
+}
+
 - (void)mouseMoved:(NSEvent *)theEvent {
     [super mouseMoved:theEvent];
     

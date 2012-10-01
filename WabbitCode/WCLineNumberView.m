@@ -193,7 +193,14 @@ static const CGFloat kDefaultThickness = 30;
         
         if (NSLocationInRange(lineStartIndex, charRange)) {
             NSUInteger numberOfLineRects;
-            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+            NSRange lineRange = NSMakeRange(lineStartIndex, 0);
+            if (lineNumber + 1 < self.lineStartIndexes.count) {
+                NSUInteger lineEndIndex = [[self.lineStartIndexes objectAtIndex:lineNumber + 1] unsignedIntegerValue];
+                
+                lineRange = NSMakeRange(lineStartIndex, lineEndIndex - lineStartIndex);
+            }
+            
+            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:lineRange withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
             
             if (numberOfLineRects) {
                 NSRect lineRect = lineRects[0];
@@ -203,6 +210,21 @@ static const CGFloat kDefaultThickness = 30;
                     NSRect drawRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(rect) - kStringMarginLeftRight, NSHeight(lineRect));
                     
                     [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
+                    
+                    CGFloat lineHeight = [self.textView.layoutManager defaultLineHeightForFont:self.textView.font];
+                    NSInteger numberOfWrappedLines = (NSHeight(lineRect) / lineHeight) - 1;
+                    
+                    if (numberOfWrappedLines > 0) {
+                        NSString *wrapString = NSLocalizedString(@".", nil);
+                        NSUInteger wrappedLineIndex;
+                        CGFloat frameY = NSMinY(drawRect) + lineHeight;
+                        
+                        for (wrappedLineIndex=0; wrappedLineIndex<numberOfWrappedLines; wrappedLineIndex++) {
+                            [wrapString drawInRect:NSMakeRect(NSMinX(drawRect), frameY, NSWidth(drawRect), lineHeight) withAttributes:attributes];
+                            
+                            frameY += lineHeight;
+                        }
+                    }
                 }
                 
                 lastLineRectY = NSMinY(lineRect);
