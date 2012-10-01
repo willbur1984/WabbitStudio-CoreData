@@ -62,7 +62,7 @@
 - (void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     
-    WCLog();
+    [[WCToolTipWindow sharedInstance] hideToolTipWindow];
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {

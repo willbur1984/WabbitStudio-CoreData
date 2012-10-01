@@ -111,6 +111,9 @@ static const NSTimeInterval kDismissThreshold = 1.5;
 }
 
 - (void)hideToolTipWindow; {
+    if (!self.isVisible)
+        return;
+    
     __block typeof (self) blockSelf = self;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
