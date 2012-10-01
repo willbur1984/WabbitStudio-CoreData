@@ -29,7 +29,7 @@
 @end
 
 @implementation WCSourceFileWindowController
-
+#pragma mark *** Subclass Overrides ***
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -49,7 +49,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:self.window];
 }
-
+#pragma mark WCTextViewControllerDelegate
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.symbolScanner;
 }
@@ -59,13 +59,16 @@
 - (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.symbolHighlighter;
 }
+- (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController {
+    return self.sourceFileDocument.displayName;
+}
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.fileURL;
 }
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.undoManager;
 }
-
+#pragma mark *** Public Methods ***
 - (id)initWithTextStorage:(WCTextStorage *)textStorage; {
     if (!(self = [super initWithWindowNibName:self.windowNibName]))
         return nil;
@@ -74,11 +77,11 @@
     
     return self;
 }
-
+#pragma mark Properties
 - (WCSourceFileDocument *)sourceFileDocument {
     return (WCSourceFileDocument *)self.document;
 }
-
+#pragma mark Notifications
 - (void)_windowWillStartLiveResize:(NSNotification *)note {
     WCLog();
 }

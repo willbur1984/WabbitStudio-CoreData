@@ -19,5 +19,6 @@
 
 - (void)showString:(NSString *)string atPoint:(NSPoint)point;
 - (void)showAttributedString:(NSAttributedString *)attributedString atPoint:(NSPoint)point;
+- (void)hideToolTipWindow;
 
 @end

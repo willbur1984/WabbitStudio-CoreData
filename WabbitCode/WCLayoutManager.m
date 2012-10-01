@@ -24,6 +24,8 @@
 	
 	[self setTypesetter:[[WCTypesetter alloc] init]];
 	[self setGlyphGenerator:[[WCGlyphGenerator alloc] init]];
+    [self setAllowsNonContiguousLayout:YES];
+    [self setBackgroundLayoutEnabled:NO];
 	
 	return self;
 }

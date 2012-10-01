@@ -58,6 +58,43 @@
     
     return self;
 }
+#pragma mark NSResponder
+- (void)mouseMoved:(NSEvent *)theEvent {
+    [super mouseMoved:theEvent];
+    
+    NSPoint point = [self convertPoint:theEvent.locationInWindow fromView:nil];
+    NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
+    
+    if (charIndex >= self.string.length)
+        return;
+    
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
+    
+    if (symbolRange.location == NSNotFound)
+        return;
+    
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
+    
+    if (!symbols.count)
+        return;
+    
+    NSMutableString *string = [NSMutableString stringWithCapacity:0];
+    
+    for (Symbol *symbol in symbols)
+        [string appendFormat:NSLocalizedString(@"%@ \u2192 line %lu\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
+    
+    [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
+    
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
+    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+    
+    lineFragmentRect.origin.x += glyphLocation.x;
+    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+    
+    [[WCToolTipWindow sharedInstance] showString:string atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
+}
+
 #pragma mark NSTextInputClient
 - (void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
     [super insertText:aString replacementRange:replacementRange];

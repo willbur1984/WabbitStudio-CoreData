@@ -185,7 +185,13 @@
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     NSURL *fileURL = [self.delegate fileURLForTextViewController:self];
-    WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
+    WCJumpBarComponentCell *cell;
+    
+    if (fileURL)
+        cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
+    else
+        cell = [[WCJumpBarComponentCell alloc] initTextCell:[self.delegate displayNameForTextViewController:self]];
+    
     NSImage *image;
     
     if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL])

@@ -94,35 +94,34 @@ static const NSTimeInterval kDismissThreshold = 1.5;
     __block typeof (self) blockSelf = self;
     
     id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
-        BOOL shouldDismiss = NO;
-        
         switch (event.type) {
             case NSMouseMoved:
                 if ([[NSDate date] timeIntervalSinceDate:self.orderedFrontDate] > kDismissThreshold) {
-                    shouldDismiss = YES;
+                    [blockSelf hideToolTipWindow];
                 }
                 break;
             default:
-                shouldDismiss = YES;
+                [blockSelf hideToolTipWindow];
                 break;
         }
-        
-        if (shouldDismiss) {
-            [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-                [context setDuration:0.3];
-                
-                [blockSelf.animator setAlphaValue:0];
-            } completionHandler:^{
-                [blockSelf orderOut:nil];
-            }];
-            
-            [blockSelf setEventMonitor:nil];
-        }
-        
         return event;
     }];
     
     [self setEventMonitor:eventMonitor];
+}
+
+- (void)hideToolTipWindow; {
+    __block typeof (self) blockSelf = self;
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setDuration:0.3];
+        
+        [blockSelf.animator setAlphaValue:0];
+    } completionHandler:^{
+        [blockSelf orderOut:nil];
+    }];
+    
+    [blockSelf setEventMonitor:nil];
 }
 
 - (NSDictionary *)defaultAttributes {
