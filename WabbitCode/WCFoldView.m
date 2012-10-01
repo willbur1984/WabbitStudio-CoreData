@@ -63,9 +63,10 @@ static const CGFloat kFoldViewWidth = 7;
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    [super mouseDown:theEvent];
-    
     [self setClickedFold:self.foldToHighlight];
+    
+    if (!self.clickedFold)
+        [super mouseDown:theEvent];
 }
 - (void)mouseUp:(NSEvent *)theEvent {
     if (self.clickedFold == self.foldToHighlight) {
