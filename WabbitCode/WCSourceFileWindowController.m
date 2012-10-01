@@ -15,6 +15,10 @@
 #import "WCSourceFileDocument.h"
 #import "WCTextViewController.h"
 #import "WCTextStorage.h"
+#import "WCSymbolHighlighter.h"
+#import "WCDefines.h"
+#import "NSTextView+WCExtensions.h"
+#import "WCTextView.h"
 
 @interface WCSourceFileWindowController () <WCTextViewControllerDelegate>
 
@@ -25,6 +29,10 @@
 @end
 
 @implementation WCSourceFileWindowController
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (NSString *)windowNibName {
     return @"WCSourceFileWindow";
@@ -37,6 +45,9 @@
     [self.textViewController setDelegate:self];
     [self.textViewController.view setFrame:[self.window.contentView bounds]];
     [self.window.contentView addSubview:self.textViewController.view];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:self.window];
 }
 
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
@@ -66,6 +77,15 @@
 
 - (WCSourceFileDocument *)sourceFileDocument {
     return (WCSourceFileDocument *)self.document;
+}
+
+- (void)_windowWillStartLiveResize:(NSNotification *)note {
+    WCLog();
+}
+- (void)_windowDidEndLiveResize:(NSNotification *)note {
+    WCSymbolHighlighter *symbolHighlighter = self.sourceFileDocument.symbolHighlighter;
+    
+    [symbolHighlighter symbolHighlightInRange:[self.textViewController.textView WC_visibleRange]];
 }
 
 @end

@@ -33,7 +33,7 @@
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,NSMenuDelegate>
 
-@property (assign,nonatomic) IBOutlet WCTextView *textView;
+@property (readwrite,assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 @property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
 

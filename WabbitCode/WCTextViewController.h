@@ -13,10 +13,12 @@
 
 #import "WCViewController.h"
 
-@class WCTextStorage;
+@class WCTextStorage,WCTextView;
 @protocol WCTextViewControllerDelegate;
 
 @interface WCTextViewController : WCViewController
+
+@property (readonly,assign,nonatomic) IBOutlet WCTextView *textView;
 
 @property (assign,nonatomic) id <WCTextViewControllerDelegate> delegate;
 
