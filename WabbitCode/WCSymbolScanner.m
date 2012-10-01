@@ -101,6 +101,14 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
+- (NSArray *)symbolsSortedByLocationWithName:(NSString *)name; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",name]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
 - (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     

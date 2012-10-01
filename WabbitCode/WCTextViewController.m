@@ -173,6 +173,10 @@
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
     return [self.delegate symbolScannerForTextViewController:self];
 }
+- (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol {
+    [textView setSelectedRange:NSRangeFromString(symbol.range)];
+    [textView scrollRangeToVisible:textView.selectedRange];
+}
 #pragma mark WCFoldViewDelegate
 - (WCFoldScanner *)foldScannerForFoldView:(WCFoldView *)foldView {
     return [self.delegate foldScannerForTextViewController:self];

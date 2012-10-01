@@ -32,6 +32,7 @@ extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
 
 - (Symbol *)symbolForRange:(NSRange)range;
 - (NSArray *)symbolsWithName:(NSString *)name;
+- (NSArray *)symbolsSortedByLocationWithName:(NSString *)name;
 - (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
 - (NSArray *)symbolsWithPrefix:(NSString *)prefix;
 

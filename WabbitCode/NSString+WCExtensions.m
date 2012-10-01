@@ -30,7 +30,7 @@
     __block NSRange retval = WC_NSNotFoundRange;
     
     [[WCSymbolScanner symbolRegex] enumerateMatchesInString:self options:0 range:[self lineRangeForRange:range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if (NSLocationInRange(result.range.location, range)) {
+        if (NSLocationInRange(range.location, result.range)) {
             retval = result.range;
             *stop = YES;
         }

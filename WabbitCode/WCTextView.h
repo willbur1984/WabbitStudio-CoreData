@@ -24,12 +24,12 @@
 - (IBAction)foldAction:(id)sender;
 - (IBAction)unfoldAction:(id)sender;
 
-- (IBAction)showToolTip:(id)sender;
-
 @end
 
-@class WCSymbolScanner;
+@class WCSymbolScanner,Symbol;
 
 @protocol WCTextViewDelegate <NSTextViewDelegate>
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView;
+@optional
+- (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol;
 @end

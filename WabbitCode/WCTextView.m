@@ -21,15 +21,17 @@
 #import "Macro.h"
 #import "WCCompletionWindow.h"
 #import "WCTextStorage.h"
+#import "WCSymbolImageManager.h"
+#import "WCGeometry.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
 @end
 
 @implementation WCTextView
-
+#pragma mark *** Subclass Overrides ***
 + (NSMenu *)defaultMenu {
-    NSMenu *retval = [[NSMenu alloc] initWithTitle:@""];
+    NSMenu *retval = [[NSMenu alloc] initWithTitle:@"org.revsoft.wctextview.default-menu"];
     
     [retval addItemWithTitle:NSLocalizedString(@"Cut", nil) action:@selector(cut:) keyEquivalent:@""];
     [retval addItemWithTitle:NSLocalizedString(@"Copy", nil) action:@selector(copy:) keyEquivalent:@""];
@@ -41,7 +43,7 @@
     
     return retval;
 }
-
+#pragma mark NSCoding
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (!(self = [super initWithCoder:aDecoder]))
         return nil;
@@ -56,7 +58,7 @@
     
     return self;
 }
-
+#pragma mark NSTextInputClient
 - (void)insertText:(id)aString replacementRange:(NSRange)replacementRange {
     [super insertText:aString replacementRange:replacementRange];
     
@@ -74,7 +76,7 @@
         [self setSelectedRange:NSMakeRange(self.selectedRange.location - 1, 0)];
     }
 }
-
+#pragma mark NSTextView
 - (void)setSelectedRanges:(NSArray *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelectingFlag {
     if (!stillSelectingFlag && ([ranges count] == 1)) {
         NSRange range = [[ranges objectAtIndex:0] rangeValue];
@@ -111,7 +113,7 @@
 - (IBAction)complete:(id)sender {
     [[WCCompletionWindow sharedInstance] showCompletionWindowForTextView:self];
 }
-
+#pragma mark *** Public Methods ***
 @dynamic delegate;
 - (id<WCTextViewDelegate>)delegate {
     return (id<WCTextViewDelegate>)[super delegate];
@@ -119,7 +121,7 @@
 - (void)setDelegate:(id<WCTextViewDelegate>)delegate {
     [super setDelegate:delegate];
 }
-
+#pragma mark Actions
 - (IBAction)jumpToDefinitionAction:(id)sender; {
     NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
     
@@ -128,18 +130,39 @@
         return;
     }
     
-    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextView:self];
-    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:symbolRange]];
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
     
     if (!symbols.count) {
         NSBeep();
         return;
     }
-    
-    Symbol *symbol = symbols.lastObject;
-    
-    [self setSelectedRange:NSRangeFromString(symbol.range)];
-    [self scrollRangeToVisible:self.selectedRange];
+    else if (symbols.count == 1) {
+        if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
+            [self.delegate textView:self jumpToDefinitionForSymbol:symbols.lastObject];
+    }
+    else {
+        NSMenu *menu = [[NSMenu alloc] initWithTitle:@"org.revsoft.wctextview.jump-to-definition-menu"];
+        
+        [menu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+        
+        for (Symbol *symbol in symbols) {
+            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 line %ld", nil),symbol.name,symbol.lineNumber.integerValue] action:@selector(_jumpToDefinitionMenuItemAction:) keyEquivalent:@""];
+            
+            [item setTarget:self];
+            [item setRepresentedObject:symbol];
+            [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+            [item.image setSize:WC_NSSmallSize];
+        }
+        
+        NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
+        NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+        NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+        
+        lineFragmentRect.origin.x += glyphLocation.x;
+        lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+        
+        [menu popUpMenuPositioningItem:nil atLocation:lineFragmentRect.origin inView:self];
+    }
 }
 
 - (IBAction)foldAction:(id)sender; {
@@ -149,38 +172,7 @@
     if (![(WCTextStorage *)self.textStorage unfoldRange:self.selectedRange effectiveRange:NULL])
         NSBeep();
 }
-
-- (IBAction)showToolTip:(id)sender; {
-    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
-    
-    if (symbolRange.location == NSNotFound) {
-        NSBeep();
-        return;
-    }
-    
-    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextView:self];
-    NSArray *symbols = [symbolScanner symbolsWithName:[self.string substringWithRange:symbolRange]];
-    
-    if (!symbols.count)
-        return;
-    
-    NSMutableString *string = [NSMutableString stringWithCapacity:0];
-    
-    for (Symbol *symbol in symbols)
-        [string appendFormat:@"%@ - %@\n",symbol.name,symbol.range];
-    
-    [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
-    
-    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:self.selectedRange.location];
-    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
-    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
-    
-    lineFragmentRect.origin.x += glyphLocation.x;
-    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
-    
-    [[WCToolTipWindow sharedInstance] showString:string atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
-}
-
+#pragma mark *** Private Methods ***
 - (void)_highlightMatchingBrace; {
     // need at least two characters in our string to be able to match
 	if (self.string.length <= 1)
@@ -233,7 +225,12 @@
 	
 	NSBeep();
 }
-
+#pragma mark Actions
+- (IBAction)_jumpToDefinitionMenuItemAction:(NSMenuItem *)sender {
+    if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
+        [self.delegate textView:self jumpToDefinitionForSymbol:sender.representedObject];
+}
+#pragma mark Notifications
 - (void)_textViewDidChangeSelection:(NSNotification *)note {
     NSRange oldSelectedRange = [[note.userInfo objectForKey:@"NSOldSelectedCharacterRange"] rangeValue];
     
