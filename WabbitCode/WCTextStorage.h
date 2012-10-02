@@ -19,11 +19,14 @@ extern NSString *const WCTextStorageDidFoldNotification;
 extern NSString *const WCTextStorageDidUnfoldNotification;
 extern NSString *const WCTextStorageFoldRangeUserInfoKey;
 
+@class WCBookmarkManager;
 @protocol WCTextStorageDelegate;
 
 @interface WCTextStorage : NSTextStorage
 
 @property (assign,nonatomic) id <WCTextStorageDelegate> delegate;
+
+@property (readonly,strong,nonatomic) WCBookmarkManager *bookmarkManager;
 
 @property (assign,nonatomic,getter = isFolding) BOOL folding;
 - (void)foldRange:(NSRange)range;

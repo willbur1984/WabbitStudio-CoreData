@@ -63,7 +63,7 @@ static const CGFloat kDefaultThickness = 30;
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
     [self drawBackgroundAndDividerLineInRect:rect];
-    //[self drawCurrentLineHighlightInRect:rect];
+//    [self drawCurrentLineHighlightInRect:self.bounds];
     [self drawLineNumbersInRect:rect];
 }
 
@@ -193,38 +193,18 @@ static const CGFloat kDefaultThickness = 30;
         
         if (NSLocationInRange(lineStartIndex, charRange)) {
             NSUInteger numberOfLineRects;
-            NSRange lineRange = NSMakeRange(lineStartIndex, 0);
-            if (lineNumber + 1 < self.lineStartIndexes.count) {
-                NSUInteger lineEndIndex = [[self.lineStartIndexes objectAtIndex:lineNumber + 1] unsignedIntegerValue];
-                
-                lineRange = NSMakeRange(lineStartIndex, lineEndIndex - lineStartIndex);
-            }
-            
-            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:lineRange withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(lineStartIndex, 0) withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0) inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
             
             if (numberOfLineRects) {
                 NSRect lineRect = lineRects[0];
                 
                 if (NSMinY(lineRect) != lastLineRectY) {
+                    NSString *lineNumberString = [NSString stringWithFormat:@"%lu",lineNumber + 1];
                     NSDictionary *attributes = [self stringAttributesForLineNumber:lineNumber selectedLineRange:selectedLineRange];
-                    NSRect drawRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y + kStringMarginTop, NSWidth(rect) - kStringMarginLeftRight, NSHeight(lineRect));
+                    NSSize stringSize = [lineNumberString sizeWithAttributes:attributes];
+                    NSRect drawRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y + (NSHeight(lineRect) * 0.5) - (stringSize.height * 0.5), NSWidth(rect) - kStringMarginLeftRight, stringSize.height);
                     
-                    [[NSString stringWithFormat:@"%lu",lineNumber + 1] drawInRect:drawRect withAttributes:attributes];
-                    
-                    CGFloat lineHeight = [self.textView.layoutManager defaultLineHeightForFont:self.textView.font];
-                    NSInteger numberOfWrappedLines = (NSHeight(lineRect) / lineHeight) - 1;
-                    
-                    if (numberOfWrappedLines > 0) {
-                        NSString *wrapString = NSLocalizedString(@".", nil);
-                        NSUInteger wrappedLineIndex;
-                        CGFloat frameY = NSMinY(drawRect) + lineHeight;
-                        
-                        for (wrappedLineIndex=0; wrappedLineIndex<numberOfWrappedLines; wrappedLineIndex++) {
-                            [wrapString drawInRect:NSMakeRect(NSMinX(drawRect), frameY, NSWidth(drawRect), lineHeight) withAttributes:attributes];
-                            
-                            frameY += lineHeight;
-                        }
-                    }
+                    [lineNumberString drawInRect:drawRect withAttributes:attributes];
                 }
                 
                 lastLineRectY = NSMinY(lineRect);

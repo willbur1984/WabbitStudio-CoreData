@@ -24,6 +24,8 @@
 - (IBAction)foldAction:(id)sender;
 - (IBAction)unfoldAction:(id)sender;
 
+- (IBAction)toggleBookmarkAction:(id)sender;
+
 @end
 
 @class WCSymbolScanner,Symbol;

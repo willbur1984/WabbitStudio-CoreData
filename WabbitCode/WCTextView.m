@@ -23,6 +23,7 @@
 #import "WCTextStorage.h"
 #import "WCSymbolImageManager.h"
 #import "WCGeometry.h"
+#import "WCBookmarkManager.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -214,6 +215,16 @@
 - (IBAction)unfoldAction:(id)sender; {
     if (![(WCTextStorage *)self.textStorage unfoldRange:self.selectedRange effectiveRange:NULL])
         NSBeep();
+}
+
+- (IBAction)toggleBookmarkAction:(id)sender; {
+    WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0)];
+    
+    if (bookmarks.count > 0)
+        [bookmarkManager removeBookmark:bookmarks.lastObject];
+    else
+        [bookmarkManager addBookmarkForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0) name:nil];
 }
 #pragma mark *** Private Methods ***
 - (void)_highlightMatchingBrace; {

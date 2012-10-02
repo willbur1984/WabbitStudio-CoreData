@@ -66,8 +66,6 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
 }
 
 - (void)syntaxHighlightInRange:(NSRange)range; {
-    WCLogNSRange(range);
-    
     if (!range.length)
         return;
     

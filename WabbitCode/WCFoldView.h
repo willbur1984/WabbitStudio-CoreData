@@ -13,13 +13,14 @@
 
 #import "WCLineNumberView.h"
 
-@class WCFoldScanner;
+@class WCFoldScanner,WCTextStorage;
 @protocol WCFoldViewDelegate;
 
 @interface WCFoldView : WCLineNumberView
 
 @property (assign,nonatomic) id <WCFoldViewDelegate> delegate;
 
+- (void)drawBookmarksInRect:(NSRect)rect;
 - (void)drawFoldsInRect:(NSRect)rect;
 
 @end

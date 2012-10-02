@@ -14,6 +14,7 @@
 #import "WCTextStorage.h"
 #import "WCFoldCell.h"
 #import "WCGeometry.h"
+#import "WCBookmarkManager.h"
 
 NSString *const WCTextStorageFoldAttributeName = @"WCTextStorageFoldAttributeName";
 
@@ -23,7 +24,7 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
 
 @interface WCTextStorage ()
 @property (strong,nonatomic) NSMutableAttributedString *attributedString;
-
+@property (readwrite,strong,nonatomic) WCBookmarkManager *bookmarkManager;
 @end
 
 @implementation WCTextStorage
@@ -33,9 +34,9 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
         return nil;
     
     [self setAttributedString:[[NSMutableAttributedString alloc] initWithString:str attributes:attrs]];
+    [self setBookmarkManager:[[WCBookmarkManager alloc] initWithTextStorage:self]];
     
     return self;
-
 }
 
 - (NSString *)string {

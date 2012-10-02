@@ -18,14 +18,17 @@
 #import "NSTextView+WCExtensions.h"
 #import "WCGeometry.h"
 #import "WCTextStorage.h"
+#import "WCBookmarkManager.h"
+#import "Bookmark.h"
+#import "WCDefines.h"
 
 static const CGFloat kFoldViewWidth = 7;
 
 @interface WCFoldView ()
+@property (readonly,nonatomic) WCTextStorage *textStorage;
 @property (strong,nonatomic) NSTrackingArea *foldTrackingRect;
 @property (strong,nonatomic) Fold *foldToHighlight;
 @property (strong,nonatomic) Fold *clickedFold;
-@property (readonly,nonatomic) WCTextStorage *textStorage;
 
 - (NSColor *)_colorForFold:(Fold *)fold;
 @end
@@ -81,6 +84,14 @@ static const CGFloat kFoldViewWidth = 7;
     [self setClickedFold:nil];
 }
 #pragma mark NSView
++ (NSMenu *)defaultMenu {
+    NSMenu *retval = [[NSMenu alloc] initWithTitle:@"org.revsoft.wcfoldview.default-menu"];
+    
+    [retval addItemWithTitle:NSLocalizedString(@"Remove All Bookmarks", nil) action:@selector(_removeAllBookmarksAction:) keyEquivalent:@""];
+    
+    return retval;
+}
+
 - (void)updateTrackingAreas {
     [super updateTrackingAreas];
     
@@ -105,6 +116,7 @@ static const CGFloat kFoldViewWidth = 7;
     [self drawBackgroundAndDividerLineInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
     [self drawLineNumbersInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
     [self drawFoldsInRect:NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame))];
+    [self drawBookmarksInRect:NSMakeRect(NSMinX(self.bounds), 0, NSWidth(self.frame), NSHeight(self.frame))];
 }
 #pragma mark *** Public Methods ***
 - (id)initWithTextView:(NSTextView *)textView {
@@ -114,9 +126,42 @@ static const CGFloat kFoldViewWidth = 7;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidFold:) name:WCTextStorageDidFoldNotification object:textView.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidUnfold:) name:WCTextStorageDidUnfoldNotification object:textView.textStorage];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bookmarkManagerDidAddBookmark:) name:WCBookmarkManagerDidAddBookmarkNotification object:self.textStorage.bookmarkManager];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bookmarkManagerDidRemoveBookmark:) name:WCBookmarkManagerDidRemoveBookmarkNotification object:self.textStorage.bookmarkManager];
+    
     return self;
 }
 
+static const CGFloat kBookmarkHeight = 9;
+static const CGFloat kBookmarkWidth = 12;
+static const CGFloat kBookmarkEdgeInset = 3;
+
+- (void)drawBookmarksInRect:(NSRect)rect; {
+    NSArray *bookmarks = [self.textStorage.bookmarkManager bookmarksForRange:[self.textView WC_visibleRange]];
+    
+    for (Bookmark *bookmark in bookmarks) {
+        NSUInteger numberOfLineRects;
+        NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:NSMakeRange(bookmark.location.integerValue, 0) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+        
+        if (!numberOfLineRects)
+            continue;
+        
+        NSRect lineRect = lineRects[0];
+        NSRect bookmarkRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y + (NSHeight(lineRect) * 0.5) - (kBookmarkHeight * 0.5), kBookmarkWidth, kBookmarkHeight);
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        
+        [path moveToPoint:NSMakePoint(NSMinX(bookmarkRect), NSMinY(bookmarkRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(bookmarkRect), NSMinY(bookmarkRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(bookmarkRect) - kBookmarkEdgeInset, NSMidY(bookmarkRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(bookmarkRect), NSMaxY(bookmarkRect))];
+        [path lineToPoint:NSMakePoint(NSMinX(bookmarkRect), NSMaxY(bookmarkRect))];
+        [path lineToPoint:NSMakePoint(NSMinX(bookmarkRect), NSMinY(bookmarkRect))];
+        [path closePath];
+        
+        [[NSColor blueColor] setFill];
+        [path fill];
+    }
+}
 - (void)drawFoldsInRect:(NSRect)rect; {
     [[NSColor WC_colorWithHexadecimalString:@"ededed"] setFill];
     NSRectFill(rect);
@@ -134,12 +179,10 @@ static const CGFloat kFoldViewWidth = 7;
         NSRect lineRect = lineRects[0];
         
         if (numberOfLineRects > 1) {
-            if (numberOfLineRects > 1) {
-                NSUInteger rectIndex;
-                
-                for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
-                    lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
-            }
+            NSUInteger rectIndex;
+            
+            for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
+                lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
         }
         
         NSRect foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(lineRect));
@@ -231,6 +274,30 @@ static const CGFloat kFoldViewWidth = 7;
 - (WCTextStorage *)textStorage {
     return (WCTextStorage *)self.textView.textStorage;
 }
+#pragma mark Actions
+- (IBAction)_removeAllBookmarksAction:(id)sender {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey]) {
+        [self.textStorage.bookmarkManager removeAllBookmarks];
+        return;
+    }
+    
+    NSAlert *alert = [NSAlert alertWithMessageText:NSLocalizedString(@"Remove All Bookmarks", nil) defaultButton:NSLocalizedString(@"Remove All", nil) alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Are you sure you want to remove all bookmarks? This operation cannot be undone.", nil)];
+    
+    [alert setAlertStyle:NSWarningAlertStyle];
+    [alert setShowsSuppressionButton:YES];
+    
+    [alert beginSheetModalForWindow:self.window modalDelegate:self didEndSelector:@selector(_removeAllBookmarksAlert:code:context:) contextInfo:NULL];
+}
+#pragma mark Callbacks
+- (void)_removeAllBookmarksAlert:(NSAlert *)alert code:(NSInteger)code context:(void *)context {
+    if (code == NSAlertDefaultReturn) {
+        if (alert.suppressionButton.state == NSOnState)
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey];
+        
+        [self.textStorage.bookmarkManager removeAllBookmarks];
+    }
+}
+
 #pragma mark Notifications
 - (void)_foldScannerDidFinishScanningFolds:(NSNotification *)note {
     [self setNeedsDisplay:YES];
@@ -239,6 +306,22 @@ static const CGFloat kFoldViewWidth = 7;
     [self setNeedsDisplay:YES];
 }
 - (void)_textStorageDidUnfold:(NSNotification *)note {
+    [self setNeedsDisplay:YES];
+}
+- (void)_bookmarkManagerDidAddBookmark:(NSNotification *)note {
+    Bookmark *bookmark = [note.userInfo objectForKey:WCBookmarkManagerBookmarkUserInfoKey];
+    
+    if (!NSLocationInRange(bookmark.location.integerValue, [self.textView WC_visibleRange]))
+        return;
+    
+    [self setNeedsDisplay:YES];
+}
+- (void)_bookmarkManagerDidRemoveBookmark:(NSNotification *)note {
+    Bookmark *bookmark = [note.userInfo objectForKey:WCBookmarkManagerBookmarkUserInfoKey];
+    
+    if (!NSLocationInRange(bookmark.location.integerValue, [self.textView WC_visibleRange]))
+        return;
+    
     [self setNeedsDisplay:YES];
 }
 

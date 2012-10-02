@@ -30,8 +30,9 @@
 #import "WCTextStorage.h"
 #import "WCSymbolHighlighter.h"
 #import "NSTextView+WCExtensions.h"
+#import "WCBookmarkScroller.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,NSMenuDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
 @property (readwrite,assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
@@ -71,6 +72,12 @@
     [self.textView.enclosingScrollView setHasHorizontalRuler:NO];
     [self.textView.enclosingScrollView setHasVerticalRuler:YES];
     [self.textView.enclosingScrollView setRulersVisible:YES];
+    
+    WCBookmarkScroller *verticalScroller = [[WCBookmarkScroller alloc] initWithFrame:NSZeroRect];
+    
+    [verticalScroller setDelegate:self];
+    
+    [self.textView.enclosingScrollView setVerticalScroller:verticalScroller];
     
     [self.textView setDelegate:self];
     
@@ -180,6 +187,13 @@
 #pragma mark WCFoldViewDelegate
 - (WCFoldScanner *)foldScannerForFoldView:(WCFoldView *)foldView {
     return [self.delegate foldScannerForTextViewController:self];
+}
+#pragma mark WCBookmarkScrollerDelegate
+- (WCBookmarkManager *)bookmarkManagerForBookmarkScroller:(WCBookmarkScroller *)bookmarkScroller {
+    return self.textStorage.bookmarkManager;
+}
+- (NSTextView *)textViewForBookmarkScroller:(WCBookmarkScroller *)bookmarkScroller {
+    return self.textView;
 }
 
 #pragma mark WCJumpBarControlDataSource

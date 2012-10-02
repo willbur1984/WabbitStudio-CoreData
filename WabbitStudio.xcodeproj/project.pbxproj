@@ -65,6 +65,10 @@
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
 		79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FC76A51618029F006B9DC3 /* WCFoldView.m */; };
 		79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */; };
+		79FE36EF161A416500DB7C6D /* Bookmarks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36ED161A416500DB7C6D /* Bookmarks.xcdatamodeld */; };
+		79FE36F3161A41C900DB7C6D /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F2161A41C900DB7C6D /* Bookmark.m */; };
+		79FE36F7161A421C00DB7C6D /* WCBookmarkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F6161A421C00DB7C6D /* WCBookmarkManager.m */; };
+		79FE36FA161A69E800DB7C6D /* WCBookmarkScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F9161A69E700DB7C6D /* WCBookmarkScroller.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -178,6 +182,13 @@
 		79FC76A51618029F006B9DC3 /* WCFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldView.m; sourceTree = "<group>"; };
 		79FE360C161945B400DB7C6D /* WCSymbolHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolHighlighter.h; sourceTree = "<group>"; };
 		79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolHighlighter.m; sourceTree = "<group>"; };
+		79FE36EE161A416500DB7C6D /* Bookmarks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Bookmarks.xcdatamodel; sourceTree = "<group>"; };
+		79FE36F1161A41C900DB7C6D /* Bookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Bookmark.h; sourceTree = "<group>"; };
+		79FE36F2161A41C900DB7C6D /* Bookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Bookmark.m; sourceTree = "<group>"; };
+		79FE36F5161A421C00DB7C6D /* WCBookmarkManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCBookmarkManager.h; sourceTree = "<group>"; };
+		79FE36F6161A421C00DB7C6D /* WCBookmarkManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCBookmarkManager.m; sourceTree = "<group>"; };
+		79FE36F8161A69E700DB7C6D /* WCBookmarkScroller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCBookmarkScroller.h; sourceTree = "<group>"; };
+		79FE36F9161A69E700DB7C6D /* WCBookmarkScroller.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCBookmarkScroller.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -498,6 +509,7 @@
 				7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */,
 				793D2368161554BB00742605 /* WCTextStorage.h */,
 				793D2369161554BB00742605 /* WCTextStorage.m */,
+				79FE36EB161A413A00DB7C6D /* Bookmarks */,
 				7959365E161637840085355E /* Folds */,
 				7903F1B5160E5F72000D3F3D /* Symbols */,
 			);
@@ -526,6 +538,8 @@
 				79FC76A51618029F006B9DC3 /* WCFoldView.m */,
 				79129118160ABD5100ADFAB5 /* WCTextView.h */,
 				79129119160ABD5100ADFAB5 /* WCTextView.m */,
+				79FE36F8161A69E700DB7C6D /* WCBookmarkScroller.h */,
+				79FE36F9161A69E700DB7C6D /* WCBookmarkScroller.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -539,6 +553,34 @@
 				793D237516155C4000742605 /* WCFoldCell.m */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		79FE36EB161A413A00DB7C6D /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				79FE36F5161A421C00DB7C6D /* WCBookmarkManager.h */,
+				79FE36F6161A421C00DB7C6D /* WCBookmarkManager.m */,
+				79FE36F4161A41F700DB7C6D /* Model */,
+			);
+			name = Bookmarks;
+			sourceTree = "<group>";
+		};
+		79FE36F0161A41BA00DB7C6D /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				79FE36F1161A41C900DB7C6D /* Bookmark.h */,
+				79FE36F2161A41C900DB7C6D /* Bookmark.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		79FE36F4161A41F700DB7C6D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				79FE36ED161A416500DB7C6D /* Bookmarks.xcdatamodeld */,
+				79FE36F0161A41BA00DB7C6D /* Classes */,
+			);
+			name = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -658,6 +700,10 @@
 				7959367016163F2B0085355E /* WCFoldMarker.m in Sources */,
 				79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */,
 				79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */,
+				79FE36EF161A416500DB7C6D /* Bookmarks.xcdatamodeld in Sources */,
+				79FE36F3161A41C900DB7C6D /* Bookmark.m in Sources */,
+				79FE36F7161A421C00DB7C6D /* WCBookmarkManager.m in Sources */,
+				79FE36FA161A69E800DB7C6D /* WCBookmarkScroller.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +867,16 @@
 			);
 			currentVersion = 795936681616384B0085355E /* Folds.xcdatamodel */;
 			path = Folds.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		79FE36ED161A416500DB7C6D /* Bookmarks.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				79FE36EE161A416500DB7C6D /* Bookmarks.xcdatamodel */,
+			);
+			currentVersion = 79FE36EE161A416500DB7C6D /* Bookmarks.xcdatamodel */;
+			path = Bookmarks.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

@@ -540,6 +540,25 @@
 						<object class="NSMenu" key="NSSubmenu" id="833568504">
 							<string key="NSTitle">Navigate</string>
 							<array class="NSMutableArray" key="NSMenuItems">
+								<object class="NSMenuItem" id="1036380749">
+									<reference key="NSMenu" ref="833568504"/>
+									<string key="NSTitle">Toggle Bookmark</string>
+									<string key="NSKeyEquiv"></string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="1034397694">
+									<reference key="NSMenu" ref="833568504"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="410222997">
 									<reference key="NSMenu" ref="833568504"/>
 									<string key="NSTitle">Jump to Definition</string>
@@ -991,6 +1010,14 @@
 						<reference key="destination" ref="552783158"/>
 					</object>
 					<int key="connectionID">551</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleBookmarkAction:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="1036380749"/>
+					</object>
+					<int key="connectionID">554</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1463,6 +1490,8 @@
 						<reference key="object" ref="833568504"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="410222997"/>
+							<reference ref="1034397694"/>
+							<reference ref="1036380749"/>
 						</array>
 						<reference key="parent" ref="945790431"/>
 					</object>
@@ -1513,6 +1542,16 @@
 						<int key="objectID">549</int>
 						<reference key="object" ref="552783158"/>
 						<reference key="parent" ref="625190667"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">552</int>
+						<reference key="object" ref="1034397694"/>
+						<reference key="parent" ref="833568504"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">553</int>
+						<reference key="object" ref="1036380749"/>
+						<reference key="parent" ref="833568504"/>
 					</object>
 				</array>
 			</object>
@@ -1581,6 +1620,8 @@
 				<string key="547.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="548.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="549.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="552.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="553.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="56.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="57.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="58.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1600,7 +1641,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">551</int>
+			<int key="maxID">554</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1636,7 +1677,7 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="foldAction:">id</string>
 						<string key="jumpToDefinitionAction:">id</string>
-						<string key="showToolTip:">id</string>
+						<string key="toggleBookmarkAction:">id</string>
 						<string key="unfoldAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -1648,8 +1689,8 @@
 							<string key="name">jumpToDefinitionAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="showToolTip:">
-							<string key="name">showToolTip:</string>
+						<object class="IBActionInfo" key="toggleBookmarkAction:">
+							<string key="name">toggleBookmarkAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="unfoldAction:">
