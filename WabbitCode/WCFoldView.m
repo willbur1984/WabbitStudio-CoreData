@@ -309,19 +309,9 @@ static const CGFloat kBookmarkEdgeInset = 3;
     [self setNeedsDisplay:YES];
 }
 - (void)_bookmarkManagerDidAddBookmark:(NSNotification *)note {
-    Bookmark *bookmark = [note.userInfo objectForKey:WCBookmarkManagerBookmarkUserInfoKey];
-    
-    if (!NSLocationInRange(bookmark.location.integerValue, [self.textView WC_visibleRange]))
-        return;
-    
     [self setNeedsDisplay:YES];
 }
 - (void)_bookmarkManagerDidRemoveBookmark:(NSNotification *)note {
-    Bookmark *bookmark = [note.userInfo objectForKey:WCBookmarkManagerBookmarkUserInfoKey];
-    
-    if (!NSLocationInRange(bookmark.location.integerValue, [self.textView WC_visibleRange]))
-        return;
-    
     [self setNeedsDisplay:YES];
 }
 
