@@ -45,11 +45,24 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
     if (charIndex < self.textStorage.length) {
         id attribute = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex effectiveRange:NULL];
         
-        if ([attribute boolValue])
+        if (![attribute boolValue] && charIndex != 0) {
+            // check one character back
+            charIndex--;
+            
+            attribute = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex effectiveRange:NULL];
+            
+            if (![attribute boolValue])
+                charIndex++;
+        }
+        
+        if ([attribute boolValue]) {
             [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex longestEffectiveRange:&highlightRange inRange:NSMakeRange(0, self.textStorage.length)];
+            
+            WCLogNSRange(highlightRange);
+        }
     }
     
-    [self performSelector:@selector(_syntaxHighlightInRangeValue:) withObject:[NSValue valueWithRange:[self.textStorage.string lineRangeForRange:highlightRange]] afterDelay:0];
+    [self syntaxHighlightInRange:[self.textStorage.string lineRangeForRange:highlightRange]];
 }
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage; {
@@ -66,7 +79,7 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
 }
 
 - (void)syntaxHighlightInRange:(NSRange)range; {
-    if (!range.length)
+    if (range.length == 0)
         return;
     
     [self.textStorage beginEditing];
@@ -159,7 +172,7 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        retval = [[NSRegularExpression alloc] initWithPattern:@"#comment.*?#endcomment" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)|(?:#comment.*)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
     });
     return retval;
 }
