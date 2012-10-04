@@ -57,6 +57,7 @@
 		79968CD71608E91100F139BC /* WCLineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CD61608E91100F139BC /* WCLineNumberView.m */; };
 		79968CDC1608E97400F139BC /* NSColor+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CDB1608E97400F139BC /* NSColor+WCExtensions.m */; };
 		79968CEF1608FB6500F139BC /* NSArray+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */; };
+		79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */; };
 		79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */; };
 		79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C92CD71610E9C800BB6CDC /* QuartzCore.framework */; };
 		79C92CEA1611136900BB6CDC /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CE91611136900BB6CDC /* File.m */; };
@@ -167,6 +168,7 @@
 		79968CDB1608E97400F139BC /* NSColor+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+WCExtensions.m"; sourceTree = "<group>"; };
 		79968CED1608FB6500F139BC /* NSArray+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+WCExtensions.h"; sourceTree = "<group>"; };
 		79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+WCExtensions.m"; sourceTree = "<group>"; };
+		79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Completions.xcdatamodel; sourceTree = "<group>"; };
 		79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionWindow.h; sourceTree = "<group>"; };
 		79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionWindow.m; sourceTree = "<group>"; };
 		79C92CD71610E9C800BB6CDC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -416,6 +418,22 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
+		79A87C20161DF39000C1A568 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */,
+				79A87C22161DF39B00C1A568 /* Classes */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		79A87C22161DF39B00C1A568 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
 		79FE35FF1619431100DB7C6D /* Editor */ = {
 			isa = PBXGroup;
 			children = (
@@ -454,6 +472,7 @@
 				79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */,
 				79C92CF116114A1300BB6CDC /* WCCompletionItem.h */,
 				79C92CF216114A1300BB6CDC /* WCCompletionItem.m */,
+				79A87C20161DF39000C1A568 /* Model */,
 			);
 			name = Completion;
 			sourceTree = "<group>";
@@ -704,6 +723,7 @@
 				79FE36F3161A41C900DB7C6D /* Bookmark.m in Sources */,
 				79FE36F7161A421C00DB7C6D /* WCBookmarkManager.m in Sources */,
 				79FE36FA161A69E800DB7C6D /* WCBookmarkScroller.m in Sources */,
+				79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -867,6 +887,16 @@
 			);
 			currentVersion = 795936681616384B0085355E /* Folds.xcdatamodel */;
 			path = Folds.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */,
+			);
+			currentVersion = 79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */;
+			path = Completions.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};
