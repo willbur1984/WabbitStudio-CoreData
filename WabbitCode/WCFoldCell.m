@@ -13,13 +13,34 @@
 
 #import "WCFoldCell.h"
 #import "NSBezierPath+StrokeExtensions.h"
+#import "WCSyntaxHighlighter.h"
 
 static const CGFloat kLeftRightMargin = 2;
 
+static NSTextStorage *kTextStorage;
+static NSLayoutManager *kLayoutManager;
+static NSTextContainer *kTextContainer;
+
 @implementation WCFoldCell
 
++ (void)initialize {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        kTextStorage = [[NSTextStorage alloc] initWithString:@""];
+        kLayoutManager = [[NSLayoutManager alloc] init];
+        
+        [kLayoutManager setAllowsNonContiguousLayout:NO];
+        [kLayoutManager setBackgroundLayoutEnabled:YES];
+        
+        kTextContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+        
+        [kLayoutManager addTextContainer:kTextContainer];
+        [kTextStorage addLayoutManager:kLayoutManager];
+    });
+}
+
 - (id)initTextCell:(NSString *)aString {
-    if (!(self = [super initTextCell:NSLocalizedString(@"...", nil)]))
+    if (!(self = [super initTextCell:NSLocalizedString(@"\u2219\u2219\u2219", nil)]))
         return nil;
     
     return self;
@@ -27,25 +48,34 @@ static const CGFloat kLeftRightMargin = 2;
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView characterIndex:(NSUInteger)charIndex layoutManager:(NSLayoutManager *)layoutManager {
 //    BOOL isSelected = NSLocationInRange(charIndex, layoutManager.firstTextView.selectedRange);
-    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, 0, 1) xRadius:5 yRadius:5];
+    NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:NSInsetRect(cellFrame, kLeftRightMargin, 1) xRadius:5 yRadius:5];
     
     [[NSColor colorWithCalibratedRed:247.0/255.0 green:245.0/255.0 blue:196.0/255.0 alpha:1.0] setFill];
 	[path fill];
 	[[NSColor colorWithCalibratedRed:167.0/255.0 green:164.0/255.0 blue:60.0/255.0 alpha:1.0] setStroke];
-	[path strokeInside];
+	[path stroke];
     
-    [self.attributedStringValue drawInRect:NSInsetRect(cellFrame, kLeftRightMargin, 0)];
+    [kLayoutManager drawGlyphsForGlyphRange:[kLayoutManager glyphRangeForTextContainer:kTextContainer] atPoint:NSMakePoint(NSMinX(cellFrame) + kLeftRightMargin, NSMinY(cellFrame))];
 }
 
 - (NSRect)cellFrameForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex {
     NSRect frame = [super cellFrameForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString:self.stringValue attributes:textContainer.textView.typingAttributes];
+    NSMutableDictionary *attributes = [[WCSyntaxHighlighter defaultAttributes] mutableCopy];
+    
+    [attributes setObject:[NSColor colorWithCalibratedRed:167.0/255.0 green:164.0/255.0 blue:60.0/255.0 alpha:1.0] forKey:NSForegroundColorAttributeName];
+    
+    NSAttributedString *string = [[NSAttributedString alloc] initWithString:self.stringValue attributes:attributes];
     
     [self setAttributedStringValue:string];
     
-    frame.size.width = string.size.width + (kLeftRightMargin * 2);
+    [kTextStorage replaceCharactersInRange:NSMakeRange(0, kTextStorage.length) withAttributedString:string];
+    [kLayoutManager ensureLayoutForTextContainer:kTextContainer];
+    
+    NSRect rect = [kLayoutManager usedRectForTextContainer:kTextContainer];
+    
+    frame.size.width = NSWidth(rect) + (kLeftRightMargin * 2);
     frame.size.height = NSHeight(lineFrag);
-    frame.origin.y -= [textContainer.layoutManager.typesetter baselineOffsetInLayoutManager:textContainer.layoutManager glyphIndex:[textContainer.layoutManager glyphIndexForCharacterAtIndex:0]];
+    frame.origin.y -= [textContainer.layoutManager.typesetter baselineOffsetInLayoutManager:kLayoutManager glyphIndex:0];
     
     return frame;
 }
