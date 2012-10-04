@@ -1,0 +1,24 @@
+{
+    "completions": [
+        {
+            "format": "adc a,@[a,f,b,c,d,e,h,l]", 
+            "name": "adc a,reg", 
+            "type": 0
+        }, 
+        {
+            "format": "adc hl,@[af,bc,de,hl]", 
+            "name": "adc hl,regpair", 
+            "type": 0
+        }, 
+        {
+            "format": "add a,@[a,f,b,c,d,e,h,l]", 
+            "name": "add a,reg", 
+            "type": 0
+        },
+        {
+            "format" : "add a,(hl)",
+            "name" : "add a,(hl)",
+            "type" : 0
+        }
+    ]
+}
