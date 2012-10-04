@@ -72,8 +72,8 @@ static const CGFloat kFoldViewWidth = 7;
         [super mouseDown:theEvent];
 }
 - (void)mouseUp:(NSEvent *)theEvent {
-    if (self.clickedFold == self.foldToHighlight) {
-        NSRange contentRange = NSRangeFromString(self.clickedFold.contentRange);
+    if (self.foldToHighlight) {
+        NSRange contentRange = NSRangeFromString(self.foldToHighlight.contentRange);
         
         if ([self.textStorage foldRangeForRange:contentRange].location == NSNotFound)
             [self.textStorage foldRange:contentRange];
@@ -97,14 +97,13 @@ static const CGFloat kFoldViewWidth = 7;
     
     [self removeTrackingArea:self.foldTrackingRect];
     
-    NSView *contentView = self.window.contentView;
-    BOOL assumeInside = ([contentView hitTest:[contentView convertPoint:[contentView.window convertScreenToBase:[NSEvent mouseLocation]] fromView:nil]] == self);
-    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseMoved|NSTrackingMouseEnteredAndExited;
+    NSRect rect = NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame));
+    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseMoved|NSTrackingMouseEnteredAndExited|NSTrackingEnabledDuringMouseDrag;
     
-    if (assumeInside)
+    if (NSPointInRect([self convertPoint:self.window.mouseLocationOutsideOfEventStream fromView:nil], rect))
         options |= NSTrackingAssumeInside;
     
-    [self setFoldTrackingRect:[[NSTrackingArea alloc] initWithRect:NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame)) options:options owner:self userInfo:nil]];
+    [self setFoldTrackingRect:[[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:nil]];
     [self addTrackingArea:self.foldTrackingRect];
 }
 #pragma mark NSRulerView
