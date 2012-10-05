@@ -167,8 +167,10 @@
     if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
         WCArgumentPlaceholderCell *placeholderCell = (WCArgumentPlaceholderCell *)cell;
         
-        [textView insertText:placeholderCell.stringValue replacementRange:NSMakeRange(charIndex, 1)];
-        [textView setSelectedRange:NSMakeRange(charIndex, placeholderCell.stringValue.length)];
+        if ([textView shouldChangeTextInRange:NSMakeRange(charIndex, 1) replacementString:placeholderCell.stringValue]) {
+            [textView replaceCharactersInRange:NSMakeRange(charIndex, 1) withString:placeholderCell.stringValue];
+            [textView setSelectedRange:NSMakeRange(charIndex, placeholderCell.stringValue.length)];
+        }
     }
 }
 
