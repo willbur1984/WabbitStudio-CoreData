@@ -19,12 +19,15 @@
 #import "WCDefines.h"
 #import "NSTextView+WCExtensions.h"
 #import "WCTextView.h"
+#import "NSEvent+WCExtensions.h"
 
-@interface WCSourceFileWindowController () <WCTextViewControllerDelegate>
+@interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate>
 
 @property (readonly,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (strong,nonatomic) WCTextViewController *textViewController;
+@property (strong,nonatomic) WCTextViewController *assistantTextViewController;
 @property (weak,nonatomic) WCTextStorage *textStorage;
+@property (strong,nonatomic) NSSplitView *splitView;
 
 @end
 
@@ -41,6 +44,10 @@
 - (void)windowDidLoad {
     [super windowDidLoad];
     
+    [self setSplitView:[[NSSplitView alloc] initWithFrame:NSZeroRect]];
+    [self.splitView setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
+    [self.splitView setDelegate:self];
+    
     [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
     [self.textViewController setDelegate:self];
     [self.textViewController.view setFrame:[self.window.contentView bounds]];
@@ -49,6 +56,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:self.window];
 }
+#pragma mark NSSplitViewDelegate
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
+    return NO;
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    return proposedMinimumPosition + floor(NSHeight(splitView.frame) * 0.25);
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    return proposedMaximumPosition - floor(NSHeight(splitView.frame) * 0.25);
+}
+
 #pragma mark WCTextViewControllerDelegate
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.symbolScanner;
@@ -77,13 +95,58 @@
     
     return self;
 }
+#pragma mark Actions
+- (IBAction)showStandardEditorAction:(id)sender; {
+    
+}
+- (IBAction)showRelatedItemsAction:(id)sender; {
+    
+}
+- (IBAction)showDocumentItemsAction:(id)sender; {
+    
+}
+
+- (IBAction)showAssistantEditorAction:(id)sender; {
+    if (self.assistantTextViewController) {
+        if ([self.assistantTextViewController.textView acceptsFirstResponder])
+            [self.window makeFirstResponder:self.assistantTextViewController.textView];
+        return;
+    }
+    
+    [self.splitView setFrame:[self.window.contentView bounds]];
+    [self.splitView setDividerStyle:NSSplitViewDividerStylePaneSplitter];
+    
+    [self setAssistantTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
+    [self.assistantTextViewController setDelegate:self];
+    
+    [self.splitView addSubview:self.textViewController.view];
+    [self.splitView addSubview:self.assistantTextViewController.view];
+    [self.splitView adjustSubviews];
+    [self.splitView setPosition:floor((NSHeight(self.splitView.frame) - self.splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    
+    [self.window.contentView addSubview:self.splitView];
+    
+    if ([self.assistantTextViewController.textView acceptsFirstResponder])
+        [self.window makeFirstResponder:self.assistantTextViewController.textView];
+}
+- (IBAction)addAssistantEditorAction:(id)sender; {
+    
+}
+- (IBAction)removeAssistantEditorAction:(id)sender; {
+    
+}
+- (IBAction)resetEditorAction:(id)sender; {
+    
+}
+
 #pragma mark Properties
 - (WCSourceFileDocument *)sourceFileDocument {
     return (WCSourceFileDocument *)self.document;
 }
+
 #pragma mark Notifications
 - (void)_windowWillStartLiveResize:(NSNotification *)note {
-    WCLog();
+
 }
 - (void)_windowDidEndLiveResize:(NSNotification *)note {
     WCSymbolHighlighter *symbolHighlighter = self.sourceFileDocument.symbolHighlighter;
