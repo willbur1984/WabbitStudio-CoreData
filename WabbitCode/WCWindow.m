@@ -13,6 +13,28 @@
 
 #import "WCWindow.h"
 
+NSString *const WCWindowFirstResponderDidChangeNotification = @"WCWindowFirstResponderDidChangeNotification";
+NSString *const WCWindowFirstResponderUserInfoKey = @"WCWindowFirstResponderUserInfoKey";
+NSString *const WCWindowOldFirstResponderUserInfoKey = @"WCWindowOldFirstResponderUserInfoKey";
+
 @implementation WCWindow
+
+- (BOOL)makeFirstResponder:(NSResponder *)aResponder {
+    NSResponder *oldFirstResponder = self.firstResponder;
+    BOOL retval = [super makeFirstResponder:aResponder];
+    
+    if (retval && (oldFirstResponder != aResponder)) {
+        NSDictionary *userInfo;
+        
+        if (aResponder)
+            userInfo = @{WCWindowFirstResponderDidChangeNotification : aResponder,WCWindowOldFirstResponderUserInfoKey : oldFirstResponder};
+        else
+            userInfo = @{WCWindowOldFirstResponderUserInfoKey : oldFirstResponder};
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:WCWindowFirstResponderDidChangeNotification object:self userInfo:userInfo];
+    }
+    
+    return retval;
+}
 
 @end

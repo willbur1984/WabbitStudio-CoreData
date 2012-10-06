@@ -13,6 +13,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern NSString *const WCWindowFirstResponderDidChangeNotification;
+extern NSString *const WCWindowFirstResponderUserInfoKey;
+extern NSString *const WCWindowOldFirstResponderUserInfoKey;
+
 @interface WCWindow : NSWindow
 
 @end
