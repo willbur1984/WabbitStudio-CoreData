@@ -24,6 +24,8 @@
 #import "WCSymbolImageManager.h"
 #import "WCGeometry.h"
 #import "WCBookmarkManager.h"
+#import "NSArray+WCExtensions.h"
+#import "Bookmark.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -219,12 +221,65 @@
 
 - (IBAction)toggleBookmarkAction:(id)sender; {
     WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
-    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0)];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0) inclusive:NO];
     
     if (bookmarks.count > 0)
         [bookmarkManager removeBookmark:bookmarks.lastObject];
     else
         [bookmarkManager addBookmarkForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0) name:nil];
+}
+- (IBAction)nextBookmarkAction:(id)sender; {
+    WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
+    NSRange lineRange = [self.string lineRangeForRange:self.selectedRange];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange(NSMaxRange(lineRange), self.string.length - NSMaxRange(lineRange))];
+    Bookmark *bookmark;
+    
+    if (bookmarks.count == 0) {
+        bookmarks = bookmarkManager.bookmarksSortedByLocation;
+        
+        if (bookmarks.count > 0) {
+            bookmark = [bookmarks WC_firstObject];
+            
+            [self setSelectedRange:NSRangeFromString(bookmark.range)];
+            [self scrollRangeToVisible:self.selectedRange];
+            
+            return;
+        }
+        
+        NSBeep();
+        return;
+    }
+    
+    bookmark = [bookmarks WC_firstObject];
+    
+    [self setSelectedRange:NSRangeFromString(bookmark.range)];
+    [self scrollRangeToVisible:self.selectedRange];
+}
+- (IBAction)previousBookmarkAction:(id)sender; {
+    WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange(0, self.selectedRange.location) inclusive:NO];
+    Bookmark *bookmark;
+    
+    if (bookmarks.count == 0) {
+        bookmarks = bookmarkManager.bookmarksSortedByLocation;
+        
+        if (bookmarks.count > 0) {
+            bookmark = bookmarks.lastObject;
+            
+            [self setSelectedRange:NSRangeFromString(bookmark.range)];
+            [self scrollRangeToVisible:self.selectedRange];
+            
+            return;
+        }
+        
+        NSBeep();
+        return;
+    }
+    
+    bookmark = bookmarks.lastObject;
+    
+    [self setSelectedRange:NSRangeFromString(bookmark.range)];
+    [self scrollRangeToVisible:self.selectedRange];
 }
 #pragma mark *** Private Methods ***
 - (void)_highlightMatchingBrace; {

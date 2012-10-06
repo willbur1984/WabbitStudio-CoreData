@@ -17,7 +17,7 @@
 
 @interface WCSourceFileDocument () <WCSymbolScannerDelegate,WCSyntaxHighlighterDelegate,WCSymbolHighlighterDelegate>
 
-@property (strong,nonatomic) WCTextStorage *textStorage;
+@property (readwrite,strong,nonatomic) WCTextStorage *textStorage;
 @property (assign,nonatomic) NSStringEncoding stringEncoding;
 @property (readwrite,strong,nonatomic) WCSyntaxHighlighter *syntaxHighlighter;
 @property (readwrite,strong,nonatomic) WCSymbolScanner *symbolScanner;
@@ -96,6 +96,10 @@
 
 - (WCSymbolScanner *)symbolScannerForSymbolHighlighter:(WCSymbolHighlighter *)symbolHighlighter {
     return self.symbolScanner;
+}
+
+- (WCSourceFileWindowController *)sourceFileWindowController {
+    return self.windowControllers.lastObject;
 }
 
 @end

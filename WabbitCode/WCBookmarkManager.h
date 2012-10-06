@@ -33,5 +33,6 @@ extern NSString *const WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey;
 - (void)removeAllBookmarks;
 
 - (NSArray *)bookmarksForRange:(NSRange)range;
+- (NSArray *)bookmarksForRange:(NSRange)range inclusive:(BOOL)inclusive;
 
 @end

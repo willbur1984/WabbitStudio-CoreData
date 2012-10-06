@@ -25,6 +25,8 @@
 - (IBAction)unfoldAction:(id)sender;
 
 - (IBAction)toggleBookmarkAction:(id)sender;
+- (IBAction)nextBookmarkAction:(id)sender;
+- (IBAction)previousBookmarkAction:(id)sender;
 
 @end
 

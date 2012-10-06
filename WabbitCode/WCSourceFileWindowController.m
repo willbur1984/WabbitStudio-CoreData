@@ -95,6 +95,7 @@
     
     return self;
 }
+
 #pragma mark Actions
 - (IBAction)showStandardEditorAction:(id)sender; {
     
@@ -138,7 +139,24 @@
 - (IBAction)resetEditorAction:(id)sender; {
     
 }
+#pragma mark Properties
+- (WCTextViewController *)currentTextViewController {
+    id firstResponder = self.window.firstResponder;
+    
+    if (![firstResponder isKindOfClass:[NSView class]])
+        return nil;
+    
+    NSView *view = (NSView *)firstResponder;
+    
+    if ([view isDescendantOf:self.textViewController.view])
+        return self.textViewController;
+    else if ([view isDescendantOf:self.assistantTextViewController.view])
+        return self.assistantTextViewController;
+    else
+        return nil;
+}
 
+#pragma mark *** Private Methods ***
 #pragma mark Properties
 - (WCSourceFileDocument *)sourceFileDocument {
     return (WCSourceFileDocument *)self.document;

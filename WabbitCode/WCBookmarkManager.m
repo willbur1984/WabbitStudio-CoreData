@@ -92,9 +92,16 @@ NSString *const WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey = @"WCBookm
 }
 
 - (NSArray *)bookmarksForRange:(NSRange)range; {
+    return [self bookmarksForRange:range inclusive:YES];
+}
+- (NSArray *)bookmarksForRange:(NSRange)range inclusive:(BOOL)inclusive; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Bookmark"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu AND self.location >= %lu",NSMaxRange(range),range.location]];
+    if (inclusive)
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu AND self.location >= %lu",NSMaxRange(range),range.location]];
+    else
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location < %lu AND self.location > %lu",NSMaxRange(range),range.location]];
+    
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];

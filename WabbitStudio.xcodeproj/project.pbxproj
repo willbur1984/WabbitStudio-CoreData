@@ -42,6 +42,7 @@
 		7959367016163F2B0085355E /* WCFoldMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366F16163F2B0085355E /* WCFoldMarker.m */; };
 		7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */; };
 		7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD9C161FDD3E006D5A7A /* WCWindow.m */; };
+		7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDA71620A5A8006D5A7A /* WCMenuController.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -140,6 +141,8 @@
 		7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+WCExtensions.m"; sourceTree = "<group>"; };
 		7962BD9B161FDD3E006D5A7A /* WCWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCWindow.h; sourceTree = "<group>"; };
 		7962BD9C161FDD3E006D5A7A /* WCWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCWindow.m; sourceTree = "<group>"; };
+		7962BDA61620A5A8006D5A7A /* WCMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCMenuController.h; sourceTree = "<group>"; };
+		7962BDA71620A5A8006D5A7A /* WCMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCMenuController.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -384,6 +387,8 @@
 			children = (
 				79968CCC1608E05F00F139BC /* WCAppDelegate.h */,
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
+				7962BDA61620A5A8006D5A7A /* WCMenuController.h */,
+				7962BDA71620A5A8006D5A7A /* WCMenuController.m */,
 				79FE36041619438A00DB7C6D /* Documents */,
 				79FE3606161943A000DB7C6D /* Window Controllers */,
 				79FE36051619439500DB7C6D /* View Controllers */,
@@ -736,6 +741,7 @@
 				79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */,
 				7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */,
 				7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */,
+				7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

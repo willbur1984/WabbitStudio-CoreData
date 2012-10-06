@@ -24,6 +24,10 @@
 
 static const CGFloat kFoldViewWidth = 7;
 
+static const CGFloat kBookmarkHeight = 9;
+static const CGFloat kBookmarkWidth = 12;
+static const CGFloat kBookmarkEdgeInset = 3;
+
 @interface WCFoldView ()
 @property (readonly,nonatomic) WCTextStorage *textStorage;
 @property (strong,nonatomic) NSTrackingArea *foldTrackingRect;
@@ -108,7 +112,7 @@ static const CGFloat kFoldViewWidth = 7;
 }
 #pragma mark NSRulerView
 - (CGFloat)requiredThickness {
-    return [super requiredThickness] + kFoldViewWidth;
+    return [super requiredThickness] + kFoldViewWidth + 6;
 }
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
@@ -130,10 +134,6 @@ static const CGFloat kFoldViewWidth = 7;
     
     return self;
 }
-
-static const CGFloat kBookmarkHeight = 9;
-static const CGFloat kBookmarkWidth = 12;
-static const CGFloat kBookmarkEdgeInset = 3;
 
 - (void)drawBookmarksInRect:(NSRect)rect; {
     NSArray *bookmarks = [self.textStorage.bookmarkManager bookmarksForRange:[self.textView WC_visibleRange]];
