@@ -12,18 +12,25 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "WCJumpBarBackgroundView.h"
+#import "WCWindow.h"
 
 @implementation WCJumpBarBackgroundView
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
     [super viewWillMoveToWindow:newWindow];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeKeyNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:WCWindowFirstResponderDidChangeNotification object:nil];
     
     if (newWindow) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidBecomeKey:) name:NSWindowDidBecomeKeyNotification object:newWindow];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidResignKey:) name:NSWindowDidResignKeyNotification object:newWindow];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowFirstResponderDidChange:) name:WCWindowFirstResponderDidChangeNotification object:newWindow];
     }
 }
 
@@ -39,7 +46,10 @@
     });
     
     
-    if (self.window.isKeyWindow) {
+    if (self.window.isKeyWindow &&
+        [self.window.firstResponder isKindOfClass:[NSView class]] &&
+        [(NSView *)self.window.firstResponder isDescendantOf:self.superview]) {
+        
         [keyGradient drawInRect:self.bounds angle:90];
         [keyFillColor setFill];
     }
@@ -55,6 +65,9 @@
     [self setNeedsDisplay:YES];
 }
 - (void)_windowDidResignKey:(NSNotification *)note {
+    [self setNeedsDisplay:YES];
+}
+- (void)_windowFirstResponderDidChange:(NSNotification *)note {
     [self setNeedsDisplay:YES];
 }
 
