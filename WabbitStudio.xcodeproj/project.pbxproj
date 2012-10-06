@@ -40,6 +40,8 @@
 		795936691616384B0085355E /* Folds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 795936671616384B0085355E /* Folds.xcdatamodeld */; };
 		7959366D161639720085355E /* Fold.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366C161639720085355E /* Fold.m */; };
 		7959367016163F2B0085355E /* WCFoldMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366F16163F2B0085355E /* WCFoldMarker.m */; };
+		7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */; };
+		7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD9C161FDD3E006D5A7A /* WCWindow.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -134,6 +136,10 @@
 		7959366C161639720085355E /* Fold.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fold.m; sourceTree = "<group>"; };
 		7959366E16163F2B0085355E /* WCFoldMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldMarker.h; sourceTree = "<group>"; };
 		7959366F16163F2B0085355E /* WCFoldMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldMarker.m; sourceTree = "<group>"; };
+		7962BD97161FD689006D5A7A /* NSEvent+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEvent+WCExtensions.h"; sourceTree = "<group>"; };
+		7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+WCExtensions.m"; sourceTree = "<group>"; };
+		7962BD9B161FDD3E006D5A7A /* WCWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCWindow.h; sourceTree = "<group>"; };
+		7962BD9C161FDD3E006D5A7A /* WCWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCWindow.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -413,6 +419,8 @@
 				7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */,
 				7903F1D5160E7F74000D3F3D /* NSString+WCExtensions.h */,
 				7903F1D6160E7F74000D3F3D /* NSString+WCExtensions.m */,
+				7962BD97161FD689006D5A7A /* NSEvent+WCExtensions.h */,
+				7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */,
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
@@ -461,6 +469,8 @@
 			children = (
 				7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */,
 				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
+				7962BD9B161FDD3E006D5A7A /* WCWindow.h */,
+				7962BD9C161FDD3E006D5A7A /* WCWindow.m */,
 			);
 			name = Windows;
 			sourceTree = "<group>";
@@ -724,6 +734,8 @@
 				79FE36F7161A421C00DB7C6D /* WCBookmarkManager.m in Sources */,
 				79FE36FA161A69E800DB7C6D /* WCBookmarkScroller.m in Sources */,
 				79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */,
+				7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */,
+				7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
