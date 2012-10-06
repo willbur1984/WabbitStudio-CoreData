@@ -43,6 +43,10 @@
 		7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */; };
 		7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD9C161FDD3E006D5A7A /* WCWindow.m */; };
 		7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDA71620A5A8006D5A7A /* WCMenuController.m */; };
+		7962BDAB1620C13C006D5A7A /* WCHUDStatusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDAA1620C13C006D5A7A /* WCHUDStatusWindow.m */; };
+		7962BDAE1620C4F8006D5A7A /* WCHUDStatusContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDAD1620C4F8006D5A7A /* WCHUDStatusContentView.m */; };
+		7962BDB11620D838006D5A7A /* FindWrapIndicator.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */; };
+		7962BDB21620D838006D5A7A /* FindWrapIndicatorReverse.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -143,6 +147,12 @@
 		7962BD9C161FDD3E006D5A7A /* WCWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCWindow.m; sourceTree = "<group>"; };
 		7962BDA61620A5A8006D5A7A /* WCMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCMenuController.h; sourceTree = "<group>"; };
 		7962BDA71620A5A8006D5A7A /* WCMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCMenuController.m; sourceTree = "<group>"; };
+		7962BDA91620C13C006D5A7A /* WCHUDStatusWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCHUDStatusWindow.h; sourceTree = "<group>"; };
+		7962BDAA1620C13C006D5A7A /* WCHUDStatusWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCHUDStatusWindow.m; sourceTree = "<group>"; };
+		7962BDAC1620C4F8006D5A7A /* WCHUDStatusContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCHUDStatusContentView.h; sourceTree = "<group>"; };
+		7962BDAD1620C4F8006D5A7A /* WCHUDStatusContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCHUDStatusContentView.m; sourceTree = "<group>"; };
+		7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = FindWrapIndicator.tiff; sourceTree = "<group>"; };
+		7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = FindWrapIndicatorReverse.tiff; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -243,6 +253,8 @@
 		7903F1E5160EBF1F000D3F3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */,
+				7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */,
 				7903F1E6160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png */,
 				793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */,
 				7903F1E8160EBF3B000D3F3D /* GCJumpBarSeparator.png */,
@@ -476,6 +488,10 @@
 				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
 				7962BD9B161FDD3E006D5A7A /* WCWindow.h */,
 				7962BD9C161FDD3E006D5A7A /* WCWindow.m */,
+				7962BDA91620C13C006D5A7A /* WCHUDStatusWindow.h */,
+				7962BDAA1620C13C006D5A7A /* WCHUDStatusWindow.m */,
+				7962BDAC1620C4F8006D5A7A /* WCHUDStatusContentView.h */,
+				7962BDAD1620C4F8006D5A7A /* WCHUDStatusContentView.m */,
 			);
 			name = Windows;
 			sourceTree = "<group>";
@@ -677,6 +693,8 @@
 				7903F1EC160EBF3B000D3F3D /* GCJumpBarSeparator.png in Resources */,
 				793D23021613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png in Resources */,
 				793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */,
+				7962BDB11620D838006D5A7A /* FindWrapIndicator.tiff in Resources */,
+				7962BDB21620D838006D5A7A /* FindWrapIndicatorReverse.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -742,6 +760,8 @@
 				7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */,
 				7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */,
 				7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */,
+				7962BDAB1620C13C006D5A7A /* WCHUDStatusWindow.m in Sources */,
+				7962BDAE1620C4F8006D5A7A /* WCHUDStatusContentView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

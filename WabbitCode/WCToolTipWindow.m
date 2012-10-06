@@ -28,7 +28,6 @@
         return nil;
     
     [self setReleasedWhenClosed:NO];
-    [self setAlphaValue:0.97];
     [self setOpaque:NO];
     [self setBackgroundColor:[NSColor colorWithCalibratedRed:1.0 green:0.96 blue:0.76 alpha:1.0]];
     [self setHasShadow:YES];

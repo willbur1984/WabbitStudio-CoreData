@@ -26,6 +26,7 @@
 #import "WCBookmarkManager.h"
 #import "NSArray+WCExtensions.h"
 #import "Bookmark.h"
+#import "WCHUDStatusWindow.h"
 
 @interface WCTextView ()
 - (void)_highlightMatchingBrace;
@@ -221,7 +222,7 @@
 
 - (IBAction)toggleBookmarkAction:(id)sender; {
     WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
-    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0) inclusive:NO];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange([self.string lineRangeForRange:self.selectedRange].location, 0)];
     
     if (bookmarks.count > 0)
         [bookmarkManager removeBookmark:bookmarks.lastObject];
@@ -231,7 +232,7 @@
 - (IBAction)nextBookmarkAction:(id)sender; {
     WCBookmarkManager *bookmarkManager = [(WCTextStorage *)self.textStorage bookmarkManager];
     NSRange lineRange = [self.string lineRangeForRange:self.selectedRange];
-    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange(NSMaxRange(lineRange), self.string.length - NSMaxRange(lineRange))];
+    NSArray *bookmarks = [bookmarkManager bookmarksForRange:NSMakeRange(NSMaxRange(lineRange), self.string.length - NSMaxRange(lineRange)) inclusive:NO];
     Bookmark *bookmark;
     
     if (bookmarks.count == 0) {
@@ -242,6 +243,8 @@
             
             [self setSelectedRange:NSRangeFromString(bookmark.range)];
             [self scrollRangeToVisible:self.selectedRange];
+            
+            [[WCHUDStatusWindow sharedInstance] showImage:[NSImage imageNamed:@"FindWrapIndicator.tiff"] inView:self.enclosingScrollView drawBackground:NO];
             
             return;
         }
@@ -268,6 +271,8 @@
             
             [self setSelectedRange:NSRangeFromString(bookmark.range)];
             [self scrollRangeToVisible:self.selectedRange];
+            
+            [[WCHUDStatusWindow sharedInstance] showImage:[NSImage imageNamed:@"FindWrapIndicatorReverse.tiff"] inView:self.enclosingScrollView drawBackground:NO];
             
             return;
         }

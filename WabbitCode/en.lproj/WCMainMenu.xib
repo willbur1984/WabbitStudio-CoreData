@@ -642,30 +642,31 @@
 								<object class="NSMenuItem" id="1036380749">
 									<reference key="NSMenu" ref="833568504"/>
 									<string key="NSTitle">Toggle Bookmark</string>
-									<string key="NSKeyEquiv"></string>
+									<string key="NSKeyEquiv">;</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="491399562">
+								<object class="NSMenuItem" id="41441205">
 									<reference key="NSMenu" ref="833568504"/>
 									<string key="NSTitle">Next Bookmark</string>
-									<string key="NSKeyEquiv"></string>
+									<string key="NSKeyEquiv">;</string>
+									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="908220742">
+								<object class="NSMenuItem" id="476631630">
 									<reference key="NSMenu" ref="833568504"/>
 									<string key="NSTitle">Previous Bookmark</string>
-									<string key="NSKeyEquiv"></string>
-									<int key="NSKeyEquivModMask">131072</int>
+									<string key="NSKeyEquiv">;</string>
+									<int key="NSKeyEquivModMask">1703936</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 								</object>
-								<object class="NSMenuItem" id="917318065">
+								<object class="NSMenuItem" id="1038236263">
 									<reference key="NSMenu" ref="833568504"/>
 									<string key="NSTitle">Go to Bookmark</string>
 									<string key="NSKeyEquiv"/>
@@ -673,7 +674,7 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 									<string key="NSAction">submenuAction:</string>
-									<object class="NSMenu" key="NSSubmenu" id="667792896">
+									<object class="NSMenu" key="NSSubmenu" id="469376122">
 										<string key="NSTitle">Go to Bookmark</string>
 										<array class="NSMutableArray" key="NSMenuItems"/>
 									</object>
@@ -830,7 +831,7 @@
 			<object class="NSCustomObject" id="933371885">
 				<string key="NSClassName">WCAppDelegate</string>
 			</object>
-			<object class="NSCustomObject" id="438629790">
+			<object class="NSCustomObject" id="361774362">
 				<string key="NSClassName">WCMenuController</string>
 			</object>
 		</array>
@@ -1160,7 +1161,7 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">nextBookmarkAction:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="491399562"/>
+						<reference key="destination" ref="41441205"/>
 					</object>
 					<int key="connectionID">578</int>
 				</object>
@@ -1168,23 +1169,23 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">previousBookmarkAction:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="908220742"/>
+						<reference key="destination" ref="476631630"/>
 					</object>
 					<int key="connectionID">579</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
-						<reference key="source" ref="667792896"/>
-						<reference key="destination" ref="438629790"/>
+						<reference key="source" ref="469376122"/>
+						<reference key="destination" ref="361774362"/>
 					</object>
 					<int key="connectionID">576</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">goToBookmarkMenu</string>
-						<reference key="source" ref="438629790"/>
-						<reference key="destination" ref="667792896"/>
+						<reference key="source" ref="361774362"/>
+						<reference key="destination" ref="469376122"/>
 					</object>
 					<int key="connectionID">577</int>
 				</object>
@@ -1652,9 +1653,9 @@
 							<reference ref="410222997"/>
 							<reference ref="1034397694"/>
 							<reference ref="1036380749"/>
-							<reference ref="491399562"/>
-							<reference ref="908220742"/>
-							<reference ref="917318065"/>
+							<reference ref="41441205"/>
+							<reference ref="476631630"/>
+							<reference ref="1038236263"/>
 						</array>
 						<reference key="parent" ref="945790431"/>
 					</object>
@@ -1802,31 +1803,31 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">570</int>
-						<reference key="object" ref="491399562"/>
+						<reference key="object" ref="41441205"/>
 						<reference key="parent" ref="833568504"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">571</int>
-						<reference key="object" ref="908220742"/>
+						<reference key="object" ref="476631630"/>
 						<reference key="parent" ref="833568504"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">572</int>
-						<reference key="object" ref="917318065"/>
+						<reference key="object" ref="1038236263"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="667792896"/>
+							<reference ref="469376122"/>
 						</array>
 						<reference key="parent" ref="833568504"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">573</int>
-						<reference key="object" ref="667792896"/>
+						<reference key="object" ref="469376122"/>
 						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="917318065"/>
+						<reference key="parent" ref="1038236263"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">575</int>
-						<reference key="object" ref="438629790"/>
+						<reference key="object" ref="361774362"/>
 						<reference key="parent" ref="0"/>
 					</object>
 				</array>

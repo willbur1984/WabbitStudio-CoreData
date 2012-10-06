@@ -17,6 +17,10 @@ static inline NSRect WC_NSRectCenter(NSRect rectToCenter, NSRect inRect) {
     return NSIntegralRectWithOptions(NSMakeRect(NSMinX(inRect) + (NSWidth(inRect) * 0.5) - (NSWidth(rectToCenter) * 0.5), NSMinY(inRect) + (NSHeight(inRect) * 0.5) - (NSHeight(rectToCenter) * 0.5), NSWidth(rectToCenter), NSHeight(rectToCenter)),NSAlignAllEdgesInward);
 }
 
+static inline NSRect WC_NSRectCenterWithSize(NSSize sizeToCenter, NSRect inRect) {
+    return WC_NSRectCenter(NSMakeRect(0, 0, sizeToCenter.width, sizeToCenter.height), inRect);
+}
+
 static inline NSRect WC_NSRectCenterX(NSRect rectToCenter, NSRect inRect) {
     NSRect retval = WC_NSRectCenter(rectToCenter, inRect);
     
