@@ -13,6 +13,21 @@
 
 #import "NSView+WCExtensions.h"
 
+#include <objc/runtime.h>
+
 @implementation NSView (WCExtensions)
+
+- (BOOL)WC_makeFirstResponder; {
+    return (self.acceptsFirstResponder && [self.window makeFirstResponder:self]);
+}
+
+static char kViewControllerKey;
+
+- (NSViewController *)WC_viewController; {
+    return (NSViewController *)objc_getAssociatedObject(self, &kViewControllerKey);
+}
+- (void)WC_setViewController:(NSViewController *)viewController; {
+    objc_setAssociatedObject(self, &kViewControllerKey, viewController, OBJC_ASSOCIATION_ASSIGN);
+}
 
 @end

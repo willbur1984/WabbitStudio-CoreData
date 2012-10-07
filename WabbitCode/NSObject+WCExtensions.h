@@ -15,4 +15,6 @@
 
 @interface NSObject (WCExtensions)
 
++ (void)WC_swapMethod:(SEL)oldMethod withMethod:(SEL)newMethod;
+
 @end

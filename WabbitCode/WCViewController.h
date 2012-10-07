@@ -15,4 +15,6 @@
 
 @interface WCViewController : NSViewController
 
+- (void)cleanup;
+
 @end

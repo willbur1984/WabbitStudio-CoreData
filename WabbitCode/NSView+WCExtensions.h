@@ -15,4 +15,9 @@
 
 @interface NSView (WCExtensions)
 
+- (BOOL)WC_makeFirstResponder;
+
+- (NSViewController *)WC_viewController;
+- (void)WC_setViewController:(NSViewController *)viewController;
+
 @end
