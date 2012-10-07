@@ -20,6 +20,7 @@
 #import "NSTextView+WCExtensions.h"
 #import "WCTextView.h"
 #import "NSEvent+WCExtensions.h"
+#import "WCExtendedAttributesManager.h"
 
 @interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate>
 
@@ -55,6 +56,13 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidEndLiveResize:) name:NSWindowDidEndLiveResizeNotification object:self.window];
+    
+    if (self.sourceFileDocument.fileURL) {
+        NSString *selectedRangeString = [[WCExtendedAttributesManager sharedManager] stringForAttribute:WCSourceFileDocumentSelectedRangeAttributeName atURL:self.sourceFileDocument.fileURL];
+        
+        [self.textViewController.textView WC_setSelectedRangeSafely:NSRangeFromString(selectedRangeString)];
+        [self.textViewController.textView scrollRangeToVisible:self.textViewController.textView.selectedRange];
+    }
 }
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {

@@ -28,6 +28,15 @@
 	return NSMakeRange(firstChar, lastChar-firstChar);
 }
 
+- (void)WC_setSelectedRangeSafely:(NSRange)range; {
+    if (NSMaxRange(range) >= self.string.length) {
+        [self setSelectedRange:NSMakeRange(self.string.length, 0)];
+        return;
+    }
+    
+    [self setSelectedRange:range];
+}
+
 - (void)WC_appendString:(NSString *)string; {
     [self replaceCharactersInRange:NSMakeRange(self.string.length, 0) withString:string];
 }

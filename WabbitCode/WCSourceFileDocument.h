@@ -8,6 +8,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern NSString *const WCSourceFileDocumentSelectedRangeAttributeName;
+extern NSString *const WCSourceFileDocumentBookmarksAttributeName;
+
 @class WCSyntaxHighlighter,WCSymbolScanner,WCFoldScanner,WCSymbolHighlighter,WCTextStorage,WCSourceFileWindowController;
 
 @interface WCSourceFileDocument : NSDocument

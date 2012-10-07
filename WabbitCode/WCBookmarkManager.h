@@ -24,6 +24,7 @@ extern NSString *const WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey;
 
 @interface WCBookmarkManager : NSObject
 
+@property (readonly,nonatomic) NSArray *bookmarks;
 @property (readonly,nonatomic) NSArray *bookmarksSortedByLocation;
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;

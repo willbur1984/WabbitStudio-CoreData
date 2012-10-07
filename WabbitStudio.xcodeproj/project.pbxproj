@@ -47,6 +47,7 @@
 		7962BDAE1620C4F8006D5A7A /* WCHUDStatusContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDAD1620C4F8006D5A7A /* WCHUDStatusContentView.m */; };
 		7962BDB11620D838006D5A7A /* FindWrapIndicator.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */; };
 		7962BDB21620D838006D5A7A /* FindWrapIndicatorReverse.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */; };
+		7962BDBB162123D8006D5A7A /* WCExtendedAttributesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -153,6 +154,8 @@
 		7962BDAD1620C4F8006D5A7A /* WCHUDStatusContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCHUDStatusContentView.m; sourceTree = "<group>"; };
 		7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = FindWrapIndicator.tiff; sourceTree = "<group>"; };
 		7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = FindWrapIndicatorReverse.tiff; sourceTree = "<group>"; };
+		7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCExtendedAttributesManager.h; sourceTree = "<group>"; };
+		7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCExtendedAttributesManager.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -401,6 +404,8 @@
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
 				7962BDA61620A5A8006D5A7A /* WCMenuController.h */,
 				7962BDA71620A5A8006D5A7A /* WCMenuController.m */,
+				7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */,
+				7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */,
 				79FE36041619438A00DB7C6D /* Documents */,
 				79FE3606161943A000DB7C6D /* Window Controllers */,
 				79FE36051619439500DB7C6D /* View Controllers */,
@@ -762,6 +767,7 @@
 				7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */,
 				7962BDAB1620C13C006D5A7A /* WCHUDStatusWindow.m in Sources */,
 				7962BDAE1620C4F8006D5A7A /* WCHUDStatusContentView.m in Sources */,
+				7962BDBB162123D8006D5A7A /* WCExtendedAttributesManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

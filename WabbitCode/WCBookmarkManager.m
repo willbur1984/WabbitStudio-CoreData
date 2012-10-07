@@ -107,6 +107,11 @@ NSString *const WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey = @"WCBookm
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
+- (NSArray *)bookmarks {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Bookmark"];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
 - (NSArray *)bookmarksSortedByLocation {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Bookmark"];
     

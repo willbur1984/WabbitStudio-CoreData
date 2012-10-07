@@ -14,6 +14,14 @@
 #import "WCTextStorage.h"
 #import "WCFoldScanner.h"
 #import "WCSymbolHighlighter.h"
+#import "WCExtendedAttributesManager.h"
+#import "WCTextViewController.h"
+#import "WCTextView.h"
+#import "WCBookmarkManager.h"
+#import "Bookmark.h"
+
+NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
+NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
 
 @interface WCSourceFileDocument () <WCSymbolScannerDelegate,WCSyntaxHighlighterDelegate,WCSymbolHighlighterDelegate>
 
@@ -74,13 +82,41 @@
     [self.symbolScanner setDelegate:self];
     [self setFoldScanner:[[WCFoldScanner alloc] initWithTextStorage:self.textStorage]];
     
+    NSArray *bookmarks = [[WCExtendedAttributesManager sharedManager] objectForAttribute:WCSourceFileDocumentBookmarksAttributeName atURL:url];
+    
+    for (NSString *rangeString in bookmarks)
+        [self.textStorage.bookmarkManager addBookmarkForRange:NSRangeFromString(rangeString) name:nil];
+    
     [self.undoManager enableUndoRegistration];
     
     return YES;
 }
 
 - (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
-    return [self.textStorage.string writeToURL:url atomically:YES encoding:self.stringEncoding error:outError];
+    NSData *data = [self.textStorage.string dataUsingEncoding:NSUTF8StringEncoding];
+    
+    if (![data writeToURL:url options:NSAtomicWrite error:outError])
+        return NO;
+    
+    NSRange selectedRange = self.sourceFileWindowController.currentTextViewController.textView.selectedRange;
+    
+    [[WCExtendedAttributesManager sharedManager] setString:NSStringFromRange(selectedRange) forAttribute:WCSourceFileDocumentSelectedRangeAttributeName atURL:url];
+    [[WCExtendedAttributesManager sharedManager] setObject:@(self.stringEncoding) forAttribute:WCExtendedAttributesManagerAppleTextEncodingAttributeName atPath:url.path];
+    
+    NSArray *bookmarks = self.textStorage.bookmarkManager.bookmarks;
+    
+    if (bookmarks.count > 0) {
+        NSMutableArray *rangeStrings = [NSMutableArray arrayWithCapacity:bookmarks.count];
+        
+        for (Bookmark *bookmark in bookmarks)
+            [rangeStrings addObject:bookmark.range];
+        
+        [[WCExtendedAttributesManager sharedManager] setObject:rangeStrings forAttribute:WCSourceFileDocumentBookmarksAttributeName atURL:url];
+    }
+    else
+        [[WCExtendedAttributesManager sharedManager] removeAttribute:WCSourceFileDocumentBookmarksAttributeName atURL:url];
+    
+    return YES;
 }
 
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {
