@@ -50,7 +50,7 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2012 William Towe. All rights reserved.</string>
 	<key>NSMainNibFile</key>
-	<string>MainMenu</string>
+	<string>WEMainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
