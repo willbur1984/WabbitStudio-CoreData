@@ -14,6 +14,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Symbol.h"
 
+@class WCJumpBarComponentCell;
 @protocol WCJumpBarControlDataSource,WCJumpBarControlDelegate;
 
 @interface WCJumpBarControl : NSPathControl
@@ -24,9 +25,9 @@
 - (void)reloadPathComponentCells;
 - (void)reloadSymbolPathComponentCell;
 
-@end
+- (void)showPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
 
-@class WCJumpBarComponentCell;
+@end
 
 @protocol WCJumpBarControlDataSource <NSObject>
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl;

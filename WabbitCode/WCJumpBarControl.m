@@ -95,8 +95,10 @@
 #pragma mark *** Public Methods ***
 - (void)reloadPathComponentCells; {
     NSMutableArray *cells = [NSMutableArray arrayWithArray:[self.dataSource jumpBarComponentCellsForJumpBarControl:self]];
+    WCJumpBarComponentCell *symbolCell = [self.dataSource symbolPathComponentCellForJumpBarControl:self];
     
-    [cells addObject:[self.dataSource symbolPathComponentCellForJumpBarControl:self]];
+    if (symbolCell)
+        [cells addObject:symbolCell];
     
     [self setPathComponentCells:cells];
 }
@@ -107,35 +109,18 @@
     
     [self setPathComponentCells:temp];
 }
-#pragma mark Properties
-- (void)setDataSource:(id<WCJumpBarControlDataSource>)dataSource {
-    _dataSource = dataSource;
-    
-    [self reloadPathComponentCells];
-}
 
-- (id<WCJumpBarControlDelegate>)delegate {
-    return (id<WCJumpBarControlDelegate>)[super delegate];
-}
-- (void)setDelegate:(id<WCJumpBarControlDelegate>)delegate {
-    [super setDelegate:delegate];
-}
-#pragma mark *** Private Methods ***
-
-#pragma mark Actions
-- (IBAction)_jumpBarControlAction:(WCJumpBarControl *)sender {
-    WCJumpBarComponentCell *cell = (WCJumpBarComponentCell *)sender.clickedPathComponentCell;
-    
-    if (!cell)
+- (void)showPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell; {
+    if (!pathComponentCell)
         return;
     
-    if ([self.delegate jumpBarControl:self shouldPopUpMenuForPathComponentCell:cell]) {
-        NSInteger numberOfItems = [self.delegate jumpBarControl:self numberOfItemsInMenuForPathComponentCell:cell];
+    if ([self.delegate jumpBarControl:self shouldPopUpMenuForPathComponentCell:pathComponentCell]) {
+        NSInteger numberOfItems = [self.delegate jumpBarControl:self numberOfItemsInMenuForPathComponentCell:pathComponentCell];
         
         if (numberOfItems <= 0)
             return;
         
-        [self setClickedJumpBarComponentCell:cell];
+        [self setClickedJumpBarComponentCell:pathComponentCell];
         
         if (self.contextualMenu.numberOfItems < numberOfItems) {
             while (self.contextualMenu.numberOfItems < numberOfItems) {
@@ -156,7 +141,7 @@
         if ([self.delegate respondsToSelector:@selector(jumpBarControl:highlightedItemIndexForPathComponentCell:)])
             highlightedItemIndex = [self.delegate jumpBarControl:self highlightedItemIndexForPathComponentCell:self.clickedJumpBarComponentCell];
         
-        NSRect menuRect = [self.cell rectOfPathComponentCell:cell withFrame:self.bounds inView:self];
+        NSRect menuRect = [self.cell rectOfPathComponentCell:pathComponentCell withFrame:self.bounds inView:self];
         
         if (![self.contextualMenu popUpMenuPositioningItem:[self.contextualMenu itemAtIndex:highlightedItemIndex] atLocation:menuRect.origin inView:self]) {
             if ([self.delegate respondsToSelector:@selector(jumpBarControl:menuDidCloseForPathComponentCell:)])
@@ -165,6 +150,27 @@
             [self setClickedJumpBarComponentCell:nil];
         }
     }
+}
+#pragma mark Properties
+- (void)setDataSource:(id<WCJumpBarControlDataSource>)dataSource {
+    _dataSource = dataSource;
+    
+    [self reloadPathComponentCells];
+}
+
+- (id<WCJumpBarControlDelegate>)delegate {
+    return (id<WCJumpBarControlDelegate>)[super delegate];
+}
+- (void)setDelegate:(id<WCJumpBarControlDelegate>)delegate {
+    [super setDelegate:delegate];
+}
+#pragma mark *** Private Methods ***
+
+#pragma mark Actions
+- (IBAction)_jumpBarControlAction:(WCJumpBarControl *)sender {
+    WCJumpBarComponentCell *cell = (WCJumpBarComponentCell *)sender.clickedPathComponentCell;
+    
+    [self showPopUpMenuForPathComponentCell:cell];
 }
 - (IBAction)_contextualMenuItemAction:(NSMenuItem *)sender {
     if ([self.delegate respondsToSelector:@selector(jumpBarControl:didSelectItem:atIndex:forPathComponentCell:)])
