@@ -48,6 +48,13 @@
 		7962BDB11620D838006D5A7A /* FindWrapIndicator.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */; };
 		7962BDB21620D838006D5A7A /* FindWrapIndicatorReverse.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */; };
 		7962BDBB162123D8006D5A7A /* WCExtendedAttributesManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */; };
+		7962BDCD16215194006D5A7A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
+		7962BDD316215194006D5A7A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDD116215194006D5A7A /* InfoPlist.strings */; };
+		7962BDD516215194006D5A7A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDD416215194006D5A7A /* main.m */; };
+		7962BDD916215194006D5A7A /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDD716215194006D5A7A /* Credits.rtf */; };
+		7962BDDC16215194006D5A7A /* WEDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDDB16215194006D5A7A /* WEDocument.m */; };
+		7962BDDF16215194006D5A7A /* WEDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDDD16215194006D5A7A /* WEDocument.xib */; };
+		7962BDE216215195006D5A7A /* WEMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDE016215195006D5A7A /* WEMainMenu.xib */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -156,6 +163,16 @@
 		7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = FindWrapIndicatorReverse.tiff; sourceTree = "<group>"; };
 		7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCExtendedAttributesManager.h; sourceTree = "<group>"; };
 		7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCExtendedAttributesManager.m; sourceTree = "<group>"; };
+		7962BDCB16215194006D5A7A /* WabbitEmu.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitEmu.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7962BDD016215194006D5A7A /* WabbitEmu-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WabbitEmu-Info.plist"; sourceTree = "<group>"; };
+		7962BDD216215194006D5A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		7962BDD416215194006D5A7A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		7962BDD616215194006D5A7A /* WabbitEmu-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WabbitEmu-Prefix.pch"; sourceTree = "<group>"; };
+		7962BDD816215194006D5A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		7962BDDA16215194006D5A7A /* WEDocument.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WEDocument.h; sourceTree = "<group>"; };
+		7962BDDB16215194006D5A7A /* WEDocument.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WEDocument.m; sourceTree = "<group>"; };
+		7962BDDE16215194006D5A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WEDocument.xib; sourceTree = "<group>"; };
+		7962BDE116215195006D5A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WEMainMenu.xib; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -216,6 +233,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7962BDC816215194006D5A7A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7962BDCD16215194006D5A7A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79968CA21608DB7A00F139BC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -326,6 +351,30 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		7962BDCE16215194006D5A7A /* WabbitEmu */ = {
+			isa = PBXGroup;
+			children = (
+				7962BDDA16215194006D5A7A /* WEDocument.h */,
+				7962BDDB16215194006D5A7A /* WEDocument.m */,
+				7962BDDD16215194006D5A7A /* WEDocument.xib */,
+				7962BDE016215195006D5A7A /* WEMainMenu.xib */,
+				7962BDCF16215194006D5A7A /* Supporting Files */,
+			);
+			path = WabbitEmu;
+			sourceTree = "<group>";
+		};
+		7962BDCF16215194006D5A7A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7962BDD016215194006D5A7A /* WabbitEmu-Info.plist */,
+				7962BDD116215194006D5A7A /* InfoPlist.strings */,
+				7962BDD416215194006D5A7A /* main.m */,
+				7962BDD616215194006D5A7A /* WabbitEmu-Prefix.pch */,
+				7962BDD716215194006D5A7A /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		79710682160B5C4700C4951A /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,6 +388,7 @@
 			isa = PBXGroup;
 			children = (
 				79968CAF1608DB7A00F139BC /* WabbitCode */,
+				7962BDCE16215194006D5A7A /* WabbitEmu */,
 				79968CA81608DB7A00F139BC /* Frameworks */,
 				79968CA61608DB7A00F139BC /* Products */,
 			);
@@ -348,6 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				79968CA51608DB7A00F139BC /* WabbitCode.app */,
+				7962BDCB16215194006D5A7A /* WabbitEmu.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -641,6 +692,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		7962BDCA16215194006D5A7A /* WabbitEmu */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7962BDE316215195006D5A7A /* Build configuration list for PBXNativeTarget "WabbitEmu" */;
+			buildPhases = (
+				7962BDC716215194006D5A7A /* Sources */,
+				7962BDC816215194006D5A7A /* Frameworks */,
+				7962BDC916215194006D5A7A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WabbitEmu;
+			productName = WabbitEmu;
+			productReference = 7962BDCB16215194006D5A7A /* WabbitEmu.app */;
+			productType = "com.apple.product-type.application";
+		};
 		79968CA41608DB7A00F139BC /* WabbitCode */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79968CC41608DB7A00F139BC /* Build configuration list for PBXNativeTarget "WabbitCode" */;
@@ -680,11 +748,23 @@
 			projectRoot = "";
 			targets = (
 				79968CA41608DB7A00F139BC /* WabbitCode */,
+				7962BDCA16215194006D5A7A /* WabbitEmu */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7962BDC916215194006D5A7A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7962BDD316215194006D5A7A /* InfoPlist.strings in Resources */,
+				7962BDD916215194006D5A7A /* Credits.rtf in Resources */,
+				7962BDDF16215194006D5A7A /* WEDocument.xib in Resources */,
+				7962BDE216215195006D5A7A /* WEMainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79968CA31608DB7A00F139BC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -706,6 +786,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7962BDC716215194006D5A7A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7962BDD516215194006D5A7A /* main.m in Sources */,
+				7962BDDC16215194006D5A7A /* WEDocument.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79968CA11608DB7A00F139BC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -774,6 +863,38 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		7962BDD116215194006D5A7A /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7962BDD216215194006D5A7A /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		7962BDD716215194006D5A7A /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7962BDD816215194006D5A7A /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		7962BDDD16215194006D5A7A /* WEDocument.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7962BDDE16215194006D5A7A /* en */,
+			);
+			name = WEDocument.xib;
+			sourceTree = "<group>";
+		};
+		7962BDE016215195006D5A7A /* WEMainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7962BDE116215195006D5A7A /* en */,
+			);
+			name = WEMainMenu.xib;
+			sourceTree = "<group>";
+		};
 		7973D6D9160CF8DF004EDE62 /* WCTextView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -817,6 +938,71 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		7962BDE416215195006D5A7A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WabbitEmu/WabbitEmu-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "WabbitEmu/WabbitEmu-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		7962BDE516215195006D5A7A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WabbitEmu/WabbitEmu-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "WabbitEmu/WabbitEmu-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.7;
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
 		79968C9F1608DB4600F139BC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -858,7 +1044,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -885,7 +1071,7 @@
 				INFOPLIST_FILE = "WabbitCode/WabbitCode-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.7;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -893,6 +1079,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7962BDE316215195006D5A7A /* Build configuration list for PBXNativeTarget "WabbitEmu" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7962BDE416215195006D5A7A /* Debug */,
+				7962BDE516215195006D5A7A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		79968C9D1608DB4600F139BC /* Build configuration list for PBXProject "WabbitStudio" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
