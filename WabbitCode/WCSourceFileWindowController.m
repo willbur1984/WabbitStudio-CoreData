@@ -21,15 +21,19 @@
 #import "WCTextView.h"
 #import "NSEvent+WCExtensions.h"
 #import "WCExtendedAttributesManager.h"
+#import "NSView+WCExtensions.h"
 
-@interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate>
+@interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate,NSUserInterfaceValidations>
 
 @property (readonly,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (strong,nonatomic) WCTextViewController *textViewController;
 @property (strong,nonatomic) WCTextViewController *assistantTextViewController;
 @property (weak,nonatomic) WCTextStorage *textStorage;
-@property (strong,nonatomic) NSSplitView *splitView;
+@property (strong,nonatomic) NSMutableSet *assistantSplitViews;
+@property (strong,nonatomic) NSMutableSet *assistantTextViewControllers;
 
+- (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentTextViewController;
+- (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentTextViewController;
 @end
 
 @implementation WCSourceFileWindowController
@@ -45,13 +49,10 @@
 - (void)windowDidLoad {
     [super windowDidLoad];
     
-    [self setSplitView:[[NSSplitView alloc] initWithFrame:NSZeroRect]];
-    [self.splitView setAutoresizingMask:NSViewHeightSizable|NSViewWidthSizable];
-    [self.splitView setDelegate:self];
-    
     [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
     [self.textViewController setDelegate:self];
     [self.textViewController.view setFrame:[self.window.contentView bounds]];
+    [self.textViewController setShowAddRemoveAssistantEditorButtons:NO];
     [self.window.contentView addSubview:self.textViewController.view];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
@@ -64,15 +65,36 @@
         [self.textViewController.textView scrollRangeToVisible:self.textViewController.textView.selectedRange];
     }
 }
+#pragma mark NSValidatedUserInterfaceItem
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item {
+    if ([item action] == @selector(addAssistantEditorAction:)) {
+        return (self.assistantTextViewControllers.count >= 1);
+    }
+    else if ([item action] == @selector(removeAssistantEditorAction:)) {
+        return (self.assistantTextViewControllers.count >= 2);
+    }
+    return YES;
+}
+
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
     return NO;
 }
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return proposedMinimumPosition + floor(NSHeight(splitView.frame) * 0.25);
+    if ([self.assistantSplitViews containsObject:splitView]) {
+        CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+        
+        return proposedMinimumPosition + floor(amount * 0.25);
+    }
+    return proposedMinimumPosition;
 }
 - (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
-    return proposedMaximumPosition - floor(NSHeight(splitView.frame) * 0.25);
+    if ([self.assistantSplitViews containsObject:splitView]) {
+        CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+        
+        return proposedMaximumPosition - floor(amount * 0.25);
+    }
+    return proposedMaximumPosition;
 }
 
 #pragma mark WCTextViewControllerDelegate
@@ -94,58 +116,99 @@
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.undoManager;
 }
+
+- (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
+    [self _addAssistantEditorForTextViewController:textViewController];
+}
+- (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
+    [self _removeAssistantEditorForTextViewController:textViewController];
+}
 #pragma mark *** Public Methods ***
 - (id)initWithTextStorage:(WCTextStorage *)textStorage; {
     if (!(self = [super initWithWindowNibName:self.windowNibName]))
         return nil;
     
     [self setTextStorage:textStorage];
+    [self setAssistantSplitViews:[NSMutableSet setWithCapacity:0]];
+    [self setAssistantTextViewControllers:[NSMutableSet setWithCapacity:0]];
     
     return self;
 }
 
 #pragma mark Actions
 - (IBAction)showStandardEditorAction:(id)sender; {
+    if (self.assistantSplitViews.count == 0) {
+        [self.textViewController.textView WC_makeFirstResponder];
+        return;
+    }
     
+    for (WCTextViewController *textViewController in self.assistantTextViewControllers)
+        [textViewController cleanup];
+    for (NSSplitView *splitView in self.assistantSplitViews)
+        [splitView removeFromSuperviewWithoutNeedingDisplay];
+    [self.assistantSplitViews removeAllObjects];
+    [self.assistantTextViewControllers removeAllObjects];
+    [self setAssistantTextViewController:nil];
+    
+    [self.textViewController.view setFrame:[self.window.contentView bounds]];
+    [self.window.contentView addSubview:self.textViewController.view];
+    
+    [self.textViewController.textView WC_makeFirstResponder];
 }
 - (IBAction)showRelatedItemsAction:(id)sender; {
-    
+    [self.currentTextViewController showRelatedItemsAction:nil];
 }
 - (IBAction)showDocumentItemsAction:(id)sender; {
-    
+    [self.currentTextViewController showDocumentItemsAction:nil];
 }
 
 - (IBAction)showAssistantEditorAction:(id)sender; {
     if (self.assistantTextViewController) {
-        if ([self.assistantTextViewController.textView acceptsFirstResponder])
-            [self.window makeFirstResponder:self.assistantTextViewController.textView];
+        [self.assistantTextViewController.textView WC_makeFirstResponder];
         return;
     }
     
-    [self.splitView setFrame:[self.window.contentView bounds]];
-    [self.splitView setDividerStyle:NSSplitViewDividerStylePaneSplitter];
+    BOOL vertical = NO;
+    NSSplitView *splitView = [[NSSplitView alloc] initWithFrame:[self.window.contentView bounds]];
     
-    [self setAssistantTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
-    [self.assistantTextViewController setDelegate:self];
+    [splitView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [splitView setVertical:vertical];
+    [splitView setDividerStyle:(vertical)?NSSplitViewDividerStyleThin:NSSplitViewDividerStylePaneSplitter];
+    [splitView setDelegate:self];
     
-    [self.splitView addSubview:self.textViewController.view];
-    [self.splitView addSubview:self.assistantTextViewController.view];
-    [self.splitView adjustSubviews];
-    [self.splitView setPosition:floor((NSHeight(self.splitView.frame) - self.splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    [self.assistantSplitViews addObject:splitView];
     
-    [self.window.contentView addSubview:self.splitView];
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithTextStorage:self.textStorage];
     
-    if ([self.assistantTextViewController.textView acceptsFirstResponder])
-        [self.window makeFirstResponder:self.assistantTextViewController.textView];
+    [textViewController setDelegate:self];
+    
+    [self.assistantTextViewControllers addObject:textViewController];
+    [self setAssistantTextViewController:textViewController];
+    
+    [splitView addSubview:self.textViewController.view];
+    [splitView addSubview:textViewController.view];
+    [splitView adjustSubviews];
+    
+    CGFloat amount = (vertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    [splitView setPosition:floor((amount - splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    
+    [self.window.contentView addSubview:splitView];
+    
+    [self.assistantTextViewController.textView WC_makeFirstResponder];
 }
 - (IBAction)addAssistantEditorAction:(id)sender; {
+    WCTextViewController *currentTextViewController = self.currentAssistantTextViewController;
     
+    [self _addAssistantEditorForTextViewController:currentTextViewController];
 }
 - (IBAction)removeAssistantEditorAction:(id)sender; {
+    WCTextViewController *currentTextViewController = self.currentAssistantTextViewController;
     
+    [self _removeAssistantEditorForTextViewController:currentTextViewController];
 }
 - (IBAction)resetEditorAction:(id)sender; {
-    
+    // TODO: what should this method do? what exactly does Xcode do?
 }
 #pragma mark Properties
 - (WCTextViewController *)currentTextViewController {
@@ -158,13 +221,83 @@
     
     if ([view isDescendantOf:self.textViewController.view])
         return self.textViewController;
-    else if ([view isDescendantOf:self.assistantTextViewController.view])
-        return self.assistantTextViewController;
-    else
-        return nil;
+    else  {
+        for (WCTextViewController *textViewController in self.assistantTextViewControllers) {
+            if ([view isDescendantOf:textViewController.view])
+                return textViewController;
+        }
+    }
+    return self.textViewController;
+}
+- (WCTextViewController *)currentAssistantTextViewController {
+    WCTextViewController *retval = self.currentTextViewController;
+    
+    if (retval == self.textViewController)
+        retval = self.assistantTextViewController;
+    
+    return retval;
 }
 
 #pragma mark *** Private Methods ***
+- (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentTextViewController; {
+    NSSplitView *currentSplitView = (NSSplitView *)currentTextViewController.view.superview;
+    
+    BOOL vertical = [NSEvent WC_isOptionKeyPressed];
+    NSSplitView *splitView = [[NSSplitView alloc] initWithFrame:currentTextViewController.view.bounds];
+    
+    [splitView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [splitView setVertical:vertical];
+    [splitView setDividerStyle:(vertical)?NSSplitViewDividerStyleThin:NSSplitViewDividerStylePaneSplitter];
+    [splitView setDelegate:self];
+    
+    [self.assistantSplitViews addObject:splitView];
+    
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithTextStorage:self.textStorage];
+    
+    [textViewController setDelegate:self];
+    
+    [self.assistantTextViewControllers addObject:textViewController];
+    
+    [splitView addSubview:currentTextViewController.view];
+    [splitView addSubview:textViewController.view];
+    [splitView adjustSubviews];
+    
+    CGFloat amount = (vertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    [splitView setPosition:floor((amount - splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    
+    [currentSplitView addSubview:splitView];
+    
+    [textViewController.textView WC_makeFirstResponder];
+}
+- (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentTextViewController; {
+    WCTextViewController *textViewController;
+    
+    NSSplitView *currentSplitView = (NSSplitView *)currentTextViewController.view.superview;
+    NSSplitView *parentSplitView = (NSSplitView *)currentSplitView.superview;
+    
+    for (NSView *view in currentSplitView.subviews) {
+        if ([view WC_viewController] != currentTextViewController) {
+            textViewController = (WCTextViewController *)[view WC_viewController];
+            break;
+        }
+    }
+    
+    WCAssert(textViewController,@"textViewController cannot be nil!");
+    
+    [currentSplitView removeFromSuperviewWithoutNeedingDisplay];
+    [currentTextViewController cleanup];
+    
+    [parentSplitView addSubview:textViewController.view];
+    
+    [textViewController.textView WC_makeFirstResponder];
+    
+    [self.assistantSplitViews removeObject:currentSplitView];
+    [self.assistantTextViewControllers removeObject:currentTextViewController];
+    
+    if (currentTextViewController == self.assistantTextViewController)
+        [self setAssistantTextViewController:textViewController];
+}
 #pragma mark Properties
 - (WCSourceFileDocument *)sourceFileDocument {
     return (WCSourceFileDocument *)self.document;

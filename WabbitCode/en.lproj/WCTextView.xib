@@ -11,6 +11,8 @@
 			<string key="NS.object.0">2840</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
+			<string>NSButton</string>
+			<string>NSButtonCell</string>
 			<string>NSCustomObject</string>
 			<string>NSCustomView</string>
 			<string>NSImageCell</string>
@@ -50,6 +52,96 @@
 						<reference key="NSNextResponder" ref="1005"/>
 						<int key="NSvFlags">266</int>
 						<array class="NSMutableArray" key="NSSubviews">
+							<object class="NSImageView" id="814215899">
+								<reference key="NSNextResponder" ref="733982818"/>
+								<int key="NSvFlags">257</int>
+								<set class="NSMutableSet" key="NSDragTypes">
+									<string>Apple PDF pasteboard type</string>
+									<string>Apple PICT pasteboard type</string>
+									<string>Apple PNG pasteboard type</string>
+									<string>NSFilenamesPboardType</string>
+									<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+									<string>NeXT TIFF v4.0 pasteboard type</string>
+								</set>
+								<string key="NSFrame">{{543, 5}, {7, 13}}</string>
+								<reference key="NSSuperview" ref="733982818"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="563430260"/>
+								<bool key="NSEnabled">YES</bool>
+								<object class="NSImageCell" key="NSCell" id="945725315">
+									<int key="NSCellFlags">130560</int>
+									<int key="NSCellFlags2">33554432</int>
+									<object class="NSCustomResource" key="NSContents" id="176086942">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">GCJumpBarAccessorySeparator</string>
+									</object>
+									<int key="NSAlign">0</int>
+									<int key="NSScale">0</int>
+									<int key="NSStyle">0</int>
+									<bool key="NSAnimates">YES</bool>
+								</object>
+								<bool key="NSEditable">YES</bool>
+							</object>
+							<object class="NSButton" id="706834005">
+								<reference key="NSNextResponder" ref="733982818"/>
+								<int key="NSvFlags">265</int>
+								<string key="NSFrame">{{569, -1}, {18, 25}}</string>
+								<reference key="NSSuperview" ref="733982818"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="372237946"/>
+								<string key="NSReuseIdentifierKey">_NS:22</string>
+								<bool key="NSEnabled">YES</bool>
+								<object class="NSButtonCell" key="NSCell" id="353811461">
+									<int key="NSCellFlags">-2080374784</int>
+									<int key="NSCellFlags2">134217728</int>
+									<string key="NSContents"/>
+									<object class="NSFont" key="NSSupport" id="448371983">
+										<string key="NSName">LucidaGrande</string>
+										<double key="NSSize">13</double>
+										<int key="NSfFlags">1044</int>
+									</object>
+									<string key="NSCellIdentifier">_NS:22</string>
+									<reference key="NSControlView" ref="706834005"/>
+									<int key="NSButtonFlags">108281856</int>
+									<int key="NSButtonFlags2">163</int>
+									<object class="NSCustomResource" key="NSNormalImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">NSRemoveTemplate</string>
+									</object>
+									<string key="NSAlternateContents"/>
+									<string key="NSKeyEquivalent"/>
+									<int key="NSPeriodicDelay">400</int>
+									<int key="NSPeriodicInterval">75</int>
+								</object>
+							</object>
+							<object class="NSButton" id="563430260">
+								<reference key="NSNextResponder" ref="733982818"/>
+								<int key="NSvFlags">265</int>
+								<string key="NSFrame">{{551, -1}, {18, 25}}</string>
+								<reference key="NSSuperview" ref="733982818"/>
+								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="706834005"/>
+								<string key="NSReuseIdentifierKey">_NS:22</string>
+								<bool key="NSEnabled">YES</bool>
+								<object class="NSButtonCell" key="NSCell" id="896841033">
+									<int key="NSCellFlags">-2080374784</int>
+									<int key="NSCellFlags2">134217728</int>
+									<string key="NSContents"/>
+									<reference key="NSSupport" ref="448371983"/>
+									<string key="NSCellIdentifier">_NS:22</string>
+									<reference key="NSControlView" ref="563430260"/>
+									<int key="NSButtonFlags">108281856</int>
+									<int key="NSButtonFlags2">163</int>
+									<object class="NSCustomResource" key="NSNormalImage">
+										<string key="NSClassName">NSImage</string>
+										<string key="NSResourceName">NSAddTemplate</string>
+									</object>
+									<string key="NSAlternateContents"/>
+									<string key="NSKeyEquivalent"/>
+									<int key="NSPeriodicDelay">400</int>
+									<int key="NSPeriodicInterval">75</int>
+								</object>
+							</object>
 							<object class="NSPopUpButton" id="410998998">
 								<reference key="NSNextResponder" ref="733982818"/>
 								<int key="NSvFlags">268</int>
@@ -62,11 +154,7 @@
 								<object class="NSPopUpButtonCell" key="NSCell" id="119902665">
 									<int key="NSCellFlags">-2080244160</int>
 									<int key="NSCellFlags2">134219776</int>
-									<object class="NSFont" key="NSSupport" id="448371983">
-										<string key="NSName">LucidaGrande</string>
-										<double key="NSSize">13</double>
-										<int key="NSfFlags">1044</int>
-									</object>
+									<reference key="NSSupport" ref="448371983"/>
 									<string key="NSCellIdentifier">_NS:9</string>
 									<reference key="NSControlView" ref="410998998"/>
 									<int key="NSButtonFlags">-2041430016</int>
@@ -128,7 +216,6 @@
 										</array>
 										<reference key="NSMenuFont" ref="448371983"/>
 									</object>
-									<int key="NSSelectedIndex">-1</int>
 									<bool key="NSPullDown">YES</bool>
 									<int key="NSPreferredEdge">1</int>
 									<bool key="NSUsesItemFromMenu">YES</bool>
@@ -154,10 +241,7 @@
 								<object class="NSImageCell" key="NSCell" id="92046285">
 									<int key="NSCellFlags">130560</int>
 									<int key="NSCellFlags2">33554432</int>
-									<object class="NSCustomResource" key="NSContents">
-										<string key="NSClassName">NSImage</string>
-										<string key="NSResourceName">GCJumpBarAccessorySeparator</string>
-									</object>
+									<reference key="NSContents" ref="176086942"/>
 									<int key="NSAlign">0</int>
 									<int key="NSScale">0</int>
 									<int key="NSStyle">0</int>
@@ -172,10 +256,10 @@
 									<string>Apple URL pasteboard type</string>
 									<string>NSFilenamesPboardType</string>
 								</set>
-								<string key="NSFrame">{{36, 0}, {555, 22}}</string>
+								<string key="NSFrame">{{36, 0}, {499, 22}}</string>
 								<reference key="NSSuperview" ref="733982818"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView" ref="372237946"/>
+								<reference key="NSNextKeyView" ref="814215899"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<bool key="NSEnabled">YES</bool>
 								<object class="NSPathCell" key="NSCell" id="818598771">
@@ -581,6 +665,30 @@ wGw</bytes>
 					</object>
 					<int key="connectionID">119</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">addRemoveDividerImageView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="814215899"/>
+					</object>
+					<int key="connectionID">126</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">addButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="563430260"/>
+					</object>
+					<int key="connectionID">127</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">removeButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="706834005"/>
+					</object>
+					<int key="connectionID">128</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -649,6 +757,9 @@ wGw</bytes>
 							<reference ref="1011154043"/>
 							<reference ref="985822695"/>
 							<reference ref="410998998"/>
+							<reference ref="563430260"/>
+							<reference ref="814215899"/>
+							<reference ref="706834005"/>
 						</array>
 						<reference key="parent" ref="1005"/>
 					</object>
@@ -719,6 +830,45 @@ wGw</bytes>
 						<reference key="object" ref="118508611"/>
 						<reference key="parent" ref="384639753"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">120</int>
+						<reference key="object" ref="563430260"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="896841033"/>
+						</array>
+						<reference key="parent" ref="733982818"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">121</int>
+						<reference key="object" ref="896841033"/>
+						<reference key="parent" ref="563430260"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">122</int>
+						<reference key="object" ref="814215899"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="945725315"/>
+						</array>
+						<reference key="parent" ref="733982818"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">123</int>
+						<reference key="object" ref="945725315"/>
+						<reference key="parent" ref="814215899"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">124</int>
+						<reference key="object" ref="706834005"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="353811461"/>
+						</array>
+						<reference key="parent" ref="733982818"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">125</int>
+						<reference key="object" ref="353811461"/>
+						<reference key="parent" ref="706834005"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -735,6 +885,14 @@ wGw</bytes>
 				<string key="116.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="117.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="118.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="120.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="121.CustomClassName">WCTransparentButtonCell</string>
+				<string key="121.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="122.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="123.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="124.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="125.CustomClassName">WCTransparentButtonCell</string>
+				<string key="125.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="21.CustomClassName">WCJumpBarControl</string>
 				<string key="21.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -750,31 +908,10 @@ wGw</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">119</int>
+			<int key="maxID">128</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
-				<object class="IBPartialClassDescription">
-					<string key="className">NSTextView</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="orderFrontSharingServicePicker:">id</string>
-						<string key="toggleQuickLookPreviewPanel:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="orderFrontSharingServicePicker:">
-							<string key="name">orderFrontSharingServicePicker:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="toggleQuickLookPreviewPanel:">
-							<string key="name">toggleQuickLookPreviewPanel:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/NSTextView.h</string>
-					</object>
-				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">WCJumpBarBackgroundView</string>
 					<string key="superclassName">NSView</string>
@@ -794,20 +931,17 @@ wGw</bytes>
 				<object class="IBPartialClassDescription">
 					<string key="className">WCJumpBarControl</string>
 					<string key="superclassName">NSPathControl</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="_contextualMenuItemAction:">NSMenuItem</string>
-						<string key="_jumpBarControlAction:">WCJumpBarControl</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="_contextualMenuItemAction:">
-							<string key="name">_contextualMenuItemAction:</string>
-							<string key="candidateClassName">NSMenuItem</string>
-						</object>
-						<object class="IBActionInfo" key="_jumpBarControlAction:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">_jumpBarControlAction:</string>
+						<string key="NS.object.0">WCJumpBarControl</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">_jumpBarControlAction:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">_jumpBarControlAction:</string>
 							<string key="candidateClassName">WCJumpBarControl</string>
 						</object>
-					</dictionary>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCJumpBarControl.h</string>
@@ -817,16 +951,36 @@ wGw</bytes>
 					<string key="className">WCTextView</string>
 					<string key="superclassName">NSTextView</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="foldAction:">id</string>
 						<string key="jumpToDefinitionAction:">id</string>
-						<string key="showToolTip:">id</string>
+						<string key="nextBookmarkAction:">id</string>
+						<string key="previousBookmarkAction:">id</string>
+						<string key="toggleBookmarkAction:">id</string>
+						<string key="unfoldAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="foldAction:">
+							<string key="name">foldAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="jumpToDefinitionAction:">
 							<string key="name">jumpToDefinitionAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="showToolTip:">
-							<string key="name">showToolTip:</string>
+						<object class="IBActionInfo" key="nextBookmarkAction:">
+							<string key="name">nextBookmarkAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="previousBookmarkAction:">
+							<string key="name">previousBookmarkAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="toggleBookmarkAction:">
+							<string key="name">toggleBookmarkAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="unfoldAction:">
+							<string key="name">unfoldAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
@@ -838,12 +992,37 @@ wGw</bytes>
 				<object class="IBPartialClassDescription">
 					<string key="className">WCTextViewController</string>
 					<string key="superclassName">WCViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="showDocumentItemsAction:">id</string>
+						<string key="showRelatedItemsAction:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="showDocumentItemsAction:">
+							<string key="name">showDocumentItemsAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showRelatedItemsAction:">
+							<string key="name">showRelatedItemsAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="addButton">NSButton</string>
+						<string key="addRemoveDividerImageView">NSImageView</string>
 						<string key="jumpBarControl">WCJumpBarControl</string>
 						<string key="relatedFilesPopUpButton">NSPopUpButton</string>
+						<string key="removeButton">NSButton</string>
 						<string key="textView">WCTextView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="addButton">
+							<string key="name">addButton</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="addRemoveDividerImageView">
+							<string key="name">addRemoveDividerImageView</string>
+							<string key="candidateClassName">NSImageView</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="jumpBarControl">
 							<string key="name">jumpBarControl</string>
 							<string key="candidateClassName">WCJumpBarControl</string>
@@ -851,6 +1030,10 @@ wGw</bytes>
 						<object class="IBToOneOutletInfo" key="relatedFilesPopUpButton">
 							<string key="name">relatedFilesPopUpButton</string>
 							<string key="candidateClassName">NSPopUpButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeButton">
+							<string key="name">removeButton</string>
+							<string key="candidateClassName">NSButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="textView">
 							<string key="name">textView</string>
@@ -860,6 +1043,14 @@ wGw</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCTextViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">WCTransparentButtonCell</string>
+					<string key="superclassName">NSButtonCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WCTransparentButtonCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -879,8 +1070,10 @@ wGw</bytes>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="GCJumpBarAccessorySeparator">{7, 13}</string>
 			<string key="NSActionTemplate">{15, 15}</string>
+			<string key="NSAddTemplate">{8, 8}</string>
 			<string key="NSMenuCheckmark">{11, 11}</string>
 			<string key="NSMenuMixedState">{10, 3}</string>
+			<string key="NSRemoveTemplate">{8, 8}</string>
 		</dictionary>
 	</data>
 </archive>

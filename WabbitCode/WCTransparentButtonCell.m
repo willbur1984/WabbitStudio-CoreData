@@ -15,4 +15,14 @@
 
 @implementation WCTransparentButtonCell
 
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (!(self = [super initWithCoder:aDecoder]))
+        return nil;
+    
+    [self setHighlightsBy:NSContentsCellMask];
+	[self setShowsStateBy:NSNoCellMask];
+    
+    return self;
+}
+
 @end

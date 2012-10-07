@@ -18,6 +18,7 @@
 @interface WCSourceFileWindowController : NSWindowController
 
 @property (readonly,nonatomic) WCTextViewController *currentTextViewController;
+@property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
 
 - (id)initWithTextStorage:(WCTextStorage *)textStorage;
 

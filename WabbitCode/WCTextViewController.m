@@ -37,6 +37,9 @@
 @property (readwrite,assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 @property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
+@property (weak,nonatomic) IBOutlet NSButton *addButton;
+@property (weak,nonatomic) IBOutlet NSButton *removeButton;
+@property (weak,nonatomic) IBOutlet NSImageView *addRemoveDividerImageView;
 
 @property (weak,nonatomic) WCTextStorage *textStorage;
 
@@ -62,6 +65,7 @@
     // text view
     [self.textView.textContainer replaceLayoutManager:[[WCLayoutManager alloc] init]];
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
+    [self.textView setMarkedTextAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
     WCFoldView *lineNumberView = [[WCFoldView alloc] initWithTextView:self.textView];
@@ -105,6 +109,24 @@
     [recentFilesItem setSubmenu:self.recentFilesMenu];
     
     [self.relatedFilesPopUpButton setMenu:menu];
+    
+    // add/remove assistant editor
+    [self.addButton setTarget:self];
+    [self.addButton setAction:@selector(_addAssistantEditorAction:)];
+    
+    [self.removeButton setTarget:self];
+    [self.removeButton setAction:@selector(_removeAssistantEditorAction:)];
+}
+
+- (void)cleanup {
+    [super cleanup];
+    
+    [self.textStorage removeLayoutManager:self.textView.layoutManager];
+    [self.jumpBarControl setDataSource:nil];
+    [self.jumpBarControl setDelegate:nil];
+    [self.textView setDelegate:nil];
+    [(WCFoldView *)self.textView.enclosingScrollView.verticalRulerView setDelegate:nil];
+    [(WCBookmarkScroller *)self.textView.enclosingScrollView.verticalScroller setDelegate:nil];
 }
 
 #pragma mark NSMenuDelegate
@@ -285,7 +307,14 @@
     
     return self;
 }
-
+#pragma mark Actions
+- (IBAction)showRelatedItemsAction:(id)sender; {
+    [self.relatedFilesPopUpButton performClick:nil];
+}
+- (IBAction)showDocumentItemsAction:(id)sender; {
+    [self.jumpBarControl showPopUpMenuForPathComponentCell:self.jumpBarControl.pathComponentCells.lastObject];
+}
+#pragma mark Properties
 - (void)setDelegate:(id<WCTextViewControllerDelegate>)delegate {
     _delegate = delegate;
     
@@ -293,6 +322,16 @@
     
     if (_delegate) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForTextViewController:self]];
+    }
+}
+
+- (void)setShowAddRemoveAssistantEditorButtons:(BOOL)showAddRemoveAssistantEditorButtons {
+    _showAddRemoveAssistantEditorButtons = showAddRemoveAssistantEditorButtons;
+    
+    if (!showAddRemoveAssistantEditorButtons) {
+        [self.addButton removeFromSuperviewWithoutNeedingDisplay];
+        [self.removeButton removeFromSuperviewWithoutNeedingDisplay];
+        [self.addRemoveDividerImageView removeFromSuperviewWithoutNeedingDisplay];
     }
 }
 #pragma mark *** Private Methods ***
@@ -303,6 +342,13 @@
     
     if (recentURL)
         [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:recentURL display:YES completionHandler:nil];
+}
+
+- (IBAction)_addAssistantEditorAction:(id)sender {
+    [self.delegate addAssistantEditorForTextViewController:self];
+}
+- (IBAction)_removeAssistantEditorAction:(id)sender {
+    [self.delegate removeAssistantEditorForTextViewController:self];
 }
 
 #pragma mark Notifications

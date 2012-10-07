@@ -22,7 +22,12 @@
 
 @property (assign,nonatomic) id <WCTextViewControllerDelegate> delegate;
 
+@property (assign,nonatomic) BOOL showAddRemoveAssistantEditorButtons;
+
 - (id)initWithTextStorage:(WCTextStorage *)textStorage;
+
+- (IBAction)showRelatedItemsAction:(id)sender;
+- (IBAction)showDocumentItemsAction:(id)sender;
 
 @end
 
@@ -35,4 +40,7 @@
 - (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController;
 - (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController;
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
+
+- (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
+- (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
 @end
