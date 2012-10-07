@@ -29,6 +29,8 @@
 #import "WCHUDStatusWindow.h"
 
 @interface WCTextView ()
+@property (weak,nonatomic) NSTimer *toolTipTimer;
+
 - (void)_highlightMatchingBrace;
 @end
 
@@ -75,34 +77,31 @@
     NSPoint point = [self convertPoint:theEvent.locationInWindow fromView:nil];
     NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
     
-    if (charIndex >= self.string.length)
+    if (charIndex >= self.string.length) {
+        [self setToolTipTimer:nil];
         return;
+    }
     
     NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
     
-    if (symbolRange.location == NSNotFound)
+    if (symbolRange.location == NSNotFound) {
+        [self setToolTipTimer:nil];
         return;
+    }
     
     NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
     
-    if (!symbols.count)
+    if (!symbols.count) {
+        [self setToolTipTimer:nil];
         return;
+    }
     
-    NSMutableString *string = [NSMutableString stringWithCapacity:0];
+    const NSTimeInterval kToolTipDelayInterval = 1;
     
-    for (Symbol *symbol in symbols)
-        [string appendFormat:NSLocalizedString(@"%@ \u2192 line %lu\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
-    
-    [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
-    
-    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
-    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
-    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
-    
-    lineFragmentRect.origin.x += glyphLocation.x;
-    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
-    
-    [[WCToolTipWindow sharedInstance] showString:string atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
+    if (self.toolTipTimer && [[WCToolTipWindow sharedInstance] isVisible])
+        [self _toolTipTimerCallback:nil];
+    else
+        [self setToolTipTimer:[NSTimer scheduledTimerWithTimeInterval:kToolTipDelayInterval target:self selector:@selector(_toolTipTimerCallback:) userInfo:nil repeats:NO]];
 }
 
 #pragma mark NSTextInputClient
@@ -339,11 +338,60 @@
 	
 	NSBeep();
 }
+#pragma mark Properties
+- (void)setToolTipTimer:(NSTimer *)toolTipTimer {
+    if (_toolTipTimer)
+        [_toolTipTimer invalidate];
+    
+    _toolTipTimer = toolTipTimer;
+}
+
 #pragma mark Actions
 - (IBAction)_jumpToDefinitionMenuItemAction:(NSMenuItem *)sender {
     if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
         [self.delegate textView:self jumpToDefinitionForSymbol:sender.representedObject];
 }
+#pragma mark Callbacks
+- (void)_toolTipTimerCallback:(NSTimer *)timer {
+    NSPoint point = [self convertPoint:[[NSApplication sharedApplication] currentEvent].locationInWindow fromView:nil];
+    NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
+    
+    if (charIndex >= self.string.length) {
+        [self setToolTipTimer:nil];
+        return;
+    }
+    
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
+    
+    if (symbolRange.location == NSNotFound) {
+        [self setToolTipTimer:nil];
+        return;
+    }
+    
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
+    
+    if (!symbols.count) {
+        [self setToolTipTimer:nil];
+        return;
+    }
+    
+    NSMutableString *string = [NSMutableString stringWithCapacity:0];
+    
+    for (Symbol *symbol in symbols)
+        [string appendFormat:NSLocalizedString(@"%@ \u2192 line %lu\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
+    
+    [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
+    
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
+    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+    
+    lineFragmentRect.origin.x += glyphLocation.x;
+    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+    
+    [[WCToolTipWindow sharedInstance] showString:string atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
+}
+
 #pragma mark Notifications
 - (void)_textViewDidChangeSelection:(NSNotification *)note {
     NSRange oldSelectedRange = [[note.userInfo objectForKey:@"NSOldSelectedCharacterRange"] rangeValue];

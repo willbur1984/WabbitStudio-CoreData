@@ -16,8 +16,7 @@
 
 @interface WCToolTipWindow ()
 @property (strong,nonatomic) NSTextField *textField;
-@property (strong,nonatomic) NSDate *orderedFrontDate;
-@property (readonly,nonatomic) NSDictionary *defaultAttributes;
+@property (assign,nonatomic) NSTimeInterval orderedFrontTimestamp;
 @property (weak,nonatomic) id eventMonitor;
 @end
 
@@ -42,7 +41,7 @@
     [self.textField setBordered:NO];
     [self.textField setDrawsBackground:NO];
     [self.textField setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
-    [self.textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"This is a tool tip!", nil) attributes:self.defaultAttributes]];
+    [self.textField setAttributedStringValue:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"This is a tool tip!", nil) attributes:[self.class defaultToolTipAttributes]]];
     
     [self setContentView:self.textField];
     [self setFrame:[self frameRectForContentRect:self.textField.frame] display:NO];
@@ -58,14 +57,17 @@
     });
     return retval;
 }
++ (NSDictionary *)defaultToolTipAttributes; {
+    return @{NSFontAttributeName : [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]], NSForegroundColorAttributeName : [NSColor blackColor]};
+}
 
 - (void)showString:(NSString *)string atPoint:(NSPoint)point; {
     WCAssert(string,@"tooltip string cannot be nil!");
     
-    [self showAttributedString:[[NSAttributedString alloc] initWithString:string attributes:self.defaultAttributes] atPoint:point];
+    [self showAttributedString:[[NSAttributedString alloc] initWithString:string attributes:[self.class defaultToolTipAttributes]] atPoint:point];
 }
 
-static const NSTimeInterval kDismissThreshold = 1.5;
+static const NSTimeInterval kDismissThreshold = 0.75;
 
 - (void)showAttributedString:(NSAttributedString *)attributedString atPoint:(NSPoint)point; {
     WCAssert(attributedString,@"attributed tooltip string cannot be nil!");
@@ -85,17 +87,23 @@ static const NSTimeInterval kDismissThreshold = 1.5;
     point.y = MIN(MAX(NSMinY(screenFrame) + NSHeight(windowFrame), point.y), NSMaxY(screenFrame));
     
     [self setFrameTopLeftPoint:point];
-    [self setAlphaValue:1];
+    
+    [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+        [context setDuration:0];
+        
+        [self.animator setAlphaValue:1];
+    } completionHandler:nil];
+    
     [self orderFront:nil];
     
-    [self setOrderedFrontDate:[NSDate date]];
+    [self setOrderedFrontTimestamp:[[NSApplication sharedApplication] currentEvent].timestamp];
     
     __block typeof (self) blockSelf = self;
     
     id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
         switch (event.type) {
             case NSMouseMoved:
-                if ([[NSDate date] timeIntervalSinceDate:self.orderedFrontDate] > kDismissThreshold) {
+                if (event.timestamp - blockSelf.orderedFrontTimestamp > kDismissThreshold) {
                     [blockSelf hideToolTipWindow];
                 }
                 break;
@@ -113,21 +121,16 @@ static const NSTimeInterval kDismissThreshold = 1.5;
     if (!self.isVisible)
         return;
     
-    __block typeof (self) blockSelf = self;
-    
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0.3];
         
-        [blockSelf.animator setAlphaValue:0];
+        [self.animator setAlphaValue:0];
     } completionHandler:^{
-        [blockSelf orderOut:nil];
+        if (self.alphaValue == 0)
+            [self orderOut:nil];
     }];
     
-    [blockSelf setEventMonitor:nil];
-}
-
-- (NSDictionary *)defaultAttributes {
-    return @{NSFontAttributeName : [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]], NSForegroundColorAttributeName : [NSColor blackColor]};
+    [self setEventMonitor:nil];
 }
 
 - (void)setEventMonitor:(id)eventMonitor {
