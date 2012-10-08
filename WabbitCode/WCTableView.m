@@ -20,13 +20,13 @@
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
     
-    if (self.numberOfRows == 0 && self.emptyString.length) {
+    if (self.numberOfRows == 0 && self.emptyAttributedString.length) {
         static NSTextStorage *textStorage;
         static NSLayoutManager *layoutManager;
         static NSTextContainer *textContainer;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            textStorage = [[NSTextStorage alloc] initWithString:@"" attributes:@{ NSFontAttributeName : [NSFont labelFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]], NSForegroundColorAttributeName : [NSColor darkGrayColor] }];
+            textStorage = [[NSTextStorage alloc] init];
             layoutManager = [[NSLayoutManager alloc] init];
             
             [textStorage addLayoutManager:layoutManager];
@@ -36,14 +36,27 @@
             [layoutManager addTextContainer:textContainer];
         });
         
-        [textStorage replaceCharactersInRange:NSMakeRange(0, textStorage.length) withString:self.emptyString];
-        [layoutManager ensureLayoutForCharacterRange:NSMakeRange(0, textStorage.length)];
+        [textStorage replaceCharactersInRange:NSMakeRange(0, textStorage.length) withAttributedString:self.emptyAttributedString];
+        [layoutManager ensureLayoutForTextContainer:textContainer];
         
         NSRect drawRect = [layoutManager usedRectForTextContainer:textContainer];
         NSRect centerRect = WC_NSRectCenter(drawRect, self.bounds);
         
-        [layoutManager drawGlyphsForGlyphRange:[layoutManager glyphRangeForCharacterRange:NSMakeRange(0, textStorage.length) actualCharacterRange:NULL] atPoint:centerRect.origin];
+        [layoutManager drawGlyphsForGlyphRange:[layoutManager glyphRangeForTextContainer:textContainer] atPoint:centerRect.origin];
     }
+}
+
+- (NSString *)emptyString {
+    return self.emptyAttributedString.string;
+}
+- (void)setEmptyString:(NSString *)emptyString {
+    [self setEmptyAttributedString:[[NSAttributedString alloc] initWithString:emptyString]];
+}
+
+- (void)setEmptyAttributedString:(NSAttributedString *)emptyAttributedString {
+    _emptyAttributedString = emptyAttributedString;
+    
+    [self setNeedsDisplay:YES];
 }
 
 @end

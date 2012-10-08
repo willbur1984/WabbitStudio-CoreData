@@ -61,6 +61,10 @@
 		7962BDF316221899006D5A7A /* include.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDF016221899006D5A7A /* include.icns */; };
 		7962BDF416221899006D5A7A /* project.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7962BDF116221899006D5A7A /* project.icns */; };
 		7962BDF816224485006D5A7A /* WCTransparentButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDF716224485006D5A7A /* WCTransparentButtonCell.m */; };
+		7962BE0116225E9E006D5A7A /* WCJumpInWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BE0016225E9E006D5A7A /* WCJumpInWindowController.m */; };
+		7962BE0416225FB1006D5A7A /* WCJumpInWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7962BE0216225FB1006D5A7A /* WCJumpInWindow.xib */; };
+		7962BE071622627D006D5A7A /* WCSearchFieldBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BE061622627C006D5A7A /* WCSearchFieldBackgroundView.m */; };
+		7962BE0A16226D3B006D5A7A /* WCJumpInCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -188,6 +192,13 @@
 		7962BDF116221899006D5A7A /* project.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = project.icns; sourceTree = "<group>"; };
 		7962BDF616224485006D5A7A /* WCTransparentButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTransparentButtonCell.h; sourceTree = "<group>"; };
 		7962BDF716224485006D5A7A /* WCTransparentButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTransparentButtonCell.m; sourceTree = "<group>"; };
+		7962BDFF16225E9E006D5A7A /* WCJumpInWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpInWindowController.h; sourceTree = "<group>"; };
+		7962BE0016225E9E006D5A7A /* WCJumpInWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpInWindowController.m; sourceTree = "<group>"; };
+		7962BE0316225FB1006D5A7A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCJumpInWindow.xib; sourceTree = "<group>"; };
+		7962BE051622627C006D5A7A /* WCSearchFieldBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSearchFieldBackgroundView.h; sourceTree = "<group>"; };
+		7962BE061622627C006D5A7A /* WCSearchFieldBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSearchFieldBackgroundView.m; sourceTree = "<group>"; };
+		7962BE0816226D3A006D5A7A /* WCJumpInCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpInCellView.h; sourceTree = "<group>"; };
+		7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpInCellView.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
@@ -402,6 +413,19 @@
 			name = Cells;
 			sourceTree = "<group>";
 		};
+		7962BDFE16225E18006D5A7A /* Jump In */ = {
+			isa = PBXGroup;
+			children = (
+				7962BDFF16225E9E006D5A7A /* WCJumpInWindowController.h */,
+				7962BE0016225E9E006D5A7A /* WCJumpInWindowController.m */,
+				7962BE0816226D3A006D5A7A /* WCJumpInCellView.h */,
+				7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */,
+				7962BE051622627C006D5A7A /* WCSearchFieldBackgroundView.h */,
+				7962BE061622627C006D5A7A /* WCSearchFieldBackgroundView.m */,
+			);
+			name = "Jump In";
+			sourceTree = "<group>";
+		};
 		79710682160B5C4700C4951A /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -501,6 +525,7 @@
 				79968CBE1608DB7A00F139BC /* WCSourceFileWindow.xib */,
 				79968CC11608DB7A00F139BC /* WCMainMenu.xib */,
 				7973D6D9160CF8DF004EDE62 /* WCTextView.xib */,
+				7962BE0216225FB1006D5A7A /* WCJumpInWindow.xib */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -550,6 +575,7 @@
 		79FE35FF1619431100DB7C6D /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				7962BDFE16225E18006D5A7A /* Jump In */,
 				79FE36031619436C00DB7C6D /* Completion */,
 				79FE36081619442800DB7C6D /* Model */,
 				79FE36091619443100DB7C6D /* Layout */,
@@ -815,6 +841,7 @@
 				7962BDF216221899006D5A7A /* assembly.icns in Resources */,
 				7962BDF316221899006D5A7A /* include.icns in Resources */,
 				7962BDF416221899006D5A7A /* project.icns in Resources */,
+				7962BE0416225FB1006D5A7A /* WCJumpInWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -895,6 +922,9 @@
 				7962BDEB16220042006D5A7A /* NSView+WCExtensions.m in Sources */,
 				7962BDEE162207C7006D5A7A /* NSObject+WCExtensions.m in Sources */,
 				7962BDF816224485006D5A7A /* WCTransparentButtonCell.m in Sources */,
+				7962BE0116225E9E006D5A7A /* WCJumpInWindowController.m in Sources */,
+				7962BE071622627D006D5A7A /* WCSearchFieldBackgroundView.m in Sources */,
+				7962BE0A16226D3B006D5A7A /* WCJumpInCellView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -931,6 +961,14 @@
 				7962BDE116215195006D5A7A /* en */,
 			);
 			name = WEMainMenu.xib;
+			sourceTree = "<group>";
+		};
+		7962BE0216225FB1006D5A7A /* WCJumpInWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7962BE0316225FB1006D5A7A /* en */,
+			);
+			name = WCJumpInWindow.xib;
 			sourceTree = "<group>";
 		};
 		7973D6D9160CF8DF004EDE62 /* WCTextView.xib */ = {

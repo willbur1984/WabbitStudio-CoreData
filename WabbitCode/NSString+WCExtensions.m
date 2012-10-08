@@ -53,5 +53,18 @@
     
     return retval;
 }
+- (NSRange)WC_rangeForLineNumber:(NSUInteger)lineNumber; {
+	__block NSRange range = WC_NSEmptyRange;
+	__block NSInteger lineNumberCopy = lineNumber;
+	
+	[self enumerateSubstringsInRange:NSMakeRange(0, [self length]) options:NSStringEnumerationByLines|NSStringEnumerationSubstringNotRequired usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+		if ((--lineNumberCopy) < 0) {
+			range = enclosingRange;
+			*stop = YES;
+		}
+	}];
+	
+	return range;
+}
 
 @end

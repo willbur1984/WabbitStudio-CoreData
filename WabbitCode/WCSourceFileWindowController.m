@@ -22,6 +22,7 @@
 #import "NSEvent+WCExtensions.h"
 #import "WCExtendedAttributesManager.h"
 #import "NSView+WCExtensions.h"
+#import "WCJumpInWindowController.h"
 
 @interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate,NSUserInterfaceValidations>
 
@@ -72,6 +73,13 @@
     }
     else if ([item action] == @selector(removeAssistantEditorAction:)) {
         return (self.assistantTextViewControllers.count >= 2);
+    }
+    else if ([item action] == @selector(jumpInAction:)) {
+        if ([(id<NSObject>)item isKindOfClass:[NSMenuItem class]]) {
+            NSMenuItem *menuItem = (NSMenuItem *)item;
+            
+            [menuItem setTitle:[NSString stringWithFormat:NSLocalizedString(@"Jump in \"%@\"\u2026", nil),self.sourceFileDocument.displayName]];
+        }
     }
     return YES;
 }
@@ -198,17 +206,17 @@
     [self.assistantTextViewController.textView WC_makeFirstResponder];
 }
 - (IBAction)addAssistantEditorAction:(id)sender; {
-    WCTextViewController *currentTextViewController = self.currentAssistantTextViewController;
-    
-    [self _addAssistantEditorForTextViewController:currentTextViewController];
+    [self _addAssistantEditorForTextViewController:self.currentAssistantTextViewController];
 }
 - (IBAction)removeAssistantEditorAction:(id)sender; {
-    WCTextViewController *currentTextViewController = self.currentAssistantTextViewController;
-    
-    [self _removeAssistantEditorForTextViewController:currentTextViewController];
+    [self _removeAssistantEditorForTextViewController:self.currentAssistantTextViewController];
 }
 - (IBAction)resetEditorAction:(id)sender; {
     // TODO: what should this method do? what exactly does Xcode do?
+}
+
+- (IBAction)jumpInAction:(id)sender; {
+    [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self.currentTextViewController.textView];
 }
 #pragma mark Properties
 - (WCTextViewController *)currentTextViewController {

@@ -1,8 +1,8 @@
 //
-//  WCTableView.h
+//  WCJumpInCellView.h
 //  WabbitStudio
 //
-//  Created by William Towe on 9/24/12.
+//  Created by William Towe on 10/7/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,9 +13,8 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface WCTableView : NSTableView
+@interface WCJumpInCellView : NSTableCellView
 
-@property (copy,nonatomic) NSString *emptyString;
-@property (copy,nonatomic) NSAttributedString *emptyAttributedString;
+@property (readonly,weak,nonatomic) IBOutlet NSTextField *pathTextField;
 
 @end
