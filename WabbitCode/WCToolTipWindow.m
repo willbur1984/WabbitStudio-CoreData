@@ -13,6 +13,7 @@
 
 #import "WCToolTipWindow.h"
 #import "WCDefines.h"
+#import "NSColor+WCExtensions.h"
 
 @interface WCToolTipWindow ()
 @property (strong,nonatomic) NSTextField *textField;
@@ -28,7 +29,7 @@
     
     [self setReleasedWhenClosed:NO];
     [self setOpaque:NO];
-    [self setBackgroundColor:[NSColor colorWithCalibratedRed:1.0 green:0.96 blue:0.76 alpha:1.0]];
+    [self setBackgroundColor:[[NSColor WC_colorWithHexadecimalString:@"f9f9c3"] colorWithAlphaComponent:0.95]];
     [self setHasShadow:YES];
     [self setLevel:NSStatusWindowLevel];
     [self setHidesOnDeactivate:YES];
@@ -122,7 +123,7 @@ static const NSTimeInterval kDismissThreshold = 0.75;
         return;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0.3];
+        [context setDuration:0.35];
         
         [self.animator setAlphaValue:0];
     } completionHandler:^{
