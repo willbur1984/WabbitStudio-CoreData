@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Define" representedClassName="Define" parentEntity="Symbol" syncable="YES">
         <attribute name="arguments" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
@@ -10,7 +10,7 @@
     <entity name="File" representedClassName="File" syncable="YES">
         <attribute name="identifier" attributeType="String" syncable="YES"/>
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="symbols" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Symbol" inverseName="file" inverseEntity="Symbol" syncable="YES"/>
+        <relationship name="symbols" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Symbol" inverseName="file" inverseEntity="Symbol" syncable="YES"/>
     </entity>
     <entity name="Label" representedClassName="Label" parentEntity="Symbol" syncable="YES"/>
     <entity name="Macro" representedClassName="Macro" parentEntity="Symbol" syncable="YES">
@@ -28,9 +28,9 @@
     <elements>
         <element name="Define" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Equate" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="File" positionX="160" positionY="192" width="128" height="90"/>
         <element name="Label" positionX="160" positionY="192" width="128" height="45"/>
         <element name="Macro" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Symbol" positionX="160" positionY="192" width="128" height="135"/>
-        <element name="File" positionX="160" positionY="192" width="128" height="90"/>
     </elements>
 </model>

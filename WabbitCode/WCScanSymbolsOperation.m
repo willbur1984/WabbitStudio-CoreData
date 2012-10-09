@@ -28,6 +28,7 @@
 @property (strong) NSManagedObjectContext *managedObjectContext;
 @property (assign,getter = isExecuting) BOOL executing;
 @property (assign,getter = isFinished) BOOL finished;
+@property (assign,getter = isCancelled) BOOL cancelled;
 @property (copy,nonatomic) NSURL *fileURL;
 @end
 
@@ -50,6 +51,12 @@
     return YES;
 }
 
+- (void)cancel {
+    [self willChangeValueForKey:@"isCancelled"];
+    [self setCancelled:YES];
+    [self didChangeValueForKey:@"isCancelled"];
+}
+
 - (void)main {
     if (self.isCancelled) {
         [self willChangeValueForKey:@"isFinished"];
@@ -63,126 +70,144 @@
     [self didChangeValueForKey:@"isExecuting"];
     
     [self.managedObjectContext performBlock:^{
-        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
-        
-        File *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
-        
-        if (!file) {
-            file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+        do {
+            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
+            
+            File *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+            
+            if (file) {
+                [self.managedObjectContext deleteObject:file];
+            }
+            else {
+                file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+            }
             
             [file setIdentifier:[NSString WC_UUIDString]];
-        }
+            [file setPath:self.fileURL.path];
+            
+            if (self.isCancelled)
+                break;
+            
+            NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.*?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
+            NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
+            
+            [commentRegex enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [comments addObject:[NSValue valueWithRange:result.range]];
+            }];
+            
+            [comments sortUsingComparator:^NSComparisonResult(NSValue *obj1, NSValue *obj2) {
+                NSRange range1 = obj1.rangeValue;
+                NSRange range2 = obj2.rangeValue;
+                
+                if (range1.location < range2.location)
+                    return NSOrderedAscending;
+                else if (range1.location > range2.location)
+                    return NSOrderedDescending;
+                return NSOrderedSame;
+            }];
+            
+            if (self.isCancelled)
+                break;
+            
+            [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                NSRange commentRange = [comments WC_rangeForRange:result.range];
+                
+                if (NSLocationInRange(result.range.location, commentRange))
+                    return;
+                
+                Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
+                
+                [entity setType:@(SymbolTypeEquate)];
+                [entity setLocation:@(result.range.location)];
+                [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
+                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setFile:file];
+            }];
+            
+            if (self.isCancelled)
+                break;
+            
+            [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                if (result.range.length == 1 &&
+                    [self.string characterAtIndex:result.range.location] == '_')
+                    return;
+                
+                NSRange commentRange = [comments WC_rangeForRange:result.range];
+                
+                if (NSLocationInRange(result.range.location, commentRange))
+                    return;
+                
+                NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
+                
+                [fetchRequest setResultType:NSCountResultType];
+                [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %@",@(result.range.location)]];
+                
+                NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+                
+                if ([fetchResult.lastObject unsignedIntegerValue] > 0)
+                    return;
+                
+                Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:self.managedObjectContext];
+                
+                [entity setType:@(SymbolTypeLabel)];
+                [entity setLocation:@(result.range.location)];
+                [entity setRange:NSStringFromRange(result.range)];
+                [entity setName:[self.string substringWithRange:result.range]];
+                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setFile:file];
+            }];
+            
+            if (self.isCancelled)
+                break;
+            
+            [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                NSRange commentRange = [comments WC_rangeForRange:result.range];
+                
+                if (NSLocationInRange(result.range.location, commentRange))
+                    return;
+                
+                Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:self.managedObjectContext];
+                
+                [entity setType:@(SymbolTypeDefine)];
+                [entity setLocation:@(result.range.location)];
+                [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
+                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setFile:file];
+            }];
+            
+            if (self.isCancelled)
+                break;
+            
+            [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                NSRange commentRange = [comments WC_rangeForRange:result.range];
+                
+                if (NSLocationInRange(result.range.location, commentRange))
+                    return;
+                
+                Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:self.managedObjectContext];
+                
+                [entity setType:@(SymbolTypeMacro)];
+                [entity setLocation:@(result.range.location)];
+                [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
+                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setFile:file];
+                
+                NSRange lineRange = [self.string lineRangeForRange:result.range];
+                NSRange parensRange = NSMakeRange(NSMaxRange(result.range), NSMaxRange(lineRange) - NSMaxRange(result.range));
+                NSString *parensString = [self.string substringWithRange:parensRange];
+                NSTextCheckingResult *parensResult = [[NSRegularExpression regularExpressionWithPattern:@"^\\((.+?)\\)" options:0 error:NULL] firstMatchInString:parensString options:0 range:NSMakeRange(0, parensRange.length)];
+                
+                if (parensResult)
+                    [entity setArguments:[parensString substringWithRange:[parensResult rangeAtIndex:1]]];
+            }];
+            
+        } while (0);
         
-        [file setPath:self.fileURL.path];
-        
-        for (Symbol *symbol in file.symbols)
-            [self.managedObjectContext deleteObject:symbol];
-        
-        NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
-        NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
-        
-        [commentRegex enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            [comments addObject:[NSValue valueWithRange:result.range]];
-        }];
-        
-        [comments sortUsingComparator:^NSComparisonResult(NSValue *obj1, NSValue *obj2) {
-            NSRange range1 = obj1.rangeValue;
-            NSRange range2 = obj2.rangeValue;
-            
-            if (range1.location < range2.location)
-                return NSOrderedAscending;
-            else if (range1.location > range2.location)
-                return NSOrderedDescending;
-            return NSOrderedSame;
-        }];
-        
-        [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            NSRange commentRange = [comments WC_rangeForRange:result.range];
-            
-            if (NSLocationInRange(result.range.location, commentRange))
-                return;
-            
-            Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
-            
-            [entity setType:@(SymbolTypeEquate)];
-            [entity setLocation:@(result.range.location)];
-            [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-            [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-            [entity setFile:file];
-        }];
-        
-        [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            if (result.range.length == 1 &&
-                [self.string characterAtIndex:result.range.location] == '_')
-                return;
-            
-            NSRange commentRange = [comments WC_rangeForRange:result.range];
-            
-            if (NSLocationInRange(result.range.location, commentRange))
-                return;
-            
-            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
-            
-            [fetchRequest setResultType:NSCountResultType];
-            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %@",@(result.range.location)]];
-            
-            NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-            
-            if ([fetchResult.lastObject unsignedIntegerValue] > 0)
-                return;
-            
-            Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:self.managedObjectContext];
-            
-            [entity setType:@(SymbolTypeLabel)];
-            [entity setLocation:@(result.range.location)];
-            [entity setRange:NSStringFromRange(result.range)];
-            [entity setName:[self.string substringWithRange:result.range]];
-            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-            [entity setFile:file];
-        }];
-        
-        [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            NSRange commentRange = [comments WC_rangeForRange:result.range];
-            
-            if (NSLocationInRange(result.range.location, commentRange))
-                return;
-            
-            Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:self.managedObjectContext];
-            
-            [entity setType:@(SymbolTypeDefine)];
-            [entity setLocation:@(result.range.location)];
-            [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-            [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-            [entity setFile:file];
-        }];
-        
-        [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            NSRange commentRange = [comments WC_rangeForRange:result.range];
-            
-            if (NSLocationInRange(result.range.location, commentRange))
-                return;
-            
-            Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:self.managedObjectContext];
-            
-            [entity setType:@(SymbolTypeMacro)];
-            [entity setLocation:@(result.range.location)];
-            [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-            [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-            [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-            [entity setFile:file];
-            
-            NSRange lineRange = [self.string lineRangeForRange:result.range];
-            NSRange parensRange = NSMakeRange(NSMaxRange(result.range), NSMaxRange(lineRange) - NSMaxRange(result.range));
-            NSString *parensString = [self.string substringWithRange:parensRange];
-            NSTextCheckingResult *parensResult = [[NSRegularExpression regularExpressionWithPattern:@"^\\((.+?)\\)" options:0 error:NULL] firstMatchInString:parensString options:0 range:NSMakeRange(0, parensRange.length)];
-            
-            if (parensResult)
-                [entity setArguments:[parensString substringWithRange:[parensResult rangeAtIndex:1]]];
-        }];
-        
-        [self.managedObjectContext save:NULL];
+        if (!self.isCancelled)
+            [self.managedObjectContext save:NULL];
         
         [self willChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];

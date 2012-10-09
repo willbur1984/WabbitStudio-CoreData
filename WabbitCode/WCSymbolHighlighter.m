@@ -16,6 +16,7 @@
 #import "WCSymbolScanner.h"
 #import "NSArray+WCExtensions.h"
 #import "WCDefines.h"
+#import "NSTextView+WCExtensions.h"
 
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -36,6 +37,20 @@
     return self;
 }
 
+- (void)symbolHighlightInVisibleRange; {
+    NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
+    
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+        for (NSTextContainer *textContainer in layoutManager.textContainers) {
+            if (!textContainer.textView.isHidden)
+                [ranges addIndexesInRange:[textContainer.textView WC_visibleRange]];
+        }
+    }
+    
+    [ranges enumerateRangesWithOptions:0 usingBlock:^(NSRange range, BOOL *stop) {
+        [self symbolHighlightInRange:range];
+    }];
+}
 - (void)symbolHighlightInRange:(NSRange)range; {
     if (!range.length)
         return;
@@ -44,41 +59,50 @@
     
     [self.textStorage beginEditing];
     
-    [[WCSymbolScanner symbolRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        id attribute = [self.textStorage attribute:kTokenAttributeName atIndex:result.range.location effectiveRange:NULL];
-        
-        if ([attribute boolValue])
-            return;
-        
-        NSArray *symbols = [symbolScanner symbolsWithName:[self.textStorage.string substringWithRange:result.range]];
-        
-        if (!symbols.count) {
-            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:result.range];
-            return;
+    NSRange effectiveRange;
+    id value;
+    
+    while (range.length) {
+        if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
+            NSString *name = [self.textStorage.string substringWithRange:effectiveRange];
+            NSArray *symbols = [symbolScanner symbolsWithName:name];
+            Symbol *symbol = [symbols WC_firstObject];
+            
+            switch (symbol.type.intValue) {
+                case SymbolTypeLabel:
+                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:effectiveRange];
+                    break;
+                case SymbolTypeEquate:
+                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:effectiveRange];
+                    break;
+                case SymbolTypeDefine:
+                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:effectiveRange];
+                    break;
+                case SymbolTypeMacro:
+                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:effectiveRange];
+                    break;
+                default:
+                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:effectiveRange];
+                    break;
+            }
         }
         
-        Symbol *symbol = [symbols WC_firstObject];
-        
-        switch (symbol.type.intValue) {
-            case SymbolTypeLabel:
-                [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:result.range];
-                break;
-            case SymbolTypeEquate:
-                [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:result.range];
-                break;
-            case SymbolTypeDefine:
-                [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:result.range];
-                break;
-            case SymbolTypeMacro:
-                [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:result.range];
-                break;
-            default:
-                [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:result.range];
-                break;
-        }
-    }];
+        range = NSMakeRange(NSMaxRange(effectiveRange), NSMaxRange(range) - NSMaxRange(effectiveRange));
+    }
     
     [self.textStorage endEditing];
+}
+
+- (void)setDelegate:(id<WCSymbolHighlighterDelegate>)delegate {
+    _delegate = delegate;
+    
+    if (delegate) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForSymbolHighlighter:self]];
+    }
+}
+
+- (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
+    [self symbolHighlightInVisibleRange];
 }
 
 @end

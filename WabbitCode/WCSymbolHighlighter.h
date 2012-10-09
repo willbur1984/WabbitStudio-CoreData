@@ -13,6 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
+
 @protocol WCSymbolHighlighterDelegate;
 
 @interface WCSymbolHighlighter : NSObject
@@ -21,6 +22,7 @@
 
 - (id)initWithTextStorage:(NSTextStorage *)textStorage;
 
+- (void)symbolHighlightInVisibleRange;
 - (void)symbolHighlightInRange:(NSRange)range;
 
 @end

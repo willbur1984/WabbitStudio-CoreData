@@ -10,7 +10,7 @@
 #import <CoreData/CoreData.h>
 
 typedef enum {
-    SymbolTypeLabel,
+    SymbolTypeLabel = 1,
     SymbolTypeEquate,
     SymbolTypeDefine,
     SymbolTypeMacro

@@ -20,6 +20,7 @@
 
 NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeName";
 NSString *const kTokenAttributeName = @"kTokenAttributeName";
+NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
 
 @interface WCSyntaxHighlighter () <NSTextStorageDelegate>
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -57,11 +58,10 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
         
         if ([attribute boolValue]) {
             [self.textStorage attribute:kMultilineCommentAttributeName atIndex:charIndex longestEffectiveRange:&highlightRange inRange:NSMakeRange(0, self.textStorage.length)];
-            
-            WCLogNSRange(highlightRange);
         }
     }
     
+//    [self performSelector:@selector(_syntaxHighlightInRangeValue:) withObject:[NSValue valueWithRange:[self.textStorage.string lineRangeForRange:highlightRange]] afterDelay:0];
     [self syntaxHighlightInRange:[self.textStorage.string lineRangeForRange:highlightRange]];
 }
 
@@ -85,6 +85,9 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
     [self.textStorage beginEditing];
     
     [self.textStorage addAttributes:[self.class defaultAttributes] range:range];
+    [self.textStorage removeAttribute:kMultilineCommentAttributeName range:range];
+    [self.textStorage removeAttribute:kTokenAttributeName range:range];
+    [self.textStorage removeAttribute:kSymbolAttributeName range:range];
     
     [[WCSyntaxHighlighter operationalCodeRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor blueColor], kTokenAttributeName : @true } range:result.range];
@@ -153,11 +156,20 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
             *stop = YES;
     }];
     
+    [self.textStorage enumerateAttribute:kTokenAttributeName inRange:range options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
+        if ([value boolValue])
+            return;
+        
+        [[WCSymbolScanner symbolRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [self.textStorage addAttribute:kSymbolAttributeName value:@true range:result.range];
+        }];
+    }];
+    
     [self.textStorage endEditing];
 }
 
 + (NSDictionary *)defaultAttributes; {
-    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false, kTokenAttributeName : @false};
+    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor]};
 }
 
 + (NSRegularExpression *)commentRegex; {
@@ -172,7 +184,7 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)|(?:#comment.*)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#comment.*?#endcomment)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
     });
     return retval;
 }
@@ -282,31 +294,8 @@ NSString *const kTokenAttributeName = @"kTokenAttributeName";
     return retval;
 }
 
-- (void)setDelegate:(id<WCSyntaxHighlighterDelegate>)delegate {
-    _delegate = delegate;
-    
-    if (delegate) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForSyntaxHighligher:self]];
-    }
-}
-
 - (void)_syntaxHighlightInRangeValue:(NSValue *)rangeValue; {
     [self syntaxHighlightInRange:rangeValue.rangeValue];
-}
-
-- (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
-    WCSymbolHighlighter *symbolHighlighter = [self.delegate symbolHighlighterForSyntaxHighlighter:self];
-    NSMutableIndexSet *visibleRanges = [NSMutableIndexSet indexSet];
-    
-    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
-        for (NSTextContainer *textContainer in layoutManager.textContainers) {
-            [visibleRanges addIndexesInRange:[textContainer.textView WC_visibleRange]];
-        }
-    }
-    
-    [visibleRanges enumerateRangesUsingBlock:^(NSRange range, BOOL *stop) {
-        [symbolHighlighter symbolHighlightInRange:range];
-    }];
 }
 
 @end

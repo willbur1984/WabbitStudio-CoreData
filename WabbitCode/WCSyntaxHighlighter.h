@@ -15,6 +15,7 @@
 
 extern NSString *const kMultilineCommentAttributeName;
 extern NSString *const kTokenAttributeName;
+extern NSString *const kSymbolAttributeName;
 
 @protocol WCSyntaxHighlighterDelegate;
 
