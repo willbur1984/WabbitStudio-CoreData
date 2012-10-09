@@ -27,11 +27,16 @@
 #import "NSArray+WCExtensions.h"
 #import "Bookmark.h"
 #import "WCHUDStatusWindow.h"
+#import "NSEvent+WCExtensions.h"
+#import "WCSyntaxHighlighter.h"
 
 @interface WCTextView ()
 @property (weak,nonatomic) NSTimer *toolTipTimer;
+@property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
+@property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 
 - (void)_highlightMatchingBrace;
+- (void)_jumpToDefinitionForRange:(NSRange)range;
 @end
 
 @implementation WCTextView
@@ -60,15 +65,41 @@
     [self setUsesFindBar:YES];
     [self setIncrementalSearchingEnabled:YES];
     
+    [self setHoverLinkTrackingAreas:[NSMutableSet setWithCapacity:0]];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:self];
     
     return self;
 }
 #pragma mark NSResponder
+- (void)mouseEntered:(NSEvent *)theEvent {
+    [super mouseEntered:theEvent];
+    
+    if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
+        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:@"range"] rangeValue];
+        
+        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:range];
+        [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
+        
+        [self setCurrentHoverLinkTrackingArea:theEvent.trackingArea];
+    }
+}
+
 - (void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     
-    [[WCToolTipWindow sharedInstance] hideToolTipWindow];
+    if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
+        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:@"range"] rangeValue];
+        
+        [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
+        [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
+        [self.textStorage removeAttribute:NSCursorAttributeName range:range];
+        
+        [self setCurrentHoverLinkTrackingArea:nil];
+    }
+    else {
+        [[WCToolTipWindow sharedInstance] hideToolTipWindow];
+    }
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {
@@ -102,6 +133,76 @@
         [self _toolTipTimerCallback:nil];
     else
         [self setToolTipTimer:[NSTimer scheduledTimerWithTimeInterval:kToolTipDelayInterval target:self selector:@selector(_toolTipTimerCallback:) userInfo:nil repeats:NO]];
+}
+
+- (void)flagsChanged:(NSEvent *)theEvent {
+    [super flagsChanged:theEvent];
+    
+    if ([theEvent WC_isOnlyCommandKeyPressed]) {
+        NSPoint point = [self convertPoint:self.window.mouseLocationOutsideOfEventStream fromView:nil];
+        NSRange range = [self WC_visibleRange];
+        NSRange effectiveRange;
+        id value;
+        
+        
+        while (range.length) {
+            if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
+                NSUInteger rectCount;
+                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:effectiveRange withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+                
+                if (rectCount > 0) {
+                    NSRect rect = rects[0];
+                    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseEnteredAndExited|NSTrackingEnabledDuringMouseDrag;
+                    
+                    if (NSPointInRect(point, rect)) {
+                        options |= NSTrackingAssumeInside;
+                        
+                        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:effectiveRange];
+                        [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:effectiveRange];
+                    }
+                    
+                    NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:@{@"range" : [NSValue valueWithRange:effectiveRange]}];
+                    
+                    [self addTrackingArea:trackingArea];
+                    [self.hoverLinkTrackingAreas addObject:trackingArea];
+                    
+                    if (options & NSTrackingAssumeInside)
+                        [self setCurrentHoverLinkTrackingArea:trackingArea];
+                }
+            }
+            
+            range = NSMakeRange(NSMaxRange(effectiveRange), NSMaxRange(range) - NSMaxRange(effectiveRange));
+        }
+    }
+    else {
+        for (NSTrackingArea *trackingArea in self.hoverLinkTrackingAreas)
+            [self removeTrackingArea:trackingArea];
+        
+        [self.hoverLinkTrackingAreas removeAllObjects];
+        
+        [self setCurrentHoverLinkTrackingArea:nil];
+    }
+}
+
+- (void)mouseDown:(NSEvent *)theEvent {
+    if (self.currentHoverLinkTrackingArea) {
+        NSEvent *event = theEvent;
+        
+        do {
+            if (event.type == NSLeftMouseDragged) {
+                [self setCurrentHoverLinkTrackingArea:nil];
+                [[NSCursor IBeamCursor] set];
+                break;
+            }
+            else if (event.type == NSLeftMouseUp) {
+                [self _jumpToDefinitionForRange:[[self.currentHoverLinkTrackingArea.userInfo objectForKey:@"range"] rangeValue]];
+                return;
+            }
+            
+        } while ((event = [self.window nextEventMatchingMask:NSLeftMouseUpMask|NSLeftMouseDraggedMask]));
+    }
+    
+    [super mouseDown:theEvent];
 }
 
 #pragma mark NSView
@@ -176,46 +277,7 @@
 }
 #pragma mark Actions
 - (IBAction)jumpToDefinitionAction:(id)sender; {
-    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
-    
-    if (symbolRange.location == NSNotFound) {
-        NSBeep();
-        return;
-    }
-    
-    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
-    
-    if (!symbols.count) {
-        NSBeep();
-        return;
-    }
-    else if (symbols.count == 1) {
-        if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
-            [self.delegate textView:self jumpToDefinitionForSymbol:symbols.lastObject];
-    }
-    else {
-        NSMenu *menu = [[NSMenu alloc] initWithTitle:@"org.revsoft.wctextview.jump-to-definition-menu"];
-        
-        [menu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
-        
-        for (Symbol *symbol in symbols) {
-            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 line %ld", nil),symbol.name,symbol.lineNumber.integerValue] action:@selector(_jumpToDefinitionMenuItemAction:) keyEquivalent:@""];
-            
-            [item setTarget:self];
-            [item setRepresentedObject:symbol];
-            [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
-            [item.image setSize:WC_NSSmallSize];
-        }
-        
-        NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
-        NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
-        NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
-        
-        lineFragmentRect.origin.x += glyphLocation.x;
-        lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
-        
-        [menu popUpMenuPositioningItem:nil atLocation:lineFragmentRect.origin inView:self];
-    }
+    [self _jumpToDefinitionForRange:self.selectedRange];
 }
 
 - (IBAction)foldAction:(id)sender; {
@@ -345,12 +407,65 @@
 	
 	NSBeep();
 }
+- (void)_jumpToDefinitionForRange:(NSRange)range; {
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:range];
+    
+    if (symbolRange.location == NSNotFound) {
+        NSBeep();
+        return;
+    }
+    
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsSortedByLocationWithName:[self.string substringWithRange:symbolRange]];
+    
+    if (!symbols.count) {
+        NSBeep();
+        return;
+    }
+    else if (symbols.count == 1) {
+        if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
+            [self.delegate textView:self jumpToDefinitionForSymbol:symbols.lastObject];
+    }
+    else {
+        NSMenu *menu = [[NSMenu alloc] initWithTitle:@"org.revsoft.wctextview.jump-to-definition-menu"];
+        
+        [menu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+        
+        for (Symbol *symbol in symbols) {
+            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 line %ld", nil),symbol.name,symbol.lineNumber.integerValue] action:@selector(_jumpToDefinitionMenuItemAction:) keyEquivalent:@""];
+            
+            [item setTarget:self];
+            [item setRepresentedObject:symbol];
+            [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+            [item.image setSize:WC_NSSmallSize];
+        }
+        
+        NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
+        NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+        NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+        
+        lineFragmentRect.origin.x += glyphLocation.x;
+        lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+        
+        [menu popUpMenuPositioningItem:nil atLocation:lineFragmentRect.origin inView:self];
+    }
+}
 #pragma mark Properties
 - (void)setToolTipTimer:(NSTimer *)toolTipTimer {
     if (_toolTipTimer)
         [_toolTipTimer invalidate];
     
     _toolTipTimer = toolTipTimer;
+}
+- (void)setCurrentHoverLinkTrackingArea:(NSTrackingArea *)currentHoverLinkTrackingArea {
+    if (_currentHoverLinkTrackingArea) {
+        NSRange range = [[_currentHoverLinkTrackingArea.userInfo objectForKey:@"range"] rangeValue];
+        
+        [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
+        [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
+        [self.textStorage removeAttribute:NSCursorAttributeName range:range];
+    }
+    
+    _currentHoverLinkTrackingArea = currentHoverLinkTrackingArea;
 }
 
 #pragma mark Actions
