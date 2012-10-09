@@ -396,7 +396,8 @@
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     WCSymbolHighlighter *symbolHighlighter = [self.delegate symbolHighlighterForTextViewController:self];
     
-    [symbolHighlighter symbolHighlightInRange:[self.textView WC_visibleRange]];
+    [NSObject cancelPreviousPerformRequestsWithTarget:symbolHighlighter selector:@selector(symbolHighlightInVisibleRange) object:nil];
+    [symbolHighlighter performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
 }
 
 @end
