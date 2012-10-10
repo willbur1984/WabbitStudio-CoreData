@@ -78,9 +78,8 @@
             if (file) {
                 [self.managedObjectContext deleteObject:file];
             }
-            else {
-                file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
-            }
+            
+            file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
             
             [file setIdentifier:[NSString WC_UUIDString]];
             [file setPath:self.fileURL.path];
