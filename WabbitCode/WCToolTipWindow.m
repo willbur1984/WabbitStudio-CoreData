@@ -68,7 +68,7 @@
     [self showAttributedString:[[NSAttributedString alloc] initWithString:string attributes:[self.class defaultToolTipAttributes]] atPoint:point];
 }
 
-static const NSTimeInterval kDismissThreshold = 0.75;
+static const NSTimeInterval kDismissThreshold = 0.5;
 
 - (void)showAttributedString:(NSAttributedString *)attributedString atPoint:(NSPoint)point; {
     WCAssert(attributedString,@"attributed tooltip string cannot be nil!");
@@ -82,12 +82,15 @@ static const NSTimeInterval kDismissThreshold = 0.75;
     windowFrame.size.width = MIN(NSWidth(windowFrame), NSWidth(screenFrame));
     windowFrame.size.height = MIN(NSHeight(windowFrame), NSHeight(screenFrame));
     
-    [self setFrame:windowFrame display:NO];
+//    [self setFrame:windowFrame display:NO];
     
     point.x = MAX(NSMinX(screenFrame), MIN(point.x, NSMaxX(screenFrame) - NSWidth(windowFrame)));
     point.y = MIN(MAX(NSMinY(screenFrame) + NSHeight(windowFrame), point.y), NSMaxY(screenFrame));
+    point.y -= NSHeight(windowFrame);
     
-    [self setFrameTopLeftPoint:point];
+    windowFrame.origin = point;
+    
+    [self setFrame:windowFrame display:NO];
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0];

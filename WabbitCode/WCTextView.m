@@ -30,6 +30,8 @@
 #import "NSEvent+WCExtensions.h"
 #import "WCSyntaxHighlighter.h"
 
+static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
+
 @interface WCTextView ()
 @property (weak,nonatomic) NSTimer *toolTipTimer;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
@@ -54,6 +56,10 @@
     
     return retval;
 }
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark NSCoding
 - (id)initWithCoder:(NSCoder *)aDecoder {
     if (!(self = [super initWithCoder:aDecoder]))
@@ -68,6 +74,7 @@
     [self setHoverLinkTrackingAreas:[NSMutableSet setWithCapacity:0]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:self.enclosingScrollView.contentView];
     
     return self;
 }
@@ -76,7 +83,7 @@
     [super mouseEntered:theEvent];
     
     if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
-        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:@"range"] rangeValue];
+        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
         [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:range];
         [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
@@ -89,7 +96,7 @@
     [super mouseExited:theEvent];
     
     if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
-        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:@"range"] rangeValue];
+        NSRange range = [[theEvent.trackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
         [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
         [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
@@ -104,6 +111,11 @@
 
 - (void)mouseMoved:(NSEvent *)theEvent {
     [super mouseMoved:theEvent];
+    
+    if ((theEvent.modifierFlags & NSDeviceIndependentModifierFlagsMask) > 0) {
+        [self setToolTipTimer:nil];
+        return;
+    }
     
     NSPoint point = [self convertPoint:theEvent.locationInWindow fromView:nil];
     NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
@@ -144,7 +156,6 @@
         NSRange effectiveRange;
         id value;
         
-        
         while (range.length) {
             if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
                 NSUInteger rectCount;
@@ -161,7 +172,7 @@
                         [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:effectiveRange];
                     }
                     
-                    NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:@{@"range" : [NSValue valueWithRange:effectiveRange]}];
+                    NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:@{kHoverLinkTrackingAreaRangeUserInfoKey : [NSValue valueWithRange:effectiveRange]}];
                     
                     [self addTrackingArea:trackingArea];
                     [self.hoverLinkTrackingAreas addObject:trackingArea];
@@ -195,7 +206,7 @@
                 break;
             }
             else if (event.type == NSLeftMouseUp) {
-                [self _jumpToDefinitionForRange:[[self.currentHoverLinkTrackingArea.userInfo objectForKey:@"range"] rangeValue]];
+                [self _jumpToDefinitionForRange:[[self.currentHoverLinkTrackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue]];
                 return;
             }
             
@@ -210,6 +221,50 @@
     [super viewWillMoveToWindow:newWindow];
     
     [self setToolTipTimer:nil];
+}
+- (void)updateTrackingAreas {
+    [super updateTrackingAreas];
+    
+    if ([self.window.currentEvent WC_isOnlyCommandKeyPressed]) {
+        for (NSTrackingArea *trackingArea in self.hoverLinkTrackingAreas)
+            [self removeTrackingArea:trackingArea];
+        
+        [self.hoverLinkTrackingAreas removeAllObjects];
+        
+        NSPoint point = [self convertPoint:self.window.mouseLocationOutsideOfEventStream fromView:nil];
+        NSRange range = [self WC_visibleRange];
+        NSRange effectiveRange;
+        id value;
+        
+        while (range.length) {
+            if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
+                NSUInteger rectCount;
+                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:effectiveRange withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+                
+                if (rectCount > 0) {
+                    NSRect rect = rects[0];
+                    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseEnteredAndExited|NSTrackingEnabledDuringMouseDrag;
+                    
+                    if (NSPointInRect(point, rect)) {
+                        options |= NSTrackingAssumeInside;
+                        
+                        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:effectiveRange];
+                        [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:effectiveRange];
+                    }
+                    
+                    NSTrackingArea *trackingArea = [[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:@{kHoverLinkTrackingAreaRangeUserInfoKey : [NSValue valueWithRange:effectiveRange]}];
+                    
+                    [self addTrackingArea:trackingArea];
+                    [self.hoverLinkTrackingAreas addObject:trackingArea];
+                    
+                    if (options & NSTrackingAssumeInside)
+                        [self setCurrentHoverLinkTrackingArea:trackingArea];
+                }
+            }
+            
+            range = NSMakeRange(NSMaxRange(effectiveRange), NSMaxRange(range) - NSMaxRange(effectiveRange));
+        }
+    }
 }
 
 #pragma mark NSTextInputClient
@@ -458,7 +513,7 @@
 }
 - (void)setCurrentHoverLinkTrackingArea:(NSTrackingArea *)currentHoverLinkTrackingArea {
     if (_currentHoverLinkTrackingArea) {
-        NSRange range = [[_currentHoverLinkTrackingArea.userInfo objectForKey:@"range"] rangeValue];
+        NSRange range = [[_currentHoverLinkTrackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
         [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
         [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
@@ -475,6 +530,11 @@
 }
 #pragma mark Callbacks
 - (void)_toolTipTimerCallback:(NSTimer *)timer {
+    if ((self.window.currentEvent.modifierFlags & NSDeviceIndependentModifierFlagsMask) > 0) {
+        [self setToolTipTimer:nil];
+        return;
+    }
+    
     NSPoint point = [self convertPoint:[[NSApplication sharedApplication] currentEvent].locationInWindow fromView:nil];
     NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
     
@@ -524,6 +584,9 @@
         
         [self _highlightMatchingBrace];
     }
+}
+- (void)_viewBoundsDidChange:(NSNotification *)note {
+    
 }
 
 @end
