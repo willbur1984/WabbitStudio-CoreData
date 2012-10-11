@@ -426,6 +426,13 @@
 			name = "Jump In";
 			sourceTree = "<group>";
 		};
+		7966A00C162620D300EEA711 /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Preferences;
+			sourceTree = "<group>";
+		};
 		79710682160B5C4700C4951A /* Headers */ = {
 			isa = PBXGroup;
 			children = (
@@ -647,6 +654,7 @@
 			children = (
 				793D2362161511C600742605 /* WCSourceFileWindowController.h */,
 				793D2363161511C700742605 /* WCSourceFileWindowController.m */,
+				7966A00C162620D300EEA711 /* Preferences */,
 			);
 			name = "Window Controllers";
 			sourceTree = "<group>";
@@ -1162,6 +1170,7 @@
 				7962BDE516215195006D5A7A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		79968C9D1608DB4600F139BC /* Build configuration list for PBXProject "WabbitStudio" */ = {
 			isa = XCConfigurationList;

@@ -17,4 +17,22 @@
 
 - (void)cleanup;
 
+- (void)viewWillAppear;
+- (void)viewDidAppear;
+
+- (void)viewWillDisappear;
+- (void)viewDidDisappear;
+
+- (void)viewWillMoveToSuperview:(NSView *)superview;
+- (void)viewDidMoveToSuperview;
+
+- (void)viewWillMoveToWindow:(NSWindow *)window;
+- (void)viewDidMoveToWindow;
+
+- (void)viewWillBeRemovedFromSuperview;
+- (void)viewWasRemovedFromSuperview;
+
+- (void)viewWillBeRemovedFromWindow;
+- (void)viewWasRemovedFromWindow;
+
 @end

@@ -163,12 +163,6 @@
     
     [self.textViewController.textView WC_makeFirstResponder];
 }
-- (IBAction)showRelatedItemsAction:(id)sender; {
-    [self.currentTextViewController showRelatedItemsAction:nil];
-}
-- (IBAction)showDocumentItemsAction:(id)sender; {
-    [self.currentTextViewController showDocumentItemsAction:nil];
-}
 
 - (IBAction)showAssistantEditorAction:(id)sender; {
     if (self.assistantTextViewController) {
@@ -279,6 +273,13 @@
     [textViewController.textView WC_makeFirstResponder];
 }
 - (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentTextViewController; {
+    if (currentTextViewController == self.assistantTextViewController &&
+        self.assistantTextViewControllers.count == 1) {
+        
+        [self showStandardEditorAction:nil];
+        return;
+    }
+    
     WCTextViewController *textViewController;
     
     NSSplitView *currentSplitView = (NSSplitView *)currentTextViewController.view.superview;

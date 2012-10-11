@@ -23,8 +23,6 @@
 - (id)initWithTextStorage:(WCTextStorage *)textStorage;
 
 - (IBAction)showStandardEditorAction:(id)sender;
-- (IBAction)showRelatedItemsAction:(id)sender;
-- (IBAction)showDocumentItemsAction:(id)sender;
 
 - (IBAction)showAssistantEditorAction:(id)sender;
 - (IBAction)addAssistantEditorAction:(id)sender;

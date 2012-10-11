@@ -12,8 +12,128 @@
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "NSView+WCExtensions.h"
+#import "NSObject+WCExtensions.h"
+#import "WCViewController.h"
 
 #include <objc/runtime.h>
+
+@interface NSView (WCExtensions_Private)
++ (void)_loadSupportForViewControllers;
+
+- (void)WC_viewWillMoveToSuperview:(NSView *)superview;
+- (void)WC_viewDidMoveToSuperview;
+
+- (void)WC_viewWillMoveToWindow:(NSWindow *)window;
+- (void)WC_viewDidMoveToWindow;
+
+- (void)WC_setNextResponder:(NSResponder *)nextResponder;
+@end
+
+@implementation NSView (WCExtensions_Private)
++ (void)_loadSupportForViewControllers; {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self WC_swapMethod:@selector(viewWillMoveToSuperview:) withMethod:@selector(WC_viewWillMoveToSuperview:)];
+        [self WC_swapMethod:@selector(viewDidMoveToSuperview) withMethod:@selector(WC_viewDidMoveToSuperview)];
+        
+        [self WC_swapMethod:@selector(viewWillMoveToWindow:) withMethod:@selector(WC_viewWillMoveToWindow:)];
+        [self WC_swapMethod:@selector(viewDidMoveToWindow) withMethod:@selector(WC_viewDidMoveToWindow)];
+        
+        [self WC_swapMethod:@selector(setNextResponder:) withMethod:@selector(WC_setNextResponder:)];
+    });
+}
+
+- (void)WC_viewWillMoveToSuperview:(NSView *)superview; {
+    [self WC_viewWillMoveToSuperview:superview];
+    
+    if ([self.WC_viewController isKindOfClass:[WCViewController class]]) {
+        WCViewController *viewController = (WCViewController *)self.WC_viewController;
+        
+        if (superview) {
+            [viewController viewWillMoveToSuperview:superview];
+            
+            if (self.window)
+                [viewController viewWillAppear];
+        }
+        else {
+            [viewController viewWillBeRemovedFromSuperview];
+            
+            if (self.superview && self.window)
+                [viewController viewWillDisappear];
+        }
+    }
+}
+- (void)WC_viewDidMoveToSuperview; {
+    [self WC_viewDidMoveToSuperview];
+    
+    if ([self.WC_viewController isKindOfClass:[WCViewController class]]) {
+        WCViewController *viewController = (WCViewController *)self.WC_viewController;
+        
+        if (self.superview) {
+            [viewController viewDidMoveToSuperview];
+            
+            if (self.window)
+                [viewController viewDidAppear];
+        }
+        else {
+            [viewController viewWasRemovedFromSuperview];
+            
+            if (self.window == nil)
+                [viewController viewDidDisappear];
+        }
+    }
+}
+
+- (void)WC_viewWillMoveToWindow:(NSWindow *)window; {
+    [self WC_viewWillMoveToWindow:window];
+    
+    if ([self.WC_viewController isKindOfClass:[WCViewController class]]) {
+        WCViewController *viewController = (WCViewController *)self.WC_viewController;
+        
+        if (window) {
+            [viewController viewWillMoveToWindow:window];
+            
+            if (self.superview)
+                [viewController viewWillAppear];
+        }
+        else {
+            [viewController viewWillBeRemovedFromWindow];
+            
+            if(self.superview && self.window)
+                [viewController viewWillDisappear];
+        }
+    }
+}
+- (void)WC_viewDidMoveToWindow; {
+    [self WC_viewDidMoveToWindow];
+    
+    if ([self.WC_viewController isKindOfClass:[WCViewController class]]) {
+        WCViewController *viewController = (WCViewController *)self.WC_viewController;
+     
+        if (self.window) {
+            [viewController viewDidMoveToWindow];
+            
+            if (self.superview)
+                [viewController viewDidAppear];
+        }
+        else {
+            [viewController viewWasRemovedFromWindow];
+            
+            if (self.superview == nil)
+                [viewController viewDidDisappear];
+        }
+    }
+}
+
+- (void)WC_setNextResponder:(NSResponder *)nextResponder; {
+    if (self.WC_viewController != nil) {
+        [self.WC_viewController setNextResponder:nextResponder];
+        return;
+    }
+    
+    [self WC_setNextResponder:nextResponder];
+}
+@end
 
 @implementation NSView (WCExtensions)
 
@@ -27,7 +147,23 @@ static char kViewControllerKey;
     return (NSViewController *)objc_getAssociatedObject(self, &kViewControllerKey);
 }
 - (void)WC_setViewController:(NSViewController *)viewController; {
+    [self.class _loadSupportForViewControllers];
+    
+    if (self.WC_viewController != nil) {
+        NSResponder *nextResponder = self.WC_viewController.nextResponder;
+        
+        [self WC_setNextResponder:nextResponder];
+        [self.WC_viewController setNextResponder:nil];
+    }
+    
     objc_setAssociatedObject(self, &kViewControllerKey, viewController, OBJC_ASSOCIATION_ASSIGN);
+    
+    if (viewController != nil) {
+        NSResponder *nextResponder = self.nextResponder;
+        
+        [self WC_setNextResponder:self.WC_viewController];
+        [self.WC_viewController setNextResponder:nextResponder];
+    }
 }
 
 @end
