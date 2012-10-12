@@ -14,6 +14,8 @@
 #import "WCFoldCell.h"
 #import "NSBezierPath+StrokeExtensions.h"
 #import "WCSyntaxHighlighter.h"
+#import "WCDefines.h"
+#import "WCTextView.h"
 
 static const CGFloat kLeftRightMargin = 2;
 
@@ -44,6 +46,18 @@ static NSTextContainer *kTextContainer;
         return nil;
     
     return self;
+}
+
+- (BOOL)wantsToTrackMouseForEvent:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex {
+    return NSPointInRect([controlView convertPoint:theEvent.locationInWindow fromView:nil], cellFrame);
+}
+
+- (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView atCharacterIndex:(NSUInteger)charIndex untilMouseUp:(BOOL)flag {
+    if ([controlView respondsToSelector:@selector(unfoldAction:)]) {
+        [(NSTextView *)controlView setSelectedRange:NSMakeRange(charIndex, 1)];
+        [(WCTextView *)controlView unfoldAction:nil];
+    }
+    return NO;
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView characterIndex:(NSUInteger)charIndex layoutManager:(NSLayoutManager *)layoutManager {
