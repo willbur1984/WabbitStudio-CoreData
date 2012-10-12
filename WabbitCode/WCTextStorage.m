@@ -93,6 +93,7 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
 
 - (void)foldRange:(NSRange)range; {
     [self addAttribute:WCTextStorageFoldAttributeName value:@true range:range];
+    [self addAttribute:NSCursorAttributeName value:[NSCursor arrowCursor] range:range];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:WCTextStorageDidFoldNotification object:self userInfo:@{ WCTextStorageFoldRangeUserInfoKey : [NSValue valueWithRange:range] }];
 }
@@ -103,6 +104,7 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
         return NO;
     
     [self removeAttribute:WCTextStorageFoldAttributeName range:foldRange];
+    [self removeAttribute:NSCursorAttributeName range:foldRange];
     
     if (effectiveRange)
         *effectiveRange = foldRange;
