@@ -19,6 +19,7 @@
 #import "NSTextView+WCExtensions.h"
 
 NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeName";
+NSString *const kCommentAttributeName = @"kCommentAttributeName";
 NSString *const kTokenAttributeName = @"kTokenAttributeName";
 NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
 
@@ -88,6 +89,7 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     [self.textStorage removeAttribute:kMultilineCommentAttributeName range:range];
     [self.textStorage removeAttribute:kTokenAttributeName range:range];
     [self.textStorage removeAttribute:kSymbolAttributeName range:range];
+    [self.textStorage removeAttribute:kCommentAttributeName range:range];
     
     [[WCSyntaxHighlighter operationalCodeRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor blueColor], kTokenAttributeName : @true } range:result.range];
@@ -146,7 +148,7 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     }];
     
     [[WCSyntaxHighlighter commentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kTokenAttributeName : @true } range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kTokenAttributeName : @true, kCommentAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:NSMakeRange(0, self.textStorage.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {

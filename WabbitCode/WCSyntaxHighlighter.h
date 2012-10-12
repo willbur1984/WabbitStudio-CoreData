@@ -14,6 +14,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const kMultilineCommentAttributeName;
+extern NSString *const kCommentAttributeName;
 extern NSString *const kTokenAttributeName;
 extern NSString *const kSymbolAttributeName;
 
