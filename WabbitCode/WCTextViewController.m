@@ -384,6 +384,20 @@
         return;
     }
     
+    id value = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:[note.object editedRange].location effectiveRange:NULL];
+    
+    if ([value boolValue]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
+        return;
+    }
+    
+    value = [self.textStorage attribute:kCommentAttributeName atIndex:[note.object editedRange].location effectiveRange:NULL];
+    
+    if ([value boolValue]) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
+        return;
+    }
+    
     [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
     [self.textView performSelector:@selector(complete:) withObject:nil afterDelay:0.35];
 }
