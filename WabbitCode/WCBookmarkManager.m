@@ -121,7 +121,18 @@ NSString *const WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey = @"WCBookm
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
+    if (!([note.object editedMask] & NSTextStorageEditedCharacters))
+        return;
+    
     // TODO: update bookmarks and remove if necessary
+    NSRange editedRange = [note.object editedRange];
+    NSInteger changeInLength = [note.object changeInLength];
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Bookmark"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location >= %lu",editedRange.location]];
+    
+    for (Bookmark *bookmark in [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL])
+        [bookmark setLocation:@(bookmark.location.longLongValue + changeInLength)];
 }
 
 @end
