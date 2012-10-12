@@ -196,7 +196,57 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
-    if (self.currentHoverLinkTrackingArea) {
+    if (theEvent.type == NSLeftMouseDown &&
+        theEvent.clickCount == 2 &&
+        !(theEvent.modifierFlags & NSDeviceIndependentModifierFlagsMask)) {
+        
+        NSUInteger glyphIndex = [self.layoutManager glyphIndexForPoint:[self convertPoint:theEvent.locationInWindow fromView:nil] inTextContainer:self.textContainer];
+        
+        if (glyphIndex >= self.layoutManager.numberOfGlyphs) {
+            [super mouseDown:theEvent];
+            return;
+        }
+        
+        WCTextStorage *textStorage = (WCTextStorage *)self.textStorage;
+        
+        [textStorage setFolding:YES];
+        
+        NSUInteger charIndex = [self.layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+        NSRange effectiveRange;
+        id value = [textStorage attribute:WCTextStorageFoldAttributeName atIndex:charIndex longestEffectiveRange:&effectiveRange inRange:NSMakeRange(0, textStorage.length)];
+        
+        if (![value boolValue]) {
+            [textStorage setFolding:NO];
+            return;
+        }
+        
+        NSTextAttachment *attachment = [textStorage attribute:NSAttachmentAttributeName atIndex:effectiveRange.location effectiveRange:NULL];
+        
+        if (!attachment) {
+            [textStorage setFolding:NO];
+            return;
+        }
+        
+        [textStorage setFolding:NO];
+        
+        glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:effectiveRange.location];
+        
+        id <NSTextAttachmentCell> cell = attachment.attachmentCell;
+        NSPoint delta = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL].origin;
+        NSRect cellFrame;
+        
+        cellFrame.origin = self.textContainerOrigin;
+        cellFrame.size = [self.layoutManager attachmentSizeForGlyphAtIndex:glyphIndex];
+        cellFrame.origin.x += delta.x;
+        cellFrame.origin.y += delta.y;
+        cellFrame.origin.x += [self.layoutManager locationForGlyphAtIndex:glyphIndex].x;
+        
+        if ([cell wantsToTrackMouseForEvent:theEvent inRect:cellFrame ofView:self atCharacterIndex:effectiveRange.location]) {
+            if ([cell trackMouse:theEvent inRect:cellFrame ofView:self atCharacterIndex:effectiveRange.location untilMouseUp:YES])
+                return;
+        }
+    }
+    else if (self.currentHoverLinkTrackingArea) {
         NSEvent *event = theEvent;
         
         do {
