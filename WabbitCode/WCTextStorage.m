@@ -91,6 +91,22 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
     [self edited:NSTextStorageEditedAttributes range:range changeInLength:0];
 }
 
+- (void)fixAttachmentAttributeInRange:(NSRange)range {
+	NSRange effectiveRange;
+	id value;
+    
+	while (range.length) {
+		if ((value = [self attribute:NSAttachmentAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
+			for (NSUInteger charIndex=effectiveRange.location; charIndex<NSMaxRange(effectiveRange); charIndex++) {
+				if ([self.string characterAtIndex:charIndex] != NSAttachmentCharacter)
+					[self removeAttribute:NSAttachmentAttributeName range:NSMakeRange(charIndex, 1)];
+			}
+		}
+		
+		range = NSMakeRange(NSMaxRange(effectiveRange),NSMaxRange(range)-NSMaxRange(effectiveRange));
+	}
+}
+
 - (void)foldRange:(NSRange)range; {
     [self addAttribute:WCTextStorageFoldAttributeName value:@true range:range];
     [self addAttribute:NSCursorAttributeName value:[NSCursor arrowCursor] range:range];
