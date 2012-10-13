@@ -14,6 +14,7 @@
 #import "NSString+WCExtensions.h"
 #import "WCSymbolScanner.h"
 #import "WCGeometry.h"
+#import "WCDefines.h"
 
 @implementation NSString (WCExtensions)
 
@@ -30,7 +31,7 @@
     __block NSRange retval = WC_NSNotFoundRange;
     
     [[WCSymbolScanner symbolRegex] enumerateMatchesInString:self options:0 range:[self lineRangeForRange:range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if (NSLocationInRange(range.location, result.range)) {
+        if (WC_NSLocationInOrEqualToRange(range.location, result.range)) {
             retval = result.range;
             *stop = YES;
         }
