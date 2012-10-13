@@ -17,6 +17,7 @@
 
 + (NSString *)WC_UUIDString;
 
+- (NSRange)WC_completionRangeForRange:(NSRange)range;
 - (NSRange)WC_symbolRangeForRange:(NSRange)range;
 
 - (NSUInteger)WC_lineNumberForRange:(NSRange)range;

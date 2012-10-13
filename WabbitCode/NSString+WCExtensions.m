@@ -13,6 +13,7 @@
 
 #import "NSString+WCExtensions.h"
 #import "WCSymbolScanner.h"
+#import "WCTextView.h"
 #import "WCGeometry.h"
 #import "WCDefines.h"
 
@@ -27,6 +28,18 @@
     return retval;
 }
 
+- (NSRange)WC_completionRangeForRange:(NSRange)range; {
+    __block NSRange retval = WC_NSNotFoundRange;
+    
+    [[WCTextView completionRegex] enumerateMatchesInString:self options:0 range:[self lineRangeForRange:range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        if (WC_NSLocationInOrEqualToRange(range.location, result.range)) {
+            retval = result.range;
+            *stop = YES;
+        }
+    }];
+    
+    return retval;
+}
 - (NSRange)WC_symbolRangeForRange:(NSRange)range; {
     __block NSRange retval = WC_NSNotFoundRange;
     

@@ -433,13 +433,22 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 }
 
 - (NSRange)rangeForUserCompletion {
-    return [self.string WC_symbolRangeForRange:[super rangeForUserCompletion]];
+    return [self.string WC_completionRangeForRange:self.selectedRange];
 }
 
 - (IBAction)complete:(id)sender {
     [[WCCompletionWindow sharedInstance] showCompletionWindowForTextView:self];
 }
 #pragma mark *** Public Methods ***
++ (NSRegularExpression *)completionRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"[A-Za-z0-9_!?.#]+" options:0 error:NULL];
+    });
+    return retval;
+}
+#pragma mark Properties
 @dynamic delegate;
 - (id<WCTextViewDelegate>)delegate {
     return (id<WCTextViewDelegate>)[super delegate];

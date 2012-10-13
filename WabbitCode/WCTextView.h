@@ -19,6 +19,8 @@
 
 @property (weak,nonatomic) id <WCTextViewDelegate> delegate;
 
++ (NSRegularExpression *)completionRegex;
+
 - (IBAction)jumpToDefinitionAction:(id)sender;
 
 - (IBAction)foldAction:(id)sender;
