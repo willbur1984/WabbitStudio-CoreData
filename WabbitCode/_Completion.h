@@ -5,13 +5,13 @@
 
 
 extern const struct CompletionAttributes {
-	 NSString *name;
-	 NSString *priority;
-	 NSString *type;
+	__unsafe_unretained NSString *name;
+	__unsafe_unretained NSString *priority;
+	__unsafe_unretained NSString *type;
 } CompletionAttributes;
 
 extern const struct CompletionRelationships {
-	 NSString *placeholders;
+	__unsafe_unretained NSString *placeholders;
 } CompletionRelationships;
 
 extern const struct CompletionFetchedProperties {
@@ -35,7 +35,7 @@ extern const struct CompletionFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSString* name;
+@property (nonatomic, strong) NSString* name;
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -43,7 +43,7 @@ extern const struct CompletionFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSNumber* priority;
+@property (nonatomic, strong) NSNumber* priority;
 
 
 @property int64_t priorityValue;
@@ -55,7 +55,7 @@ extern const struct CompletionFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSNumber* type;
+@property (nonatomic, strong) NSNumber* type;
 
 
 @property int16_t typeValue;
@@ -68,7 +68,7 @@ extern const struct CompletionFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSOrderedSet* placeholders;
+@property (nonatomic, strong) NSOrderedSet* placeholders;
 
 - (NSMutableOrderedSet*)placeholdersSet;
 

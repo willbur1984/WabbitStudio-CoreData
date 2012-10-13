@@ -13,13 +13,27 @@
 
 #import <Foundation/Foundation.h>
 
-@class Symbol;
+@protocol WCCompletionItemDataSource;
 
 @interface WCCompletionItem : NSObject
 
-@property (readonly,strong,nonatomic) Symbol *symbol;
+@property (readonly,strong,nonatomic) id <WCCompletionItemDataSource> dataSource;
 @property (readonly,copy,nonatomic) NSAttributedString *displayString;
 
-- (id)initWithSymbol:(Symbol *)symbol;
+- (id)initWithDataSource:(id<WCCompletionItemDataSource>)dataSource;
 
+@end
+
+@protocol WCCompletionItemDataSource <NSObject>
+- (NSString *)name;
+- (NSImage *)image;
+@optional
+
+@property (nonatomic,retain) NSNumber *priority;
+
+- (NSString *)arguments;
+- (NSString *)format;
+- (int64_t)lineNumber;
+- (NSString *)path;
+           
 @end

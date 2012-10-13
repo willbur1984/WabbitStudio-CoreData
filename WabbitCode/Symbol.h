@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "WCCompletionItem.h"
 
 typedef enum {
     SymbolTypeLabel = 1,
@@ -18,7 +19,7 @@ typedef enum {
 
 @class File;
 
-@interface Symbol : NSManagedObject
+@interface Symbol : NSManagedObject <WCCompletionItemDataSource>
 
 @property (nonatomic, retain) NSNumber * location;
 @property (nonatomic, retain) NSString * name;

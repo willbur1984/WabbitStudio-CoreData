@@ -8,9 +8,18 @@
 
 #import "Symbol.h"
 #import "File.h"
+#import "WCSymbolImageManager.h"
 
 
 @implementation Symbol
+
+- (NSImage *)image {
+    return [[WCSymbolImageManager sharedManager] imageForSymbol:self];
+}
+- (NSString *)path {
+    return self.file.path;
+}
+
 
 @dynamic location;
 @dynamic name;

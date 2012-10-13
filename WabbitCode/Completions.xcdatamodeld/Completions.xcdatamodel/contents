@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
-    <entity name="Completion" syncable="YES">
-        <attribute name="format" optional="YES" attributeType="String" syncable="YES"/>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="11E53" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Completion" representedClassName="Completion" syncable="YES">
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="priority" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="placeholders" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Placeholder" inverseName="completion" inverseEntity="Placeholder" syncable="YES"/>
+    </entity>
+    <entity name="Placeholder" representedClassName="Placeholder" syncable="YES">
+        <attribute name="arguments" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isPlaceholder" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="completion" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Completion" inverseName="placeholders" inverseEntity="Completion" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Completion" positionX="160" positionY="192" width="128" height="90"/>
+        <element name="Completion" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Placeholder" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

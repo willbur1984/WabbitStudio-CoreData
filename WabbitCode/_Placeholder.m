@@ -4,7 +4,7 @@
 #import "_Placeholder.h"
 
 const struct PlaceholderAttributes PlaceholderAttributes = {
-	.choices = @"choices",
+	.arguments = @"arguments",
 	.isPlaceholder = @"isPlaceholder",
 	.name = @"name",
 };
@@ -53,7 +53,7 @@ const struct PlaceholderFetchedProperties PlaceholderFetchedProperties = {
 
 
 
-@dynamic choices;
+@dynamic arguments;
 
 
 
@@ -95,6 +95,15 @@ const struct PlaceholderFetchedProperties PlaceholderFetchedProperties = {
 
 @dynamic completion;
 
+	
+- (NSMutableSet*)completionSet {
+	[self willAccessValueForKey:@"completion"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"completion"];
+  
+	[self didAccessValueForKey:@"completion"];
+	return result;
+}
 	
 
 

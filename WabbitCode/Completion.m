@@ -1,19 +1,11 @@
-//
-//  Completion.m
-//  WabbitStudio
-//
-//  Created by William Towe on 10/13/12.
-//  Copyright (c) 2012 William Towe. All rights reserved.
-//
-
 #import "Completion.h"
-
+#import "WCCompletionsImageManager.h"
 
 @implementation Completion
 
-@dynamic format;
-@dynamic name;
-@dynamic type;
-@dynamic priority;
+// Custom logic goes here.
+- (NSImage *)image {
+    return [[WCCompletionsImageManager sharedManager] imageForCompletion:self];
+}
 
 @end

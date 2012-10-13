@@ -21,6 +21,11 @@ static NSTextStorage *kTextStorage;
 static NSLayoutManager *kLayoutManager;
 static NSTextContainer *kTextContainer;
 
+@interface WCArgumentPlaceholderCell ()
+@property (copy,nonatomic) NSString *name;
+@property (strong,nonatomic) NSArray *arguments;
+@end
+
 @implementation WCArgumentPlaceholderCell
 
 + (void)initialize {
@@ -37,6 +42,16 @@ static NSTextContainer *kTextContainer;
         [kLayoutManager addTextContainer:kTextContainer];
         [kTextStorage addLayoutManager:kLayoutManager];
     });
+}
+
+- (id)initTextCell:(NSString *)aString arguments:(NSString *)arguments; {
+    if (!(self = [super initTextCell:aString]))
+        return nil;
+    
+    [self setName:aString];
+    [self setArguments:[arguments componentsSeparatedByString:@","]];
+    
+    return self;
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView characterIndex:(NSUInteger)charIndex layoutManager:(NSLayoutManager *)layoutManager {
@@ -65,13 +80,20 @@ static NSTextContainer *kTextContainer;
     [path stroke];
     
     [kTextStorage replaceCharactersInRange:NSMakeRange(0, kTextStorage.length) withAttributedString:self.attributedStringValue];
+    
+    if (isSelected)
+        [kTextStorage addAttribute:NSForegroundColorAttributeName value:[NSColor alternateSelectedControlTextColor] range:NSMakeRange(0, kTextStorage.length)];
+    
     [kLayoutManager ensureLayoutForTextContainer:kTextContainer];
     [kLayoutManager drawGlyphsForGlyphRange:[kLayoutManager glyphRangeForTextContainer:kTextContainer] atPoint:NSMakePoint(NSMinX(cellFrame) + kLeftRightMargin, NSMinY(cellFrame))];
 }
 
 - (NSRect)cellFrameForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex {
     NSRect frame = [super cellFrameForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    NSAttributedString *string = [[NSAttributedString alloc] initWithString:self.stringValue attributes:[WCSyntaxHighlighter defaultAttributes]];
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.name attributes:[WCSyntaxHighlighter defaultAttributes]];
+    
+    if (self.arguments.count > 0)
+        [string.mutableString appendString:@"\u25BC"];
     
     [self setAttributedStringValue:string];
     

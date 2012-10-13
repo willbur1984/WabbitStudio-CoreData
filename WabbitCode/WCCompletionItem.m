@@ -13,28 +13,27 @@
 
 #import "WCCompletionItem.h"
 #import "WCSyntaxHighlighter.h"
-#import "Macro.h"
-#import "File.h"
+#import "Symbol.h"
+#import "Completion.h"
 
 @interface WCCompletionItem ()
-@property (readwrite,strong,nonatomic) Symbol *symbol;
+@property (readwrite,strong,nonatomic) id <WCCompletionItemDataSource> dataSource;
 @property (readwrite,copy,nonatomic) NSAttributedString *displayString;
 @end
 
 @implementation WCCompletionItem
 
-- (id)initWithSymbol:(Symbol *)symbol; {
+- (id)initWithDataSource:(id<WCCompletionItemDataSource>)dataSource; {
     if (!(self = [super init]))
         return nil;
     
-    [self setSymbol:symbol];
+    [self setDataSource:dataSource];
     
     NSDictionary *defaultAttributes = [WCSyntaxHighlighter defaultAttributes];
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:symbol.name attributes:defaultAttributes];
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:[self.dataSource name] attributes:defaultAttributes];
     
-    if (symbol.type.intValue == SymbolTypeMacro) {
-        Macro *macro = (Macro *)symbol;
-        NSArray *arguments = [macro.arguments componentsSeparatedByString:@","];
+    if ([self.dataSource respondsToSelector:@selector(arguments)]) {
+        NSArray *arguments = [[self.dataSource arguments] componentsSeparatedByString:@","];
         
         if (arguments.count) {
             NSMutableString *argumentString = [NSMutableString stringWithCapacity:0];
@@ -55,7 +54,9 @@
         }
     }
     
-    [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),symbol.file.path.lastPathComponent,symbol.lineNumber.longValue + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
+    if ([self.dataSource respondsToSelector:@selector(lineNumber)]) {
+        [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),[self.dataSource path].lastPathComponent,[self.dataSource lineNumber] + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
+    }
     
     [self setDisplayString:string];
     

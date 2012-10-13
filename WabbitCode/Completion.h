@@ -1,20 +1,14 @@
-//
-//  Completion.h
-//  WabbitStudio
-//
-//  Created by William Towe on 10/13/12.
-//  Copyright (c) 2012 William Towe. All rights reserved.
-//
+#import "_Completion.h"
+#import "WCCompletionItem.h"
 
-#import <Foundation/Foundation.h>
-#import <CoreData/CoreData.h>
+typedef enum {
+    CompletionTypeOperationalCode = 0,
+    CompletionTypeRegister,
+    CompletionTypeConditionalRegister,
+    CompletionTypeDirective,
+    CompletionTypePreProcessor
+} CompletionType;
 
-
-@interface Completion : NSManagedObject
-
-@property (nonatomic, retain) NSString * format;
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * type;
-@property (nonatomic, retain) NSNumber * priority;
-
+@interface Completion : _Completion <WCCompletionItemDataSource> {}
+// Custom logic goes here.
 @end

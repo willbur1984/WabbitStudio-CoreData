@@ -5,13 +5,13 @@
 
 
 extern const struct PlaceholderAttributes {
-	 NSString *choices;
-	 NSString *isPlaceholder;
-	 NSString *name;
+	__unsafe_unretained NSString *arguments;
+	__unsafe_unretained NSString *isPlaceholder;
+	__unsafe_unretained NSString *name;
 } PlaceholderAttributes;
 
 extern const struct PlaceholderRelationships {
-	 NSString *completion;
+	__unsafe_unretained NSString *completion;
 } PlaceholderRelationships;
 
 extern const struct PlaceholderFetchedProperties {
@@ -35,15 +35,15 @@ extern const struct PlaceholderFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSString* choices;
+@property (nonatomic, strong) NSString* arguments;
 
 
-//- (BOOL)validateChoices:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateArguments:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, retain) NSNumber* isPlaceholder;
+@property (nonatomic, strong) NSNumber* isPlaceholder;
 
 
 @property BOOL isPlaceholderValue;
@@ -55,7 +55,7 @@ extern const struct PlaceholderFetchedProperties {
 
 
 
-@property (nonatomic, retain) NSString* name;
+@property (nonatomic, strong) NSString* name;
 
 
 //- (BOOL)validateName:(id*)value_ error:(NSError**)error_;
@@ -64,9 +64,9 @@ extern const struct PlaceholderFetchedProperties {
 
 
 
-@property (nonatomic, retain) Completion* completion;
+@property (nonatomic, strong) NSSet* completion;
 
-//- (BOOL)validateCompletion:(id*)value_ error:(NSError**)error_;
+- (NSMutableSet*)completionSet;
 
 
 
@@ -76,13 +76,18 @@ extern const struct PlaceholderFetchedProperties {
 
 @interface _Placeholder (CoreDataGeneratedAccessors)
 
+- (void)addCompletion:(NSSet*)value_;
+- (void)removeCompletion:(NSSet*)value_;
+- (void)addCompletionObject:(Completion*)value_;
+- (void)removeCompletionObject:(Completion*)value_;
+
 @end
 
 @interface _Placeholder (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSString*)primitiveChoices;
-- (void)setPrimitiveChoices:(NSString*)value;
+- (NSString*)primitiveArguments;
+- (void)setPrimitiveArguments:(NSString*)value;
 
 
 
@@ -103,8 +108,8 @@ extern const struct PlaceholderFetchedProperties {
 
 
 
-- (Completion*)primitiveCompletion;
-- (void)setPrimitiveCompletion:(Completion*)value;
+- (NSMutableSet*)primitiveCompletion;
+- (void)setPrimitiveCompletion:(NSMutableSet*)value;
 
 
 @end

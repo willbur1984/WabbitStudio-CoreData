@@ -15,4 +15,6 @@
 
 @interface WCArgumentPlaceholderCell : NSTextAttachmentCell
 
+- (id)initTextCell:(NSString *)aString arguments:(NSString *)arguments;
+
 @end

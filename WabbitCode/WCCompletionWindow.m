@@ -24,6 +24,9 @@
 #import "File.h"
 #import "WCTableView.h"
 #import "WCCompletionItem.h"
+#import "Completion.h"
+#import "Placeholder.h"
+#import "NSAttributedString+WCExtensions.h"
 
 @interface WCCompletionWindow () <NSTableViewDataSource,NSTableViewDelegate>
 
@@ -35,8 +38,13 @@
 @property (strong,nonatomic) NSLayoutManager *layoutManager;
 @property (strong,nonatomic) NSTextStorage *textStorage;
 @property (strong,nonatomic) NSTextContainer *textContainer;
+@property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
+@property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
 
-- (void)_insertSymbol:(Symbol *)symbol;
+- (void)_insertCompletionItem:(WCCompletionItem *)completionItem;
+- (NSArray *)_completionsWithPrefix:(NSString *)prefix;
+- (NSAttributedString *)_attributedStringForCompletion:(Completion *)completion;
 @end
 
 @implementation WCCompletionWindow
@@ -50,6 +58,54 @@
     [self setBackgroundColor:[NSColor clearColor]];
     [self setHasShadow:YES];
     [self setLevel:NSStatusWindowLevel];
+    [self setAlphaValue:0];
+    
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Completions" withExtension:@"momd"];
+    
+    [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
+    [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
+    [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
+    [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType]];
+    [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    [self.managedObjectContext setUndoManager:nil];
+    
+    NSData *data = [NSData dataWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Completions" withExtension:@"json"] options:NSDataReadingUncached error:NULL];
+    NSDictionary *completions = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+    NSEntityDescription *completionDesc = [NSEntityDescription entityForName:@"Completion" inManagedObjectContext:self.managedObjectContext];
+    
+    for (NSDictionary *dict in [completions objectForKey:@"completions"]) {
+        Completion *completion = [NSEntityDescription insertNewObjectForEntityForName:@"Completion" inManagedObjectContext:self.managedObjectContext];
+        
+        [completionDesc.attributesByName enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSAttributeDescription *desc, BOOL *stop) {
+            [completion setValue:[dict objectForKey:name] forKey:name];
+        }];
+        
+        [completionDesc.relationshipsByName enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSRelationshipDescription *desc, BOOL *stop) {
+            if (desc.isToMany && desc.isOrdered) {
+                NSMutableOrderedSet *temp = [completion mutableOrderedSetValueForKey:name];
+                
+                for (NSDictionary *placeholderDict in [dict objectForKey:name]) {
+                    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:desc.destinationEntity.name];
+                    
+                    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",[placeholderDict objectForKey:@"name"]]];
+                    
+                    id entity = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+                    
+                    if (!entity) {
+                        entity = [NSEntityDescription insertNewObjectForEntityForName:desc.destinationEntity.name inManagedObjectContext:self.managedObjectContext];
+                        
+                        [desc.destinationEntity.attributesByName enumerateKeysAndObjectsUsingBlock:^(NSString *name, NSAttributeDescription *desc, BOOL *stop) {
+                            [entity setValue:[placeholderDict objectForKey:name] forKey:name];
+                        }];
+                    }
+                    
+                    [temp addObject:entity];
+                }
+            }
+        }];
+    }
+    
+    [self.managedObjectContext save:NULL];
     
     NSDictionary *defaultAttributes = [WCSyntaxHighlighter defaultAttributes];
     
@@ -115,7 +171,7 @@
     WCCompletionItem *completionItem = [self.completionItems objectAtIndex:row];
     
     if ([tableColumn.identifier isEqualToString:@"image"])
-        return [[WCSymbolImageManager sharedManager] imageForSymbol:completionItem.symbol];
+        return [completionItem.dataSource image];
     
     NSMutableAttributedString *string = [completionItem.displayString mutableCopy];
     
@@ -142,12 +198,15 @@
     [self.textView.window addChildWindow:self ordered:NSWindowAbove];
     
     NSRange completionRange = self.textView.rangeForUserCompletion;
-    
-    NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:(completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange]];
+    NSString *prefix = (completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange];
+    NSArray *completions = [self _completionsWithPrefix:prefix];
+    NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:prefix];
     NSMutableArray *completionItems = [NSMutableArray arrayWithCapacity:symbols.count];
     
+    for (Completion *completion in completions)
+        [completionItems addObject:[[WCCompletionItem alloc] initWithDataSource:completion]];
     for (Symbol *symbol in symbols)
-        [completionItems addObject:[[WCCompletionItem alloc] initWithSymbol:symbol]];
+        [completionItems addObject:[[WCCompletionItem alloc] initWithDataSource:symbol]];
     
     [self setCompletionItems:completionItems];
     
@@ -222,7 +281,7 @@
                     case KEY_CODE_ENTER:
                     case KEY_CODE_RETURN:
                     case KEY_CODE_TAB:
-                        [blockSelf _insertSymbol:[[blockSelf.completionItems objectAtIndex:[blockSelf.tableView selectedRow]] symbol]];
+                        [blockSelf _insertCompletionItem:[blockSelf.completionItems objectAtIndex:[blockSelf.tableView selectedRow]]];
                         return nil;
                     case KEY_CODE_UP_ARROW:
                     case KEY_CODE_DOWN_ARROW:
@@ -287,31 +346,37 @@
     }];
 }
 #pragma mark *** Private Methods ***
-- (void)_insertSymbol:(Symbol *)symbol; {
+- (void)_insertCompletionItem:(WCCompletionItem *)completionItem; {
     NSDictionary *defaultAttributes = [WCSyntaxHighlighter defaultAttributes];
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:symbol.name attributes:defaultAttributes];
+    NSMutableAttributedString *string;
     
-    if (symbol.type.intValue == SymbolTypeMacro) {
-        Macro *macro = (Macro *)symbol;
-        NSArray *arguments = [macro.arguments componentsSeparatedByString:@","];
+    if ([completionItem.dataSource isKindOfClass:[Completion class]]) {
+        string = [[NSMutableAttributedString alloc] initWithAttributedString:[self _attributedStringForCompletion:(Completion *)completionItem.dataSource]];
+    }
+    else {
+        string = [[NSMutableAttributedString alloc] initWithString:[completionItem.dataSource name] attributes:defaultAttributes];
         
-        if (arguments.count) {
-            NSMutableAttributedString *argumentString = [[NSMutableAttributedString alloc] initWithString:@"(" attributes:defaultAttributes];
+        if ([completionItem.dataSource respondsToSelector:@selector(arguments)]) {
+            NSArray *arguments = [[completionItem.dataSource arguments] componentsSeparatedByString:@","];
             
-            [arguments enumerateObjectsUsingBlock:^(NSString *argument, NSUInteger argumentIndex, BOOL *stop) {
-                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+            if (arguments.count) {
+                NSMutableAttributedString *argumentString = [[NSMutableAttributedString alloc] initWithString:@"(" attributes:defaultAttributes];
                 
-                [attachment setAttachmentCell:[[WCArgumentPlaceholderCell alloc] initTextCell:[argument stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
+                [arguments enumerateObjectsUsingBlock:^(NSString *argument, NSUInteger argumentIndex, BOOL *stop) {
+                    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                    
+                    [attachment setAttachmentCell:[[WCArgumentPlaceholderCell alloc] initTextCell:[argument stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]]];
+                    
+                    [argumentString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+                    
+                    if (argumentIndex == arguments.count - 1)
+                        [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@")" attributes:defaultAttributes]];
+                    else
+                        [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@"," attributes:defaultAttributes]];
+                }];
                 
-                [argumentString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
-                
-                if (argumentIndex == arguments.count - 1)
-                    [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@")" attributes:defaultAttributes]];
-                else
-                    [argumentString appendAttributedString:[[NSAttributedString alloc] initWithString:@"," attributes:defaultAttributes]];
-            }];
-            
-            [string appendAttributedString:argumentString];
+                [string appendAttributedString:argumentString];
+            }
         }
     }
     
@@ -324,21 +389,50 @@
         [self.textView.textStorage replaceCharactersInRange:charRange withAttributedString:string];
         [self.textView didChangeText];
         
-        NSRange lineRange = [self.textView.string lineRangeForRange:charRange];
+        NSRange range = [self.textView.textStorage WC_nextPlaceholderRangeForRange:charRange inRange:[self.textView.string lineRangeForRange:charRange] wrap:NO];
         
-        [self.textView.textStorage enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(charRange.location, NSMaxRange(lineRange) - charRange.location) options:NSAttributedStringEnumerationLongestEffectiveRangeNotRequired usingBlock:^(id value, NSRange range, BOOL *stop) {
-            if (value) {
-                id cell = [(NSTextAttachment *)value attachmentCell];
-                
-                if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
-                    [self.textView setSelectedRange:range];
-                    *stop = YES;
-                }
-            }
-        }];
+        if (range.location != NSNotFound)
+            [self.textView setSelectedRange:range];
     }
     
+    if ([completionItem.dataSource respondsToSelector:@selector(priority)])
+        [completionItem.dataSource setPriority:@([completionItem.dataSource priority].longLongValue + 1)];
+    
     [self hideCompletionWindow];
+}
+- (NSArray *)_completionsWithPrefix:(NSString *)prefix; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Completion"];
+    
+    if (prefix.length)
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",prefix]];
+    
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"priority" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] ]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+
+- (NSAttributedString *)_attributedStringForCompletion:(Completion *)completion; {
+    NSMutableAttributedString *retval = [[NSMutableAttributedString alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]];
+    
+    if (completion.placeholders.count > 0) {
+        for (Placeholder *placeholder in completion.placeholders) {
+            if (placeholder.isPlaceholderValue) {
+                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                
+                [attachment setAttachmentCell:[[WCArgumentPlaceholderCell alloc] initTextCell:placeholder.name arguments:placeholder.arguments]];
+                
+                [retval appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+            }
+            else {
+                [retval.mutableString appendString:placeholder.name];
+            }
+        }
+    }
+    else {
+        [retval.mutableString appendString:completion.name];
+    }
+    
+    return retval;
 }
 
 #pragma mark Properties
@@ -361,7 +455,7 @@
         return;
     }
     
-    [self _insertSymbol:[[self.completionItems objectAtIndex:self.tableView.clickedRow] symbol]];
+    [self _insertCompletionItem:[self.completionItems objectAtIndex:self.tableView.clickedRow]];
 }
 #pragma mark Notifications
 - (void)_applicationDidResignActive:(NSNotification *)note {
@@ -371,11 +465,16 @@
 }
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     NSRange completionRange = self.textView.rangeForUserCompletion;
-    NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:(completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange]];
+    NSString *prefix = (completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange];
+    NSArray *completions = [self _completionsWithPrefix:prefix];
+    NSArray *symbols = [[self.textView.delegate symbolScannerForTextView:self.textView] symbolsWithPrefix:prefix];
     NSMutableArray *completionItems = [NSMutableArray arrayWithCapacity:symbols.count];
     
+    for (Completion *completion in completions)
+        [completionItems addObject:[[WCCompletionItem alloc] initWithDataSource:completion]];
+    
     for (Symbol *symbol in symbols)
-        [completionItems addObject:[[WCCompletionItem alloc] initWithSymbol:symbol]];
+        [completionItems addObject:[[WCCompletionItem alloc] initWithDataSource:symbol]];
     
     [self setCompletionItems:completionItems];
 }
