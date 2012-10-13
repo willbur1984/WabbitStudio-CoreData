@@ -389,7 +389,7 @@
         [self.textView.textStorage replaceCharactersInRange:charRange withAttributedString:string];
         [self.textView didChangeText];
         
-        NSRange range = [self.textView.textStorage WC_nextPlaceholderRangeForRange:charRange inRange:[self.textView.string lineRangeForRange:charRange] wrap:NO];
+        NSRange range = [self.textView.textStorage WC_nextPlaceholderRangeForRange:charRange inRange:NSMakeRange(charRange.location, string.length) wrap:NO];
         
         if (range.location != NSNotFound)
             [self.textView setSelectedRange:range];
