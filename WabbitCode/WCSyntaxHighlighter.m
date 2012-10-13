@@ -86,10 +86,8 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     [self.textStorage beginEditing];
     
     [self.textStorage addAttributes:[self.class defaultAttributes] range:range];
-    [self.textStorage removeAttribute:kMultilineCommentAttributeName range:range];
-    [self.textStorage removeAttribute:kTokenAttributeName range:range];
+    
     [self.textStorage removeAttribute:kSymbolAttributeName range:range];
-    [self.textStorage removeAttribute:kCommentAttributeName range:range];
     
     [[WCSyntaxHighlighter operationalCodeRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor blueColor], kTokenAttributeName : @true } range:result.range];
@@ -171,7 +169,7 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
 }
 
 + (NSDictionary *)defaultAttributes; {
-    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor]};
+    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false, kCommentAttributeName : @false, kTokenAttributeName : @false, kSymbolAttributeName : @false};
 }
 
 + (NSRegularExpression *)commentRegex; {
