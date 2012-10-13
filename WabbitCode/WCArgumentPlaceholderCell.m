@@ -103,7 +103,7 @@ static NSTextContainer *kTextContainer;
     NSRect rect = [kLayoutManager usedRectForTextContainer:kTextContainer];
     
     frame.size.width = NSWidth(rect) + (kLeftRightMargin * 2);
-    frame.size.height = NSHeight(lineFrag);
+    frame.size.height = NSHeight(rect);
     frame.origin.y -= [textContainer.layoutManager.typesetter baselineOffsetInLayoutManager:kLayoutManager glyphIndex:0];
     
     return frame;
