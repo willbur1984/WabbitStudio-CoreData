@@ -35,6 +35,13 @@
 		793D23701615584F00742605 /* WCTypesetter.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D236F1615584D00742605 /* WCTypesetter.m */; };
 		793D23731615597B00742605 /* WCGlyphGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23721615597A00742605 /* WCGlyphGenerator.m */; };
 		793D237616155C4200742605 /* WCFoldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D237516155C4000742605 /* WCFoldCell.m */; };
+		794843891629CC5E007903BE /* Completions.json in Resources */ = {isa = PBXBuildFile; fileRef = 794843881629CC5E007903BE /* Completions.json */; };
+		794843901629E142007903BE /* WCCompletionsImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7948438F1629E142007903BE /* WCCompletionsImageManager.m */; };
+		794843991629F8FD007903BE /* _Completion.m in Sources */ = {isa = PBXBuildFile; fileRef = 794843921629F8FD007903BE /* _Completion.m */; };
+		7948439A1629F8FD007903BE /* _Placeholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 794843941629F8FD007903BE /* _Placeholder.m */; };
+		7948439B1629F8FD007903BE /* Completion.m in Sources */ = {isa = PBXBuildFile; fileRef = 794843961629F8FD007903BE /* Completion.m */; };
+		7948439C1629F8FD007903BE /* Placeholder.m in Sources */ = {isa = PBXBuildFile; fileRef = 794843981629F8FD007903BE /* Placeholder.m */; };
+		7948439F162A0B57007903BE /* NSAttributedString+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7948439E162A0B57007903BE /* NSAttributedString+WCExtensions.m */; };
 		79593663161637A80085355E /* WCFoldScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 79593662161637A80085355E /* WCFoldScanner.m */; };
 		79593666161638390085355E /* WCScanFoldsOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 79593665161638390085355E /* WCScanFoldsOperation.m */; };
 		795936691616384B0085355E /* Folds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 795936671616384B0085355E /* Folds.xcdatamodeld */; };
@@ -150,6 +157,19 @@
 		793D23721615597A00742605 /* WCGlyphGenerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGlyphGenerator.m; sourceTree = "<group>"; };
 		793D237416155C3F00742605 /* WCFoldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldCell.h; sourceTree = "<group>"; };
 		793D237516155C4000742605 /* WCFoldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldCell.m; sourceTree = "<group>"; };
+		794843881629CC5E007903BE /* Completions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Completions.json; sourceTree = "<group>"; };
+		7948438E1629E141007903BE /* WCCompletionsImageManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionsImageManager.h; sourceTree = "<group>"; };
+		7948438F1629E142007903BE /* WCCompletionsImageManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionsImageManager.m; sourceTree = "<group>"; };
+		794843911629F8FD007903BE /* _Completion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Completion.h; sourceTree = "<group>"; };
+		794843921629F8FD007903BE /* _Completion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Completion.m; sourceTree = "<group>"; };
+		794843931629F8FD007903BE /* _Placeholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Placeholder.h; sourceTree = "<group>"; };
+		794843941629F8FD007903BE /* _Placeholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Placeholder.m; sourceTree = "<group>"; };
+		794843951629F8FD007903BE /* Completion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Completion.h; sourceTree = "<group>"; };
+		794843961629F8FD007903BE /* Completion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Completion.m; sourceTree = "<group>"; };
+		794843971629F8FD007903BE /* Placeholder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Placeholder.h; sourceTree = "<group>"; };
+		794843981629F8FD007903BE /* Placeholder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Placeholder.m; sourceTree = "<group>"; };
+		7948439D162A0B57007903BE /* NSAttributedString+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+WCExtensions.h"; sourceTree = "<group>"; };
+		7948439E162A0B57007903BE /* NSAttributedString+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+WCExtensions.m"; sourceTree = "<group>"; };
 		79593661161637A80085355E /* WCFoldScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldScanner.h; sourceTree = "<group>"; };
 		79593662161637A80085355E /* WCFoldScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldScanner.m; sourceTree = "<group>"; };
 		79593664161638390085355E /* WCScanFoldsOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCScanFoldsOperation.h; sourceTree = "<group>"; };
@@ -558,6 +578,8 @@
 				7962BDEA16220042006D5A7A /* NSView+WCExtensions.m */,
 				7962BDEC162207C7006D5A7A /* NSObject+WCExtensions.h */,
 				7962BDED162207C7006D5A7A /* NSObject+WCExtensions.m */,
+				7948439D162A0B57007903BE /* NSAttributedString+WCExtensions.h */,
+				7948439E162A0B57007903BE /* NSAttributedString+WCExtensions.m */,
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
@@ -566,6 +588,7 @@
 		79A87C20161DF39000C1A568 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				794843881629CC5E007903BE /* Completions.json */,
 				79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */,
 				79A87C22161DF39B00C1A568 /* Classes */,
 			);
@@ -575,6 +598,14 @@
 		79A87C22161DF39B00C1A568 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				794843911629F8FD007903BE /* _Completion.h */,
+				794843921629F8FD007903BE /* _Completion.m */,
+				794843931629F8FD007903BE /* _Placeholder.h */,
+				794843941629F8FD007903BE /* _Placeholder.m */,
+				794843951629F8FD007903BE /* Completion.h */,
+				794843961629F8FD007903BE /* Completion.m */,
+				794843971629F8FD007903BE /* Placeholder.h */,
+				794843981629F8FD007903BE /* Placeholder.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -624,6 +655,8 @@
 				79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */,
 				79C92CF116114A1300BB6CDC /* WCCompletionItem.h */,
 				79C92CF216114A1300BB6CDC /* WCCompletionItem.m */,
+				7948438E1629E141007903BE /* WCCompletionsImageManager.h */,
+				7948438F1629E142007903BE /* WCCompletionsImageManager.m */,
 				79A87C20161DF39000C1A568 /* Model */,
 			);
 			name = Completion;
@@ -850,6 +883,7 @@
 				7962BDF316221899006D5A7A /* include.icns in Resources */,
 				7962BDF416221899006D5A7A /* project.icns in Resources */,
 				7962BE0416225FB1006D5A7A /* WCJumpInWindow.xib in Resources */,
+				794843891629CC5E007903BE /* Completions.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -933,6 +967,12 @@
 				7962BE0116225E9E006D5A7A /* WCJumpInWindowController.m in Sources */,
 				7962BE071622627D006D5A7A /* WCSearchFieldBackgroundView.m in Sources */,
 				7962BE0A16226D3B006D5A7A /* WCJumpInCellView.m in Sources */,
+				794843901629E142007903BE /* WCCompletionsImageManager.m in Sources */,
+				794843991629F8FD007903BE /* _Completion.m in Sources */,
+				7948439A1629F8FD007903BE /* _Placeholder.m in Sources */,
+				7948439B1629F8FD007903BE /* Completion.m in Sources */,
+				7948439C1629F8FD007903BE /* Placeholder.m in Sources */,
+				7948439F162A0B57007903BE /* NSAttributedString+WCExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

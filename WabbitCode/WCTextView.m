@@ -29,6 +29,7 @@
 #import "WCHUDStatusWindow.h"
 #import "NSEvent+WCExtensions.h"
 #import "WCSyntaxHighlighter.h"
+#import "NSAttributedString+WCExtensions.h"
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -266,6 +267,28 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     [super mouseDown:theEvent];
 }
 
+- (void)insertTab:(id)sender {
+    NSRange range = [self.textStorage WC_nextPlaceholderRangeForRange:self.selectedRange inRange:[self.string lineRangeForRange:self.selectedRange] wrap:YES];
+    
+    if (range.location == NSNotFound) {
+        [super insertTab:nil];
+        return;
+    }
+    
+    [self setSelectedRange:range];
+}
+
+- (void)insertBacktab:(id)sender {
+    NSRange range = [self.textStorage WC_previousPlaceholderRangeForRange:self.selectedRange inRange:[self.string lineRangeForRange:self.selectedRange] wrap:YES];
+    
+    if (range.location == NSNotFound) {
+        [super insertBacktab:nil];
+        return;
+    }
+    
+    [self setSelectedRange:range];
+}
+
 #pragma mark NSView
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow {
     [super viewWillMoveToWindow:newWindow];
@@ -501,6 +524,29 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     bookmark = bookmarks.lastObject;
     
     [self setSelectedRange:NSRangeFromString(bookmark.range)];
+    [self scrollRangeToVisible:self.selectedRange];
+}
+
+- (IBAction)jumpToNextPlaceholderAction:(id)sender; {
+    NSRange range = [self.textStorage WC_nextPlaceholderRangeForRange:self.selectedRange inRange:NSMakeRange(0, self.string.length) wrap:YES];
+    
+    if (range.location == NSNotFound) {
+        NSBeep();
+        return;
+    }
+    
+    [self setSelectedRange:range];
+    [self scrollRangeToVisible:self.selectedRange];
+}
+- (IBAction)jumpToPreviousPlaceholderAction:(id)sender; {
+    NSRange range = [self.textStorage WC_previousPlaceholderRangeForRange:self.selectedRange inRange:NSMakeRange(0, self.string.length) wrap:YES];
+    
+    if (range.location == NSNotFound) {
+        NSBeep();
+        return;
+    }
+    
+    [self setSelectedRange:range];
     [self scrollRangeToVisible:self.selectedRange];
 }
 #pragma mark *** Private Methods ***
