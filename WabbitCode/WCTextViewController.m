@@ -85,7 +85,6 @@
     
     [self.textView setDelegate:self];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidFold:) name:WCTextStorageDidFoldNotification object:self.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidUnfold:) name:WCTextStorageDidUnfoldNotification object:self.textStorage];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:self.textView.enclosingScrollView.contentView];
@@ -354,52 +353,6 @@
 #pragma mark Notifications
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
-}
-- (void)_textStorageDidProcessEditing:(NSNotification *)note {
-    if (self.textView.window.firstResponder != self.textView)
-        return;
-    else if (([note.object editedMask] & NSTextStorageEditedCharacters) == 0)
-        return;
-    else if ([self.textView.undoManager isRedoing] ||
-        [self.textView.undoManager isUndoing] ||
-        [note.object changeInLength] != 1) {
-        
-        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
-        return;
-    }
-    
-    static NSCharacterSet *kLegalCharacters;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSMutableCharacterSet *temp = [[NSCharacterSet letterCharacterSet] mutableCopy];
-        
-        [temp formUnionWithCharacterSet:[NSCharacterSet decimalDigitCharacterSet]];
-        [temp formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"_!?.#"]];
-        
-        kLegalCharacters = [temp copy];
-    });
-    
-    if (![kLegalCharacters characterIsMember:[self.textView.string characterAtIndex:[note.object editedRange].location]]) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
-        return;
-    }
-    
-    id value = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:[note.object editedRange].location effectiveRange:NULL];
-    
-    if ([value boolValue]) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
-        return;
-    }
-    
-    value = [self.textStorage attribute:kCommentAttributeName atIndex:[note.object editedRange].location effectiveRange:NULL];
-    
-    if ([value boolValue]) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
-        return;
-    }
-    
-    [NSObject cancelPreviousPerformRequestsWithTarget:self.textView selector:@selector(complete:) object:nil];
-    [self.textView performSelector:@selector(complete:) withObject:nil afterDelay:0.35];
 }
 - (void)_textStorageDidFold:(NSNotification *)note {
     [self.textView setNeedsDisplay:YES];

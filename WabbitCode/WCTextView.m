@@ -334,6 +334,50 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         [super insertText:@")"];
         [self setSelectedRange:NSMakeRange(self.selectedRange.location - 1, 0)];
     }
+    else {
+        if (self.window.firstResponder != self)
+            return;
+        else if ([self.undoManager isRedoing] ||
+                 [self.undoManager isUndoing] ||
+                 [aString length] != 1) {
+            
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+            return;
+        }
+        
+        static NSCharacterSet *kLegalCharacters;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            NSMutableCharacterSet *temp = [[NSCharacterSet letterCharacterSet] mutableCopy];
+            
+            [temp formUnionWithCharacterSet:[NSCharacterSet decimalDigitCharacterSet]];
+            [temp formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"_!?.#"]];
+            
+            kLegalCharacters = [temp copy];
+        });
+        
+        if (![kLegalCharacters characterIsMember:[aString characterAtIndex:0]]) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+            return;
+        }
+        
+        id value = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:self.selectedRange.location effectiveRange:NULL];
+        
+        if ([value boolValue]) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+            return;
+        }
+        
+        value = [self.textStorage attribute:kCommentAttributeName atIndex:self.selectedRange.location effectiveRange:NULL];
+        
+        if ([value boolValue]) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+            return;
+        }
+        
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+        [self performSelector:@selector(complete:) withObject:nil afterDelay:0.35];
+    }
 }
 #pragma mark NSTextView
 - (void)setSelectedRanges:(NSArray *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelectingFlag {
