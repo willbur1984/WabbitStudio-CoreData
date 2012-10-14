@@ -39,6 +39,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 
 - (void)_highlightMatchingBrace;
+- (void)_highlightMatchingTempLabel;
 - (void)_jumpToDefinitionForRange:(NSRange)range;
 @end
 
@@ -635,6 +636,103 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 	
 	NSBeep();
 }
+- (void)_highlightMatchingTempLabel; {
+	// need at least two characters in order to match
+    if (self.string.length <= 2)
+		return;
+    
+    NSRange selectedRange = self.selectedRange;
+    
+	// selection cannot have a length
+	if (selectedRange.length > 0)
+		return;
+    // must be a temp label character to continue searching
+    else if ([self.string characterAtIndex:selectedRange.location - 1] != '_')
+		return;
+	// dont highlight the temp labels themselves
+	else if ([self.string lineRangeForRange:selectedRange].location == selectedRange.location - 1)
+		return;
+	
+	// number of references (going forwards or backwards) we are looking for
+	__block NSInteger numberOfReferences = 0;
+	
+	NSUInteger stringLength = self.string.length;
+	NSInteger charIndex;
+	
+	// count of the number of references so we know how many temp labels to skip over
+	for (charIndex = selectedRange.location - 2; charIndex > 0; charIndex--) {
+		unichar charAtIndex = [[self string] characterAtIndex:charIndex];
+		
+		// '+' means search forward in the file
+		if (charAtIndex == '+')
+			numberOfReferences++;
+		// '-' means seach backwards in the file
+		else if (charAtIndex == '-')
+			numberOfReferences--;
+		// otherwise we are done counting references
+		else
+			break;
+	}
+	
+	// if we didn't count any references, it's an underscore by itself
+	if (!numberOfReferences) {
+		static NSCharacterSet *delimiterCharSet;
+		static dispatch_once_t onceToken;
+		dispatch_once(&onceToken, ^{
+			NSMutableCharacterSet *charSet = [[NSCharacterSet whitespaceCharacterSet] mutableCopy];
+            
+			[charSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@","]];
+            
+			delimiterCharSet = [charSet copy];
+		});
+		
+		// we need to make sure it isn't part of another word before continuing the search
+		if (![delimiterCharSet characterIsMember:[self.string characterAtIndex:selectedRange.location - 2]])
+			return;
+		
+		// otherwise count it as a single forward reference
+		numberOfReferences++;
+	}
+	
+	// always enumerate by lines, adding the reverse flag when we have a negative number of references
+	__block BOOL foundMatchingTempLabel = NO;
+	NSStringEnumerationOptions options = NSStringEnumerationByLines;
+    
+	if (numberOfReferences < 0)
+		options |= NSStringEnumerationReverse;
+    
+	// we want to search either from our selected index forward to the end of the file or backwards from our selected index to the beginning of the file
+	NSRange enumRange = (numberOfReferences > 0)?NSMakeRange(selectedRange.location, stringLength-selectedRange.location):NSMakeRange(0, selectedRange.location);
+	
+	[self.string enumerateSubstringsInRange:enumRange options:options usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+		// the first character has to be an underscore
+		if (substringRange.length && [substring characterAtIndex:0] == '_') {
+			// make sure the underscore isn't part of another symbol (i.e. a label)
+			id value = [self.textStorage attribute:kTokenAttributeName atIndex:substringRange.location effectiveRange:NULL];
+            if ([value boolValue])
+                return;
+			
+			// decrement the number of references, checking for 0
+			if (numberOfReferences > 0 && (!(--numberOfReferences))) {
+				foundMatchingTempLabel = YES;
+				*stop = YES;
+				
+				[self showFindIndicatorForRange:NSMakeRange(substringRange.location, 1)];
+			}
+			// increment the number of references, checking for 0
+			else if (numberOfReferences < 0 && (!(++numberOfReferences))) {
+				foundMatchingTempLabel = YES;
+				*stop = YES;
+				
+				[self showFindIndicatorForRange:NSMakeRange(substringRange.location, 1)];
+			}
+		}
+	}];
+	
+	// if we didn't find a matching temp label, beep at the user because we are angry
+	if (!foundMatchingTempLabel)
+		NSBeep();
+}
 - (void)_jumpToDefinitionForRange:(NSRange)range; {
     NSRange symbolRange = [self.string WC_symbolRangeForRange:range];
     
@@ -770,6 +868,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 		self.selectedRange.location - oldSelectedRange.location == 1) {
         
         [self _highlightMatchingBrace];
+        [self _highlightMatchingTempLabel];
     }
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
