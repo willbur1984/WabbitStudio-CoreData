@@ -126,6 +126,19 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         return;
     }
     
+    const NSTimeInterval kToolTipDelayInterval = 1;
+    
+    NSRange foldRange = [(WCTextStorage *)self.textStorage foldRangeForRange:NSMakeRange(charIndex, 0)];
+    
+    if (foldRange.location != NSNotFound) {
+        if (self.toolTipTimer && [[WCToolTipWindow sharedInstance] isVisible])
+            [self _toolTipTimerCallback:nil];
+        else
+            [self setToolTipTimer:[NSTimer scheduledTimerWithTimeInterval:kToolTipDelayInterval target:self selector:@selector(_toolTipTimerCallback:) userInfo:nil repeats:NO]];
+        
+        return;
+    }
+    
     NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
     
     if (symbolRange.location == NSNotFound) {
@@ -139,8 +152,6 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         [self setToolTipTimer:nil];
         return;
     }
-    
-    const NSTimeInterval kToolTipDelayInterval = 1;
     
     if (self.toolTipTimer && [[WCToolTipWindow sharedInstance] isVisible])
         [self _toolTipTimerCallback:nil];
@@ -689,6 +700,20 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     
     if (charIndex >= self.string.length) {
         [self setToolTipTimer:nil];
+        return;
+    }
+    
+    NSRange foldRange = [(WCTextStorage *)self.textStorage foldRangeForRange:NSMakeRange(charIndex, 0)];
+    
+    if (foldRange.location != NSNotFound) {
+        NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:foldRange.location];
+        NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+        NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+        
+        lineFragmentRect.origin.x += glyphLocation.x;
+        lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+        
+        [[WCToolTipWindow sharedInstance] showString:[self.string substringWithRange:foldRange] atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
         return;
     }
     
