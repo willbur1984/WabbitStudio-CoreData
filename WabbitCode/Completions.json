@@ -1,24 +1,1822 @@
 {
     "completions": [
         {
-            "format": "adc a,@[a,f,b,c,d,e,h,l]", 
             "name": "adc a,reg", 
+            "placeholders": [
+                {
+                    "name": "adc a,"
+                }, 
+                {
+                    "arguments": "a,f,b,c,d,e,h,l", 
+                    "isPlaceholder": true, 
+                    "name": "reg"
+                }
+            ], 
             "type": 0
         }, 
         {
-            "format": "adc hl,@[af,bc,de,hl]", 
             "name": "adc hl,regpair", 
+            "placeholders": [
+            {
+                "name": "adc hl,"
+            },
+            {
+                "arguments": "af,bc,de,hl",
+                "isPlaceholder": true,
+                "name": "regpair"
+            }
+            ],
             "type": 0
         }, 
         {
-            "format": "add a,@[a,f,b,c,d,e,h,l]", 
             "name": "add a,reg", 
+            "placeholders": [
+                {
+                    "name": "add a,"
+                }, 
+                {
+                    "name": "reg"
+                }
+            ],
+            "type": 0
+        }, 
+        {
+            "name": "add a,(hl)", 
             "type": 0
         },
         {
-            "format" : "add a,(hl)",
-            "name" : "add a,(hl)",
-            "type" : 0
+            "name": "add a,(ix+offset)",
+            "placeholders": [
+            {
+                "name": "add a,(ix+"
+            },
+            {
+                "isPlaceholder": true,
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "add a,(iy+offset)",
+            "placeholders": [
+            {
+                "name": "add a,(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "add hl,regpair",
+            "placeholders": [
+            {
+                "name": "add hl,"
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "add ix,regpair",
+            "placeholders": [
+            {
+                "name": "add ix,"
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "add iy,regpair",
+            "placeholders": [
+            {
+                "name": "add iy,"
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "and reg",
+            "placeholders": [
+            {
+                "name": "and "
+            },
+            {
+                "name": "reg"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "and number",
+            "placeholders": [
+            {
+                "name": "and "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "number"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "and (hl)",
+            "type": 0
+        },
+        {
+            "name": "and (ix+offset)",
+            "placeholders": [
+            {
+                "name": "and (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "and (iy+offset)",
+            "placeholders": [
+            {
+                "name": "and (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }  
+            ],
+            "type": 0
+        },
+        {
+            "name": "and regpair",
+            "placeholders": [
+            {
+                "name": "and "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "bit bit,reg",
+            "placeholders": [
+            {
+                "name": "bit "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "bit"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "reg"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "bit bit,(hl)",
+            "placeholders": [
+            {
+                "name": "bit "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(hl)"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "bit bit,(ix+offset)",
+            "placeholders": [
+            {
+                "name": "bit "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "bit bit,(iy+offset)",
+            "placeholders": [
+            {
+                "name": "bit "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "call address",
+            "placeholders": [
+            {
+                "name": "call "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "address"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "call creg,address",
+            "placeholders": [
+            {
+                "name": "call "
+            },
+            {
+                "arguments": "nc,nv,nz,pe,po,c,m,n,p,v,z",
+                "isPlaceholder": true,
+                "name": "creg"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "address"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "call creg,_",
+            "placeholders": [
+            {
+                "name": "call "
+            },
+            {
+                "name": "creg"
+            },
+            {
+                "name": ",_"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "ccf",
+            "type": 0
+        },
+        {
+            "name": "cpdr",
+            "type": 0
+        },
+        {
+            "name": "cpd",
+            "type": 0
+        },
+        {
+            "name": "cpir",
+            "type": 0
+        },
+        {
+            "name": "cpi",
+            "type": 0
+        },
+        {
+            "name": "cpl",
+            "type": 0
+        },
+        {
+            "name": "cp src,dst",
+            "placeholders": [
+            {
+                "name": "cp "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "src"
+            },
+            {
+                "name": ","
+            },
+            {
+                "isPlaceholder": true,
+                "name": "dst"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "daa",
+            "type": 0
+        },
+        {
+            "name": "dec reg",
+            "placeholders": [
+            {
+                "name": "dec "
+            },
+            {
+                "name": "reg"
+            }    
+            ]
+        },
+        {
+            "name": "dec (hl)",
+            "type": 0
+        },
+        {
+            "name": "dec (ix+offset)",
+            "placeholders": [
+            {
+                "name": "dec "
+            },
+            {
+                "name": "(ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "dec (iy+offset)",
+            "placeholders": [
+            {
+                "name": "dec "
+            },
+            {
+                "name": "(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "di",
+            "type": 0
+        },
+        {
+            "name": "djnz address",
+            "placeholders": [
+            {
+                "name": "djnz "
+            },
+            {
+                "name": "address"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "ei",
+            "type": 0
+        },
+        {
+            "name": "exx",
+            "type": 0
+        },
+        {
+            "name": "ex de,hl",
+            "type": 0
+        },
+        {
+            "name": "ex af,af'",
+            "type": 0
+        },
+        {
+            "name": "ex (sp),hl",
+            "type": 0
+        },
+        {
+            "name": "ex (sp),ix",
+            "type": 0
+        },
+        {
+            "name": "ex (sp),iy",
+            "type": 0
+        },
+        {
+            "name": "halt",
+            "type": 0
+        },
+        {
+            "name": "im 0",
+            "type": 0
+        },
+        {
+            "name": "im 1",
+            "type": 0
+        },
+        {
+            "name": "im 2",
+            "type": 0
+        },
+        {
+            "name": "inc regpair",
+            "placeholders": [
+            {
+                "name": "inc "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "inc ix",
+            "type": 0
+        },
+        {
+            "name": "inc iy",
+            "type": 0
+        },
+        {
+            "name": "indr",
+            "type": 0
+        },
+        {
+            "name": "ind",
+            "type": 0
+        },
+        {
+            "name": "inir",
+            "type": 0
+        },
+        {
+            "name": "in",
+            "type": 0
+        },
+        {
+            "name": "in a,(port)",
+            "placeholders": [
+            {
+                "name": "in a,("
+            },
+            {
+                "isPlaceholder": true,
+                "name": "port"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "in reg,(c)",
+            "placeholders": [
+            {
+                "name": "in "
+            },
+            {
+                "name": "reg"
+            },
+            {
+                "name": ",(c)"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "jp (hl)",
+            "type": 0
+        },
+        {
+            "name": "jp (ix)",
+            "type": 0
+        },
+        {
+            "name": "jp (iy)",
+            "type": 0
+        },
+        {
+            "name": "jp address",
+            "placeholders": [
+            {
+                "name": "jp "
+            },
+            {
+                "name": "address"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "jp creg,address",
+            "placeholders": [
+            {
+                "name": "jp "
+            },
+            {
+                "name": "creg"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "address"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "jp creg,_",
+            "placeholders": [
+            {
+                "name": "jp "
+            },
+            {
+                "name": "creg"
+            },
+            {
+                "name": ",_"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "jr address",
+            "placeholders": [
+            {
+                "name": "jr "
+            },
+            {
+                "name": "address"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "jr creg,address",
+            "placeholders": [
+            {
+                "name": "jr "
+            },
+            {
+                "name": "creg"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "address"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "jr creg,_",
+            "placeholders": [
+            {
+                "name": "jr "
+            },
+            {
+                "name": "creg"
+            },
+            {
+                "name": ",_"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "lddr",
+            "type": 0
+        },
+        {
+            "name": "ldd",
+            "type": 0
+        },
+        {
+            "name": "ldir",
+            "type": 0
+        },
+        {
+            "name": "ldi",
+            "type": 0
+        },
+        {
+            "name": "ld dst,src",
+            "placeholders": [
+            {
+                "name": "ld "
+            },
+            {
+                "name": "dst"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "src"
+            }    
+            ]
+        },
+        {
+            "name": "ld dst,(ix+offset)",
+            "placeholders": [
+            {
+                "name": "ld "
+            },
+            {
+                "name": "dst"
+            },
+            {
+                "name": ",(ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "ld dst,(iy+offset)",
+            "placeholders": [
+            {
+                "name": "ld "
+            },
+            {
+                "name": "dst"
+            },
+            {
+                "name": ",(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "ld (ix+offset),src",
+            "placeholders": [
+            {
+                "name": "ld (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": "),"
+            },
+            {
+                "name": "src"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "ld (iy+offset),src",
+            "placeholders": [
+            {
+                "name": "ld (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": "),"
+            },
+            {
+                "name": "src"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "ld dst,(value)",
+            "placeholders": [
+            {
+                "name": "ld "
+            },
+            {
+                "name": "dst"
+            },
+            {
+                "name": ",("
+            },
+            {
+                "name": "value"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "neg number",
+            "placeholders": [
+            {
+                "name": "neg "
+            },
+            {
+                "name": "number"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "nop",
+            "type": 0
+        },
+        {
+            "name": "or number1 number2",
+            "placeholders": [
+            {
+                "isPlaceholder": true,
+                "name": "number1"
+            },
+            {
+                "isPlaceholder": true,
+                "name": "number2"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "otdr",
+            "type": 0
+        },
+        {
+            "name": "otir",
+            "type": 0
+        },
+        {
+            "name": "outd",
+            "type": 0
+        },
+        {
+            "name": "outi",
+            "type": 0
+        },
+        {
+            "name": "out (port),a",
+            "placeholders": [
+            {
+                "name": "out ("
+            },
+            {
+                "name": "port"
+            },
+            {
+                "name": "),a"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "out (c),reg",
+            "placeholders": [
+            {
+                "name": "out (c),"
+            },
+            {
+                "name": "reg"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "pop regpair",
+            "placeholders": [
+            {
+                "name": "pop "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "push regpair",
+            "placeholders": [
+            {
+                "name": "push "
+            },
+            {
+                "name": "regpair"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "res bit,reg",
+            "placeholders": [
+            {
+                "name": "res "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": "reg"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "res bit,(hl)",
+            "placeholders": [
+            {
+                "name": "res "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(hl)"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "res bit,(ix+offset)",
+            "placeholders": [
+            {
+                "name": "res "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "res bit,(iy+offset)",
+            "placeholders": [
+            {
+                "name": "res "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "reti",
+            "type": 0
+        },
+        {
+            "name": "retn",
+            "type": 0
+        },
+        {
+            "name": "ret",
+            "type": 0
+        },
+        {
+            "name": "rla",
+            "type": 0
+        },
+        {
+            "name": "rlc regpair",
+            "placeholders": [
+            {
+                "name": "rlc "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rlc (hl)",
+            "type": 0
+        },
+        {
+            "name": "rlc (ix+offset)",
+            "placeholders": [
+            {
+                "name": "rlc (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rlc (iy+offset)",
+            "placeholders": [
+            {
+                "name": "rlc (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rld",
+            "type": 0
+        },
+        {
+            "name": "rl regpair",
+            "placeholders": [
+            {
+                "name": "rl "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rl (hl)",
+            "type": 0
+        },
+        {
+            "name": "rl (ix+offset)",
+            "placeholders": [
+            {
+                "name": "rl (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rl (iy+offset)",
+            "placeholders": [
+            {
+                "name": "rl (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rra",
+            "type": 0
+        },
+        {
+            "name": "rrca",
+            "type": 0
+        },
+        {
+            "name": "rrc regpair",
+            "placeholders": [
+            {
+                "name": "rrc "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rrc (hl)",
+            "type": 0
+        },
+        {
+            "name": "rrc (ix+offset)",
+            "placeholders": [
+            {
+                "name": "rrc (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rrc (iy+offset)",
+            "placeholders": [
+            {
+                "name": "rrc (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rrd",
+            "type": 0
+        },
+        {
+            "name": "rr regpair",
+            "placeholders": [
+            {
+                "name": "rr "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rr (hl)",
+            "type": 0
+        },
+        {
+            "name": "rr (ix+offset)",
+            "placeholders": [
+            {
+                "name": "rr (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rr (iy+offset)",
+            "placeholders": [
+            {
+                "name": "rr (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "rst address",
+            "placeholders": [
+            {
+                "name": "rst "
+            },
+            {
+                "name": "address"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sbc",
+            "type": 0
+        },
+        {
+            "name": "scf",
+            "type": 0
+        },
+        {
+            "name": "set bit,reg",
+            "placeholders": [
+            {
+                "name": "set "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "reg"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "set bit,(hl)",
+            "placeholders": [
+            {
+                "name": "set "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(hl)"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "set bit,(ix+offset)",
+            "placeholders": [
+            {
+                "name": "set "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }    
+            ],
+            "type": 0
+        },
+        {
+            "name": "set bit,(iy+offset)",
+            "placeholders": [
+            {
+                "name": "set "
+            },
+            {
+                "name": "bit"
+            },
+            {
+                "name": ",(iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sla regpair",
+            "placeholders": [
+            {
+                "name": "sla "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sla (hl)",
+            "type": 0
+        },
+        {
+            "name": "sla (ix+offset)",
+            "placeholders": [
+            {
+                "name": "sla (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sla (iy+offset)",
+            "placeholders": [
+            {
+                "name": "sla (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sll",
+            "type": 0
+        },
+        {
+            "name": "sra regpair",
+            "placeholders": [
+            {
+                "name": "sra "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sra (hl)",
+            "type": 0
+        },
+        {
+            "name": "sra (ix+offset)",
+            "placeholders": [
+            {
+                "name": "sra (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sra (iy+offset)",
+            "placeholders": [
+            {
+                "name": "sra (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "srl regpair",
+            "placeholders": [
+            {
+                "name": "srl "
+            },
+            {
+                "name": "regpair"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "srl (hl)",
+            "type": 0
+        },
+        {
+            "name": "srl (ix+offset)",
+            "placeholders": [
+            {
+                "name": "srl (ix+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "srl (iy+offset)",
+            "placeholders": [
+            {
+                "name": "srl (iy+"
+            },
+            {
+                "name": "offset"
+            },
+            {
+                "name": ")"
+            }
+            ],
+            "type": 0
+        },
+        {
+            "name": "sub",
+            "type": 0
+        },
+        {
+            "name": "xor",
+            "type": 0
+        },
+        {
+            "name": "ixh",
+            "type": 1
+        },
+        {
+            "name": "iyh",
+            "type": 1
+        },
+        {
+            "name": "ixl",
+            "type": 1
+        },
+        {
+            "name": "iyl",
+            "type": 1
+        },
+        {
+            "name": "sp",
+            "type": 1
+        },
+        {
+            "name": "pc",
+            "type": 1
+        },
+        {
+            "name": "af",
+            "type": 1
+        },
+        {
+            "name": "af'",
+            "type": 1
+        },
+        {
+            "name": "bc",
+            "type": 1
+        },
+        {
+            "name": "de",
+            "type": 1
+        },
+        {
+            "name": "hl",
+            "type": 1
+        },
+        {
+            "name": "ix",
+            "type": 1
+        },
+        {
+            "name": "iy",
+            "type": 1
+        },
+        {
+            "name": "a",
+            "type": 1
+        },
+        {
+            "name": "f",
+            "type": 1
+        },
+        {
+            "name": "b",
+            "type": 1
+        },
+        {
+            "name": "c",
+            "type": 1
+        },
+        {
+            "name": "d",
+            "type": 1
+        },
+        {
+            "name": "e",
+            "type": 1
+        },
+        {
+            "name": "h",
+            "type": 1
+        },
+        {
+            "name": "l",
+            "type": 1
+        },
+        {
+            "name": "i",
+            "type": 1
+        },
+        {
+            "name": "r",
+            "type": 1
+        },
+        {
+            "name": "nz",
+            "type": 2
+        },
+        {
+            "name": "nc",
+            "type": 2
+        },
+        {
+            "name": "nv",
+            "type": 2
+        },
+        {
+            "name": "po",
+            "type": 2
+        },
+        {
+            "name": "pe",
+            "type": 2
+        },
+        {
+            "name": "c",
+            "type": 2
+        },
+        {
+            "name": "p",
+            "type": 2
+        },
+        {
+            "name": "m",
+            "type": 2
+        },
+        {
+            "name": "n",
+            "type": 2
+        },
+        {
+            "name": "z",
+            "type": 2
+        },
+        {
+            "name": "v",
+            "type": 2
+        },
+        {
+            "name": ".block size",
+            "placeholders": [
+            {
+                "name": ".block "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "size"
+            }    
+            ],
+            "type": 3
+        },
+        {
+            "name": ".dw value",
+            "placeholders": [
+            {
+                "name": ".dw "
+            },
+            {
+                "name": "value"
+            }
+            ],
+            "type": 3
+        },
+        {
+            "name": ".db value",
+            "placeholders": [
+            {
+                "name": ".db "
+            },
+            {
+                "name": "value"
+            }    
+            ],
+            "type": 3
+        },
+        {
+            "name": ".addinstr",
+            "type": 3
+        },
+        {
+            "name": ".byte",
+            "type": 3
+        },
+        {
+            "name": ".echo",
+            "type": 3
+        },
+        {
+            "name": ".end",
+            "type": 3
+        },
+        {
+            "name": ".error",
+            "type": 3
+        },
+        {
+            "name": ".fill size,value",
+            "placeholders": [
+            {
+                "name": ".fill "
+            },
+            {
+                "name": "size"
+            },
+            {
+                "name": ","
+            },
+            {
+                "name": "value"
+            }
+            ],
+            "type": 3
+        },
+        {
+            "name": ".list",
+            "type": 3
+        },
+        {
+            "name": ".nolist",
+            "type": 3
+        },
+        {
+            "name": ".option",
+            "type": 3
+        },
+        {
+            "name": ".org",
+            "type": 3
+        },
+        {
+            "name": ".seek",
+            "type": 3
+        },
+        {
+            "name": ".show",
+            "type": 3
+        },
+        {
+            "name": "#comment body #endcomment",
+            "placeholders": [
+            {
+                "name": "#comment\n"
+            },
+            {
+                "isPlaceholder": true,
+                "name": "body"
+            },
+            {
+                "name": "\n#endcomment"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#endcomment",
+            "type": 4
+        },
+        {
+            "name": "#elif condition",
+            "placeholders": [
+            {
+                "name": "#elif "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "condition"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#else",
+            "type": 4
+        },
+        {
+            "name": "#endif",
+            "type": 4
+        },
+        {
+            "name": "#if condition",
+            "placeholders": [
+            {
+                "name": "#if "
+            },
+            {
+                "name": "condition"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#ifdef define",
+            "placeholders": [
+            {
+                "name": "#ifdef "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "define"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#ifndef define",
+            "placeholders": [
+            {
+                "name": "#ifndef "
+            },
+            {
+                "name": "define"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#undef define",
+            "placeholders": [
+            {
+                "name": "#undef "
+            },
+            {
+                "name": "define"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#undefine define",
+            "placeholders": [
+            {
+                "name": "#undefine "
+            },
+            {
+                "name": "define"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#define name value",
+            "placeholders": [
+            {
+                "name": "#define "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "name"
+            },
+            {
+                "name": " "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "value"
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#import \"filename\"",
+            "placeholders": [
+            {
+                "name": "#import \""
+            },
+            {
+                "isPlaceholder": true,
+                "name": "filename"
+            },
+            {
+                "name": "\""
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#include \"filename\"",
+            "placeholders": [
+            {
+                "name": "#include \""
+            },
+            {
+                "isPlaceholder": true,
+                "name": "filename"
+            },
+            {
+                "name": "\""
+            }
+            ],
+            "type": 4
+        },
+        {
+            "name": "#macro name(args) body #endmacro",
+            "placeholders": [
+            {
+                "name": "#macro "
+            },
+            {
+                "isPlaceholder": true,
+                "name": "name"
+            },
+            {
+                "name": "("
+            },
+            {
+                "isPlaceholder": true,
+                "name": "args"
+            },
+            {
+                "name": ")\n"
+            },
+            {
+                "isPlaceholder": true,
+                "name": "body"
+            },
+            {
+                "name": "\n"
+            },
+            {
+                "name": "#endmacro"
+            }
+            ],
+            "type": 4
         }
     ]
 }
