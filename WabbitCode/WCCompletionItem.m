@@ -36,21 +36,12 @@
         NSArray *arguments = [[self.dataSource arguments] componentsSeparatedByString:@","];
         
         if (arguments.count) {
-            NSMutableString *argumentString = [NSMutableString stringWithCapacity:0];
+            NSMutableArray *temp = [NSMutableArray arrayWithCapacity:arguments.count];
             
-            [arguments enumerateObjectsUsingBlock:^(NSString *argument, NSUInteger argumentIndex, BOOL *stop) {
-                if (argumentIndex == 0)
-                    [argumentString appendString:@"("];
-                
-                [argumentString appendString:[argument stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
-                
-                if (argumentIndex == arguments.count - 1)
-                    [argumentString appendString:@")"];
-                else
-                    [argumentString appendString:@","];
-            }];
+            for (NSString *argument in arguments)
+                [temp addObject:[argument stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
             
-            [string appendAttributedString:[[NSAttributedString alloc] initWithString:argumentString attributes:defaultAttributes]];
+            [string.mutableString appendFormat:@"(%@)",[temp componentsJoinedByString:@","]];
         }
     }
     
