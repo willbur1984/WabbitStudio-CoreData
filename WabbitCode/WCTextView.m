@@ -229,6 +229,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         
         if (![value boolValue]) {
             [textStorage setFolding:NO];
+            [super mouseDown:theEvent];
             return;
         }
         
@@ -236,6 +237,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         
         if (!attachment) {
             [textStorage setFolding:NO];
+            [super mouseDown:theEvent];
             return;
         }
         
@@ -414,6 +416,17 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     }
 }
 #pragma mark NSTextView
+- (NSRange)selectionRangeForProposedRange:(NSRange)proposedCharRange granularity:(NSSelectionGranularity)granularity {
+    if (granularity != NSSelectByWord)
+        return proposedCharRange;
+    
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:proposedCharRange];
+    
+    if (symbolRange.location == NSNotFound)
+        return proposedCharRange;
+
+    return symbolRange;
+}
 - (void)setSelectedRanges:(NSArray *)ranges affinity:(NSSelectionAffinity)affinity stillSelecting:(BOOL)stillSelectingFlag {
     if (!stillSelectingFlag && ([ranges count] == 1)) {
         NSRange range = [[ranges objectAtIndex:0] rangeValue];
