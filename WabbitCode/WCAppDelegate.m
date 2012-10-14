@@ -13,9 +13,10 @@
 
 #import "WCAppDelegate.h"
 #import "WCBookmarkManager.h"
+#import "WCPreferencesWindowController.h"
 
 @interface WCAppDelegate () <NSApplicationDelegate>
-
+@property (strong,nonatomic) WCPreferencesWindowController *preferencesWindowController;
 @end
 
 @implementation WCAppDelegate
@@ -26,6 +27,13 @@
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
     return NO;
+}
+
+- (IBAction)preferencesAction:(id)sender; {
+    if (!self.preferencesWindowController)
+        [self setPreferencesWindowController:[[WCPreferencesWindowController alloc] init]];
+    
+    [self.preferencesWindowController showWindow:nil];
 }
 
 @end

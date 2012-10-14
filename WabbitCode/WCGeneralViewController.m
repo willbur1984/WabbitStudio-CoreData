@@ -19,14 +19,25 @@
 
 @implementation WCGeneralViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Initialization code here.
-    }
+- (id)init {
+    if (!(self = [super initWithNibName:self.nibName bundle:nil]))
+        return nil;
     
     return self;
+}
+
+- (NSString *)nibName {
+    return @"WCGeneralView";
+}
+
+- (NSString *)identifier {
+    return @"org.revsoft.wabbitcode.preferences.general";
+}
+- (NSImage *)toolbarItemImage {
+    return [NSImage imageNamed:NSImageNamePreferencesGeneral];
+}
+- (NSString *)toolbarItemLabel {
+    return NSLocalizedString(@"General", nil);
 }
 
 @end

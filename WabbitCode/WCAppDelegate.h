@@ -15,4 +15,6 @@
 
 @interface WCAppDelegate : NSObject
 
+- (IBAction)preferencesAction:(id)sender;
+
 @end

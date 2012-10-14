@@ -19,14 +19,25 @@
 
 @implementation WCTextEditingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Initialization code here.
-    }
+- (id)init {
+    if (!(self = [super initWithNibName:self.nibName bundle:nil]))
+        return nil;
     
     return self;
+}
+
+- (NSString *)nibName {
+    return @"WCTextEditingView";
+}
+
+- (NSString *)identifier {
+    return @"org.revsoft.wabbitcode.preferences.text-editing";
+}
+- (NSImage *)toolbarItemImage {
+    return [NSImage imageNamed:@"Text Editing.png"];
+}
+- (NSString *)toolbarItemLabel {
+    return NSLocalizedString(@"Text Editing", nil);
 }
 
 @end
