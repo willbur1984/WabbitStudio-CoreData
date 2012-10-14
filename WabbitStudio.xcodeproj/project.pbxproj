@@ -96,6 +96,16 @@
 		79C92CED1611136A00BB6CDC /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEC1611136A00BB6CDC /* Symbol.m */; };
 		79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEF161144B600BB6CDC /* WCTableView.m */; };
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
+		79DF87AC162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
+		79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
+		79DF87AE162A8C8200818741 /* MASPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		79DF87AF162A8C8200818741 /* MASPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */; };
+		79DF87B2162A8CCF00818741 /* WCPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87B1162A8CCF00818741 /* WCPreferencesWindowController.m */; };
+		79DF87B5162A8D0C00818741 /* WCGeneralViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87B4162A8D0C00818741 /* WCGeneralViewController.m */; };
+		79DF87B8162A8D3000818741 /* WCTextEditingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87B7162A8D3000818741 /* WCTextEditingViewController.m */; };
+		79DF87BB162A8E1A00818741 /* WCGeneralView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87B9162A8E1A00818741 /* WCGeneralView.xib */; };
+		79DF87BD162A8E9D00818741 /* Text Editing.png in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87BC162A8E9D00818741 /* Text Editing.png */; };
+		79DF87C0162A8ED100818741 /* WCTextEditingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87BE162A8ED100818741 /* WCTextEditingView.xib */; };
 		79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FC76A51618029F006B9DC3 /* WCFoldView.m */; };
 		79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */; };
 		79FE36EF161A416500DB7C6D /* Bookmarks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36ED161A416500DB7C6D /* Bookmarks.xcdatamodeld */; };
@@ -265,6 +275,19 @@
 		79C92CEF161144B600BB6CDC /* WCTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTableView.m; sourceTree = "<group>"; };
 		79C92CF116114A1300BB6CDC /* WCCompletionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionItem.h; sourceTree = "<group>"; };
 		79C92CF216114A1300BB6CDC /* WCCompletionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionItem.m; sourceTree = "<group>"; };
+		79DF87A8162A8C8200818741 /* MASPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesViewController.h; sourceTree = "<group>"; };
+		79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MASPreferencesWindow.xib; sourceTree = "<group>"; };
+		79DF87AA162A8C8200818741 /* MASPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesWindowController.h; sourceTree = "<group>"; };
+		79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MASPreferencesWindowController.m; sourceTree = "<group>"; };
+		79DF87B0162A8CCF00818741 /* WCPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCPreferencesWindowController.h; sourceTree = "<group>"; };
+		79DF87B1162A8CCF00818741 /* WCPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCPreferencesWindowController.m; sourceTree = "<group>"; };
+		79DF87B3162A8D0C00818741 /* WCGeneralViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCGeneralViewController.h; sourceTree = "<group>"; };
+		79DF87B4162A8D0C00818741 /* WCGeneralViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGeneralViewController.m; sourceTree = "<group>"; };
+		79DF87B6162A8D3000818741 /* WCTextEditingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextEditingViewController.h; sourceTree = "<group>"; };
+		79DF87B7162A8D3000818741 /* WCTextEditingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextEditingViewController.m; sourceTree = "<group>"; };
+		79DF87BA162A8E1A00818741 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCGeneralView.xib; sourceTree = "<group>"; };
+		79DF87BC162A8E9D00818741 /* Text Editing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Text Editing.png"; sourceTree = "<group>"; };
+		79DF87BF162A8ED100818741 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCTextEditingView.xib; sourceTree = "<group>"; };
 		79FC76A41618029F006B9DC3 /* WCFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldView.h; sourceTree = "<group>"; };
 		79FC76A51618029F006B9DC3 /* WCFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldView.m; sourceTree = "<group>"; };
 		79FE360C161945B400DB7C6D /* WCSymbolHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolHighlighter.h; sourceTree = "<group>"; };
@@ -327,6 +350,7 @@
 		7903F1E5160EBF1F000D3F3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				79DF87BC162A8E9D00818741 /* Text Editing.png */,
 				7962BDEF16221899006D5A7A /* assembly.icns */,
 				7962BDF016221899006D5A7A /* include.icns */,
 				7962BDF116221899006D5A7A /* project.icns */,
@@ -449,6 +473,12 @@
 		7966A00C162620D300EEA711 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
+				79DF87B0162A8CCF00818741 /* WCPreferencesWindowController.h */,
+				79DF87B1162A8CCF00818741 /* WCPreferencesWindowController.m */,
+				79DF87B3162A8D0C00818741 /* WCGeneralViewController.h */,
+				79DF87B4162A8D0C00818741 /* WCGeneralViewController.m */,
+				79DF87B6162A8D3000818741 /* WCTextEditingViewController.h */,
+				79DF87B7162A8D3000818741 /* WCTextEditingViewController.m */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -465,6 +495,7 @@
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
+				79DF87A6162A8C6500818741 /* MASPreferences */,
 				79968CAF1608DB7A00F139BC /* WabbitCode */,
 				7962BDCE16215194006D5A7A /* WabbitEmu */,
 				79968CA81608DB7A00F139BC /* Frameworks */,
@@ -553,6 +584,8 @@
 				79968CC11608DB7A00F139BC /* WCMainMenu.xib */,
 				7973D6D9160CF8DF004EDE62 /* WCTextView.xib */,
 				7962BE0216225FB1006D5A7A /* WCJumpInWindow.xib */,
+				79DF87B9162A8E1A00818741 /* WCGeneralView.xib */,
+				79DF87BE162A8ED100818741 /* WCTextEditingView.xib */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -608,6 +641,17 @@
 				794843981629F8FD007903BE /* Placeholder.m */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		79DF87A6162A8C6500818741 /* MASPreferences */ = {
+			isa = PBXGroup;
+			children = (
+				79DF87A8162A8C8200818741 /* MASPreferencesViewController.h */,
+				79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */,
+				79DF87AA162A8C8200818741 /* MASPreferencesWindowController.h */,
+				79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */,
+			);
+			path = MASPreferences;
 			sourceTree = "<group>";
 		};
 		79FE35FF1619431100DB7C6D /* Editor */ = {
@@ -861,6 +905,7 @@
 				7962BDD916215194006D5A7A /* Credits.rtf in Resources */,
 				7962BDDF16215194006D5A7A /* WEDocument.xib in Resources */,
 				7962BDE216215195006D5A7A /* WEMainMenu.xib in Resources */,
+				79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,6 +929,10 @@
 				7962BDF416221899006D5A7A /* project.icns in Resources */,
 				7962BE0416225FB1006D5A7A /* WCJumpInWindow.xib in Resources */,
 				794843891629CC5E007903BE /* Completions.json in Resources */,
+				79DF87AC162A8C8200818741 /* MASPreferencesWindow.xib in Resources */,
+				79DF87BB162A8E1A00818741 /* WCGeneralView.xib in Resources */,
+				79DF87BD162A8E9D00818741 /* Text Editing.png in Resources */,
+				79DF87C0162A8ED100818741 /* WCTextEditingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -896,6 +945,7 @@
 			files = (
 				7962BDD516215194006D5A7A /* main.m in Sources */,
 				7962BDDC16215194006D5A7A /* WEDocument.m in Sources */,
+				79DF87AF162A8C8200818741 /* MASPreferencesWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -973,6 +1023,10 @@
 				7948439B1629F8FD007903BE /* Completion.m in Sources */,
 				7948439C1629F8FD007903BE /* Placeholder.m in Sources */,
 				7948439F162A0B57007903BE /* NSAttributedString+WCExtensions.m in Sources */,
+				79DF87AE162A8C8200818741 /* MASPreferencesWindowController.m in Sources */,
+				79DF87B2162A8CCF00818741 /* WCPreferencesWindowController.m in Sources */,
+				79DF87B5162A8D0C00818741 /* WCGeneralViewController.m in Sources */,
+				79DF87B8162A8D3000818741 /* WCTextEditingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1057,6 +1111,22 @@
 				79968CC21608DB7A00F139BC /* en */,
 			);
 			name = WCMainMenu.xib;
+			sourceTree = "<group>";
+		};
+		79DF87B9162A8E1A00818741 /* WCGeneralView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79DF87BA162A8E1A00818741 /* en */,
+			);
+			name = WCGeneralView.xib;
+			sourceTree = "<group>";
+		};
+		79DF87BE162A8ED100818741 /* WCTextEditingView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79DF87BF162A8ED100818741 /* en */,
+			);
+			name = WCTextEditingView.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
