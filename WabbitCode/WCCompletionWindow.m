@@ -406,7 +406,7 @@
     if (prefix.length)
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",prefix]];
     
-    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"priority" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] ]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"priority" ascending:NO],[NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
