@@ -1,5 +1,5 @@
 //
-//  WCPreferencesWindowController.m
+//  WCFontsAndColorsViewController.m
 //  WabbitStudio
 //
 //  Created by William Towe on 10/14/12.
@@ -11,19 +11,33 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "WCPreferencesWindowController.h"
-#import "WCGeneralViewController.h"
-#import "WCTextEditingViewController.h"
 #import "WCFontsAndColorsViewController.h"
 
-@interface WCPreferencesWindowController ()
+@interface WCFontsAndColorsViewController ()
 
 @end
 
-@implementation WCPreferencesWindowController
+@implementation WCFontsAndColorsViewController
 
 - (id)init {
-    return [self initWithViewControllers:@[[[WCGeneralViewController alloc] init],[[WCFontsAndColorsViewController alloc] init],[[WCTextEditingViewController alloc] init]] title:NSLocalizedString(@"Preferences", nil)];
+    if (!(self = [super initWithNibName:self.nibName bundle:nil]))
+        return nil;
+    
+    return self;
+}
+
+- (NSString *)nibName {
+    return @"WCFontsAndColorsView";
+}
+
+- (NSString *)identifier {
+    return @"org.revsoft.wabbitcode.preferences.fonts-and-colors";
+}
+- (NSImage *)toolbarItemImage {
+    return [NSImage imageNamed:@"Fonts & Colors.png"];
+}
+- (NSString *)toolbarItemLabel {
+    return NSLocalizedString(@"Fonts & Colors", nil);
 }
 
 @end
