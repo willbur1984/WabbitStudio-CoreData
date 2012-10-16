@@ -194,13 +194,16 @@
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
                 [entity setFile:file];
                 
-                NSRange lineRange = [self.string lineRangeForRange:result.range];
-                NSRange parensRange = NSMakeRange(NSMaxRange(result.range), NSMaxRange(lineRange) - NSMaxRange(result.range));
-                NSString *parensString = [self.string substringWithRange:parensRange];
-                NSTextCheckingResult *parensResult = [[NSRegularExpression regularExpressionWithPattern:@"^\\((.+?)\\)" options:0 error:NULL] firstMatchInString:parensString options:0 range:NSMakeRange(0, parensRange.length)];
-                
-                if (parensResult)
-                    [entity setArguments:[parensString substringWithRange:[parensResult rangeAtIndex:1]]];
+                [[WCSyntaxHighlighter expandedMacroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(result.range.location, self.string.length - result.range.location) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                    NSRange argumentsRange = [result rangeAtIndex:2];
+                    
+                    if (argumentsRange.length > 0)
+                        [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
+
+                    [entity setValue:[self.string substringWithRange:[result rangeAtIndex:3]]];
+                    
+                    *stop = YES;
+                }];
             }];
             
         } while (0);

@@ -70,9 +70,11 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     
     [operation setCompletionBlock:^{
         if (!operation.isCancelled) {
-            [self.symbolNamesToSymbolArrays removeAllObjects];
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:blockSelf];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [blockSelf.symbolNamesToSymbolArrays removeAllObjects];
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:blockSelf];
+            });
         }
     }];
     
