@@ -39,9 +39,13 @@ static NSTextContainer *kTextContainer;
         
         kTextContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
         
-        [kLayoutManager addTextContainer:kTextContainer];
         [kTextStorage addLayoutManager:kLayoutManager];
+        [kLayoutManager addTextContainer:kTextContainer];
     });
+}
+
+- (id)initTextCell:(NSString *)aString {
+    return [self initTextCell:aString arguments:nil];
 }
 
 - (id)initTextCell:(NSString *)aString arguments:(NSString *)arguments; {
@@ -85,12 +89,12 @@ static NSTextContainer *kTextContainer;
         [kTextStorage addAttribute:NSForegroundColorAttributeName value:[NSColor alternateSelectedControlTextColor] range:NSMakeRange(0, kTextStorage.length)];
     
     [kLayoutManager ensureLayoutForTextContainer:kTextContainer];
-    [kLayoutManager drawGlyphsForGlyphRange:[kLayoutManager glyphRangeForTextContainer:kTextContainer] atPoint:NSMakePoint(NSMinX(cellFrame) + kLeftRightMargin, NSMinY(cellFrame))];
+    [kLayoutManager drawGlyphsForGlyphRange:[kLayoutManager glyphRangeForTextContainer:kTextContainer] atPoint:NSMakePoint(NSMinX(cellFrame) /*+ kLeftRightMargin*/, NSMinY(cellFrame))];
 }
 
 - (NSRect)cellFrameForTextContainer:(NSTextContainer *)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex {
-    NSRect frame = [super cellFrameForTextContainer:textContainer proposedLineFragment:lineFrag glyphPosition:position characterIndex:charIndex];
-    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.name attributes:[WCSyntaxHighlighter defaultAttributes]];
+    NSDictionary *attributes = [WCSyntaxHighlighter defaultAttributes];
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] initWithString:self.name attributes:attributes];
     
     if (self.arguments.count > 0)
         [string.mutableString appendString:@"\u25BC"];
@@ -100,11 +104,11 @@ static NSTextContainer *kTextContainer;
     [kTextStorage replaceCharactersInRange:NSMakeRange(0, kTextStorage.length) withAttributedString:string];
     [kLayoutManager ensureLayoutForTextContainer:kTextContainer];
     
-    NSRect rect = [kLayoutManager usedRectForTextContainer:kTextContainer];
+    NSRect frame = [kLayoutManager usedRectForTextContainer:kTextContainer];
     
-    frame.size.width = NSWidth(rect) + (kLeftRightMargin * 2);
-    frame.size.height = NSHeight(rect);
-    frame.origin.y -= [textContainer.layoutManager.typesetter baselineOffsetInLayoutManager:kLayoutManager glyphIndex:0];
+    // FIXME: the spacing here isnt correct, and i dont know why :( keep trying!
+    frame.origin = NSZeroPoint;
+    frame.origin.y -= [kLayoutManager.typesetter baselineOffsetInLayoutManager:kLayoutManager glyphIndex:[kLayoutManager glyphIndexForCharacterAtIndex:0]];
     
     return frame;
 }
