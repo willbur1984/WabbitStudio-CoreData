@@ -293,6 +293,14 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     });
     return retval;
 }
++ (NSRegularExpression *)expandedMacroRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:macro|MACRO)\\s+([A-Za-z0-9_]+)(\\(.*?\\))?(.*?)#(?:endmacro|ENDMACRO)" options:NSRegularExpressionDotMatchesLineSeparators error:NULL];
+    });
+    return retval;
+}
 
 - (void)_syntaxHighlightInRangeValue:(NSValue *)rangeValue; {
     [self syntaxHighlightInRange:rangeValue.rangeValue];
