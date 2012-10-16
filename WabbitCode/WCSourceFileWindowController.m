@@ -24,7 +24,7 @@
 #import "NSView+WCExtensions.h"
 #import "WCJumpInWindowController.h"
 
-@interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate,NSUserInterfaceValidations>
+@interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate,NSUserInterfaceValidations,NSWindowDelegate>
 
 @property (readonly,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (strong,nonatomic) WCTextViewController *textViewController;
@@ -49,6 +49,8 @@
 
 - (void)windowDidLoad {
     [super windowDidLoad];
+    
+    [self.window setDelegate:self];
     
     [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
     [self.textViewController setDelegate:self];
@@ -82,6 +84,13 @@
         }
     }
     return YES;
+}
+#pragma mark NSWindowDelegate
+- (void)windowWillClose:(NSNotification *)notification {
+    for (WCTextViewController *viewController in self.assistantTextViewControllers)
+        [viewController cleanup];
+    
+    [self.textViewController cleanup];
 }
 
 #pragma mark NSSplitViewDelegate

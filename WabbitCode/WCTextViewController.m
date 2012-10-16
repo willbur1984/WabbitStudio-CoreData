@@ -31,6 +31,7 @@
 #import "WCSymbolHighlighter.h"
 #import "NSTextView+WCExtensions.h"
 #import "WCBookmarkScroller.h"
+#import "NSView+WCExtensions.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -202,6 +203,9 @@
 #pragma mark WCTextViewDelegate
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
     return [self.delegate symbolScannerForTextViewController:self];
+}
+- (WCFoldScanner *)foldScannerForTextView:(WCTextView *)textView {
+    return [self.delegate foldScannerForTextViewController:self];
 }
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol {
     [textView setSelectedRange:NSRangeFromString(symbol.range)];
