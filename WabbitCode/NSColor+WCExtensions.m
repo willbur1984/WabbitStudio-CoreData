@@ -70,5 +70,10 @@
     
     return retval;
 }
+- (NSColor *)WC_colorWithBrightnessAdjustment:(CGFloat)adjustment; {
+    NSColor *color = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    
+    return [NSColor colorWithCalibratedHue:color.hueComponent saturation:color.saturationComponent brightness:(color.brightnessComponent - adjustment) alpha:color.alphaComponent];
+}
 
 @end
