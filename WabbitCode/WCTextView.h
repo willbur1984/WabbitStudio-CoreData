@@ -35,10 +35,11 @@
 
 @end
 
-@class WCSymbolScanner,Symbol;
+@class WCSymbolScanner,Symbol,WCFoldScanner;
 
 @protocol WCTextViewDelegate <NSTextViewDelegate>
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView;
+- (WCFoldScanner *)foldScannerForTextView:(WCTextView *)textView;
 @optional
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol;
 @end

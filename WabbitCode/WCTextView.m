@@ -30,6 +30,9 @@
 #import "NSEvent+WCExtensions.h"
 #import "WCSyntaxHighlighter.h"
 #import "NSAttributedString+WCExtensions.h"
+#import "WCFoldScanner.h"
+#import "Fold.h"
+#import "NSColor+WCExtensions.h"
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -417,6 +420,61 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     }
 }
 #pragma mark NSTextView
+- (void)drawViewBackgroundInRect:(NSRect)rect {
+    [super drawViewBackgroundInRect:rect];
+    
+    const NSUInteger kColumnNumber = 80;
+    const CGFloat width = [@" " sizeWithAttributes:[WCSyntaxHighlighter defaultAttributes]].width;
+    const CGFloat frameX = width * kColumnNumber;
+    NSRect guideRect = NSMakeRect(frameX, NSMinY(self.bounds), NSWidth(self.bounds) - frameX, NSHeight(self.bounds));
+    
+    if (NSIntersectsRect(guideRect, rect)) {
+        NSColor *color = [NSColor lightGrayColor];
+        
+        [[color colorWithAlphaComponent:0.35] setFill];
+        NSRectFillUsingOperation(guideRect, NSCompositeSourceOver);
+        
+        [color setFill];
+        
+        guideRect.size.width = 1;
+        
+        NSRectFill(guideRect);
+    }
+    
+    Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
+    
+    if (fold) {
+        const CGFloat stepAmount = 0.05;
+        NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
+        NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
+        NSColor *foldColor = self.backgroundColor;
+        
+        do {
+            NSUInteger rectCount;
+            NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+            NSRect foldRect = NSZeroRect;
+            
+            for (NSUInteger index=0; index<rectCount; index++)
+                foldRect = NSUnionRect(foldRect, rects[index]);
+            
+            [foldRects addObject:[NSValue valueWithRect:foldRect]];
+            [foldColors addObject:foldColor];
+            
+            fold = fold.fold;
+            foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
+            
+        } while (fold);
+        
+        [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
+            NSColor *color = [foldColors objectAtIndex:idx];
+            NSRect rect = value.rectValue;
+            
+            [color setFill];
+            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
+        }];
+    }
+}
+
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedCharRange granularity:(NSSelectionGranularity)granularity {
     if (granularity != NSSelectByWord)
         return proposedCharRange;
@@ -870,6 +928,8 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         [self _highlightMatchingBrace];
         [self _highlightMatchingTempLabel];
     }
+    
+    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     
