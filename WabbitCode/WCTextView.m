@@ -902,8 +902,12 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     
     NSMutableString *string = [NSMutableString stringWithCapacity:0];
     
-    for (Symbol *symbol in symbols)
-        [string appendFormat:NSLocalizedString(@"%@ \u2192 line %lu\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
+    for (Symbol *symbol in symbols) {
+        if ([symbol respondsToSelector:@selector(arguments)])
+            [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 line %ld\n", nil),symbol.name,symbol.arguments,symbol.lineNumber.integerValue + 1];
+        else
+            [string appendFormat:NSLocalizedString(@"%@ \u2192 line %ld\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
+    }
     
     [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
     
