@@ -33,7 +33,7 @@
 
 - (NSString *)arguments;
 - (NSString *)format;
-- (int64_t)lineNumber;
+- (NSNumber *)lineNumber;
 - (NSString *)path;
            
 @end

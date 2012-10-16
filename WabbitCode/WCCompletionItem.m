@@ -46,7 +46,7 @@
     }
     
     if ([self.dataSource respondsToSelector:@selector(lineNumber)]) {
-        [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),[self.dataSource path].lastPathComponent,[self.dataSource lineNumber] + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
+        [string appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:NSLocalizedString(@" \u2192 %@:%ld", nil),[self.dataSource path].lastPathComponent,[self.dataSource lineNumber].integerValue + 1] attributes:@{ NSFontAttributeName : [defaultAttributes objectForKey:NSFontAttributeName], NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
     }
     
     [self setDisplayString:string];
