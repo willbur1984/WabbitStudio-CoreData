@@ -45,6 +45,7 @@ extern NSString *const kSymbolAttributeName;
 + (NSRegularExpression *)labelRegex;
 + (NSRegularExpression *)equateRegex;
 + (NSRegularExpression *)defineRegex;
++ (NSRegularExpression *)expandedDefineRegex;
 + (NSRegularExpression *)macroRegex;
 + (NSRegularExpression *)expandedMacroRegex;
 

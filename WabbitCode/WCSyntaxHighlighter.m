@@ -273,7 +273,7 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        retval = [[NSRegularExpression alloc] initWithPattern:@"^([A-Za-z0-9_!?]+)(?:(?:\\s*=)|(?:\\s+\\.(?:equ|EQU))|(?:\\s+(?:equ|EQU)))" options:NSRegularExpressionAnchorsMatchLines error:NULL];
+        retval = [[NSRegularExpression alloc] initWithPattern:@"^([A-Za-z0-9_!?]+)(?:(?:\\s*=)|(?:\\s+\\.(?:equ|EQU))|(?:\\s+(?:equ|EQU)))(.*)" options:NSRegularExpressionAnchorsMatchLines error:NULL];
     });
     return retval;
 }
@@ -281,7 +281,15 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        retval = [[NSRegularExpression alloc] initWithPattern:@"(?:#define|DEFINE)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:define|DEFINE)\\s+([A-Za-z0-9_.!?]+)" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)expandedDefineRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"#(?:define|DEFINE)\\s+([A-Za-z0-9_.]+)(\\(.*?\\))?\\s+(.*)" options:0 error:NULL];
     });
     return retval;
 }
