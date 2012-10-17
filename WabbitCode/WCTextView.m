@@ -905,6 +905,8 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     for (Symbol *symbol in symbols) {
         if ([symbol respondsToSelector:@selector(arguments)])
             [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 line %ld\n", nil),symbol.name,symbol.arguments,symbol.lineNumber.integerValue + 1];
+        else if ([symbol respondsToSelector:@selector(value)])
+            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 line %ld\n", nil),symbol.name,symbol.value,symbol.lineNumber.integerValue + 1];
         else
             [string appendFormat:NSLocalizedString(@"%@ \u2192 line %ld\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
     }
