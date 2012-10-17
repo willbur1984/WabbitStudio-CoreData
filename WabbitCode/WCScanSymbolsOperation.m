@@ -121,6 +121,7 @@
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setValue:[self.string substringWithRange:[result rangeAtIndex:2]]];
                 [entity setFile:file];
             }];
             
@@ -174,6 +175,17 @@
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
                 [entity setFile:file];
+                
+                [[WCSyntaxHighlighter expandedDefineRegex] enumerateMatchesInString:self.string options:0 range:[self.string lineRangeForRange:result.range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                    NSRange argumentsRange = [result rangeAtIndex:2];
+                    
+                    if (argumentsRange.length > 0)
+                        [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
+                    
+                    [entity setValue:[self.string substringWithRange:[result rangeAtIndex:3]]];
+                    
+                    *stop = YES;
+                }];
             }];
             
             if (self.isCancelled)
