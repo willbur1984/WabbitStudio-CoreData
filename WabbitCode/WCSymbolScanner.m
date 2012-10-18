@@ -66,7 +66,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     
     WCScanSymbolsOperation *operation = [[WCScanSymbolsOperation alloc] initWithSymbolScanner:self];
     
-    __block typeof (self) blockSelf = self;
+    __weak typeof (self) blockSelf = self;
     
     [operation setCompletionBlock:^{
         if (!operation.isCancelled) {

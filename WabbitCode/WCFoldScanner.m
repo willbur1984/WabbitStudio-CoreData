@@ -71,7 +71,7 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     
     WCScanFoldsOperation *operation = [[WCScanFoldsOperation alloc] initWithFoldScanner:self];
     
-    __block typeof (self) blockSelf = self;
+    __weak typeof (self) blockSelf = self;
     
     [operation setCompletionBlock:^{
         [blockSelf setScanning:NO];

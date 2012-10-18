@@ -269,7 +269,7 @@
         kLegalCharacters = [temp copy];
     });
     
-    __block typeof (self) blockSelf = self;
+    __unsafe_unretained typeof (self) blockSelf = self;
     
     id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
         switch (event.type) {
@@ -334,7 +334,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidResignActiveNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
     
-    __block typeof (self) blockSelf = self;
+    __unsafe_unretained typeof (self) blockSelf = self;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
         [context setDuration:0.3];

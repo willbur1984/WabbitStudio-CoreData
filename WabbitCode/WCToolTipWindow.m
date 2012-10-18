@@ -102,7 +102,7 @@ static const NSTimeInterval kDismissThreshold = 0.5;
     
     [self setOrderedFrontTimestamp:[[NSApplication sharedApplication] currentEvent].timestamp];
     
-    __block typeof (self) blockSelf = self;
+    __unsafe_unretained typeof (self) blockSelf = self;
     
     id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
         switch (event.type) {
