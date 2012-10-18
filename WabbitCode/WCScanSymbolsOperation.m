@@ -121,7 +121,7 @@
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-                [entity setValue:[self.string substringWithRange:[result rangeAtIndex:2]]];
+                [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                 [entity setFile:file];
             }];
             
@@ -182,7 +182,7 @@
                     if (argumentsRange.length > 0)
                         [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
                     
-                    [entity setValue:[self.string substringWithRange:[result rangeAtIndex:3]]];
+                    [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                     
                     *stop = YES;
                 }];
@@ -212,7 +212,7 @@
                     if (argumentsRange.length > 0)
                         [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
 
-                    [entity setValue:[self.string substringWithRange:[result rangeAtIndex:3]]];
+                    [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                     
                     *stop = YES;
                 }];
