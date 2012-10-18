@@ -32,4 +32,17 @@
     }
 }
 
++ (NSSet *)WC_userDefaultsKeysToObserve; {
+    return nil;
+}
+
+- (void)WC_startObservingUserDefaultsKeysWithOptions:(NSKeyValueObservingOptions)options context:(void *)context; {
+    for (NSString *key in [self.class WC_userDefaultsKeysToObserve])
+        [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:[@"values." stringByAppendingString:key] options:options context:context];
+}
+- (void)WC_stopObservingUserDefaultsKeysWithContext:(void *)context; {
+    for (NSString *key in [self.class WC_userDefaultsKeysToObserve])
+        [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:[@"values." stringByAppendingString:key] context:context];
+}
+
 @end

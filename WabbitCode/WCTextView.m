@@ -33,8 +33,13 @@
 #import "WCFoldScanner.h"
 #import "Fold.h"
 #import "NSColor+WCExtensions.h"
+#import "NSObject+WCExtensions.h"
+
+NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
+
+static char kWCTextViewObservingContext;
 
 @interface WCTextView ()
 @property (weak,nonatomic) NSTimer *toolTipTimer;
@@ -63,6 +68,24 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 }
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self WC_stopObservingUserDefaultsKeysWithContext:&kWCTextViewObservingContext];
+}
+
++ (NSSet *)WC_userDefaultsKeysToObserve {
+    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey, nil];
+}
+
+#pragma mark NSKeyValueObserving
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &kWCTextViewObservingContext) {
+        if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewFocusFollowsSelectionUserDefaultsKey]]) {
+            [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 #pragma mark NSCoding
@@ -80,6 +103,8 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textViewDidChangeSelection:) name:NSTextViewDidChangeSelectionNotification object:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_viewBoundsDidChange:) name:NSViewBoundsDidChangeNotification object:self.enclosingScrollView.contentView];
+    
+    [self WC_startObservingUserDefaultsKeysWithOptions:NSKeyValueObservingOptionNew context:&kWCTextViewObservingContext];
     
     return self;
 }
@@ -126,6 +151,10 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     NSUInteger charIndex = [self characterIndexForInsertionAtPoint:point];
     
     if (charIndex >= self.string.length) {
+        [self setToolTipTimer:nil];
+        return;
+    }
+    else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
         [self setToolTipTimer:nil];
         return;
     }
@@ -441,37 +470,39 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         NSRectFill(guideRect);
     }
     
-    Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
-    
-    if (fold) {
-        const CGFloat stepAmount = 0.05;
-        NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
-        NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
-        NSColor *foldColor = self.backgroundColor;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {
+        Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
         
-        do {
-            NSUInteger rectCount;
-            NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
-            NSRect foldRect = NSZeroRect;
+        if (fold) {
+            const CGFloat stepAmount = 0.05;
+            NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
+            NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
+            NSColor *foldColor = self.backgroundColor;
             
-            for (NSUInteger index=0; index<rectCount; index++)
-                foldRect = NSUnionRect(foldRect, rects[index]);
+            do {
+                NSUInteger rectCount;
+                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+                NSRect foldRect = NSZeroRect;
+                
+                for (NSUInteger index=0; index<rectCount; index++)
+                    foldRect = NSUnionRect(foldRect, rects[index]);
+                
+                [foldRects addObject:[NSValue valueWithRect:foldRect]];
+                [foldColors addObject:foldColor];
+                
+                fold = fold.fold;
+                foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
+                
+            } while (fold);
             
-            [foldRects addObject:[NSValue valueWithRect:foldRect]];
-            [foldColors addObject:foldColor];
-            
-            fold = fold.fold;
-            foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
-            
-        } while (fold);
-        
-        [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
-            NSColor *color = [foldColors objectAtIndex:idx];
-            NSRect rect = value.rectValue;
-            
-            [color setFill];
-            [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
-        }];
+            [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
+                NSColor *color = [foldColors objectAtIndex:idx];
+                NSRect rect = value.rectValue;
+                
+                [color setFill];
+                [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
+            }];
+        }
     }
 }
 
@@ -871,6 +902,10 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
         [self setToolTipTimer:nil];
         return;
     }
+    else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
+        [self setToolTipTimer:nil];
+        return;
+    }
     
     NSRange foldRange = [(WCTextStorage *)self.textStorage foldRangeForRange:NSMakeRange(charIndex, 0)];
     
@@ -903,8 +938,30 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
     NSMutableString *string = [NSMutableString stringWithCapacity:0];
     
     for (Symbol *symbol in symbols) {
-        if ([symbol respondsToSelector:@selector(arguments)])
-            [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 line %ld\n", nil),symbol.name,symbol.arguments,symbol.lineNumber.integerValue + 1];
+        if ([symbol respondsToSelector:@selector(arguments)]) {
+            NSMutableString *value = [NSMutableString stringWithString:symbol.value];
+            NSRange newlineRange = [value rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet] options:NSLiteralSearch];
+            
+            if (newlineRange.length > 0 && NSMaxRange(newlineRange) < value.length) {
+                __block NSUInteger toIndex = NSNotFound;
+                __block NSUInteger lines = 5;
+                
+                [value enumerateSubstringsInRange:NSMakeRange(NSMaxRange(newlineRange), value.length - NSMaxRange(newlineRange)) options:NSStringEnumerationByLines|NSStringEnumerationSubstringNotRequired usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                    toIndex = NSMaxRange(substringRange);
+                    
+                    if (--lines == 0)
+                        *stop = YES;
+                }];
+                
+                [value deleteCharactersInRange:NSMakeRange(toIndex, value.length - toIndex)];
+                [value appendString:NSLocalizedString(@" \u2026", nil)];
+            }
+            
+            if (symbol.arguments)
+                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 line %ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.lineNumber.integerValue + 1,value];
+            else
+                [string appendFormat:NSLocalizedString(@"%@ \u2192 line %ld\n%@\n", nil),symbol.name,symbol.lineNumber.integerValue + 1,value];
+        }
         else if ([symbol respondsToSelector:@selector(value)])
             [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 line %ld\n", nil),symbol.name,symbol.value,symbol.lineNumber.integerValue + 1];
         else

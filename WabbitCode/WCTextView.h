@@ -13,6 +13,8 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey;
+
 @protocol WCTextViewDelegate;
 
 @interface WCTextView : NSTextView

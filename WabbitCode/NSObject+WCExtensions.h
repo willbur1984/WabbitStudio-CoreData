@@ -17,4 +17,9 @@
 
 + (void)WC_swapMethod:(SEL)oldMethod withMethod:(SEL)newMethod;
 
++ (NSSet *)WC_userDefaultsKeysToObserve;
+
+- (void)WC_startObservingUserDefaultsKeysWithOptions:(NSKeyValueObservingOptions)options context:(void *)context;
+- (void)WC_stopObservingUserDefaultsKeysWithContext:(void *)context;
+
 @end
