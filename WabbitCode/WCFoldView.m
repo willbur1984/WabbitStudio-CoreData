@@ -28,11 +28,13 @@ static const CGFloat kBookmarkHeight = 9;
 static const CGFloat kBookmarkWidth = 12;
 static const CGFloat kBookmarkEdgeInset = 3;
 
-@interface WCFoldView ()
+@interface WCFoldView () <NSUserInterfaceValidations>
+
 @property (readonly,nonatomic) WCTextStorage *textStorage;
 @property (strong,nonatomic) NSTrackingArea *foldTrackingRect;
 @property (strong,nonatomic) Fold *foldToHighlight;
 @property (strong,nonatomic) Fold *clickedFold;
+@property (assign,nonatomic) NSUInteger clickedLineNumber;
 
 - (NSColor *)_colorForFold:(Fold *)fold;
 @end
@@ -91,7 +93,22 @@ static const CGFloat kBookmarkEdgeInset = 3;
 + (NSMenu *)defaultMenu {
     NSMenu *retval = [[NSMenu alloc] initWithTitle:@"org.revsoft.wcfoldview.default-menu"];
     
+    [retval addItemWithTitle:NSLocalizedString(@"Toggle Bookmark", nil) action:@selector(_toggleBookmarkAction:) keyEquivalent:@""];
+    [retval addItem:[NSMenuItem separatorItem]];
     [retval addItemWithTitle:NSLocalizedString(@"Remove All Bookmarks", nil) action:@selector(_removeAllBookmarksAction:) keyEquivalent:@""];
+    
+    return retval;
+}
+
+- (NSMenu *)menuForEvent:(NSEvent *)event {
+    NSMenu *retval = [super menuForEvent:event];
+    
+    if (retval) {
+        [self setClickedLineNumber:[self lineNumberForPoint:[self convertPoint:event.locationInWindow fromView:nil]]];
+    }
+    else {
+        [self setClickedLineNumber:NSNotFound];
+    }
     
     return retval;
 }
@@ -121,6 +138,24 @@ static const CGFloat kBookmarkEdgeInset = 3;
     [self drawFoldsInRect:NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame))];
     [self drawBookmarksInRect:NSMakeRect(NSMinX(self.bounds), 0, NSWidth(self.frame), NSHeight(self.frame))];
 }
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)item {
+    if ([item action] == @selector(_toggleBookmarkAction:)) {
+        if (self.clickedLineNumber == NSNotFound) {
+            [(NSMenuItem *)item setTitle:NSLocalizedString(@"Toggle Bookmark", nil)];
+            return NO;
+        }
+        
+        NSArray *bookmarks = [self.textStorage.bookmarkManager bookmarksForRange:NSMakeRange([[self.lineStartIndexes objectAtIndex:self.clickedLineNumber] unsignedIntegerValue], 0)];
+        
+        if (bookmarks.count > 0)
+            [(NSMenuItem *)item setTitle:NSLocalizedString(@"Remove Bookmark", nil)];
+        else
+            [(NSMenuItem *)item setTitle:NSLocalizedString(@"Add Bookmark", nil)];
+    }
+    return YES;
+}
+
 #pragma mark *** Public Methods ***
 - (id)initWithTextView:(NSTextView *)textView {
     if (!(self = [super initWithTextView:textView]))
@@ -200,16 +235,11 @@ static const CGFloat kBookmarkEdgeInset = 3;
         if (!numberOfLineRects)
             return;
         
-        NSRect lineRect = lineRects[0];
+        NSRect lineRect = NSZeroRect;
+        NSUInteger rectIndex;
         
-        if (numberOfLineRects > 1) {
-            if (numberOfLineRects > 1) {
-                NSUInteger rectIndex;
-                
-                for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
-                    lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
-            }
-        }
+        for (rectIndex=0; rectIndex<numberOfLineRects; rectIndex++)
+            lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
         
         NSRect foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(lineRect));
         
@@ -274,6 +304,15 @@ static const CGFloat kBookmarkEdgeInset = 3;
     return (WCTextStorage *)self.textView.textStorage;
 }
 #pragma mark Actions
+- (IBAction)_toggleBookmarkAction:(id)sender {
+    NSRange bookmarkRange = NSMakeRange([[self.lineStartIndexes objectAtIndex:self.clickedLineNumber] unsignedIntegerValue], 0);
+    NSArray *bookmarks = [self.textStorage.bookmarkManager bookmarksForRange:bookmarkRange];
+    
+    if (bookmarks.count > 0)
+        [self.textStorage.bookmarkManager removeBookmark:bookmarks.lastObject];
+    else
+        [self.textStorage.bookmarkManager addBookmarkForRange:bookmarkRange name:nil];
+}
 - (IBAction)_removeAllBookmarksAction:(id)sender {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey]) {
         [self.textStorage.bookmarkManager removeAllBookmarks];
