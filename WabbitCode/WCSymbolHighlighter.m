@@ -17,6 +17,7 @@
 #import "NSArray+WCExtensions.h"
 #import "WCDefines.h"
 #import "NSTextView+WCExtensions.h"
+#import "WCTextStorage.h"
 
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -55,39 +56,49 @@
     if (!range.length)
         return;
     
+    // TODO: this should ignore ranges that are folded, slows things waaaaaaay down otherwise
     WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForSymbolHighlighter:self];
     
     [self.textStorage beginEditing];
     
-    NSRange effectiveRange;
+    NSRange foldRange;
     id value;
     
     while (range.length) {
-        if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:range])) {
-            NSString *name = [self.textStorage.string substringWithRange:effectiveRange];
-            NSArray *symbols = [symbolScanner symbolsWithName:name];
-            Symbol *symbol = [symbols WC_firstObject];
+        if ((value = [self.textStorage attribute:WCTextStorageDidFoldNotification atIndex:range.location longestEffectiveRange:&foldRange inRange:range])) {
+            NSRange highlightRange = foldRange;
+            NSRange symbolRange;
             
-            switch (symbol.type.intValue) {
-                case SymbolTypeLabel:
-                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:effectiveRange];
-                    break;
-                case SymbolTypeEquate:
-                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:effectiveRange];
-                    break;
-                case SymbolTypeDefine:
-                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:effectiveRange];
-                    break;
-                case SymbolTypeMacro:
-                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:effectiveRange];
-                    break;
-                default:
-                    [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:effectiveRange];
-                    break;
+            while (highlightRange.length) {
+                if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:highlightRange.location longestEffectiveRange:&symbolRange inRange:highlightRange])) {
+                    NSString *name = [self.textStorage.string substringWithRange:symbolRange];
+                    NSArray *symbols = [symbolScanner symbolsWithName:name];
+                    Symbol *symbol = [symbols WC_firstObject];
+                    
+                    switch (symbol.type.intValue) {
+                        case SymbolTypeLabel:
+                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:symbolRange];
+                            break;
+                        case SymbolTypeEquate:
+                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:symbolRange];
+                            break;
+                        case SymbolTypeDefine:
+                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:symbolRange];
+                            break;
+                        case SymbolTypeMacro:
+                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:symbolRange];
+                            break;
+                        default:
+                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:symbolRange];
+                            break;
+                    }
+                }
+                
+                highlightRange = NSMakeRange(NSMaxRange(symbolRange), NSMaxRange(highlightRange) - NSMaxRange(symbolRange));
             }
         }
         
-        range = NSMakeRange(NSMaxRange(effectiveRange), NSMaxRange(range) - NSMaxRange(effectiveRange));
+        range = NSMakeRange(NSMaxRange(foldRange), NSMaxRange(range) - NSMaxRange(foldRange));
     }
     
     [self.textStorage endEditing];
