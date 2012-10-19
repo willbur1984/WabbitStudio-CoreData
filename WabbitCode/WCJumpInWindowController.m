@@ -126,6 +126,8 @@
 - (void)showJumpInWindowForTextView:(NSTextView *)textView; {
     [self setTextView:textView];
     
+    [self.window setTitle:[NSString stringWithFormat:NSLocalizedString(@"Jump in \"%@\"", nil),[[self.textView.window.windowController document] displayName]]];
+    
     [[NSApplication sharedApplication] runModalForWindow:self.window];
 }
 - (void)hideJumpInWindow; {
