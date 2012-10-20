@@ -37,7 +37,7 @@
 - (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
 - (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController;
 - (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController;
-- (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController;
+- (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController;
 - (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController;
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
 

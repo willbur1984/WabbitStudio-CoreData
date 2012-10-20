@@ -32,6 +32,7 @@
 #import "NSTextView+WCExtensions.h"
 #import "WCBookmarkScroller.h"
 #import "NSView+WCExtensions.h"
+#import "NSImage+WCExtensions.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -180,6 +181,22 @@
     [self.jumpBarControl reloadSymbolPathComponentCell];
 }
 
+- (BOOL)textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {
+    if (commandSelector == @selector(insertNewline:)) {
+        if (textView.selectedRange.location >= textView.string.length)
+            return NO;
+        
+        id value = [textView.textStorage attribute:NSAttachmentAttributeName atIndex:textView.selectedRange.location effectiveRange:NULL];
+        id cell = [value attachmentCell];
+        
+        if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
+            [self textView:textView doubleClickedOnCell:cell inRect:NSZeroRect atIndex:textView.selectedRange.location];
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (void)textView:(NSTextView *)textView clickedOnCell:(id<NSTextAttachmentCell>)cell inRect:(NSRect)cellFrame atIndex:(NSUInteger)charIndex {
     if ([cell isKindOfClass:[WCArgumentPlaceholderCell class]]) {
         [textView setSelectedRange:NSMakeRange(charIndex, 1)];
@@ -225,7 +242,7 @@
 
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
-    NSURL *fileURL = [self.delegate fileURLForTextViewController:self];
+    NSURL *fileURL = [[self.delegate documentForTextViewController:self] fileURL];
     WCJumpBarComponentCell *cell;
     
     if (fileURL)
@@ -235,8 +252,14 @@
     
     NSImage *image;
     
-    if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL])
-        [cell setImage:image];
+    if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
+        NSDocument *document = [self.delegate documentForTextViewController:self];
+        
+        if (document.isDocumentEdited)
+            [cell setImage:[image WC_unsavedImageIcon]];
+        else
+            [cell setImage:image];
+    }
     
     return @[ cell ];
 }
@@ -257,6 +280,18 @@
     [cell setRepresentedObject:symbol];
     
     return cell;
+}
+- (NSImage *)jumpBarControl:(WCJumpBarControl *)jumpBarControl imageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    NSURL *fileURL = [[self.delegate documentForTextViewController:self] fileURL];
+    NSImage *image;
+    
+    if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
+        NSDocument *document = [self.delegate documentForTextViewController:self];
+        
+        if (document.isDocumentEdited)
+            image = [image WC_unsavedImageIcon];
+    }
+    return image;
 }
 #pragma mark WCJumpBarControlDelegate
 - (BOOL)jumpBarControl:(WCJumpBarControl *)jumpBarControl shouldPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
@@ -298,7 +333,7 @@
             return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.longValue];
         return nil;
     }
-    return [self.delegate fileURLForTextViewController:self].path;
+    return [self.delegate documentForTextViewController:self].fileURL.path;
 }
 
 #pragma mark *** Public Methods ***
@@ -324,7 +359,13 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
     
     if (_delegate) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForTextViewController:self]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[self.delegate symbolScannerForTextViewController:self]];
+        
+        NSUndoManager *undoManager = [self.delegate undoManagerForTextViewController:self];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidCloseUndoGroup:) name:NSUndoManagerDidCloseUndoGroupNotification object:undoManager];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidUndoChange:) name:NSUndoManagerDidUndoChangeNotification object:undoManager];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidRedoChange:) name:NSUndoManagerDidRedoChangeNotification object:undoManager];
     }
 }
 
@@ -369,6 +410,16 @@
     
     [NSObject cancelPreviousPerformRequestsWithTarget:symbolHighlighter selector:@selector(symbolHighlightInVisibleRange) object:nil];
     [symbolHighlighter performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
+}
+
+- (void)_undoManagerDidCloseUndoGroup:(NSNotification *)note {
+    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
+}
+- (void)_undoManagerDidUndoChange:(NSNotification *)note {
+    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
+}
+- (void)_undoManagerDidRedoChange:(NSNotification *)note {
+    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
 }
 
 @end

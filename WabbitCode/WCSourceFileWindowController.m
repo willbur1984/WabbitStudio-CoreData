@@ -127,8 +127,8 @@
 - (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.displayName;
 }
-- (NSURL *)fileURLForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.fileURL;
+- (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController {
+    return self.document;
 }
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.undoManager;
