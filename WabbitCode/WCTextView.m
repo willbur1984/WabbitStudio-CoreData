@@ -154,10 +154,6 @@ static char kWCTextViewObservingContext;
         [self setToolTipTimer:nil];
         return;
     }
-    else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
-        [self setToolTipTimer:nil];
-        return;
-    }
     
     const NSTimeInterval kToolTipDelayInterval = 1;
     
@@ -169,6 +165,10 @@ static char kWCTextViewObservingContext;
         else
             [self setToolTipTimer:[NSTimer scheduledTimerWithTimeInterval:kToolTipDelayInterval target:self selector:@selector(_toolTipTimerCallback:) userInfo:nil repeats:NO]];
         
+        return;
+    }
+    else if ([[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
+        [self setToolTipTimer:nil];
         return;
     }
     
@@ -333,6 +333,19 @@ static char kWCTextViewObservingContext;
     }
     
     [self setSelectedRange:range];
+}
+
+- (void)insertNewline:(id)sender {
+    [super insertNewline:sender];
+    
+    NSScanner *scanner = [[NSScanner alloc] initWithString:[self.string substringWithRange:[self.string lineRangeForRange:NSMakeRange(self.selectedRange.location - 1, 0)]]];
+    
+    [scanner setCharactersToBeSkipped:nil];
+    
+    NSString *whitespace;
+    
+    if ([scanner scanCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&whitespace])
+        [self insertText:whitespace];
 }
 
 #pragma mark NSView
@@ -902,10 +915,6 @@ static char kWCTextViewObservingContext;
         [self setToolTipTimer:nil];
         return;
     }
-    else if ([[NSCharacterSet newlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
-        [self setToolTipTimer:nil];
-        return;
-    }
     
     NSRange foldRange = [(WCTextStorage *)self.textStorage foldRangeForRange:NSMakeRange(charIndex, 0)];
     
@@ -918,6 +927,10 @@ static char kWCTextViewObservingContext;
         lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
         
         [[WCToolTipWindow sharedInstance] showString:[self.string substringWithRange:foldRange] atPoint:[self.window convertBaseToScreen:[self convertPoint:lineFragmentRect.origin toView:nil]]];
+        return;
+    }
+    else if ([[NSCharacterSet whitespaceAndNewlineCharacterSet] characterIsMember:[self.string characterAtIndex:charIndex]]) {
+        [self setToolTipTimer:nil];
         return;
     }
     
