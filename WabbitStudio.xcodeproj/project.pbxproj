@@ -78,6 +78,7 @@
 		7973D6DE160CFC7B004EDE62 /* NSTextView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6DD160CFC7B004EDE62 /* NSTextView+WCExtensions.m */; };
 		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
 		7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */; };
+		797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */; };
 		79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
 		79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB21608DB7A00F139BC /* InfoPlist.strings */; };
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
@@ -244,6 +245,8 @@
 		7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSyntaxHighlighter.m; sourceTree = "<group>"; };
 		7973D6E2160D2274004EDE62 /* WCToolTipWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCToolTipWindow.h; sourceTree = "<group>"; };
 		7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCToolTipWindow.m; sourceTree = "<group>"; };
+		797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+WCExtensions.h"; sourceTree = "<group>"; };
+		797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+WCExtensions.m"; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -624,6 +627,8 @@
 				7962BDED162207C7006D5A7A /* NSObject+WCExtensions.m */,
 				7948439D162A0B57007903BE /* NSAttributedString+WCExtensions.h */,
 				7948439E162A0B57007903BE /* NSAttributedString+WCExtensions.m */,
+				797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */,
+				797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */,
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
@@ -1041,6 +1046,7 @@
 				79DF87B5162A8D0C00818741 /* WCGeneralViewController.m in Sources */,
 				79DF87B8162A8D3000818741 /* WCTextEditingViewController.m in Sources */,
 				79DF87C5162B52C300818741 /* WCFontsAndColorsViewController.m in Sources */,
+				797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
