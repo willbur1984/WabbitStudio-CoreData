@@ -109,6 +109,16 @@
     
     [self setPathComponentCells:temp];
 }
+- (void)reloadImageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
+    if ([self.dataSource respondsToSelector:@selector(jumpBarControl:imageForPathComponentCell:)]) {
+        NSImage *image = [self.dataSource jumpBarControl:self imageForPathComponentCell:pathComponentCell];
+        
+        [pathComponentCell setImage:image];
+        return;
+    }
+    
+    [self reloadPathComponentCells];
+}
 
 - (void)showPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell; {
     if (!pathComponentCell)

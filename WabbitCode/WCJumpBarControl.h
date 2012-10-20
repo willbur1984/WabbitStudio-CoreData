@@ -24,14 +24,18 @@
 
 - (void)reloadPathComponentCells;
 - (void)reloadSymbolPathComponentCell;
+- (void)reloadImageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
 
 - (void)showPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
 
 @end
 
 @protocol WCJumpBarControlDataSource <NSObject>
+@required
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
 - (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl;
+@optional
+- (NSImage *)jumpBarControl:(WCJumpBarControl *)jumpBarControl imageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell;
 @end
 
 @protocol WCJumpBarControlDelegate <NSPathControlDelegate>
