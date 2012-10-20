@@ -182,9 +182,10 @@ static char kWCTextViewObservingContext;
         return;
     }
     
-    NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
+    NSRange symbolRange;
+    id value = [self.textStorage attribute:kSymbolAttributeName atIndex:charIndex effectiveRange:&symbolRange];
     
-    if (symbolRange.location == NSNotFound) {
+    if (![value boolValue]) {
         [self setToolTipTimer:nil];
         return;
     }
@@ -946,9 +947,10 @@ static char kWCTextViewObservingContext;
         return;
     }
     
-    NSRange symbolRange = [self.string WC_symbolRangeForRange:NSMakeRange(charIndex, 0)];
+    NSRange symbolRange;
+    id value = [self.textStorage attribute:kSymbolAttributeName atIndex:charIndex effectiveRange:&symbolRange];
     
-    if (symbolRange.location == NSNotFound) {
+    if (![value boolValue]) {
         [self setToolTipTimer:nil];
         return;
     }

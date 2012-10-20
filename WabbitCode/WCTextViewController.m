@@ -399,6 +399,7 @@
 #pragma mark Notifications
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
+    [[self.delegate symbolHighlighterForTextViewController:self] symbolHighlightInVisibleRange];
 }
 - (void)_textStorageDidFold:(NSNotification *)note {
     [self.textView setNeedsDisplay:YES];
