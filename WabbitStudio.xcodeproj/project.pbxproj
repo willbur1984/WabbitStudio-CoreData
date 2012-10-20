@@ -111,6 +111,7 @@
 		79DF87C5162B52C300818741 /* WCFontsAndColorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87C4162B52C200818741 /* WCFontsAndColorsViewController.m */; };
 		79DF87C8162B52F400818741 /* WCFontsAndColorsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87C6162B52F400818741 /* WCFontsAndColorsView.xib */; };
 		79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FC76A51618029F006B9DC3 /* WCFoldView.m */; };
+		79FDAE711633173900FC9CF3 /* NSUserDefaults+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FDAE701633173900FC9CF3 /* NSUserDefaults+WCExtensions.m */; };
 		79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */; };
 		79FE36EF161A416500DB7C6D /* Bookmarks.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36ED161A416500DB7C6D /* Bookmarks.xcdatamodeld */; };
 		79FE36F3161A41C900DB7C6D /* Bookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F2161A41C900DB7C6D /* Bookmark.m */; };
@@ -300,6 +301,8 @@
 		79DF87C7162B52F400818741 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCFontsAndColorsView.xib; sourceTree = "<group>"; };
 		79FC76A41618029F006B9DC3 /* WCFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldView.h; sourceTree = "<group>"; };
 		79FC76A51618029F006B9DC3 /* WCFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldView.m; sourceTree = "<group>"; };
+		79FDAE6F1633173900FC9CF3 /* NSUserDefaults+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+WCExtensions.h"; sourceTree = "<group>"; };
+		79FDAE701633173900FC9CF3 /* NSUserDefaults+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+WCExtensions.m"; sourceTree = "<group>"; };
 		79FE360C161945B400DB7C6D /* WCSymbolHighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolHighlighter.h; sourceTree = "<group>"; };
 		79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolHighlighter.m; sourceTree = "<group>"; };
 		79FE36EE161A416500DB7C6D /* Bookmarks.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Bookmarks.xcdatamodel; sourceTree = "<group>"; };
@@ -629,6 +632,8 @@
 				7948439E162A0B57007903BE /* NSAttributedString+WCExtensions.m */,
 				797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */,
 				797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */,
+				79FDAE6F1633173900FC9CF3 /* NSUserDefaults+WCExtensions.h */,
+				79FDAE701633173900FC9CF3 /* NSUserDefaults+WCExtensions.m */,
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
@@ -1047,6 +1052,7 @@
 				79DF87B8162A8D3000818741 /* WCTextEditingViewController.m in Sources */,
 				79DF87C5162B52C300818741 /* WCFontsAndColorsViewController.m in Sources */,
 				797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */,
+				79FDAE711633173900FC9CF3 /* NSUserDefaults+WCExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
