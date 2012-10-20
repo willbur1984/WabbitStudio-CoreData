@@ -119,6 +119,23 @@ NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.sourc
     return YES;
 }
 
+- (void)saveToURL:(NSURL *)url ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation completionHandler:(void (^)(NSError *))completionHandler {
+    if (saveOperation != NSAutosaveElsewhereOperation) {
+        for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+            for (NSTextContainer *textContainer in layoutManager.textContainers) {
+                if (textContainer.textView.isCoalescingUndo)
+                    [textContainer.textView breakUndoCoalescing];
+            }
+        }
+    }
+    
+    [super saveToURL:url ofType:typeName forSaveOperation:saveOperation completionHandler:^(NSError *outError) {
+        // TODO:  update stuff here after the save
+        
+        completionHandler(outError);
+    }];
+}
+
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {
     return self.fileURL;
 }
