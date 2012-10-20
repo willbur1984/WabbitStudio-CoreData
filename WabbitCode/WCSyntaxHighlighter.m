@@ -151,6 +151,7 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     
     [[WCSyntaxHighlighter multilineCommentRegex] enumerateMatchesInString:self.textStorage.string options:0 range:NSMakeRange(0, self.textStorage.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
         [self.textStorage addAttributes:@{NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0 alpha:1], kMultilineCommentAttributeName : @true, kTokenAttributeName : @true} range:result.range];
+        [self.textStorage removeAttribute:kSymbolAttributeName range:result.range];
         
         if (NSMaxRange(result.range) > NSMaxRange(range))
             *stop = YES;
