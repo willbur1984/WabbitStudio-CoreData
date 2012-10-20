@@ -124,9 +124,6 @@
 - (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController {
     return self.sourceFileDocument.symbolHighlighter;
 }
-- (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.displayName;
-}
 - (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController {
     return self.document;
 }

@@ -14,6 +14,7 @@
 #import "WCAppDelegate.h"
 #import "WCBookmarkManager.h"
 #import "WCPreferencesWindowController.h"
+#import "WCTextView.h"
 
 @interface WCAppDelegate () <NSApplicationDelegate>
 @property (strong,nonatomic) WCPreferencesWindowController *preferencesWindowController;
@@ -22,7 +23,7 @@
 @implementation WCAppDelegate
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true }];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @(80) }];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {

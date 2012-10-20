@@ -14,6 +14,8 @@
 #import <Cocoa/Cocoa.h>
 
 extern NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey;
+extern NSString *const WCTextViewPageGuideUserDefaultsKey;
+extern NSString *const WCTextViewPageGuideColumnUserDefaultsKey;
 
 @protocol WCTextViewDelegate;
 

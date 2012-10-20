@@ -38,7 +38,6 @@
 - (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController;
 - (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController;
 - (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController;
-- (NSString *)displayNameForTextViewController:(WCTextViewController *)textViewController;
 - (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
 
 - (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController;

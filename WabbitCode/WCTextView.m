@@ -34,8 +34,11 @@
 #import "Fold.h"
 #import "NSColor+WCExtensions.h"
 #import "NSObject+WCExtensions.h"
+#import "NSUserDefaults+WCExtensions.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
+NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
+NSString *const WCTextViewPageGuideColumnUserDefaultsKey = @"WCTextViewPageGuideColumnUserDefaultsKey";
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -73,7 +76,7 @@ static char kWCTextViewObservingContext;
 }
 
 + (NSSet *)WC_userDefaultsKeysToObserve {
-    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey, nil];
+    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey, nil];
 }
 
 #pragma mark NSKeyValueObserving
@@ -81,6 +84,13 @@ static char kWCTextViewObservingContext;
     if (context == &kWCTextViewObservingContext) {
         if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewFocusFollowsSelectionUserDefaultsKey]]) {
             [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewPageGuideUserDefaultsKey]]) {
+            [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewPageGuideColumnUserDefaultsKey]]) {
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewPageGuideUserDefaultsKey])
+                [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
         }
     }
     else {
@@ -465,22 +475,24 @@ static char kWCTextViewObservingContext;
 - (void)drawViewBackgroundInRect:(NSRect)rect {
     [super drawViewBackgroundInRect:rect];
     
-    const NSUInteger kColumnNumber = 80;
-    const CGFloat width = [@" " sizeWithAttributes:[WCSyntaxHighlighter defaultAttributes]].width;
-    const CGFloat frameX = width * kColumnNumber;
-    NSRect guideRect = NSMakeRect(frameX, NSMinY(self.bounds), NSWidth(self.bounds) - frameX, NSHeight(self.bounds));
-    
-    if (NSIntersectsRect(guideRect, rect)) {
-        NSColor *color = [NSColor lightGrayColor];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewPageGuideUserDefaultsKey]) {
+        const NSUInteger kColumnNumber = [[NSUserDefaults standardUserDefaults] WC_unsignedIntegerForKey:WCTextViewPageGuideColumnUserDefaultsKey];
+        const CGFloat width = [@" " sizeWithAttributes:[WCSyntaxHighlighter defaultAttributes]].width;
+        const CGFloat frameX = width * kColumnNumber;
+        NSRect guideRect = NSMakeRect(frameX, NSMinY(self.bounds), NSWidth(self.bounds) - frameX, NSHeight(self.bounds));
         
-        [[color colorWithAlphaComponent:0.35] setFill];
-        NSRectFillUsingOperation(guideRect, NSCompositeSourceOver);
-        
-        [color setFill];
-        
-        guideRect.size.width = 1;
-        
-        NSRectFill(guideRect);
+        if (NSIntersectsRect(guideRect, rect)) {
+            NSColor *color = [NSColor lightGrayColor];
+            
+            [[color colorWithAlphaComponent:0.35] setFill];
+            NSRectFillUsingOperation(guideRect, NSCompositeSourceOver);
+            
+            [color setFill];
+            
+            guideRect.size.width = 1;
+            
+            NSRectFill(guideRect);
+        }
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {

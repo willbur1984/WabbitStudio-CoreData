@@ -242,18 +242,19 @@
 
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
-    NSURL *fileURL = [[self.delegate documentForTextViewController:self] fileURL];
+    NSDocument *document = [self.delegate documentForTextViewController:self];
+    NSURL *fileURL = document.fileURL;
     WCJumpBarComponentCell *cell;
     
     if (fileURL)
         cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
     else
-        cell = [[WCJumpBarComponentCell alloc] initTextCell:[self.delegate displayNameForTextViewController:self]];
+        cell = [[WCJumpBarComponentCell alloc] initTextCell:document.displayName];
     
     NSImage *image;
     
     if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
-        NSDocument *document = [self.delegate documentForTextViewController:self];
+        
         
         if (document.isDocumentEdited)
             [cell setImage:[image WC_unsavedImageIcon]];
