@@ -35,6 +35,8 @@
     
     [self setTextStorage:textStorage];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
+    
     return self;
 }
 
@@ -65,7 +67,9 @@
     id value;
     
     while (range.length) {
-        if ((value = [self.textStorage attribute:WCTextStorageDidFoldNotification atIndex:range.location longestEffectiveRange:&foldRange inRange:range])) {
+        value = [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location longestEffectiveRange:&foldRange inRange:range];
+        
+        if (![value boolValue]) {
             NSRange highlightRange = foldRange;
             NSRange symbolRange;
             
@@ -104,15 +108,10 @@
     [self.textStorage endEditing];
 }
 
-- (void)setDelegate:(id<WCSymbolHighlighterDelegate>)delegate {
-    _delegate = delegate;
+- (void)_textStorageDidProcessEditing:(NSNotification *)note {
+    if (!([note.object editedMask] & NSTextStorageEditedCharacters))
+        return;
     
-    if (delegate) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[delegate symbolScannerForSymbolHighlighter:self]];
-    }
-}
-
-- (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self symbolHighlightInVisibleRange];
 }
 
