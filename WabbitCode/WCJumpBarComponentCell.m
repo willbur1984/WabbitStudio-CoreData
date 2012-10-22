@@ -38,6 +38,12 @@
     return self;
 }
 
+- (id)copyWithZone:(NSZone *)zone {
+    WCJumpBarComponentCell *copy = [[WCJumpBarComponentCell alloc] initTextCell:self.stringValue];
+    
+    return copy;
+}
+
 static const CGFloat kImageMarginLeft = 3;
 static const CGFloat kTitleMarginLeft = 1;
 

@@ -23,6 +23,8 @@
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
 
+NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFileDocumentEditedDidChangeNotification";
+
 @interface WCSourceFileDocument () <WCSymbolScannerDelegate,WCSyntaxHighlighterDelegate,WCSymbolHighlighterDelegate>
 
 @property (readwrite,strong,nonatomic) WCTextStorage *textStorage;
@@ -123,17 +125,26 @@ NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.sourc
     if (saveOperation != NSAutosaveElsewhereOperation) {
         for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
             for (NSTextContainer *textContainer in layoutManager.textContainers) {
-                if (textContainer.textView.isCoalescingUndo)
+                if (textContainer.textView.isCoalescingUndo) {
                     [textContainer.textView breakUndoCoalescing];
+                }
             }
         }
     }
     
     [super saveToURL:url ofType:typeName forSaveOperation:saveOperation completionHandler:^(NSError *outError) {
-        // TODO:  update stuff here after the save
         
         completionHandler(outError);
     }];
+}
+
+- (void)updateChangeCount:(NSDocumentChangeType)change {
+    BOOL edited = self.isDocumentEdited;
+    
+    [super updateChangeCount:change];
+    
+    if (edited != self.isDocumentEdited)
+        [[NSNotificationCenter defaultCenter] postNotificationName:WCSourceFileDocumentEditedDidChangeNotification object:self];
 }
 
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {

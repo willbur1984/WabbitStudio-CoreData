@@ -33,6 +33,7 @@
 #import "WCBookmarkScroller.h"
 #import "NSView+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
+#import "WCSourceFileDocument.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -68,6 +69,7 @@
     [self.textView.textContainer replaceLayoutManager:[[WCLayoutManager alloc] init]];
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView setMarkedTextAttributes:[WCSyntaxHighlighter defaultAttributes]];
+    [self.textView setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
     [self.textView.layoutManager replaceTextStorage:self.textStorage];
     
     WCFoldView *lineNumberView = [[WCFoldView alloc] initWithTextView:self.textView];
@@ -361,12 +363,10 @@
     
     if (_delegate) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[self.delegate symbolScannerForTextViewController:self]];
+
+        id document = [self.delegate documentForTextViewController:self];
         
-        NSUndoManager *undoManager = [self.delegate undoManagerForTextViewController:self];
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidCloseUndoGroup:) name:NSUndoManagerDidCloseUndoGroupNotification object:undoManager];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidUndoChange:) name:NSUndoManagerDidUndoChangeNotification object:undoManager];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_undoManagerDidRedoChange:) name:NSUndoManagerDidRedoChangeNotification object:undoManager];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_documentEditedDidChange:) name:WCSourceFileDocumentEditedDidChangeNotification object:document];
     }
 }
 
@@ -401,6 +401,9 @@
     [self.jumpBarControl reloadSymbolPathComponentCell];
     [[self.delegate symbolHighlighterForTextViewController:self] symbolHighlightInVisibleRange];
 }
+- (void)_documentEditedDidChange:(NSNotification *)note {
+    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
+}
 - (void)_textStorageDidFold:(NSNotification *)note {
     [self.textView setNeedsDisplay:YES];
 }
@@ -412,16 +415,6 @@
     
     [NSObject cancelPreviousPerformRequestsWithTarget:symbolHighlighter selector:@selector(symbolHighlightInVisibleRange) object:nil];
     [symbolHighlighter performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
-}
-
-- (void)_undoManagerDidCloseUndoGroup:(NSNotification *)note {
-    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
-}
-- (void)_undoManagerDidUndoChange:(NSNotification *)note {
-    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
-}
-- (void)_undoManagerDidRedoChange:(NSNotification *)note {
-    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
 }
 
 @end

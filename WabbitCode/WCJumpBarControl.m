@@ -112,8 +112,16 @@
 - (void)reloadImageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
     if ([self.dataSource respondsToSelector:@selector(jumpBarControl:imageForPathComponentCell:)]) {
         NSImage *image = [self.dataSource jumpBarControl:self imageForPathComponentCell:pathComponentCell];
+        WCJumpBarComponentCell *cell = [pathComponentCell copy];
         
-        [pathComponentCell setImage:image];
+        [cell setImage:image];
+        
+        NSMutableArray *temp = [self.pathComponentCells mutableCopy];
+        
+        [temp replaceObjectAtIndex:[temp indexOfObject:pathComponentCell] withObject:cell];
+        
+        [self setPathComponentCells:temp];
+        
         return;
     }
     

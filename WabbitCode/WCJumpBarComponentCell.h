@@ -13,6 +13,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface WCJumpBarComponentCell : NSPathComponentCell
+@interface WCJumpBarComponentCell : NSPathComponentCell <NSCopying>
 
 @end

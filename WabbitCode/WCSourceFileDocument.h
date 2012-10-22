@@ -11,6 +11,8 @@
 extern NSString *const WCSourceFileDocumentSelectedRangeAttributeName;
 extern NSString *const WCSourceFileDocumentBookmarksAttributeName;
 
+extern NSString *const WCSourceFileDocumentEditedDidChangeNotification;
+
 @class WCSyntaxHighlighter,WCSymbolScanner,WCFoldScanner,WCSymbolHighlighter,WCTextStorage,WCSourceFileWindowController;
 
 @interface WCSourceFileDocument : NSDocument
