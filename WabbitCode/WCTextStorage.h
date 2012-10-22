@@ -33,6 +33,10 @@ extern NSString *const WCTextStorageFoldRangeUserInfoKey;
 - (BOOL)unfoldRange:(NSRange)range effectiveRange:(NSRangePointer)effectiveRange;
 - (NSRange)foldRangeForRange:(NSRange)range;
 
+@property (readonly,nonatomic) NSParagraphStyle *paragraphStyle;
+
++ (NSParagraphStyle *)defaultParagraphStyle;
+
 @end
 
 @protocol WCTextStorageDelegate <NSTextStorageDelegate>

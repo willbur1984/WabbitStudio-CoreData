@@ -15,6 +15,10 @@
 #import "WCFoldCell.h"
 #import "WCGeometry.h"
 #import "WCBookmarkManager.h"
+#import "NSObject+WCExtensions.h"
+#import "WCTextView.h"
+#import "NSUserDefaults+WCExtensions.h"
+#import "WCSyntaxHighlighter.h"
 
 NSString *const WCTextStorageFoldAttributeName = @"WCTextStorageFoldAttributeName";
 
@@ -22,19 +26,31 @@ NSString *const WCTextStorageDidFoldNotification = @"WCTextStorageDidFoldNotific
 NSString *const WCTextStorageDidUnfoldNotification = @"WCTextStorageDidUnfoldNotification";
 NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUserInfoKey";
 
+static char kWCTextStorageObservingContext;
+
 @interface WCTextStorage ()
 @property (strong,nonatomic) NSMutableAttributedString *attributedString;
 @property (readwrite,strong,nonatomic) WCBookmarkManager *bookmarkManager;
 @end
 
 @implementation WCTextStorage
+#pragma mark *** Subclass Overrides ***
+- (void)dealloc {
+    [self WC_stopObservingUserDefaultsKeysWithContext:&kWCTextStorageObservingContext];
+}
 
 - (id)initWithString:(NSString *)str attributes:(NSDictionary *)attrs {
     if (!(self = [super init]))
         return nil;
     
-    [self setAttributedString:[[NSMutableAttributedString alloc] initWithString:str attributes:attrs]];
+    NSMutableDictionary *temp = [attrs mutableCopy];
+    
+    [temp setObject:self.paragraphStyle forKey:NSParagraphStyleAttributeName];
+    
+    [self setAttributedString:[[NSMutableAttributedString alloc] initWithString:str attributes:temp]];
     [self setBookmarkManager:[[WCBookmarkManager alloc] initWithTextStorage:self]];
+    
+    [self WC_startObservingUserDefaultsKeysWithOptions:NSKeyValueObservingOptionNew context:&kWCTextStorageObservingContext];
     
     return self;
 }
@@ -107,6 +123,49 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
 	}
 }
 
++ (NSSet *)WC_userDefaultsKeysToObserve {
+    return [NSSet setWithObjects:WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey, nil];
+}
+
+#pragma mark NSKeyValueObserving
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &kWCTextStorageObservingContext) {
+        if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewWrapLinesUserDefaultsKey]]) {
+            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesUserDefaultsKey]]) {
+            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey]]) {
+            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
+#pragma mark *** Public Methods ***
++ (NSParagraphStyle *)defaultParagraphStyle; {
+    NSMutableParagraphStyle *retval = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewWrapLinesUserDefaultsKey] &&
+        [[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewIndentWrappedLinesUserDefaultsKey]) {
+        
+        NSUInteger spaces = [[NSUserDefaults standardUserDefaults] WC_unsignedIntegerForKey:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey];
+        NSMutableString *temp = [NSMutableString stringWithCapacity:spaces];
+        
+        for (NSUInteger tempIndex=0; tempIndex<spaces; tempIndex++)
+            [temp appendString:@" "];
+        
+        NSSize tempSize = [temp sizeWithAttributes:[WCSyntaxHighlighter defaultAttributes]];
+        
+        [retval setHeadIndent:tempSize.width];
+    }
+    
+    return retval;
+}
+
 - (void)foldRange:(NSRange)range; {
     [self addAttribute:WCTextStorageFoldAttributeName value:@true range:range];
     [self addAttribute:NSCursorAttributeName value:[NSCursor arrowCursor] range:range];
@@ -138,11 +197,15 @@ NSString *const WCTextStorageFoldRangeUserInfoKey = @"WCTextStorageFoldRangeUser
     
     return WC_NSNotFoundRange;
 }
-
+#pragma mark Properties
 - (id<WCTextStorageDelegate>)delegate {
     return (id<WCTextStorageDelegate>)[super delegate];
 }
 - (void)setDelegate:(id<WCTextStorageDelegate>)delegate {
     [super setDelegate:delegate];
+}
+
+- (NSParagraphStyle *)paragraphStyle {
+    return [self.class defaultParagraphStyle];
 }
 @end

@@ -23,7 +23,7 @@
 @implementation WCAppDelegate
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @(80) }];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @(80), WCTextViewWrapLinesUserDefaultsKey : @true, WCTextViewIndentWrappedLinesUserDefaultsKey : @false, WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey : @0 }];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {

@@ -16,6 +16,9 @@
 extern NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey;
 extern NSString *const WCTextViewPageGuideUserDefaultsKey;
 extern NSString *const WCTextViewPageGuideColumnUserDefaultsKey;
+extern NSString *const WCTextViewWrapLinesUserDefaultsKey;
+extern NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey;
+extern NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey;
 
 @protocol WCTextViewDelegate;
 

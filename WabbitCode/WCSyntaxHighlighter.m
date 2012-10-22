@@ -17,6 +17,7 @@
 #import "WCSymbolHighlighter.h"
 #import "WCSymbolScanner.h"
 #import "NSTextView+WCExtensions.h"
+#import "WCTextStorage.h"
 
 NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeName";
 NSString *const kCommentAttributeName = @"kCommentAttributeName";

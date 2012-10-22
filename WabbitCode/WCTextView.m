@@ -39,6 +39,9 @@
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
 NSString *const WCTextViewPageGuideColumnUserDefaultsKey = @"WCTextViewPageGuideColumnUserDefaultsKey";
+NSString *const WCTextViewWrapLinesUserDefaultsKey = @"WCTextViewWrapLinesUserDefaultsKey";
+NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey = @"WCTextViewIndentWrappedLinesUserDefaultsKey";
+NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey = @"WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey";
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -48,6 +51,7 @@ static char kWCTextViewObservingContext;
 @property (weak,nonatomic) NSTimer *toolTipTimer;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
+@property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
 
 - (void)_highlightMatchingBrace;
 - (void)_highlightMatchingTempLabel;
@@ -76,7 +80,7 @@ static char kWCTextViewObservingContext;
 }
 
 + (NSSet *)WC_userDefaultsKeysToObserve {
-    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey, nil];
+    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey,WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey, nil];
 }
 
 #pragma mark NSKeyValueObserving
@@ -91,6 +95,16 @@ static char kWCTextViewObservingContext;
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewPageGuideColumnUserDefaultsKey]]) {
             if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewPageGuideUserDefaultsKey])
                 [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewWrapLinesUserDefaultsKey]]) {
+            [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
+            [self setWrapping:[[object valueForKeyPath:keyPath] boolValue]];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesUserDefaultsKey]]) {
+            [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey]]) {
+            [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
         }
     }
     else {
@@ -108,6 +122,8 @@ static char kWCTextViewObservingContext;
     [self setContinuousSpellCheckingEnabled:NO];
     [self setUsesFindBar:YES];
     [self setIncrementalSearchingEnabled:YES];
+    
+    [self setWrapping:[[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewWrapLinesUserDefaultsKey]];
     
     [self setHoverLinkTrackingAreas:[NSMutableSet setWithCapacity:0]];
     
@@ -907,6 +923,34 @@ static char kWCTextViewObservingContext;
     }
     
     _currentHoverLinkTrackingArea = currentHoverLinkTrackingArea;
+}
+- (void)setWrapping:(BOOL)wrapping {
+    _wrapping = wrapping;
+    
+    if (_wrapping) {
+        [self.enclosingScrollView setHasHorizontalScroller:NO];
+        
+        [self.textContainer setContainerSize:NSMakeSize(self.enclosingScrollView.contentSize.width, CGFLOAT_MAX)];
+        [self.textContainer setWidthTracksTextView:YES];
+        
+        [self setMaxSize:NSMakeSize(self.enclosingScrollView.contentSize.width, CGFLOAT_MAX)];
+        [self setHorizontallyResizable:NO];
+        [self setVerticallyResizable:YES];
+        [self setAutoresizingMask:NSViewWidthSizable];
+    }
+    else {
+        [self.enclosingScrollView setHasHorizontalScroller:YES];
+        
+        [self.textContainer setContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+        [self.textContainer setWidthTracksTextView:NO];
+        
+        [self setMaxSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+        [self setHorizontallyResizable:YES];
+        [self setVerticallyResizable:YES];
+        [self setAutoresizingMask:NSViewNotSizable];
+    }
+    
+    [self.enclosingScrollView reflectScrolledClipView:self.enclosingScrollView.contentView];
 }
 
 #pragma mark Actions
