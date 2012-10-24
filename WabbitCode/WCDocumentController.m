@@ -24,4 +24,15 @@
     return self;
 }
 
+- (NSArray *)unsavedDocumentURLs {
+    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
+    
+    for (NSDocument *document in self.documents) {
+        if (document.isDocumentEdited)
+            [temp addObject:document.fileURL];
+    }
+    
+    return temp;
+}
+
 @end

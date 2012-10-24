@@ -34,6 +34,8 @@
 #import "NSView+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
 #import "WCSourceFileDocument.h"
+#import "WCDocumentController.h"
+#import "NSImage+WCExtensions.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -50,6 +52,9 @@
 
 @property (strong,nonatomic) NSArray *recentFileURLs;
 @property (weak,nonatomic) NSMenu *recentFilesMenu;
+
+@property (strong,nonatomic) NSArray *unsavedFileURLs;
+@property (weak,nonatomic) NSMenu *unsavedFilesMenu;
 @end
 
 @implementation WCTextViewController
@@ -104,12 +109,21 @@
     [actionItem setImage:[NSImage imageNamed:NSImageNameActionTemplate]];
     [actionItem setHidden:YES];
     
+    // recent files
     NSMenuItem *recentFilesItem = [menu addItemWithTitle:NSLocalizedString(@"Recent Files", nil) action:NULL keyEquivalent:@""];
     NSMenu *recentFilesMenu = [[NSMenu alloc] initWithTitle:@"org.revsoft.text-view-controller.related-files.recent-files-menu"];
     
     [self setRecentFilesMenu:recentFilesMenu];
     [self.recentFilesMenu setDelegate:self];
     [recentFilesItem setSubmenu:self.recentFilesMenu];
+    
+    // unsaved files
+    NSMenuItem *unsavedFilesItem = [menu addItemWithTitle:NSLocalizedString(@"Unsaved Files", nil) action:NULL keyEquivalent:@""];
+    NSMenu *unsavedFilesMenu = [[NSMenu alloc] initWithTitle:@"org.revsoft.text-view-controller.related-files.unsaved-files-menu"];
+    
+    [self setUnsavedFilesMenu:unsavedFilesMenu];
+    [self.unsavedFilesMenu setDelegate:self];
+    [unsavedFilesItem setSubmenu:self.unsavedFilesMenu];
     
     [self.relatedFilesPopUpButton setMenu:menu];
     
@@ -135,23 +149,37 @@
 #pragma mark NSMenuDelegate
 - (NSInteger)numberOfItemsInMenu:(NSMenu *)menu {
     if (menu == self.recentFilesMenu) {
-        if (!self.recentFileURLs) {
-            [self setRecentFileURLs:[[NSDocumentController sharedDocumentController] recentDocumentURLs]];
-        }
+        [self setRecentFileURLs:[[NSDocumentController sharedDocumentController] recentDocumentURLs]];
+        
         return self.recentFileURLs.count;
+    }
+    else if (menu == self.unsavedFilesMenu) {
+        [self setUnsavedFileURLs:[[WCDocumentController sharedDocumentController] unsavedDocumentURLs]];
+        
+        return self.unsavedFileURLs.count;
     }
     return 0;
 }
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(NSInteger)index shouldCancel:(BOOL)shouldCancel {
     if (menu == self.recentFilesMenu) {
-        NSURL *recentURL = [self.recentFileURLs objectAtIndex:index];
+        NSURL *url = [self.recentFileURLs objectAtIndex:index];
         
-        [item setTitle:recentURL.lastPathComponent];
-        [item setImage:[recentURL WC_effectiveIcon]];
+        [item setTitle:url.lastPathComponent];
+        [item setImage:[url WC_effectiveIcon]];
         [item.image setSize:WC_NSSmallSize];
         [item setTarget:self];
         [item setTag:index];
         [item setAction:@selector(_recentFilesMenuItemAction:)];
+    }
+    else if (menu == self.unsavedFilesMenu) {
+        NSURL *url = [self.unsavedFileURLs objectAtIndex:index];
+        
+        [item setTitle:url.lastPathComponent];
+        [item setImage:[[url WC_effectiveIcon] WC_unsavedImageIcon]];
+        [item.image setSize:WC_NSSmallSize];
+        [item setTarget:self];
+        [item setTag:index];
+        [item setAction:@selector(_unsavedFilesMenuItemAction:)];
     }
     return YES;
 }
@@ -160,22 +188,6 @@
     *target = nil;
     *action = NULL;
     return NO;
-}
-- (void)menu:(NSMenu *)menu willHighlightItem:(NSMenuItem *)item {
-    if (menu == self.recentFilesMenu) {
-        NSMenuItem *highlightedItem = menu.highlightedItem;
-        
-        [highlightedItem setRepresentedObject:nil];
-        
-        if (item) {
-            NSURL *recentURL = [self.recentFileURLs objectAtIndex:item.tag];
-            
-            [item setRepresentedObject:recentURL];
-        }
-    }
-}
-- (void)menuDidClose:(NSMenu *)menu {
-    [self setRecentFileURLs:nil];
 }
 
 #pragma mark NSTextViewDelegate
@@ -383,10 +395,16 @@
 
 #pragma mark Actions
 - (IBAction)_recentFilesMenuItemAction:(NSMenuItem *)sender {
-    NSURL *recentURL = sender.representedObject;
+    NSURL *url = [self.recentFileURLs objectAtIndex:sender.tag];
     
-    if (recentURL)
-        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:recentURL display:YES completionHandler:nil];
+    if (url)
+        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:nil];
+}
+- (IBAction)_unsavedFilesMenuItemAction:(NSMenuItem *)sender {
+    NSURL *url = [self.unsavedFileURLs objectAtIndex:sender.tag];
+    
+    if (url)
+        [[NSDocumentController sharedDocumentController] openDocumentWithContentsOfURL:url display:YES completionHandler:nil];
 }
 
 - (IBAction)_addAssistantEditorAction:(id)sender {

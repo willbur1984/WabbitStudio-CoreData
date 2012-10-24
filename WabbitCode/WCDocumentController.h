@@ -15,4 +15,6 @@
 
 @interface WCDocumentController : NSDocumentController
 
+@property (readonly,nonatomic) NSArray *unsavedDocumentURLs;
+
 @end
