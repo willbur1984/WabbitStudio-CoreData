@@ -47,6 +47,7 @@
 		795936691616384B0085355E /* Folds.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 795936671616384B0085355E /* Folds.xcdatamodeld */; };
 		7959366D161639720085355E /* Fold.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366C161639720085355E /* Fold.m */; };
 		7959367016163F2B0085355E /* WCFoldMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366F16163F2B0085355E /* WCFoldMarker.m */; };
+		795F5B5B1637717400C70449 /* WCDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795F5B5A1637717400C70449 /* WCDocumentController.m */; };
 		7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */; };
 		7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD9C161FDD3E006D5A7A /* WCWindow.m */; };
 		7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDA71620A5A8006D5A7A /* WCMenuController.m */; };
@@ -194,6 +195,8 @@
 		7959366C161639720085355E /* Fold.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Fold.m; sourceTree = "<group>"; };
 		7959366E16163F2B0085355E /* WCFoldMarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldMarker.h; sourceTree = "<group>"; };
 		7959366F16163F2B0085355E /* WCFoldMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldMarker.m; sourceTree = "<group>"; };
+		795F5B591637717400C70449 /* WCDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCDocumentController.h; sourceTree = "<group>"; };
+		795F5B5A1637717400C70449 /* WCDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDocumentController.m; sourceTree = "<group>"; };
 		7962BD97161FD689006D5A7A /* NSEvent+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEvent+WCExtensions.h"; sourceTree = "<group>"; };
 		7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+WCExtensions.m"; sourceTree = "<group>"; };
 		7962BD9B161FDD3E006D5A7A /* WCWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCWindow.h; sourceTree = "<group>"; };
@@ -580,6 +583,8 @@
 				79968CCD1608E05F00F139BC /* WCAppDelegate.m */,
 				7962BDA61620A5A8006D5A7A /* WCMenuController.h */,
 				7962BDA71620A5A8006D5A7A /* WCMenuController.m */,
+				795F5B591637717400C70449 /* WCDocumentController.h */,
+				795F5B5A1637717400C70449 /* WCDocumentController.m */,
 				7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */,
 				7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */,
 				79FE36041619438A00DB7C6D /* Documents */,
@@ -1053,6 +1058,7 @@
 				79DF87C5162B52C300818741 /* WCFontsAndColorsViewController.m in Sources */,
 				797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */,
 				79FDAE711633173900FC9CF3 /* NSUserDefaults+WCExtensions.m in Sources */,
+				795F5B5B1637717400C70449 /* WCDocumentController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
