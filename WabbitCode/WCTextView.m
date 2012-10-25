@@ -151,6 +151,8 @@ static char kWCTextViewObservingContext;
 - (void)mouseExited:(NSEvent *)theEvent {
     [super mouseExited:theEvent];
     
+    [self setToolTipTimer:nil];
+    
     if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
         NSRange range = [[theEvent.trackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
