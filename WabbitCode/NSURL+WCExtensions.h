@@ -16,5 +16,6 @@
 @interface NSURL (WCExtensions)
 
 - (NSImage *)WC_effectiveIcon;
+- (NSDate *)WC_contentModificationDate;
 
 @end

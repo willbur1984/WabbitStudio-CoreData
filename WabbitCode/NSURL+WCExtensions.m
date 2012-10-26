@@ -25,5 +25,14 @@
     
     return retval;
 }
+- (NSDate *)WC_contentModificationDate; {
+    NSDate *retval = nil;
+    NSError *outError;
+    
+    if (![self getResourceValue:&retval forKey:NSURLContentModificationDateKey error:&outError])
+        WCLogObject(outError);
+    
+    return retval;
+}
 
 @end
