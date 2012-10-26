@@ -19,6 +19,8 @@
 #import "WCTextView.h"
 #import "WCBookmarkManager.h"
 #import "Bookmark.h"
+#import "NSTextView+WCExtensions.h"
+#import "NSURL+WCExtensions.h"
 
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
@@ -34,9 +36,14 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 @property (readwrite,strong,nonatomic) WCFoldScanner *foldScanner;
 @property (readwrite,strong,nonatomic) WCSymbolHighlighter *symbolHighlighter;
 
+- (void)_startWatchingDocument;
+- (void)_stopWatchingDocument;
+- (void)_reloadDocumentFromDisk;
 @end
 
-@implementation WCSourceFileDocument
+@implementation WCSourceFileDocument {
+    dispatch_source_t _source;
+}
 
 - (id)initWithType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     if (!(self = [super initWithType:typeName error:outError]))
@@ -59,6 +66,12 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
     WCSourceFileWindowController *windowController = [[WCSourceFileWindowController alloc] initWithTextStorage:self.textStorage];
     
     [self addWindowController:windowController];
+}
+
+- (void)close {
+    [super close];
+    
+    [self _stopWatchingDocument];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
@@ -147,6 +160,12 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
         [[NSNotificationCenter defaultCenter] postNotificationName:WCSourceFileDocumentEditedDidChangeNotification object:self];
 }
 
+- (void)setFileURL:(NSURL *)url {
+    [super setFileURL:url];
+    
+    [self _startWatchingDocument];
+}
+
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {
     return self.fileURL;
 }
@@ -164,6 +183,66 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 
 - (WCSourceFileWindowController *)sourceFileWindowController {
     return self.windowControllers.lastObject;
+}
+
+- (void)_startWatchingDocument; {
+    [self _stopWatchingDocument];
+    
+    if (!self.fileURL)
+        return;
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+    int fd = open(self.fileURL.path.fileSystemRepresentation, O_EVTONLY);
+    __weak typeof (self) weakSelf = self;
+    _source = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE, fd, DISPATCH_VNODE_DELETE|DISPATCH_VNODE_RENAME|DISPATCH_VNODE_WRITE|DISPATCH_VNODE_EXTEND, queue);
+    __block dispatch_source_t source = _source;
+    
+    dispatch_source_set_event_handler(source, ^{
+        unsigned long flags = dispatch_source_get_data(source);
+        
+        if (flags & DISPATCH_VNODE_DELETE) {
+            dispatch_source_cancel(source);
+            [weakSelf _startWatchingDocument];
+        }
+        
+        [weakSelf _reloadDocumentFromDisk];
+    });
+    
+    dispatch_source_set_cancel_handler(source, ^{
+        close(fd);
+    });
+    
+    dispatch_resume(source);
+}
+- (void)_stopWatchingDocument; {
+    if (_source)
+        dispatch_source_cancel(_source);
+}
+- (void)_reloadDocumentFromDisk; {
+    NSError *outError;
+    NSStringEncoding usedEncoding = NSUTF8StringEncoding;
+    NSString *string = [NSString stringWithContentsOfURL:self.fileURL encoding:usedEncoding error:&outError];
+    
+    if (!string) {
+        string = [NSString stringWithContentsOfURL:self.fileURL usedEncoding:&usedEncoding error:&outError];
+        
+        if (!string)
+            return;
+    }
+    
+    NSMutableArray *selectedRanges = [NSMutableArray arrayWithCapacity:0];
+    
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers)
+        [selectedRanges addObject:[NSValue valueWithRange:layoutManager.firstTextView.selectedRange]];
+    
+    [self.textStorage replaceCharactersInRange:NSMakeRange(0, self.textStorage.length) withString:string];
+    [self setFileModificationDate:[self.fileURL WC_contentModificationDate]];
+    
+    [self.textStorage.layoutManagers enumerateObjectsUsingBlock:^(NSLayoutManager *layoutManager, NSUInteger lmIndex, BOOL *stop) {
+        NSRange selectedRange = [[selectedRanges objectAtIndex:lmIndex] rangeValue];
+        
+        [layoutManager.firstTextView WC_setSelectedRangeSafely:selectedRange];
+    }];
 }
 
 @end
