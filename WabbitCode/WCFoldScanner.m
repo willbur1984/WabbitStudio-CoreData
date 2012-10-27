@@ -14,6 +14,7 @@
 #import "WCFoldScanner.h"
 #import "WCScanFoldsOperation.h"
 #import "WCDefines.h"
+#import "NSArray+WCExtensions.h"
 
 NSString *const WCFoldScannerDidFinishScanningFoldsNotification = @"WCFoldScannerDidFinishScanningFoldsNotification";
 
@@ -102,6 +103,14 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"depth" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+- (Fold *)topLevelFoldForRange:(NSRange)range; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location < %lu AND self.endLocation > %lu",NSMaxRange(range),range.location]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"depth" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
+    
+    return [[self.managedObjectContext executeFetchRequest:fetchRequest error:NULL] WC_firstObject];
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
