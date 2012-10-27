@@ -42,6 +42,8 @@ NSString *const WCTextViewPageGuideColumnUserDefaultsKey = @"WCTextViewPageGuide
 NSString *const WCTextViewWrapLinesUserDefaultsKey = @"WCTextViewWrapLinesUserDefaultsKey";
 NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey = @"WCTextViewIndentWrappedLinesUserDefaultsKey";
 NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey = @"WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey";
+NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey = @"WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey";
+NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey = @"WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey";
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -52,7 +54,7 @@ static char kWCTextViewObservingContext;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 @property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
-@property (strong,nonatomic) NSArray *symbolRanges;
+@property (strong,nonatomic) NSIndexSet *symbolRangesToHighlight;
 
 - (void)_highlightMatchingBrace;
 - (void)_highlightMatchingTempLabel;
@@ -82,7 +84,7 @@ static char kWCTextViewObservingContext;
 }
 
 + (NSSet *)WC_userDefaultsKeysToObserve {
-    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey,WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey, nil];
+    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey,WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey,WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey, nil];
 }
 
 #pragma mark NSKeyValueObserving
@@ -107,6 +109,9 @@ static char kWCTextViewObservingContext;
         }
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey]]) {
             [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]]) {
+            [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
         }
     }
     else {
@@ -551,24 +556,28 @@ static char kWCTextViewObservingContext;
         }
     }
     
-    if (self.symbolRanges.count > 1) {
-        [[[NSColor orangeColor] colorWithAlphaComponent:0.75] setStroke];
-        const NSInteger dashCount = 2;
-        CGFloat dash[dashCount] = {3,1};
-        
-        for (NSValue *rangeValue in self.symbolRanges) {
-            NSRange range = rangeValue.rangeValue;
-            NSUInteger rectCount;
-            NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
+        if (self.symbolRangesToHighlight.count) {
+            [[NSColor darkGrayColor] setStroke];
+            [[[NSColor lightGrayColor] colorWithAlphaComponent:0.25] setFill];
             
-            if (!rectCount)
-                continue;
+            const NSInteger dashCount = 2;
             
-            NSRect rect = rects[0];
-            NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSInsetRect(rect, 0, 2)];
-            
-            [path setLineDash:dash count:dashCount phase:0];
-            [path stroke];
+            [self.symbolRangesToHighlight enumerateRangesInRange:[self WC_visibleRange] options:0 usingBlock:^(NSRange range, BOOL *stop) {
+                NSUInteger rectCount;
+                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+                
+                if (!rectCount)
+                    return;
+                
+                NSRect rect = rects[0];
+                NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
+                CGFloat dash[dashCount] = {3,1};
+                
+                [path setLineDash:dash count:dashCount phase:0];
+                [path fill];
+                [path stroke];
+            }];
         }
     }
 }
@@ -744,30 +753,29 @@ static char kWCTextViewObservingContext;
     NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
     
     if (symbolRange.location == NSNotFound) {
-        [self setSymbolRanges:nil];
-        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        [self setSymbolRangesToHighlight:nil];
         return;
     }
     
     NSString *symbolName = [[self.string substringWithRange:symbolRange] lowercaseString];
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName];
     
-    if ([[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName].count == 0) {
-        [self setSymbolRanges:nil];
-        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+    if (symbols.count == 0) {
+        [self setSymbolRangesToHighlight:nil];
         return;
     }
     
-    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
+    NSMutableIndexSet *temp = [NSMutableIndexSet indexSet];
     
-    [self.textStorage enumerateAttributesInRange:[self WC_visibleRange] options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
-        if ([[attrs objectForKey:kSymbolAttributeName] boolValue] || [[attrs objectForKey:kSymbolDefinitionAttributeName] boolValue]) {
-            if ([symbolName isEqualToString:[[self.string substringWithRange:range] lowercaseString]])
-                [temp addObject:[NSValue valueWithRange:range]];
-        }
+    [self.textStorage enumerateAttribute:kSymbolAttributeName inRange:NSMakeRange(0, self.textStorage.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
+        if (![value boolValue])
+            return;
+        
+        if ([symbolName isEqualToString:[[self.string substringWithRange:range] lowercaseString]])
+            [temp addIndexesInRange:range];
     }];
     
-    [self setSymbolRanges:temp];
-    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+    [self setSymbolRangesToHighlight:temp];
 }
 - (void)_highlightMatchingBrace; {
     // need at least two characters in our string to be able to match
@@ -1007,6 +1015,14 @@ static char kWCTextViewObservingContext;
     
     [self.enclosingScrollView reflectScrolledClipView:self.enclosingScrollView.contentView];
 }
+- (void)setSymbolRangesToHighlight:(NSIndexSet *)symbolRangesToHighlight {
+    NSUInteger prevCount = _symbolRangesToHighlight.count;
+    
+    _symbolRangesToHighlight = symbolRangesToHighlight;
+    
+    if (prevCount != _symbolRangesToHighlight.count)
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+}
 
 #pragma mark Actions
 - (IBAction)_jumpToDefinitionMenuItemAction:(NSMenuItem *)sender {
@@ -1118,10 +1134,12 @@ static char kWCTextViewObservingContext;
         [self _highlightMatchingTempLabel];
     }
     
-    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+//    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+    
+    const NSTimeInterval kHighlightDelay = [[NSUserDefaults standardUserDefaults] doubleForKey:WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey];
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_findSymbolRanges) object:nil];
-    [self performSelector:@selector(_findSymbolRanges) withObject:nil afterDelay:0.35];
+    [self performSelector:@selector(_findSymbolRanges) withObject:nil afterDelay:kHighlightDelay];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     

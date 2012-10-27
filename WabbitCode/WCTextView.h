@@ -19,6 +19,8 @@ extern NSString *const WCTextViewPageGuideColumnUserDefaultsKey;
 extern NSString *const WCTextViewWrapLinesUserDefaultsKey;
 extern NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey;
 extern NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey;
+extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey;
+extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey;
 
 @protocol WCTextViewDelegate;
 
