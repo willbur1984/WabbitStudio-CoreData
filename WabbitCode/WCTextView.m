@@ -52,9 +52,11 @@ static char kWCTextViewObservingContext;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 @property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
+@property (strong,nonatomic) NSArray *symbolRanges;
 
 - (void)_highlightMatchingBrace;
 - (void)_highlightMatchingTempLabel;
+- (void)_findSymbolRanges;
 - (void)_jumpToDefinitionForRange:(NSRange)range;
 @end
 
@@ -548,6 +550,27 @@ static char kWCTextViewObservingContext;
             }];
         }
     }
+    
+    if (self.symbolRanges.count > 1) {
+        [[[NSColor orangeColor] colorWithAlphaComponent:0.75] setStroke];
+        const NSInteger dashCount = 2;
+        CGFloat dash[dashCount] = {3,1};
+        
+        for (NSValue *rangeValue in self.symbolRanges) {
+            NSRange range = rangeValue.rangeValue;
+            NSUInteger rectCount;
+            NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+            
+            if (!rectCount)
+                continue;
+            
+            NSRect rect = rects[0];
+            NSBezierPath *path = [NSBezierPath bezierPathWithRect:NSInsetRect(rect, 0, 2)];
+            
+            [path setLineDash:dash count:dashCount phase:0];
+            [path stroke];
+        }
+    }
 }
 
 - (NSRange)selectionRangeForProposedRange:(NSRange)proposedCharRange granularity:(NSSelectionGranularity)granularity {
@@ -717,6 +740,35 @@ static char kWCTextViewObservingContext;
     [self scrollRangeToVisible:self.selectedRange];
 }
 #pragma mark *** Private Methods ***
+- (void)_findSymbolRanges; {
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
+    
+    if (symbolRange.location == NSNotFound) {
+        [self setSymbolRanges:nil];
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        return;
+    }
+    
+    NSString *symbolName = [[self.string substringWithRange:symbolRange] lowercaseString];
+    
+    if ([[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName].count == 0) {
+        [self setSymbolRanges:nil];
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        return;
+    }
+    
+    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
+    
+    [self.textStorage enumerateAttributesInRange:[self WC_visibleRange] options:0 usingBlock:^(NSDictionary *attrs, NSRange range, BOOL *stop) {
+        if ([[attrs objectForKey:kSymbolAttributeName] boolValue] || [[attrs objectForKey:kSymbolDefinitionAttributeName] boolValue]) {
+            if ([symbolName isEqualToString:[[self.string substringWithRange:range] lowercaseString]])
+                [temp addObject:[NSValue valueWithRange:range]];
+        }
+    }];
+    
+    [self setSymbolRanges:temp];
+    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+}
 - (void)_highlightMatchingBrace; {
     // need at least two characters in our string to be able to match
 	if (self.string.length <= 1)
@@ -866,6 +918,7 @@ static char kWCTextViewObservingContext;
 	if (!foundMatchingTempLabel)
 		NSBeep();
 }
+
 - (void)_jumpToDefinitionForRange:(NSRange)range; {
     NSRange symbolRange = [self.string WC_symbolRangeForRange:range];
     
@@ -1066,6 +1119,9 @@ static char kWCTextViewObservingContext;
     }
     
     [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_findSymbolRanges) object:nil];
+    [self performSelector:@selector(_findSymbolRanges) withObject:nil afterDelay:0.35];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     
