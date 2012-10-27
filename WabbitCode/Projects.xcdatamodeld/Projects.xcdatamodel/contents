@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="11G63b" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Breakpoint" representedClassName="Breakpoint" parentEntity="Item" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="address" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="page" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="breakpoints" inverseEntity="Project" syncable="YES"/>
+    </entity>
+    <entity name="Define" representedClassName="Define" parentEntity="Item" syncable="YES">
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="target" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Target" inverseName="defines" inverseEntity="Target" syncable="YES"/>
+    </entity>
+    <entity name="File" representedClassName="File" parentEntity="Item" syncable="YES">
+        <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="breakpoints" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="FileBreakpoint" inverseName="file" inverseEntity="FileBreakpoint" syncable="YES"/>
+        <relationship name="file" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="files" inverseEntity="File" syncable="YES"/>
+        <relationship name="files" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="File" inverseName="file" inverseEntity="File" syncable="YES"/>
+        <relationship name="include" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Include" inverseName="file" inverseEntity="Include" syncable="YES"/>
+        <relationship name="issues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Issue" inverseName="file" inverseEntity="Issue" syncable="YES"/>
+        <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="file" inverseEntity="Project" syncable="YES"/>
+    </entity>
+    <entity name="FileBreakpoint" representedClassName="FileBreakpoint" parentEntity="Breakpoint" syncable="YES">
+        <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="symbolType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="file" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="breakpoints" inverseEntity="File" syncable="YES"/>
+    </entity>
+    <entity name="Include" representedClassName="Include" parentEntity="Item" syncable="YES">
+        <relationship name="file" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="include" inverseEntity="File" syncable="YES"/>
+        <relationship name="target" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Target" inverseName="includes" inverseEntity="Target" syncable="YES"/>
+    </entity>
+    <entity name="Issue" representedClassName="Issue" parentEntity="Item" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="file" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="issues" inverseEntity="File" syncable="YES"/>
+        <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="issues" inverseEntity="Project" syncable="YES"/>
+    </entity>
+    <entity name="Item" representedClassName="Item" isAbstract="YES" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Project" representedClassName="Project" parentEntity="Item" syncable="YES">
+        <relationship name="breakpoints" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Breakpoint" inverseName="project" inverseEntity="Breakpoint" syncable="YES"/>
+        <relationship name="file" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="project" inverseEntity="File" syncable="YES"/>
+        <relationship name="issues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Issue" inverseName="project" inverseEntity="Issue" syncable="YES"/>
+        <relationship name="targets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Target" inverseName="project" inverseEntity="Target" syncable="YES"/>
+    </entity>
+    <entity name="Target" representedClassName="Target" parentEntity="Item" syncable="YES">
+        <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="generateCodeListing" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="generateLabelFile" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="outputType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="symbolsAreCaseSensitive" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <relationship name="defines" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Define" inverseName="target" inverseEntity="Define" syncable="YES"/>
+        <relationship name="includes" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Include" inverseName="target" inverseEntity="Include" syncable="YES"/>
+        <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="targets" inverseEntity="Project" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Breakpoint" positionX="-47" positionY="240" width="128" height="120"/>
+        <element name="Define" positionX="-423" positionY="297" width="128" height="75"/>
+        <element name="File" positionX="286" positionY="117" width="128" height="165"/>
+        <element name="FileBreakpoint" positionX="-54" positionY="387" width="128" height="90"/>
+        <element name="Include" positionX="-272" positionY="387" width="128" height="75"/>
+        <element name="Issue" positionX="108" positionY="225" width="128" height="135"/>
+        <element name="Item" positionX="-20" positionY="-144" width="128" height="75"/>
+        <element name="Project" positionX="-36" positionY="30" width="128" height="105"/>
+        <element name="Target" positionX="-236" positionY="108" width="128" height="165"/>
+    </elements>
+</model>

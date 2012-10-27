@@ -26,6 +26,7 @@
 		7903F207160FDE9E000D3F3D /* WCArgumentPlaceholderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */; };
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
+		79390160163B673100168CD5 /* WCProjectDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7939015E163B673100168CD5 /* WCProjectDocument.m */; };
 		793D23021613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */; };
 		793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */; };
 		793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23061613E2C000742605 /* NSURL+WCExtensions.m */; };
@@ -98,6 +99,7 @@
 		79C92CED1611136A00BB6CDC /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEC1611136A00BB6CDC /* Symbol.m */; };
 		79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEF161144B600BB6CDC /* WCTableView.m */; };
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
+		79DE43461638C09E003D56EA /* Projects.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79DE43441638C09E003D56EA /* Projects.xcdatamodeld */; };
 		79DF87AC162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
 		79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
 		79DF87AE162A8C8200818741 /* MASPreferencesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -157,6 +159,8 @@
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
 		79129119160ABD5100ADFAB5 /* WCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextView.m; sourceTree = "<group>"; };
+		7939015D163B673100168CD5 /* WCProjectDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectDocument.h; sourceTree = "<group>"; };
+		7939015E163B673100168CD5 /* WCProjectDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectDocument.m; sourceTree = "<group>"; };
 		793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarAccessorySeparator@2x.png"; sourceTree = "<group>"; };
 		793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarSeparator@2x.png"; sourceTree = "<group>"; };
 		793D23051613E2C000742605 /* NSURL+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+WCExtensions.h"; sourceTree = "<group>"; };
@@ -285,6 +289,7 @@
 		79C92CEF161144B600BB6CDC /* WCTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTableView.m; sourceTree = "<group>"; };
 		79C92CF116114A1300BB6CDC /* WCCompletionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionItem.h; sourceTree = "<group>"; };
 		79C92CF216114A1300BB6CDC /* WCCompletionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionItem.m; sourceTree = "<group>"; };
+		79DE43451638C09E003D56EA /* Projects.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Projects.xcdatamodel; sourceTree = "<group>"; };
 		79DF87A8162A8C8200818741 /* MASPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesViewController.h; sourceTree = "<group>"; };
 		79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MASPreferencesWindow.xib; sourceTree = "<group>"; };
 		79DF87AA162A8C8200818741 /* MASPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesWindowController.h; sourceTree = "<group>"; };
@@ -407,6 +412,13 @@
 				79C92CE91611136900BB6CDC /* File.m */,
 			);
 			name = Classes;
+			sourceTree = "<group>";
+		};
+		7939012C163AC18A00168CD5 /* machine */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = machine;
 			sourceTree = "<group>";
 		};
 		7959365E161637840085355E /* Folds */ = {
@@ -587,6 +599,7 @@
 				795F5B5A1637717400C70449 /* WCDocumentController.m */,
 				7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */,
 				7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */,
+				79DE43401638C046003D56EA /* Project */,
 				79FE36041619438A00DB7C6D /* Documents */,
 				79FE3606161943A000DB7C6D /* Window Controllers */,
 				79FE36051619439500DB7C6D /* View Controllers */,
@@ -665,6 +678,33 @@
 				794843961629F8FD007903BE /* Completion.m */,
 				794843971629F8FD007903BE /* Placeholder.h */,
 				794843981629F8FD007903BE /* Placeholder.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		79DE43401638C046003D56EA /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				7939015D163B673100168CD5 /* WCProjectDocument.h */,
+				7939015E163B673100168CD5 /* WCProjectDocument.m */,
+				79DE43421638C051003D56EA /* Model */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		79DE43421638C051003D56EA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				79DE43441638C09E003D56EA /* Projects.xcdatamodeld */,
+				79DE43431638C056003D56EA /* Classes */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		79DE43431638C056003D56EA /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				7939012C163AC18A00168CD5 /* machine */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -1059,6 +1099,8 @@
 				797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */,
 				79FDAE711633173900FC9CF3 /* NSUserDefaults+WCExtensions.m in Sources */,
 				795F5B5B1637717400C70449 /* WCDocumentController.m in Sources */,
+				79DE43461638C09E003D56EA /* Projects.xcdatamodeld in Sources */,
+				79390160163B673100168CD5 /* WCProjectDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1370,6 +1412,16 @@
 			);
 			currentVersion = 79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */;
 			path = Completions.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		79DE43441638C09E003D56EA /* Projects.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				79DE43451638C09E003D56EA /* Projects.xcdatamodel */,
+			);
+			currentVersion = 79DE43451638C09E003D56EA /* Projects.xcdatamodel */;
+			path = Projects.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

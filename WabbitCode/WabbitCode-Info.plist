@@ -81,7 +81,7 @@
 				<string>org.revsoft.wabbitcode.project</string>
 			</array>
 			<key>LSTypeIsPackage</key>
-			<true/>
+			<false/>
 			<key>NSDocumentClass</key>
 			<string>WCProjectDocument</string>
 		</dict>
