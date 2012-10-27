@@ -210,14 +210,11 @@ static const CGFloat kBookmarkEdgeInset = 3;
         if (!numberOfLineRects)
             continue;
         
-        NSRect lineRect = lineRects[0];
+        NSRect lineRect = NSZeroRect;
+        NSUInteger rectIndex;
         
-        if (numberOfLineRects > 1) {
-            NSUInteger rectIndex;
-            
-            for (rectIndex=1; rectIndex<numberOfLineRects; rectIndex++)
-                lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
-        }
+        for (rectIndex=0; rectIndex<numberOfLineRects; rectIndex++)
+            lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
         
         NSRect foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(lineRect));
         NSColor *foldColor = [self _colorForFold:fold];
