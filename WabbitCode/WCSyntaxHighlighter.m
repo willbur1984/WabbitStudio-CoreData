@@ -23,7 +23,6 @@ NSString *const kMultilineCommentAttributeName = @"kMultilineCommentAttributeNam
 NSString *const kCommentAttributeName = @"kCommentAttributeName";
 NSString *const kTokenAttributeName = @"kTokenAttributeName";
 NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
-NSString *const kSymbolDefinitionAttributeName = @"kSymbolDefinitionAttributeName";
 
 @interface WCSyntaxHighlighter () <NSTextStorageDelegate>
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -128,19 +127,19 @@ NSString *const kSymbolDefinitionAttributeName = @"kSymbolDefinitionAttributeNam
             [self.textStorage.string characterAtIndex:result.range.location] == '_')
             return;
         
-        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1], kTokenAttributeName : @true, kSymbolDefinitionAttributeName : @true } range:result.range];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1], kTokenAttributeName : @true, kSymbolAttributeName : @true } range:result.range];
     }];
     
     [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1], kTokenAttributeName : @true, kSymbolDefinitionAttributeName : @true } range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1], kTokenAttributeName : @true, kSymbolAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor brownColor], kTokenAttributeName : @true, kSymbolDefinitionAttributeName : @true } range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor brownColor], kTokenAttributeName : @true, kSymbolAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1], kTokenAttributeName : @true, kSymbolDefinitionAttributeName : @true } range:[result rangeAtIndex:1]];
+        [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1], kTokenAttributeName : @true, kSymbolAttributeName : @true } range:[result rangeAtIndex:1]];
     }];
     
     [[WCSyntaxHighlighter stringRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -172,7 +171,7 @@ NSString *const kSymbolDefinitionAttributeName = @"kSymbolDefinitionAttributeNam
 }
 
 + (NSDictionary *)defaultAttributes; {
-    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false, kCommentAttributeName : @false, kTokenAttributeName : @false, kSymbolAttributeName : @false, kSymbolDefinitionAttributeName : @false};
+    return @{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:13], NSForegroundColorAttributeName : [NSColor blackColor], kMultilineCommentAttributeName : @false, kCommentAttributeName : @false, kTokenAttributeName : @false, kSymbolAttributeName : @false};
 }
 
 + (NSRegularExpression *)commentRegex; {
