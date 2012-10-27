@@ -104,7 +104,7 @@ static const NSTimeInterval kDismissThreshold = 0.5;
     
     __unsafe_unretained typeof (self) blockSelf = self;
     
-    id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask handler:^NSEvent *(NSEvent *event) {
+    id eventMonitor = [NSEvent addLocalMonitorForEventsMatchingMask:NSLeftMouseDownMask|NSRightMouseDownMask|NSOtherMouseDownMask|NSMouseMovedMask|NSKeyDownMask|NSScrollWheelMask|NSFlagsChangedMask handler:^NSEvent *(NSEvent *event) {
         switch (event.type) {
             case NSMouseMoved:
                 if (event.timestamp - blockSelf.orderedFrontTimestamp > kDismissThreshold) {
