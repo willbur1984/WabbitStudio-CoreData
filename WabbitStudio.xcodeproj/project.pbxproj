@@ -27,6 +27,8 @@
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
 		79390160163B673100168CD5 /* WCProjectDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7939015E163B673100168CD5 /* WCProjectDocument.m */; };
+		79390173163D9D8C00168CD5 /* NSShadow+MCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79390172163D9D8C00168CD5 /* NSShadow+MCAdditions.m */; };
+		79390179163D9E2500168CD5 /* NSBezierPath+MCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79390178163D9E2500168CD5 /* NSBezierPath+MCAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		793D23021613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */; };
 		793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */; };
 		793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23061613E2C000742605 /* NSURL+WCExtensions.m */; };
@@ -161,6 +163,10 @@
 		79129119160ABD5100ADFAB5 /* WCTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTextView.m; sourceTree = "<group>"; };
 		7939015D163B673100168CD5 /* WCProjectDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectDocument.h; sourceTree = "<group>"; };
 		7939015E163B673100168CD5 /* WCProjectDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectDocument.m; sourceTree = "<group>"; };
+		79390171163D9D8C00168CD5 /* NSShadow+MCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSShadow+MCAdditions.h"; sourceTree = "<group>"; };
+		79390172163D9D8C00168CD5 /* NSShadow+MCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSShadow+MCAdditions.m"; sourceTree = "<group>"; };
+		79390177163D9E2500168CD5 /* NSBezierPath+MCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+MCAdditions.h"; sourceTree = "<group>"; };
+		79390178163D9E2500168CD5 /* NSBezierPath+MCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+MCAdditions.m"; sourceTree = "<group>"; };
 		793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarAccessorySeparator@2x.png"; sourceTree = "<group>"; };
 		793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarSeparator@2x.png"; sourceTree = "<group>"; };
 		793D23051613E2C000742605 /* NSURL+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+WCExtensions.h"; sourceTree = "<group>"; };
@@ -389,6 +395,10 @@
 		7903F1F7160FB2BA000D3F3D /* External */ = {
 			isa = PBXGroup;
 			children = (
+				79390177163D9E2500168CD5 /* NSBezierPath+MCAdditions.h */,
+				79390178163D9E2500168CD5 /* NSBezierPath+MCAdditions.m */,
+				79390171163D9D8C00168CD5 /* NSShadow+MCAdditions.h */,
+				79390172163D9D8C00168CD5 /* NSShadow+MCAdditions.m */,
 				7903F1F8160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.h */,
 				7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */,
 			);
@@ -419,6 +429,13 @@
 			children = (
 			);
 			name = machine;
+			sourceTree = "<group>";
+		};
+		7939016D163D6F7200168CD5 /* Toolbar */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Toolbar;
 			sourceTree = "<group>";
 		};
 		7959365E161637840085355E /* Folds */ = {
@@ -599,6 +616,7 @@
 				795F5B5A1637717400C70449 /* WCDocumentController.m */,
 				7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */,
 				7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */,
+				7939016D163D6F7200168CD5 /* Toolbar */,
 				79DE43401638C046003D56EA /* Project */,
 				79FE36041619438A00DB7C6D /* Documents */,
 				79FE3606161943A000DB7C6D /* Window Controllers */,
@@ -1101,6 +1119,8 @@
 				795F5B5B1637717400C70449 /* WCDocumentController.m in Sources */,
 				79DE43461638C09E003D56EA /* Projects.xcdatamodeld in Sources */,
 				79390160163B673100168CD5 /* WCProjectDocument.m in Sources */,
+				79390173163D9D8C00168CD5 /* NSShadow+MCAdditions.m in Sources */,
+				79390179163D9E2500168CD5 /* NSBezierPath+MCAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
