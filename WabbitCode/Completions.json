@@ -758,6 +758,7 @@
                 "name": ",("
             },
             {
+                "isPlaceholder": true,
                 "name": "value"
             },
             {
@@ -1552,6 +1553,7 @@
                 "name": ".dw "
             },
             {
+                "isPlaceholder": true,
                 "name": "value"
             }
             ],
@@ -1564,6 +1566,7 @@
                 "name": ".db "
             },
             {
+                "isPlaceholder": true,
                 "name": "value"
             }    
             ],
@@ -1602,6 +1605,7 @@
                 "name": ","
             },
             {
+                "isPlaceholder": true,
                 "name": "value"
             }
             ],
