@@ -135,12 +135,10 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 }
 
 - (void)saveToURL:(NSURL *)url ofType:(NSString *)typeName forSaveOperation:(NSSaveOperationType)saveOperation completionHandler:(void (^)(NSError *))completionHandler {
-    if (saveOperation != NSAutosaveElsewhereOperation) {
-        for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
-            for (NSTextContainer *textContainer in layoutManager.textContainers) {
-                if (textContainer.textView.isCoalescingUndo) {
-                    [textContainer.textView breakUndoCoalescing];
-                }
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+        for (NSTextContainer *textContainer in layoutManager.textContainers) {
+            if (textContainer.textView.isCoalescingUndo) {
+                [textContainer.textView breakUndoCoalescing];
             }
         }
     }
