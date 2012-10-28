@@ -60,7 +60,7 @@
                 break;
             case CompletionTypeDirective:
                 color = [NSColor orangeColor];
-                letter = [[NSAttributedString alloc] initWithString:@"." attributes:@{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSForegroundColorAttributeName : [NSColor whiteColor] }];
+                letter = [[NSAttributedString alloc] initWithString:@"d" attributes:@{ NSFontAttributeName : [NSFont userFixedPitchFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSForegroundColorAttributeName : [NSColor whiteColor] }];
                 break;
             case CompletionTypeOperationalCode:
                 color = [NSColor blueColor];
