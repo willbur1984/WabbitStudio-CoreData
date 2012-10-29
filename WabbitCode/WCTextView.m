@@ -55,10 +55,11 @@ static char kWCTextViewObservingContext;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 @property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
 @property (strong,nonatomic) NSIndexSet *symbolRangesToHighlight;
+@property (assign,nonatomic) NSUInteger countOfSymbolRangesToHighlight;
 
 - (void)_highlightMatchingBrace;
 - (void)_highlightMatchingTempLabel;
-- (void)_findSymbolRanges;
+- (void)_findSymbolRangesToHighlight;
 - (void)_jumpToDefinitionForRange:(NSRange)range;
 @end
 
@@ -478,6 +479,10 @@ static char kWCTextViewObservingContext;
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
             return;
         }
+        else if (self.selectedRange.location >= self.string.length) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(complete:) object:nil];
+            return;
+        }
         
         id value = [self.textStorage attribute:kMultilineCommentAttributeName atIndex:self.selectedRange.location effectiveRange:NULL];
         
@@ -557,7 +562,7 @@ static char kWCTextViewObservingContext;
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
-        if (self.symbolRangesToHighlight.count) {
+        if (self.countOfSymbolRangesToHighlight > 1) {
             [[NSColor darkGrayColor] setStroke];
             [[[NSColor lightGrayColor] colorWithAlphaComponent:0.25] setFill];
             
@@ -749,10 +754,11 @@ static char kWCTextViewObservingContext;
     [self scrollRangeToVisible:self.selectedRange];
 }
 #pragma mark *** Private Methods ***
-- (void)_findSymbolRanges; {
+- (void)_findSymbolRangesToHighlight; {
     NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
     
     if (symbolRange.location == NSNotFound) {
+        [self setCountOfSymbolRangesToHighlight:0];
         [self setSymbolRangesToHighlight:nil];
         return;
     }
@@ -761,20 +767,25 @@ static char kWCTextViewObservingContext;
     NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName];
     
     if (symbols.count == 0) {
+        [self setCountOfSymbolRangesToHighlight:0];
         [self setSymbolRangesToHighlight:nil];
         return;
     }
     
+    __block NSUInteger countOfSymbolRanges = 0;
     NSMutableIndexSet *temp = [NSMutableIndexSet indexSet];
     
     [self.textStorage enumerateAttribute:kSymbolAttributeName inRange:NSMakeRange(0, self.textStorage.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
         if (![value boolValue])
             return;
         
-        if ([symbolName isEqualToString:[[self.string substringWithRange:range] lowercaseString]])
+        if ([symbolName isEqualToString:[[self.string substringWithRange:range] lowercaseString]]) {
             [temp addIndexesInRange:range];
+            countOfSymbolRanges++;
+        }
     }];
     
+    [self setCountOfSymbolRangesToHighlight:countOfSymbolRanges];
     [self setSymbolRangesToHighlight:temp];
 }
 - (void)_highlightMatchingBrace; {
@@ -1138,8 +1149,8 @@ static char kWCTextViewObservingContext;
     
     const NSTimeInterval kHighlightDelay = [[NSUserDefaults standardUserDefaults] doubleForKey:WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey];
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_findSymbolRanges) object:nil];
-    [self performSelector:@selector(_findSymbolRanges) withObject:nil afterDelay:kHighlightDelay];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_findSymbolRangesToHighlight) object:nil];
+    [self performSelector:@selector(_findSymbolRangesToHighlight) withObject:nil afterDelay:kHighlightDelay];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     
