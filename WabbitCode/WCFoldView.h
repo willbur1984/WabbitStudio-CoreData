@@ -13,6 +13,10 @@
 
 #import "WCLineNumberView.h"
 
+extern NSString *const WCFoldViewLineNumbersUserDefaultsKey;
+extern NSString *const WCFoldViewCodeFoldingRibbonUserDefaultsKey;
+extern NSString *const WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey;
+
 @class WCFoldScanner,WCTextStorage;
 @protocol WCFoldViewDelegate;
 

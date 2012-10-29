@@ -35,6 +35,7 @@
 #import "NSColor+WCExtensions.h"
 #import "NSObject+WCExtensions.h"
 #import "NSUserDefaults+WCExtensions.h"
+#import "WCFoldView.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -61,6 +62,7 @@ static char kWCTextViewObservingContext;
 - (void)_highlightMatchingTempLabel;
 - (void)_findSymbolRangesToHighlight;
 - (void)_jumpToDefinitionForRange:(NSRange)range;
+- (void)_drawContentRectsForFold:(Fold *)fold;
 @end
 
 @implementation WCTextView
@@ -526,39 +528,13 @@ static char kWCTextViewObservingContext;
         }
     }
     
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {
+    if (self.focusFold && [[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey])
+        [self _drawContentRectsForFold:self.focusFold];
+    else if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {
         Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
         
-        if (fold) {
-            const CGFloat stepAmount = 0.05;
-            NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
-            NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
-            NSColor *foldColor = self.backgroundColor;
-            
-            do {
-                NSUInteger rectCount;
-                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
-                NSRect foldRect = NSZeroRect;
-                
-                for (NSUInteger index=0; index<rectCount; index++)
-                    foldRect = NSUnionRect(foldRect, rects[index]);
-                
-                [foldRects addObject:[NSValue valueWithRect:foldRect]];
-                [foldColors addObject:foldColor];
-                
-                fold = fold.fold;
-                foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
-                
-            } while (fold);
-            
-            [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
-                NSColor *color = [foldColors objectAtIndex:idx];
-                NSRect rect = value.rectValue;
-                
-                [color setFill];
-                [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
-            }];
-        }
+        if (fold)
+            [self _drawContentRectsForFold:fold];
     }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
@@ -648,6 +624,12 @@ static char kWCTextViewObservingContext;
 }
 - (void)setDelegate:(id<WCTextViewDelegate>)delegate {
     [super setDelegate:delegate];
+}
+- (void)setFocusFold:(Fold *)focusFold {
+    _focusFold = focusFold;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey])
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
 }
 #pragma mark Actions
 - (IBAction)jumpToDefinitionAction:(id)sender; {
@@ -977,6 +959,36 @@ static char kWCTextViewObservingContext;
         
         [menu popUpMenuPositioningItem:nil atLocation:lineFragmentRect.origin inView:self];
     }
+}
+- (void)_drawContentRectsForFold:(Fold *)fold; {
+    const CGFloat stepAmount = 0.05;
+    NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
+    NSColor *foldColor = self.backgroundColor;
+    
+    do {
+        NSUInteger rectCount;
+        NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+        NSRect foldRect = NSZeroRect;
+        
+        for (NSUInteger index=0; index<rectCount; index++)
+            foldRect = NSUnionRect(foldRect, rects[index]);
+        
+        [foldRects addObject:[NSValue valueWithRect:foldRect]];
+        [foldColors addObject:foldColor];
+        
+        fold = fold.fold;
+        foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
+        
+    } while (fold);
+    
+    [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
+        NSColor *color = [foldColors objectAtIndex:idx];
+        NSRect rect = value.rectValue;
+        
+        [color setFill];
+        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
+    }];
 }
 #pragma mark Properties
 - (void)setToolTipTimer:(NSTimer *)toolTipTimer {

@@ -22,11 +22,14 @@ extern NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey
 extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey;
 extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey;
 
+@class Fold;
 @protocol WCTextViewDelegate;
 
 @interface WCTextView : NSTextView
 
 @property (weak,nonatomic) id <WCTextViewDelegate> delegate;
+
+@property (strong,nonatomic) Fold *focusFold;
 
 + (NSRegularExpression *)completionRegex;
 

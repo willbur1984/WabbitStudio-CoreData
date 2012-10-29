@@ -21,12 +21,20 @@
 #import "WCBookmarkManager.h"
 #import "Bookmark.h"
 #import "WCDefines.h"
+#import "WCTextView.h"
+#import "NSObject+WCExtensions.h"
+
+NSString *const WCFoldViewLineNumbersUserDefaultsKey = @"WCFoldViewLineNumbersUserDefaultsKey";
+NSString *const WCFoldViewCodeFoldingRibbonUserDefaultsKey = @"WCFoldViewCodeFoldingRibbonUserDefaultsKey";
+NSString *const WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey = @"WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey";
 
 static const CGFloat kFoldViewWidth = 7;
 
 static const CGFloat kBookmarkHeight = 9;
 static const CGFloat kBookmarkWidth = 12;
 static const CGFloat kBookmarkEdgeInset = 3;
+
+static char kWCFoldViewObservingContext;
 
 @interface WCFoldView () <NSUserInterfaceValidations>
 
@@ -35,15 +43,38 @@ static const CGFloat kBookmarkEdgeInset = 3;
 @property (strong,nonatomic) Fold *foldToHighlight;
 @property (strong,nonatomic) Fold *clickedFold;
 @property (assign,nonatomic) NSUInteger clickedLineNumber;
+@property (readonly,nonatomic) WCTextView *sourceTextView;
 
 - (NSColor *)_colorForFold:(Fold *)fold;
+- (void)_updateCodeFoldingTrackingRect;
 @end
 
 @implementation WCFoldView
 #pragma mark *** Subclass Overrides ***
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    
+    [self WC_stopObservingUserDefaultsKeysWithContext:&kWCFoldViewObservingContext];
 }
+
++ (NSSet *)WC_userDefaultsKeysToObserve {
+    return [NSSet setWithObjects:WCFoldViewLineNumbersUserDefaultsKey,WCFoldViewCodeFoldingRibbonUserDefaultsKey, nil];
+}
+#pragma mark NSKeyValueObserving
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if (context == &kWCFoldViewObservingContext) {
+        if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCFoldViewLineNumbersUserDefaultsKey]]) {
+            [self setNeedsDisplay:YES];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCFoldViewCodeFoldingRibbonUserDefaultsKey]]) {
+            [self setNeedsDisplay:YES];
+        }
+    }
+    else {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
+}
+
 #pragma mark NSResponder
 - (void)mouseEntered:(NSEvent *)theEvent {
     NSUInteger lineNumber = [self lineNumberForPoint:[self convertPoint:theEvent.locationInWindow fromView:nil]];
@@ -116,26 +147,34 @@ static const CGFloat kBookmarkEdgeInset = 3;
 - (void)updateTrackingAreas {
     [super updateTrackingAreas];
     
-    [self removeTrackingArea:self.foldTrackingRect];
-    
-    NSRect rect = NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame));
-    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseMoved|NSTrackingMouseEnteredAndExited|NSTrackingEnabledDuringMouseDrag;
-    
-    if (NSPointInRect([self convertPoint:self.window.mouseLocationOutsideOfEventStream fromView:nil], rect))
-        options |= NSTrackingAssumeInside;
-    
-    [self setFoldTrackingRect:[[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:nil]];
-    [self addTrackingArea:self.foldTrackingRect];
+    [self _updateCodeFoldingTrackingRect];
 }
 #pragma mark NSRulerView
 - (CGFloat)requiredThickness {
-    return [super requiredThickness] + kFoldViewWidth + 6;
+    CGFloat retval = [super requiredThickness] + 6;
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewCodeFoldingRibbonUserDefaultsKey])
+        retval += kFoldViewWidth;
+    
+    return retval;
 }
 
 - (void)drawHashMarksAndLabelsInRect:(NSRect)rect {
-    [self drawBackgroundAndDividerLineInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
-    [self drawLineNumbersInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
-    [self drawFoldsInRect:NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame))];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewCodeFoldingRibbonUserDefaultsKey])
+        [self drawBackgroundAndDividerLineInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
+    else
+        [self drawBackgroundAndDividerLineInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame), NSHeight(self.frame))];
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewLineNumbersUserDefaultsKey]) {
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewCodeFoldingRibbonUserDefaultsKey])
+            [self drawLineNumbersInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame) - kFoldViewWidth, NSHeight(self.frame))];
+        else
+            [self drawLineNumbersInRect:NSMakeRect(NSMinX(self.frame), 0, NSWidth(self.frame), NSHeight(self.frame))];
+    }
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewCodeFoldingRibbonUserDefaultsKey])
+        [self drawFoldsInRect:NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame))];
+    
     [self drawBookmarksInRect:NSMakeRect(NSMinX(self.bounds), 0, NSWidth(self.frame), NSHeight(self.frame))];
 }
 #pragma mark NSUserInterfaceValidations
@@ -166,6 +205,8 @@ static const CGFloat kBookmarkEdgeInset = 3;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bookmarkManagerDidAddBookmark:) name:WCBookmarkManagerDidAddBookmarkNotification object:self.textStorage.bookmarkManager];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_bookmarkManagerDidRemoveBookmark:) name:WCBookmarkManagerDidRemoveBookmarkNotification object:self.textStorage.bookmarkManager];
+    
+    [self WC_startObservingUserDefaultsKeysWithOptions:NSKeyValueObservingOptionNew context:&kWCFoldViewObservingContext];
     
     return self;
 }
@@ -287,6 +328,23 @@ static const CGFloat kBookmarkEdgeInset = 3;
     
     return [NSColor colorWithCalibratedHue:baseColor.hueComponent saturation:baseColor.saturationComponent brightness:baseColor.brightnessComponent - (depth * kStepAmount) alpha:baseColor.alphaComponent];
 }
+- (void)_updateCodeFoldingTrackingRect; {
+    [self removeTrackingArea:self.foldTrackingRect];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewCodeFoldingRibbonUserDefaultsKey]) {
+        [self setFoldTrackingRect:nil];
+        return;
+    }
+    
+    NSRect rect = NSMakeRect(NSMaxX(self.frame) - kFoldViewWidth, 0, kFoldViewWidth, NSHeight(self.frame));
+    NSTrackingAreaOptions options = NSTrackingActiveInKeyWindow|NSTrackingMouseMoved|NSTrackingMouseEnteredAndExited|NSTrackingEnabledDuringMouseDrag;
+    
+    if (NSPointInRect([self convertPoint:self.window.mouseLocationOutsideOfEventStream fromView:nil], rect))
+        options |= NSTrackingAssumeInside;
+    
+    [self setFoldTrackingRect:[[NSTrackingArea alloc] initWithRect:rect options:options owner:self userInfo:nil]];
+    [self addTrackingArea:self.foldTrackingRect];
+}
 #pragma mark Properties
 - (void)setFoldToHighlight:(Fold *)foldToHighlight {
     if (_foldToHighlight == foldToHighlight)
@@ -295,10 +353,15 @@ static const CGFloat kBookmarkEdgeInset = 3;
     _foldToHighlight = foldToHighlight;
     
     [self setNeedsDisplay:YES];
+    
+    [self.sourceTextView setFocusFold:foldToHighlight];
 }
 
 - (WCTextStorage *)textStorage {
     return (WCTextStorage *)self.textView.textStorage;
+}
+- (WCTextView *)sourceTextView {
+    return (WCTextView *)self.textView;
 }
 #pragma mark Actions
 - (IBAction)_toggleBookmarkAction:(id)sender {

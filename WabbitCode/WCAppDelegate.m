@@ -15,6 +15,7 @@
 #import "WCBookmarkManager.h"
 #import "WCPreferencesWindowController.h"
 #import "WCTextView.h"
+#import "WCFoldView.h"
 
 @interface WCAppDelegate () <NSApplicationDelegate>
 @property (strong,nonatomic) WCPreferencesWindowController *preferencesWindowController;
@@ -23,7 +24,7 @@
 @implementation WCAppDelegate
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
-    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @(80), WCTextViewWrapLinesUserDefaultsKey : @true, WCTextViewIndentWrappedLinesUserDefaultsKey : @false, WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey : @0, WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey : @true, WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey : @(0.35) }];
+    [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @(80), WCTextViewWrapLinesUserDefaultsKey : @true, WCTextViewIndentWrappedLinesUserDefaultsKey : @false, WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey : @0, WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey : @true, WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey : @(0.35), WCFoldViewLineNumbersUserDefaultsKey : @true, WCFoldViewCodeFoldingRibbonUserDefaultsKey : @true }];
 }
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
