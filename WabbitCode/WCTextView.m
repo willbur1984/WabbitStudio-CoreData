@@ -603,7 +603,7 @@ static char kWCTextViewObservingContext;
         if ((range.location < self.textStorage.length) && ([[ranges objectAtIndex:0] rangeValue].length == 0)) {
             id attribute = [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location effectiveRange:NULL];
 			
-            if (attribute && [attribute boolValue]) {
+            if ([attribute boolValue]) {
                 NSRange effectiveRange;
                 
                 [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location longestEffectiveRange:&effectiveRange inRange:NSMakeRange(0, self.textStorage.length)];
