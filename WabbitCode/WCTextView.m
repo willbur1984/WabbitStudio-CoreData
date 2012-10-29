@@ -564,7 +564,6 @@ static char kWCTextViewObservingContext;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
             [[NSColor darkGrayColor] setStroke];
-            [[[NSColor lightGrayColor] colorWithAlphaComponent:0.25] setFill];
             
             const NSInteger dashCount = 2;
             
@@ -580,7 +579,6 @@ static char kWCTextViewObservingContext;
                 CGFloat dash[dashCount] = {3,1};
                 
                 [path setLineDash:dash count:dashCount phase:0];
-                [path fill];
                 [path stroke];
             }];
         }
