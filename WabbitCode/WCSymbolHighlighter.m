@@ -58,7 +58,6 @@
     if (!range.length)
         return;
     
-    // TODO: this should ignore ranges that are folded, slows things waaaaaaay down otherwise
     WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForSymbolHighlighter:self];
     
     [self.textStorage beginEditing];
