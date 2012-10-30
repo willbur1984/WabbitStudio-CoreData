@@ -15,7 +15,7 @@
 
 @interface NSObject (WCExtensions)
 
-+ (void)WC_swapMethod:(SEL)oldMethod withMethod:(SEL)newMethod;
++ (void)WC_swapMethod:(SEL)oldSelector withMethod:(SEL)newSelector;
 
 + (NSSet *)WC_userDefaultsKeysToObserve;
 
