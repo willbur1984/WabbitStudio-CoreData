@@ -36,6 +36,7 @@
 #import "NSObject+WCExtensions.h"
 #import "NSUserDefaults+WCExtensions.h"
 #import "WCFoldView.h"
+#import "WCArgumentPlaceholderCell.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -130,6 +131,10 @@ static char kWCTextViewObservingContext;
     [self setAutomaticSpellingCorrectionEnabled:NO];
     [self setAutomaticTextReplacementEnabled:NO];
     [self setContinuousSpellCheckingEnabled:NO];
+    [self setSmartInsertDeleteEnabled:NO];
+    [self setRichText:NO];
+    [self setUsesFontPanel:NO];
+    [self setUsesRuler:NO];
     [self setUsesFindBar:YES];
     [self setIncrementalSearchingEnabled:YES];
     
@@ -505,8 +510,88 @@ static char kWCTextViewObservingContext;
     }
 }
 #pragma mark NSTextView
+- (BOOL)readSelectionFromPasteboard:(NSPasteboard *)pboard type:(NSString *)type {
+    if ([type isEqualToString:NSStringPboardType]) {
+        NSString *string = [pboard stringForType:NSStringPboardType];
+        
+        if ([string rangeOfString:@"<#" options:NSLiteralSearch].length > 0) {
+            NSMutableAttributedString *pasteString = [[NSMutableAttributedString alloc] initWithString:@"" attributes:[WCSyntaxHighlighter defaultAttributes]];
+            NSScanner *scanner = [NSScanner scannerWithString:string];
+            
+            [scanner setCharactersToBeSkipped:nil];
+            
+            while (!scanner.isAtEnd) {
+                NSString *temp;
+                
+                if (![scanner scanUpToString:@"<#" intoString:&temp]) {
+                    [pasteString.mutableString appendString:[scanner.string substringFromIndex:scanner.scanLocation]];
+                    break;
+                }
+                
+                [pasteString.mutableString appendString:temp];
+                
+                if (![scanner scanString:@"<#" intoString:NULL])
+                    break;
+                
+                if (![scanner scanUpToString:@"#>" intoString:&temp]) {
+                    [pasteString.mutableString appendString:[scanner.string substringFromIndex:scanner.scanLocation]];
+                    break;
+                }
+                
+                if (![scanner scanString:@"#>" intoString:NULL])
+                    break;
+                
+                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                
+                [attachment setAttachmentCell:[[WCArgumentPlaceholderCell alloc] initTextCell:temp]];
+                
+                [pasteString appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
+            }
+            
+            if ([self shouldChangeTextInRange:self.rangeForUserTextChange replacementString:pasteString.string]) {
+                [self.textStorage replaceCharactersInRange:self.rangeForUserTextChange withAttributedString:pasteString];
+                [self didChangeText];
+                
+                return YES;
+            }
+            return NO;
+        }
+        return [super readSelectionFromPasteboard:pboard type:type];
+    }
+    return [super readSelectionFromPasteboard:pboard type:type];
+}
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard types:(NSArray *)types {    
+    if ([types containsObject:NSStringPboardType]) {
+        NSAttributedString *substring = [self.textStorage attributedSubstringFromRange:self.selectedRange];
+        NSMutableString *string = [NSMutableString stringWithCapacity:substring.length];
+        
+        [substring enumerateAttribute:NSAttachmentAttributeName inRange:NSMakeRange(0, substring.length) options:0 usingBlock:^(id value, NSRange range, BOOL *stop) {
+            if ([[value attachmentCell] isKindOfClass:[WCArgumentPlaceholderCell class]]) {
+                [string appendFormat:@"<#%@#>",[(WCArgumentPlaceholderCell *)[value attachmentCell] stringValue]];
+            }
+            else {
+                [string appendString:[substring.string substringWithRange:range]];
+            }
+        }];
+        
+        [pboard clearContents];
+        
+        return [pboard writeObjects:@[string]];
+    }
+    return [super writeSelectionToPasteboard:pboard types:types];
+}
+
 - (void)drawViewBackgroundInRect:(NSRect)rect {
     [super drawViewBackgroundInRect:rect];
+    
+    if (self.focusFold && [[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey])
+        [self _drawContentRectsForFold:self.focusFold];
+    else if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {
+        Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
+        
+        if (fold)
+            [self _drawContentRectsForFold:fold];
+    }
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewPageGuideUserDefaultsKey]) {
         const NSUInteger kColumnNumber = [[NSUserDefaults standardUserDefaults] WC_unsignedIntegerForKey:WCTextViewPageGuideColumnUserDefaultsKey];
@@ -514,7 +599,7 @@ static char kWCTextViewObservingContext;
         const CGFloat frameX = width * kColumnNumber;
         NSRect guideRect = NSMakeRect(frameX, NSMinY(self.bounds), NSWidth(self.bounds) - frameX, NSHeight(self.bounds));
         
-        if (NSIntersectsRect(guideRect, rect)) {
+        if (NSIntersectsRect(guideRect, rect) && [self needsToDrawRect:guideRect]) {
             NSColor *color = [NSColor lightGrayColor];
             
             [[color colorWithAlphaComponent:0.35] setFill];
@@ -528,15 +613,6 @@ static char kWCTextViewObservingContext;
         }
     }
     
-    if (self.focusFold && [[NSUserDefaults standardUserDefaults] boolForKey:WCFoldViewFocusCodeBlocksOnHoverUserDefaultsKey])
-        [self _drawContentRectsForFold:self.focusFold];
-    else if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey]) {
-        Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
-        
-        if (fold)
-            [self _drawContentRectsForFold:fold];
-    }
-    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
             [[NSColor darkGrayColor] setStroke];
@@ -547,10 +623,14 @@ static char kWCTextViewObservingContext;
                 NSUInteger rectCount;
                 NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
                 
-                if (!rectCount)
+                if (rectCount == 0)
                     return;
                 
                 NSRect rect = rects[0];
+                
+                if (![self needsToDrawRect:rect])
+                    return;
+                
                 NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
                 CGFloat dash[dashCount] = {3,1};
                 
@@ -962,32 +1042,42 @@ static char kWCTextViewObservingContext;
 }
 - (void)_drawContentRectsForFold:(Fold *)fold; {
     const CGFloat stepAmount = 0.05;
-    NSMutableArray *foldRects = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *folds = [NSMutableArray arrayWithCapacity:0];
     NSMutableArray *foldColors = [NSMutableArray arrayWithCapacity:0];
     NSColor *foldColor = self.backgroundColor;
     
     do {
-        NSUInteger rectCount;
-        NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
-        NSRect foldRect = NSZeroRect;
-        
-        for (NSUInteger index=0; index<rectCount; index++)
-            foldRect = NSUnionRect(foldRect, rects[index]);
-        
-        [foldRects addObject:[NSValue valueWithRect:foldRect]];
+        [folds addObject:fold];
         [foldColors addObject:foldColor];
         
-        fold = fold.fold;
         foldColor = [foldColor WC_colorWithBrightnessAdjustment:stepAmount];
+        fold = fold.fold;
         
     } while (fold);
     
-    [foldRects enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(NSValue *value, NSUInteger idx, BOOL *stop) {
-        NSColor *color = [foldColors objectAtIndex:idx];
-        NSRect rect = value.rectValue;
+    [foldColor setFill];
+    NSRectFill(self.visibleRect);
+    
+    [folds enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(Fold *fold, NSUInteger idx, BOOL *stop) {
+        NSUInteger rectCount;
+        NSRect *rects = [self.layoutManager rectArrayForCharacterRange:NSRangeFromString(fold.contentRange) withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
         
-        [color setFill];
-        [[NSBezierPath bezierPathWithRoundedRect:rect xRadius:8 yRadius:8] fill];
+        if (rectCount == 0)
+            return;
+        
+        NSUInteger drawCount = 0;
+        NSRect drawRects[rectCount];
+        
+        for (NSUInteger rectIdx=0; rectIdx<rectCount; rectIdx++) {
+            if (NSIntersectsRect(rects[rectIdx], self.visibleRect) && [self needsToDrawRect:rects[rectIdx]])
+                drawRects[drawCount++] = rects[rectIdx];
+        }
+        
+        if (drawCount == 0)
+            return;
+        
+        [[foldColors objectAtIndex:idx] setFill];
+        NSRectFillList(drawRects, drawCount);
     }];
 }
 #pragma mark Properties
@@ -1155,7 +1245,8 @@ static char kWCTextViewObservingContext;
         [self _highlightMatchingTempLabel];
     }
     
-//    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey])
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
     
     const NSTimeInterval kHighlightDelay = [[NSUserDefaults standardUserDefaults] doubleForKey:WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey];
     
