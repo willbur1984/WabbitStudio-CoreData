@@ -27,7 +27,8 @@
     
     if(class_addMethod(self, oldSelector, method_getImplementation(newMethod), newTypeEncoding)) {
         class_replaceMethod(self, newSelector, method_getImplementation(originalMethod), originalTypeEncoding);
-    } else {
+    }
+    else {
         method_exchangeImplementations(originalMethod, newMethod);
     }
 }
