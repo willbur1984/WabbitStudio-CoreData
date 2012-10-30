@@ -111,7 +111,7 @@
     if (!([note.object editedMask] & NSTextStorageEditedCharacters))
         return;
     
-    [self symbolHighlightInVisibleRange];
+    [self performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
 }
 
 @end
