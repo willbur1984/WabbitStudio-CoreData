@@ -13,6 +13,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface WCProjectDocument : NSDocument
+@interface WCProjectDocument : NSPersistentDocument
 
 @end
