@@ -21,7 +21,7 @@
 #import "Equate.h"
 #import "Define.h"
 #import "Macro.h"
-#import "File.h"
+#import "FileContainer.h"
 
 @interface WCScanSymbolsOperation ()
 @property (copy,nonatomic) NSString *string;
@@ -71,15 +71,15 @@
     
     [self.managedObjectContext performBlock:^{
         do {
-            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"File"];
+            NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
             
-            File *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+            FileContainer *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
             
             if (file) {
                 [self.managedObjectContext deleteObject:file];
             }
             
-            file = [NSEntityDescription insertNewObjectForEntityForName:@"File" inManagedObjectContext:self.managedObjectContext];
+            file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
             
             [file setIdentifier:[NSString WC_UUIDString]];
             [file setPath:self.fileURL.path];

@@ -7,7 +7,7 @@
 //
 
 #import "Symbol.h"
-#import "File.h"
+#import "FileContainer.h"
 #import "WCSymbolImageManager.h"
 
 

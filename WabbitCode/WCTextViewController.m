@@ -23,7 +23,7 @@
 #import "WCArgumentPlaceholderCell.h"
 #import "Symbol.h"
 #import "NSArray+WCExtensions.h"
-#import "File.h"
+#import "FileContainer.h"
 #import "NSURL+WCExtensions.h"
 #import "WCGeometry.h"
 #import "WCLayoutManager.h"

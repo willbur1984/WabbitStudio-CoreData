@@ -17,7 +17,7 @@ typedef enum {
     SymbolTypeMacro
 } SymbolType;
 
-@class File;
+@class FileContainer;
 
 @interface Symbol : NSManagedObject <WCCompletionItemDataSource>
 
@@ -26,6 +26,6 @@ typedef enum {
 @property (nonatomic, retain) NSString * range;
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSNumber * lineNumber;
-@property (nonatomic, retain) File *file;
+@property (nonatomic, retain) FileContainer *file;
 
 @end
