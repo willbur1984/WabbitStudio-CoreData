@@ -16,6 +16,7 @@
 #import "WCPreferencesWindowController.h"
 #import "WCTextView.h"
 #import "WCFoldView.h"
+#import "WCNewProjectWindowController.h"
 
 @interface WCAppDelegate () <NSApplicationDelegate>
 @property (strong,nonatomic) WCPreferencesWindowController *preferencesWindowController;
@@ -29,6 +30,10 @@
 
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
     return NO;
+}
+
+- (IBAction)newProjectAction:(id)sender; {
+    [[WCNewProjectWindowController sharedWindowController] showNewProjectWindow];
 }
 
 - (IBAction)preferencesAction:(id)sender; {
