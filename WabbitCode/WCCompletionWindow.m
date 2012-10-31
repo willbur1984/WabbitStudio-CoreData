@@ -195,7 +195,6 @@
         return;
     
     [self setTextView:textView];
-    [self.textView.window addChildWindow:self ordered:NSWindowAbove];
     
     NSRange completionRange = self.textView.rangeForUserCompletion;
     NSString *prefix = (completionRange.location == NSNotFound) ? nil : [self.textView.string substringWithRange:completionRange];
@@ -209,6 +208,11 @@
         [completionItems addObject:[[WCCompletionItem alloc] initWithDataSource:symbol]];
     
     [self setCompletionItems:completionItems];
+    
+    if (self.completionItems.count == 0) {
+        [self setTextView:nil];
+        return;
+    }
     
     const NSUInteger maximumNumberOfRows = 8;
     NSUInteger numberOfRows = self.completionItems.count;
@@ -254,6 +258,7 @@
     point.x = MAX(NSMinX(screenFrame), MIN(point.x, NSMaxX(screenFrame) - NSWidth(windowFrame)));
     point.y = MIN(MAX(NSMinY(screenFrame) + NSHeight(windowFrame), point.y), NSMaxY(screenFrame));
     
+    [self.textView.window addChildWindow:self ordered:NSWindowAbove];
     [self setFrameTopLeftPoint:point];
     [self setAlphaValue:1];
     [self orderFront:nil];

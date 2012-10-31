@@ -759,6 +759,25 @@
 						<object class="NSMenu" key="NSSubmenu" id="658877101">
 							<string key="NSTitle">Editor</string>
 							<array class="NSMutableArray" key="NSMenuItems">
+								<object class="NSMenuItem" id="942222627">
+									<reference key="NSMenu" ref="658877101"/>
+									<string key="NSTitle">Edit All in Scope</string>
+									<string key="NSKeyEquiv">e</string>
+									<int key="NSKeyEquivModMask">1310720</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="65445179">
+									<reference key="NSMenu" ref="658877101"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
 								<object class="NSMenuItem" id="948469779">
 									<reference key="NSMenu" ref="658877101"/>
 									<string key="NSTitle">Code Folding</string>
@@ -1289,6 +1308,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">editAllInScopeAction:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="942222627"/>
+					</object>
+					<int key="connectionID">598</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">preferencesAction:</string>
 						<reference key="source" ref="933371885"/>
 						<reference key="destination" ref="609285721"/>
@@ -1804,6 +1831,8 @@
 						<reference key="object" ref="658877101"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="948469779"/>
+							<reference ref="942222627"/>
+							<reference ref="65445179"/>
 						</array>
 						<reference key="parent" ref="231761219"/>
 					</object>
@@ -1987,6 +2016,16 @@
 						<reference key="object" ref="688882024"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">596</int>
+						<reference key="object" ref="942222627"/>
+						<reference key="parent" ref="658877101"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">597</int>
+						<reference key="object" ref="65445179"/>
+						<reference key="parent" ref="658877101"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2081,6 +2120,8 @@
 				<string key="590.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="591.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="595.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="596.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="597.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2097,7 +2138,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">595</int>
+			<int key="maxID">598</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2219,6 +2260,9 @@
 					<string key="className">WCTextView</string>
 					<string key="superclassName">NSTextView</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="_jumpToDefinitionMenuItemAction:">NSMenuItem</string>
+						<string key="complete:">id</string>
+						<string key="editAllInScopeAction:">id</string>
 						<string key="foldAction:">id</string>
 						<string key="jumpToDefinitionAction:">id</string>
 						<string key="jumpToNextPlaceholderAction:">id</string>
@@ -2229,6 +2273,18 @@
 						<string key="unfoldAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="_jumpToDefinitionMenuItemAction:">
+							<string key="name">_jumpToDefinitionMenuItemAction:</string>
+							<string key="candidateClassName">NSMenuItem</string>
+						</object>
+						<object class="IBActionInfo" key="complete:">
+							<string key="name">complete:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="editAllInScopeAction:">
+							<string key="name">editAllInScopeAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="foldAction:">
 							<string key="name">foldAction:</string>
 							<string key="candidateClassName">id</string>

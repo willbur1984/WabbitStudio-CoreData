@@ -58,6 +58,7 @@ static char kWCTextViewObservingContext;
 @property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
 @property (strong,nonatomic) NSIndexSet *symbolRangesToHighlight;
 @property (assign,nonatomic) NSUInteger countOfSymbolRangesToHighlight;
+@property (assign,nonatomic,getter = isEditingSymbols) BOOL editingSymbols;
 
 - (void)_highlightMatchingBrace;
 - (void)_highlightMatchingTempLabel;
@@ -616,6 +617,7 @@ static char kWCTextViewObservingContext;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
             [[NSColor darkGrayColor] setStroke];
+            [[[NSColor lightGrayColor] colorWithAlphaComponent:0.35] setFill];
             
             const NSInteger dashCount = 2;
             
@@ -636,6 +638,9 @@ static char kWCTextViewObservingContext;
                 
                 [path setLineDash:dash count:dashCount phase:0];
                 [path stroke];
+                
+                if (self.isEditingSymbols)
+                    [path fill];
             }];
         }
     }
@@ -812,6 +817,11 @@ static char kWCTextViewObservingContext;
     
     [self setSelectedRange:range];
     [self scrollRangeToVisible:self.selectedRange];
+}
+
+- (IBAction)editAllInScopeAction:(id)sender; {
+    if (self.countOfSymbolRangesToHighlight > 0)
+        [self setEditingSymbols:YES];
 }
 #pragma mark *** Private Methods ***
 - (void)_findSymbolRangesToHighlight; {
@@ -1134,6 +1144,14 @@ static char kWCTextViewObservingContext;
     if (prevCount != _symbolRangesToHighlight.count)
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
 }
+- (void)setEditingSymbols:(BOOL)editingSymbols {
+    if (_editingSymbols == editingSymbols)
+        return;
+    
+    _editingSymbols = editingSymbols;
+    
+    [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+}
 
 #pragma mark Actions
 - (IBAction)_jumpToDefinitionMenuItemAction:(NSMenuItem *)sender {
@@ -1244,6 +1262,8 @@ static char kWCTextViewObservingContext;
         [self _highlightMatchingBrace];
         [self _highlightMatchingTempLabel];
     }
+    
+    [self setEditingSymbols:NO];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey])
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
