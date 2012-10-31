@@ -29,6 +29,9 @@
 		79390160163B673100168CD5 /* WCProjectDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7939015E163B673100168CD5 /* WCProjectDocument.m */; };
 		79390173163D9D8C00168CD5 /* NSShadow+MCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79390172163D9D8C00168CD5 /* NSShadow+MCAdditions.m */; };
 		79390179163D9E2500168CD5 /* NSBezierPath+MCAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79390178163D9E2500168CD5 /* NSBezierPath+MCAdditions.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		7939021F16415DEB00168CD5 /* increment_build_number.sh in Resources */ = {isa = PBXBuildFile; fileRef = 7939021D16415DEB00168CD5 /* increment_build_number.sh */; };
+		7939023D164167A100168CD5 /* WCNewProjectWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7939023C164167A100168CD5 /* WCNewProjectWindowController.m */; };
+		79390240164167FE00168CD5 /* WCNewProjectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7939023E164167FE00168CD5 /* WCNewProjectWindow.xib */; };
 		793D23021613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */; };
 		793D23041613DB4700742605 /* GCJumpBarSeparator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */; };
 		793D23071613E2C000742605 /* NSURL+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 793D23061613E2C000742605 /* NSURL+WCExtensions.m */; };
@@ -83,6 +86,27 @@
 		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
 		7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */; };
 		797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */; };
+		798DB7741641A3B2007B4176 /* FileContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7731641A3B2007B4176 /* FileContainer.m */; };
+		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
+		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
+		798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */; };
+		798DB7901641ACA5007B4176 /* _Issue.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7801641ACA5007B4176 /* _Issue.m */; };
+		798DB7911641ACA5007B4176 /* _Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7821641ACA5007B4176 /* _Item.m */; };
+		798DB7921641ACA5007B4176 /* _Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7841641ACA5007B4176 /* _Project.m */; };
+		798DB7931641ACA5007B4176 /* _Target.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7861641ACA5007B4176 /* _Target.m */; };
+		798DB7941641ACA5007B4176 /* _TargetDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7881641ACA5007B4176 /* _TargetDefine.m */; };
+		798DB7951641ACA5007B4176 /* _TargetInclude.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB78A1641ACA5007B4176 /* _TargetInclude.m */; };
+		798DB7AC1641ACAF007B4176 /* Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7971641ACAF007B4176 /* Breakpoint.m */; };
+		798DB7AE1641ACAF007B4176 /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB79B1641ACAF007B4176 /* File.m */; };
+		798DB7AF1641ACAF007B4176 /* FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB79D1641ACAF007B4176 /* FileBreakpoint.m */; };
+		798DB7B11641ACAF007B4176 /* Issue.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7A11641ACAF007B4176 /* Issue.m */; };
+		798DB7B21641ACAF007B4176 /* Item.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7A31641ACAF007B4176 /* Item.m */; };
+		798DB7B31641ACAF007B4176 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7A51641ACAF007B4176 /* Project.m */; };
+		798DB7B41641ACAF007B4176 /* Target.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7A71641ACAF007B4176 /* Target.m */; };
+		798DB7B51641ACAF007B4176 /* TargetDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7A91641ACAF007B4176 /* TargetDefine.m */; };
+		798DB7B61641ACAF007B4176 /* TargetInclude.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7AB1641ACAF007B4176 /* TargetInclude.m */; };
+		798DB7F31641B5FF007B4176 /* WCProjectWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7F21641B5FF007B4176 /* WCProjectWindowController.m */; };
+		798DB7F61641B61E007B4176 /* WCProjectWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 798DB7F41641B61E007B4176 /* WCProjectWindow.xib */; };
 		79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79968CA91608DB7A00F139BC /* Cocoa.framework */; };
 		79968CB41608DB7A00F139BC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 79968CB21608DB7A00F139BC /* InfoPlist.strings */; };
 		79968CB61608DB7A00F139BC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CB51608DB7A00F139BC /* main.m */; };
@@ -97,7 +121,6 @@
 		79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */; };
 		79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */; };
 		79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C92CD71610E9C800BB6CDC /* QuartzCore.framework */; };
-		79C92CEA1611136900BB6CDC /* File.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CE91611136900BB6CDC /* File.m */; };
 		79C92CED1611136A00BB6CDC /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEC1611136A00BB6CDC /* Symbol.m */; };
 		79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEF161144B600BB6CDC /* WCTableView.m */; };
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
@@ -167,6 +190,10 @@
 		79390172163D9D8C00168CD5 /* NSShadow+MCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSShadow+MCAdditions.m"; sourceTree = "<group>"; };
 		79390177163D9E2500168CD5 /* NSBezierPath+MCAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSBezierPath+MCAdditions.h"; sourceTree = "<group>"; };
 		79390178163D9E2500168CD5 /* NSBezierPath+MCAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+MCAdditions.m"; sourceTree = "<group>"; };
+		7939021D16415DEB00168CD5 /* increment_build_number.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = increment_build_number.sh; sourceTree = SOURCE_ROOT; };
+		7939023B164167A100168CD5 /* WCNewProjectWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCNewProjectWindowController.h; sourceTree = "<group>"; };
+		7939023C164167A100168CD5 /* WCNewProjectWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCNewProjectWindowController.m; sourceTree = "<group>"; };
+		7939023F164167FE00168CD5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCNewProjectWindow.xib; sourceTree = "<group>"; };
 		793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarAccessorySeparator@2x.png"; sourceTree = "<group>"; };
 		793D23031613DB4700742605 /* GCJumpBarSeparator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "GCJumpBarSeparator@2x.png"; sourceTree = "<group>"; };
 		793D23051613E2C000742605 /* NSURL+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+WCExtensions.h"; sourceTree = "<group>"; };
@@ -261,6 +288,47 @@
 		7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCToolTipWindow.m; sourceTree = "<group>"; };
 		797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+WCExtensions.h"; sourceTree = "<group>"; };
 		797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+WCExtensions.m"; sourceTree = "<group>"; };
+		798DB7721641A3B2007B4176 /* FileContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileContainer.h; sourceTree = "<group>"; };
+		798DB7731641A3B2007B4176 /* FileContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileContainer.m; sourceTree = "<group>"; };
+		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
+		798DB7761641ACA5007B4176 /* _Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Breakpoint.m; sourceTree = "<group>"; };
+		798DB7791641ACA5007B4176 /* _File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _File.h; sourceTree = "<group>"; };
+		798DB77A1641ACA5007B4176 /* _File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _File.m; sourceTree = "<group>"; };
+		798DB77B1641ACA5007B4176 /* _FileBreakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _FileBreakpoint.h; sourceTree = "<group>"; };
+		798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _FileBreakpoint.m; sourceTree = "<group>"; };
+		798DB77F1641ACA5007B4176 /* _Issue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Issue.h; sourceTree = "<group>"; };
+		798DB7801641ACA5007B4176 /* _Issue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Issue.m; sourceTree = "<group>"; };
+		798DB7811641ACA5007B4176 /* _Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Item.h; sourceTree = "<group>"; };
+		798DB7821641ACA5007B4176 /* _Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Item.m; sourceTree = "<group>"; };
+		798DB7831641ACA5007B4176 /* _Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Project.h; sourceTree = "<group>"; };
+		798DB7841641ACA5007B4176 /* _Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Project.m; sourceTree = "<group>"; };
+		798DB7851641ACA5007B4176 /* _Target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Target.h; sourceTree = "<group>"; };
+		798DB7861641ACA5007B4176 /* _Target.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Target.m; sourceTree = "<group>"; };
+		798DB7871641ACA5007B4176 /* _TargetDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TargetDefine.h; sourceTree = "<group>"; };
+		798DB7881641ACA5007B4176 /* _TargetDefine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TargetDefine.m; sourceTree = "<group>"; };
+		798DB7891641ACA5007B4176 /* _TargetInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _TargetInclude.h; sourceTree = "<group>"; };
+		798DB78A1641ACA5007B4176 /* _TargetInclude.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _TargetInclude.m; sourceTree = "<group>"; };
+		798DB7961641ACAF007B4176 /* Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Breakpoint.h; sourceTree = "<group>"; };
+		798DB7971641ACAF007B4176 /* Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Breakpoint.m; sourceTree = "<group>"; };
+		798DB79A1641ACAF007B4176 /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
+		798DB79B1641ACAF007B4176 /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
+		798DB79C1641ACAF007B4176 /* FileBreakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileBreakpoint.h; sourceTree = "<group>"; };
+		798DB79D1641ACAF007B4176 /* FileBreakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileBreakpoint.m; sourceTree = "<group>"; };
+		798DB7A01641ACAF007B4176 /* Issue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Issue.h; sourceTree = "<group>"; };
+		798DB7A11641ACAF007B4176 /* Issue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Issue.m; sourceTree = "<group>"; };
+		798DB7A21641ACAF007B4176 /* Item.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Item.h; sourceTree = "<group>"; };
+		798DB7A31641ACAF007B4176 /* Item.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Item.m; sourceTree = "<group>"; };
+		798DB7A41641ACAF007B4176 /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
+		798DB7A51641ACAF007B4176 /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
+		798DB7A61641ACAF007B4176 /* Target.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Target.h; sourceTree = "<group>"; };
+		798DB7A71641ACAF007B4176 /* Target.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Target.m; sourceTree = "<group>"; };
+		798DB7A81641ACAF007B4176 /* TargetDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetDefine.h; sourceTree = "<group>"; };
+		798DB7A91641ACAF007B4176 /* TargetDefine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetDefine.m; sourceTree = "<group>"; };
+		798DB7AA1641ACAF007B4176 /* TargetInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TargetInclude.h; sourceTree = "<group>"; };
+		798DB7AB1641ACAF007B4176 /* TargetInclude.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TargetInclude.m; sourceTree = "<group>"; };
+		798DB7F11641B5FF007B4176 /* WCProjectWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectWindowController.h; sourceTree = "<group>"; };
+		798DB7F21641B5FF007B4176 /* WCProjectWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectWindowController.m; sourceTree = "<group>"; };
+		798DB7F51641B61E007B4176 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCProjectWindow.xib; sourceTree = "<group>"; };
 		79968CA51608DB7A00F139BC /* WabbitCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WabbitCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79968CA91608DB7A00F139BC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		79968CAC1608DB7A00F139BC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -287,8 +355,6 @@
 		79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionWindow.h; sourceTree = "<group>"; };
 		79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionWindow.m; sourceTree = "<group>"; };
 		79C92CD71610E9C800BB6CDC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
-		79C92CE81611136900BB6CDC /* File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = File.h; sourceTree = "<group>"; };
-		79C92CE91611136900BB6CDC /* File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = File.m; sourceTree = "<group>"; };
 		79C92CEB1611136A00BB6CDC /* Symbol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Symbol.h; sourceTree = "<group>"; };
 		79C92CEC1611136A00BB6CDC /* Symbol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Symbol.m; sourceTree = "<group>"; };
 		79C92CEE161144B500BB6CDC /* WCTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTableView.h; sourceTree = "<group>"; };
@@ -418,8 +484,8 @@
 				7903F1FD160FB810000D3F3D /* Macro.m */,
 				79C92CEB1611136A00BB6CDC /* Symbol.h */,
 				79C92CEC1611136A00BB6CDC /* Symbol.m */,
-				79C92CE81611136900BB6CDC /* File.h */,
-				79C92CE91611136900BB6CDC /* File.m */,
+				798DB7721641A3B2007B4176 /* FileContainer.h */,
+				798DB7731641A3B2007B4176 /* FileContainer.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -427,8 +493,26 @@
 		7939012C163AC18A00168CD5 /* machine */ = {
 			isa = PBXGroup;
 			children = (
+				798DB7751641ACA5007B4176 /* _Breakpoint.h */,
+				798DB7761641ACA5007B4176 /* _Breakpoint.m */,
+				798DB7791641ACA5007B4176 /* _File.h */,
+				798DB77A1641ACA5007B4176 /* _File.m */,
+				798DB77B1641ACA5007B4176 /* _FileBreakpoint.h */,
+				798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */,
+				798DB77F1641ACA5007B4176 /* _Issue.h */,
+				798DB7801641ACA5007B4176 /* _Issue.m */,
+				798DB7811641ACA5007B4176 /* _Item.h */,
+				798DB7821641ACA5007B4176 /* _Item.m */,
+				798DB7831641ACA5007B4176 /* _Project.h */,
+				798DB7841641ACA5007B4176 /* _Project.m */,
+				798DB7851641ACA5007B4176 /* _Target.h */,
+				798DB7861641ACA5007B4176 /* _Target.m */,
+				798DB7871641ACA5007B4176 /* _TargetDefine.h */,
+				798DB7881641ACA5007B4176 /* _TargetDefine.m */,
+				798DB7891641ACA5007B4176 /* _TargetInclude.h */,
+				798DB78A1641ACA5007B4176 /* _TargetInclude.m */,
 			);
-			name = machine;
+			path = machine;
 			sourceTree = "<group>";
 		};
 		7939016D163D6F7200168CD5 /* Toolbar */ = {
@@ -436,6 +520,26 @@
 			children = (
 			);
 			name = Toolbar;
+			sourceTree = "<group>";
+		};
+		793902391641670C00168CD5 /* Documents */ = {
+			isa = PBXGroup;
+			children = (
+				7939015D163B673100168CD5 /* WCProjectDocument.h */,
+				7939015E163B673100168CD5 /* WCProjectDocument.m */,
+			);
+			name = Documents;
+			sourceTree = "<group>";
+		};
+		7939023A1641671B00168CD5 /* Window Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				7939023B164167A100168CD5 /* WCNewProjectWindowController.h */,
+				7939023C164167A100168CD5 /* WCNewProjectWindowController.m */,
+				798DB7F11641B5FF007B4176 /* WCProjectWindowController.h */,
+				798DB7F21641B5FF007B4176 /* WCProjectWindowController.m */,
+			);
+			name = "Window Controllers";
 			sourceTree = "<group>";
 		};
 		7959365E161637840085355E /* Folds */ = {
@@ -596,6 +700,7 @@
 		79968CB01608DB7A00F139BC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				7939021D16415DEB00168CD5 /* increment_build_number.sh */,
 				79968CB11608DB7A00F139BC /* WabbitCode-Info.plist */,
 				79968CB21608DB7A00F139BC /* InfoPlist.strings */,
 				79968CB51608DB7A00F139BC /* main.m */,
@@ -639,6 +744,8 @@
 				79DF87B9162A8E1A00818741 /* WCGeneralView.xib */,
 				79DF87BE162A8ED100818741 /* WCTextEditingView.xib */,
 				79DF87C6162B52F400818741 /* WCFontsAndColorsView.xib */,
+				7939023E164167FE00168CD5 /* WCNewProjectWindow.xib */,
+				798DB7F41641B61E007B4176 /* WCProjectWindow.xib */,
 			);
 			name = Xibs;
 			sourceTree = "<group>";
@@ -703,8 +810,8 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
-				7939015D163B673100168CD5 /* WCProjectDocument.h */,
-				7939015E163B673100168CD5 /* WCProjectDocument.m */,
+				7939023A1641671B00168CD5 /* Window Controllers */,
+				793902391641670C00168CD5 /* Documents */,
 				79DE43421638C051003D56EA /* Model */,
 			);
 			name = Project;
@@ -722,9 +829,28 @@
 		79DE43431638C056003D56EA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				798DB7961641ACAF007B4176 /* Breakpoint.h */,
+				798DB7971641ACAF007B4176 /* Breakpoint.m */,
+				798DB79A1641ACAF007B4176 /* File.h */,
+				798DB79B1641ACAF007B4176 /* File.m */,
+				798DB79C1641ACAF007B4176 /* FileBreakpoint.h */,
+				798DB79D1641ACAF007B4176 /* FileBreakpoint.m */,
+				798DB7A01641ACAF007B4176 /* Issue.h */,
+				798DB7A11641ACAF007B4176 /* Issue.m */,
+				798DB7A21641ACAF007B4176 /* Item.h */,
+				798DB7A31641ACAF007B4176 /* Item.m */,
+				798DB7A41641ACAF007B4176 /* Project.h */,
+				798DB7A51641ACAF007B4176 /* Project.m */,
+				798DB7A61641ACAF007B4176 /* Target.h */,
+				798DB7A71641ACAF007B4176 /* Target.m */,
+				798DB7A81641ACAF007B4176 /* TargetDefine.h */,
+				798DB7A91641ACAF007B4176 /* TargetDefine.m */,
+				798DB7AA1641ACAF007B4176 /* TargetInclude.h */,
+				798DB7AB1641ACAF007B4176 /* TargetInclude.m */,
 				7939012C163AC18A00168CD5 /* machine */,
 			);
 			name = Classes;
+			path = CoreData;
 			sourceTree = "<group>";
 		};
 		79DF87A6162A8C6500818741 /* MASPreferences */ = {
@@ -923,6 +1049,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7962BDE316215195006D5A7A /* Build configuration list for PBXNativeTarget "WabbitEmu" */;
 			buildPhases = (
+				7939022216415E3F00168CD5 /* Increment Build Number */,
 				7962BDC716215194006D5A7A /* Sources */,
 				7962BDC816215194006D5A7A /* Frameworks */,
 				7962BDC916215194006D5A7A /* Resources */,
@@ -940,6 +1067,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79968CC41608DB7A00F139BC /* Build configuration list for PBXNativeTarget "WabbitCode" */;
 			buildPhases = (
+				7939022116415E0A00168CD5 /* Increment Build Number */,
 				79968CA11608DB7A00F139BC /* Sources */,
 				79968CA21608DB7A00F139BC /* Frameworks */,
 				79968CA31608DB7A00F139BC /* Resources */,
@@ -990,6 +1118,7 @@
 				7962BDDF16215194006D5A7A /* WEDocument.xib in Resources */,
 				7962BDE216215195006D5A7A /* WEMainMenu.xib in Resources */,
 				79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */,
+				7939021F16415DEB00168CD5 /* increment_build_number.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,10 +1148,43 @@
 				79DF87C0162A8ED100818741 /* WCTextEditingView.xib in Resources */,
 				79DF87C2162B52A900818741 /* Fonts & Colors.png in Resources */,
 				79DF87C8162B52F400818741 /* WCFontsAndColorsView.xib in Resources */,
+				79390240164167FE00168CD5 /* WCNewProjectWindow.xib in Resources */,
+				798DB7F61641B61E007B4176 /* WCProjectWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7939022116415E0A00168CD5 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh /${PROJECT_DIR}/increment_build_number.sh \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+		7939022216415E3F00168CD5 /* Increment Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Increment Build Number";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/bin/sh /${PROJECT_DIR}/increment_build_number.sh \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7962BDC716215194006D5A7A /* Sources */ = {
@@ -1068,7 +1230,6 @@
 				7903F1FE160FB810000D3F3D /* Macro.m in Sources */,
 				7903F207160FDE9E000D3F3D /* WCArgumentPlaceholderCell.m in Sources */,
 				79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */,
-				79C92CEA1611136900BB6CDC /* File.m in Sources */,
 				79C92CED1611136A00BB6CDC /* Symbol.m in Sources */,
 				79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */,
 				79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */,
@@ -1121,12 +1282,41 @@
 				79390160163B673100168CD5 /* WCProjectDocument.m in Sources */,
 				79390173163D9D8C00168CD5 /* NSShadow+MCAdditions.m in Sources */,
 				79390179163D9E2500168CD5 /* NSBezierPath+MCAdditions.m in Sources */,
+				7939023D164167A100168CD5 /* WCNewProjectWindowController.m in Sources */,
+				798DB7741641A3B2007B4176 /* FileContainer.m in Sources */,
+				798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */,
+				798DB78D1641ACA5007B4176 /* _File.m in Sources */,
+				798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */,
+				798DB7901641ACA5007B4176 /* _Issue.m in Sources */,
+				798DB7911641ACA5007B4176 /* _Item.m in Sources */,
+				798DB7921641ACA5007B4176 /* _Project.m in Sources */,
+				798DB7931641ACA5007B4176 /* _Target.m in Sources */,
+				798DB7941641ACA5007B4176 /* _TargetDefine.m in Sources */,
+				798DB7951641ACA5007B4176 /* _TargetInclude.m in Sources */,
+				798DB7AC1641ACAF007B4176 /* Breakpoint.m in Sources */,
+				798DB7AE1641ACAF007B4176 /* File.m in Sources */,
+				798DB7AF1641ACAF007B4176 /* FileBreakpoint.m in Sources */,
+				798DB7B11641ACAF007B4176 /* Issue.m in Sources */,
+				798DB7B21641ACAF007B4176 /* Item.m in Sources */,
+				798DB7B31641ACAF007B4176 /* Project.m in Sources */,
+				798DB7B41641ACAF007B4176 /* Target.m in Sources */,
+				798DB7B51641ACAF007B4176 /* TargetDefine.m in Sources */,
+				798DB7B61641ACAF007B4176 /* TargetInclude.m in Sources */,
+				798DB7F31641B5FF007B4176 /* WCProjectWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		7939023E164167FE00168CD5 /* WCNewProjectWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7939023F164167FE00168CD5 /* en */,
+			);
+			name = WCNewProjectWindow.xib;
+			sourceTree = "<group>";
+		};
 		7962BDD116215194006D5A7A /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1173,6 +1363,14 @@
 				7973D6DA160CF8DF004EDE62 /* en */,
 			);
 			name = WCTextView.xib;
+			sourceTree = "<group>";
+		};
+		798DB7F41641B61E007B4176 /* WCProjectWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				798DB7F51641B61E007B4176 /* en */,
+			);
+			name = WCProjectWindow.xib;
 			sourceTree = "<group>";
 		};
 		79968CB21608DB7A00F139BC /* InfoPlist.strings */ = {
