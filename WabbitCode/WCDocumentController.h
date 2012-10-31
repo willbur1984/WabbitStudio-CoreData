@@ -13,8 +13,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+extern NSString *const kProjectDocumentUTI;
+
+extern NSString *const kProjectEntityName;
+extern NSString *const kFileEntityName;
+
 @interface WCDocumentController : NSDocumentController
 
 @property (readonly,nonatomic) NSArray *unsavedDocumentURLs;
+
+- (BOOL)makeProjectDocumentForURL:(NSURL *)documentURL withContentsOfURL:(NSURL *)directoryURL error:(NSError *__autoreleasing *)outError;
 
 @end

@@ -74,7 +74,7 @@
             NSURL *projectURL = [directoryURL URLByAppendingPathComponent:[directoryURL.lastPathComponent stringByAppendingPathExtension:projectExtension]];
             
             NSError *outError;
-            if (![[WCDocumentController sharedDocumentController] makeProjectDocumentWithURL:projectURL withContentsOfURL:directoryURL error:&outError]) {
+            if (![[WCDocumentController sharedDocumentController] makeProjectDocumentForURL:projectURL withContentsOfURL:directoryURL error:&outError]) {
                 WCLogObject(outError);
                 return;
             }
