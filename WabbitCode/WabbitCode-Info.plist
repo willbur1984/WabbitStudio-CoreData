@@ -72,13 +72,17 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>project</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>text/xml</string>
+			</array>
 			<key>CFBundleTypeName</key>
 			<string>WabbitCode Project File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.revsoft.wabbitcode.project</string>
+				<string>org.revsoft.wabbitcode.project.current</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
@@ -162,29 +166,6 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>com.apple.package</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>WabbitCode Project File</string>
-			<key>UTTypeIconFile</key>
-			<string>project</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.revsoft.wabbitcode.project</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>wcodeproj</string>
-				</array>
-			</dict>
-			<key>public.filename-extension</key>
-			<array>
-				<string>wstudioproj</string>
-			</array>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
 				<string>public.source-code</string>
 			</array>
 			<key>UTTypeDescription</key>
@@ -221,6 +202,29 @@
 				<array>
 					<string>inc</string>
 					<string>INC</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.xml</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>WabbitCode Project File</string>
+			<key>UTTypeIconFile</key>
+			<string>project</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.revsoft.wabbitcode.project.current</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>wcodeproject</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>text/xml</string>
 				</array>
 			</dict>
 		</dict>
