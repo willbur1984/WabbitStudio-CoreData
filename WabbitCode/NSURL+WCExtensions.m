@@ -34,5 +34,23 @@
     
     return retval;
 }
+- (BOOL)WC_isDirectory; {
+    NSNumber *retval = nil;
+    NSError *outError;
+    
+    if (![self getResourceValue:&retval forKey:NSURLIsDirectoryKey error:&outError])
+        WCLogObject(outError);
+    
+    return retval.boolValue;
+}
+- (NSURL *)WC_parentDirectory; {
+    NSURL *retval = nil;
+    NSError *outError;
+    
+    if (![self getResourceValue:&retval forKey:NSURLParentDirectoryURLKey error:&outError])
+        WCLogObject(outError);
+    
+    return retval;
+}
 
 @end

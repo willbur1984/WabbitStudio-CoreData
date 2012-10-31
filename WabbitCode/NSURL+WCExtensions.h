@@ -17,5 +17,7 @@
 
 - (NSImage *)WC_effectiveIcon;
 - (NSDate *)WC_contentModificationDate;
+- (BOOL)WC_isDirectory;
+- (NSURL *)WC_parentDirectory;
 
 @end
