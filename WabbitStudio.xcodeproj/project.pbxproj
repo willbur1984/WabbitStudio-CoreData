@@ -86,6 +86,10 @@
 		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
 		7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */; };
 		797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */; };
+		79813E5F16437CF500D0F184 /* WCProjectCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E5E16437CF500D0F184 /* WCProjectCellView.m */; };
+		79813E611643816100D0F184 /* Group.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 79813E601643816100D0F184 /* Group.tiff */; };
+		79813E64164382D100D0F184 /* WCOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E63164382D100D0F184 /* WCOutlineView.m */; };
+		79813E67164383F100D0F184 /* NSOutlineView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */; };
 		798DB7741641A3B2007B4176 /* FileContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7731641A3B2007B4176 /* FileContainer.m */; };
 		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
 		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
@@ -288,6 +292,13 @@
 		7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCToolTipWindow.m; sourceTree = "<group>"; };
 		797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+WCExtensions.h"; sourceTree = "<group>"; };
 		797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+WCExtensions.m"; sourceTree = "<group>"; };
+		79813E5D16437CF500D0F184 /* WCProjectCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectCellView.h; sourceTree = "<group>"; };
+		79813E5E16437CF500D0F184 /* WCProjectCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectCellView.m; sourceTree = "<group>"; };
+		79813E601643816100D0F184 /* Group.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Group.tiff; sourceTree = "<group>"; };
+		79813E62164382D100D0F184 /* WCOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCOutlineView.h; sourceTree = "<group>"; };
+		79813E63164382D100D0F184 /* WCOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCOutlineView.m; sourceTree = "<group>"; };
+		79813E65164383F100D0F184 /* NSOutlineView+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOutlineView+WCExtensions.h"; sourceTree = "<group>"; };
+		79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOutlineView+WCExtensions.m"; sourceTree = "<group>"; };
 		798DB7721641A3B2007B4176 /* FileContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileContainer.h; sourceTree = "<group>"; };
 		798DB7731641A3B2007B4176 /* FileContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileContainer.m; sourceTree = "<group>"; };
 		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
@@ -443,6 +454,7 @@
 		7903F1E5160EBF1F000D3F3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				79813E601643816100D0F184 /* Group.tiff */,
 				79DF87C1162B52A900818741 /* Fonts & Colors.png */,
 				79DF87BC162A8E9D00818741 /* Text Editing.png */,
 				7962BDEF16221899006D5A7A /* assembly.icns */,
@@ -644,6 +656,15 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		79813E5B16437CDC00D0F184 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				79813E5D16437CF500D0F184 /* WCProjectCellView.h */,
+				79813E5E16437CF500D0F184 /* WCProjectCellView.m */,
+			);
+			name = Cells;
+			sourceTree = "<group>";
+		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
@@ -777,6 +798,8 @@
 				797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */,
 				79FDAE6F1633173900FC9CF3 /* NSUserDefaults+WCExtensions.h */,
 				79FDAE701633173900FC9CF3 /* NSUserDefaults+WCExtensions.m */,
+				79813E65164383F100D0F184 /* NSOutlineView+WCExtensions.h */,
+				79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */,
 				7903F1F7160FB2BA000D3F3D /* External */,
 			);
 			name = Categories;
@@ -810,6 +833,7 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				79813E5B16437CDC00D0F184 /* Cells */,
 				7939023A1641671B00168CD5 /* Window Controllers */,
 				793902391641670C00168CD5 /* Documents */,
 				79DE43421638C051003D56EA /* Model */,
@@ -882,6 +906,8 @@
 			children = (
 				79C92CEE161144B500BB6CDC /* WCTableView.h */,
 				79C92CEF161144B600BB6CDC /* WCTableView.m */,
+				79813E62164382D100D0F184 /* WCOutlineView.h */,
+				79813E63164382D100D0F184 /* WCOutlineView.m */,
 				79FE3607161943AF00DB7C6D /* Jump Bar */,
 			);
 			name = Views;
@@ -1150,6 +1176,7 @@
 				79DF87C8162B52F400818741 /* WCFontsAndColorsView.xib in Resources */,
 				79390240164167FE00168CD5 /* WCNewProjectWindow.xib in Resources */,
 				798DB7F61641B61E007B4176 /* WCProjectWindow.xib in Resources */,
+				79813E611643816100D0F184 /* Group.tiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1303,6 +1330,9 @@
 				798DB7B51641ACAF007B4176 /* TargetDefine.m in Sources */,
 				798DB7B61641ACAF007B4176 /* TargetInclude.m in Sources */,
 				798DB7F31641B5FF007B4176 /* WCProjectWindowController.m in Sources */,
+				79813E5F16437CF500D0F184 /* WCProjectCellView.m in Sources */,
+				79813E64164382D100D0F184 /* WCOutlineView.m in Sources */,
+				79813E67164383F100D0F184 /* NSOutlineView+WCExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
