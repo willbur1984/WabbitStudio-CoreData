@@ -44,11 +44,12 @@
         NSTextView *textView = [self.delegate textViewForBookmarkScroller:self];
         CGFloat scaleY = NSHeight(textView.frame) / NSHeight(self.frame);
         
+        [[NSColor blueColor] setFill];
+        
         for (Bookmark *bookmark in bookmarks) {
             NSRect lineRect = [textView.layoutManager lineFragmentRectForGlyphAtIndex:[textView.layoutManager glyphIndexForCharacterAtIndex:bookmark.location.integerValue] effectiveRange:NULL];
             NSRect bookmarkRect = NSInsetRect(NSMakeRect(NSMinX(slotRect), NSMinY(slotRect) + floor(NSMinY(lineRect) / scaleY), NSWidth(slotRect), 1), 1, 0);
             
-            [[NSColor blueColor] setFill];
             NSRectFill(bookmarkRect);
         }
     }
