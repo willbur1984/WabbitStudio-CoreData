@@ -74,9 +74,12 @@ NSString *const kFileEntityName = @"File";
         
         [file setName:url.lastPathComponent];
         [file setPath:url.path];
-        [file setFile:parentFile];
+        
+        [[parentFile filesSet] addObject:file];
         
         if ([url WC_isDirectory]) {
+            [file setIsGroup:@true];
+            
             [URLsToFiles setObject:file forKey:url];
         }
     }
