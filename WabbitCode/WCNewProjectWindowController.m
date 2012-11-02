@@ -61,7 +61,6 @@
 - (IBAction)createFromFolderAction:(id)sender; {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
     
-    [openPanel setTitle:NSLocalizedString(@"Create From Folder…", nil)];
     [openPanel setMessage:NSLocalizedString(@"Choose a folder to create your project from.", nil)];
     [openPanel setCanChooseFiles:NO];
     [openPanel setCanChooseDirectories:YES];
