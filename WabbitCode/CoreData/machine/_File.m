@@ -4,6 +4,7 @@
 #import "_File.h"
 
 const struct FileAttributes FileAttributes = {
+	.isGroup = @"isGroup",
 	.path = @"path",
 	.url = @"url",
 };
@@ -46,9 +47,39 @@ const struct FileFetchedProperties FileFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"isGroupValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isGroup"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic isGroup;
+
+
+
+- (BOOL)isGroupValue {
+	NSNumber *result = [self isGroup];
+	return [result boolValue];
+}
+
+- (void)setIsGroupValue:(BOOL)value_ {
+	[self setIsGroup:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveIsGroupValue {
+	NSNumber *result = [self primitiveIsGroup];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveIsGroupValue:(BOOL)value_ {
+	[self setPrimitiveIsGroup:[NSNumber numberWithBool:value_]];
+}
+
 
 
 

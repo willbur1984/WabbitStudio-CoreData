@@ -5,6 +5,7 @@
 #import "Item.h"
 
 extern const struct FileAttributes {
+	__unsafe_unretained NSString *isGroup;
 	__unsafe_unretained NSString *path;
 	__unsafe_unretained NSString *url;
 } FileAttributes;
@@ -29,6 +30,7 @@ extern const struct FileFetchedProperties {
 @class Project;
 
 
+
 @class NSObject;
 
 @interface FileID : NSManagedObjectID {}
@@ -39,6 +41,18 @@ extern const struct FileFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (FileID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSNumber* isGroup;
+
+
+@property BOOL isGroupValue;
+- (BOOL)isGroupValue;
+- (void)setIsGroupValue:(BOOL)value_;
+
+//- (BOOL)validateIsGroup:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -125,6 +139,15 @@ extern const struct FileFetchedProperties {
 @end
 
 @interface _File (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveIsGroup;
+- (void)setPrimitiveIsGroup:(NSNumber*)value;
+
+- (BOOL)primitiveIsGroupValue;
+- (void)setPrimitiveIsGroupValue:(BOOL)value_;
+
+
 
 
 - (NSString*)primitivePath;
