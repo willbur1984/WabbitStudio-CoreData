@@ -56,7 +56,7 @@ static char kWCTextViewObservingContext;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
 @property (assign,nonatomic,getter = isWrapping) BOOL wrapping;
-@property (strong,nonatomic) NSIndexSet *symbolRangesToHighlight;
+@property (strong,nonatomic) NSMutableIndexSet *symbolRangesToHighlight;
 @property (assign,nonatomic) NSUInteger countOfSymbolRangesToHighlight;
 @property (assign,nonatomic,getter = isEditingSymbols) BOOL editingSymbols;
 
@@ -460,6 +460,9 @@ static char kWCTextViewObservingContext;
     else if ([aString isEqualToString:@"("]) {
         [super insertText:@")"];
         [self setSelectedRange:NSMakeRange(self.selectedRange.location - 1, 0)];
+    }
+    else if (self.isEditingSymbols) {
+        
     }
     else {
         if (self.window.firstResponder != self)
@@ -1136,7 +1139,7 @@ static char kWCTextViewObservingContext;
     
     [self.enclosingScrollView reflectScrolledClipView:self.enclosingScrollView.contentView];
 }
-- (void)setSymbolRangesToHighlight:(NSIndexSet *)symbolRangesToHighlight {
+- (void)setSymbolRangesToHighlight:(NSMutableIndexSet *)symbolRangesToHighlight {
     NSUInteger prevCount = _symbolRangesToHighlight.count;
     
     _symbolRangesToHighlight = symbolRangesToHighlight;
@@ -1263,7 +1266,8 @@ static char kWCTextViewObservingContext;
         [self _highlightMatchingTempLabel];
     }
     
-    [self setEditingSymbols:NO];
+    if (![self.symbolRangesToHighlight containsIndex:self.selectedRange.location])
+        [self setEditingSymbols:NO];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey])
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
