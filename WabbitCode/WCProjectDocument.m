@@ -17,6 +17,15 @@
 
 @implementation WCProjectDocument
 
+- (id)init {
+    if (!(self = [super init]))
+        return nil;
+    
+    [self setUndoManager:nil];
+    
+    return self;
+}
+
 - (void)makeWindowControllers {
     WCProjectWindowController *windowController = [[WCProjectWindowController alloc] init];
     
