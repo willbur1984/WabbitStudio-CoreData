@@ -123,6 +123,10 @@
 		79968CDC1608E97400F139BC /* NSColor+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CDB1608E97400F139BC /* NSColor+WCExtensions.m */; };
 		79968CEF1608FB6500F139BC /* NSArray+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */; };
 		79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */; };
+		79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA4081645BD2900876655 /* WCProjectView.xib */; };
+		79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA40B1645BF3700876655 /* WCIssueView.xib */; };
+		79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA40E1645BF4000876655 /* WCSearchView.xib */; };
+		79BF21C61645B21A00E79CBA /* DMTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BF21C51645B21A00E79CBA /* DMTabBarItem.m */; };
 		79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */; };
 		79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C92CD71610E9C800BB6CDC /* QuartzCore.framework */; };
 		79C92CED1611136A00BB6CDC /* Symbol.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEC1611136A00BB6CDC /* Symbol.m */; };
@@ -142,6 +146,13 @@
 		79DF87C2162B52A900818741 /* Fonts & Colors.png in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87C1162B52A900818741 /* Fonts & Colors.png */; };
 		79DF87C5162B52C300818741 /* WCFontsAndColorsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79DF87C4162B52C200818741 /* WCFontsAndColorsViewController.m */; };
 		79DF87C8162B52F400818741 /* WCFontsAndColorsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87C6162B52F400818741 /* WCFontsAndColorsView.xib */; };
+		79E3843116458840009B0DF1 /* WCProjectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E3843016458840009B0DF1 /* WCProjectViewController.m */; };
+		79E3843616458BBE009B0DF1 /* WCNavigatorControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E3843516458BBE009B0DF1 /* WCNavigatorControl.m */; };
+		79E3843816459837009B0DF1 /* Folder.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 79E3843716459837009B0DF1 /* Folder.tiff */; };
+		79E3843E1645A2B9009B0DF1 /* Issue.png in Resources */ = {isa = PBXBuildFile; fileRef = 79E3843C1645A2B9009B0DF1 /* Issue.png */; };
+		79E3843F1645A2B9009B0DF1 /* Search.png in Resources */ = {isa = PBXBuildFile; fileRef = 79E3843D1645A2B9009B0DF1 /* Search.png */; };
+		79E384441645A3BC009B0DF1 /* WCSearchViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E384431645A3BC009B0DF1 /* WCSearchViewController.m */; };
+		79E384481645A40C009B0DF1 /* WCIssueViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E384471645A40C009B0DF1 /* WCIssueViewController.m */; };
 		79FC76A61618029F006B9DC3 /* WCFoldView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FC76A51618029F006B9DC3 /* WCFoldView.m */; };
 		79FDAE711633173900FC9CF3 /* NSUserDefaults+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FDAE701633173900FC9CF3 /* NSUserDefaults+WCExtensions.m */; };
 		79FE360E161945B400DB7C6D /* WCSymbolHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE360D161945B400DB7C6D /* WCSymbolHighlighter.m */; };
@@ -363,6 +374,11 @@
 		79968CED1608FB6500F139BC /* NSArray+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+WCExtensions.h"; sourceTree = "<group>"; };
 		79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+WCExtensions.m"; sourceTree = "<group>"; };
 		79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Completions.xcdatamodel; sourceTree = "<group>"; };
+		79AFA4091645BD2900876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCProjectView.xib; sourceTree = "<group>"; };
+		79AFA40C1645BF3700876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCIssueView.xib; sourceTree = "<group>"; };
+		79AFA40F1645BF4000876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCSearchView.xib; sourceTree = "<group>"; };
+		79BF21C41645B21A00E79CBA /* DMTabBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMTabBarItem.h; path = DMTabBar/DMTabBar/DMTabBarItem.h; sourceTree = "<group>"; };
+		79BF21C51645B21A00E79CBA /* DMTabBarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMTabBarItem.m; path = DMTabBar/DMTabBar/DMTabBarItem.m; sourceTree = "<group>"; };
 		79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionWindow.h; sourceTree = "<group>"; };
 		79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionWindow.m; sourceTree = "<group>"; };
 		79C92CD71610E9C800BB6CDC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/QuartzCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -390,6 +406,18 @@
 		79DF87C3162B52C200818741 /* WCFontsAndColorsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFontsAndColorsViewController.h; sourceTree = "<group>"; };
 		79DF87C4162B52C200818741 /* WCFontsAndColorsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFontsAndColorsViewController.m; sourceTree = "<group>"; };
 		79DF87C7162B52F400818741 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/WCFontsAndColorsView.xib; sourceTree = "<group>"; };
+		79E3842F16458840009B0DF1 /* WCProjectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectViewController.h; sourceTree = "<group>"; };
+		79E3843016458840009B0DF1 /* WCProjectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectViewController.m; sourceTree = "<group>"; };
+		79E3843416458BBE009B0DF1 /* WCNavigatorControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCNavigatorControl.h; sourceTree = "<group>"; };
+		79E3843516458BBE009B0DF1 /* WCNavigatorControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCNavigatorControl.m; sourceTree = "<group>"; };
+		79E3843716459837009B0DF1 /* Folder.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Folder.tiff; sourceTree = "<group>"; };
+		79E3843C1645A2B9009B0DF1 /* Issue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Issue.png; sourceTree = "<group>"; };
+		79E3843D1645A2B9009B0DF1 /* Search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Search.png; sourceTree = "<group>"; };
+		79E384401645A2FC009B0DF1 /* WCNavigatorItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCNavigatorItem.h; sourceTree = "<group>"; };
+		79E384421645A3BC009B0DF1 /* WCSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSearchViewController.h; sourceTree = "<group>"; };
+		79E384431645A3BC009B0DF1 /* WCSearchViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSearchViewController.m; sourceTree = "<group>"; };
+		79E384461645A40C009B0DF1 /* WCIssueViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCIssueViewController.h; sourceTree = "<group>"; };
+		79E384471645A40C009B0DF1 /* WCIssueViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCIssueViewController.m; sourceTree = "<group>"; };
 		79FC76A41618029F006B9DC3 /* WCFoldView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFoldView.h; sourceTree = "<group>"; };
 		79FC76A51618029F006B9DC3 /* WCFoldView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldView.m; sourceTree = "<group>"; };
 		79FDAE6F1633173900FC9CF3 /* NSUserDefaults+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSUserDefaults+WCExtensions.h"; sourceTree = "<group>"; };
@@ -454,6 +482,9 @@
 		7903F1E5160EBF1F000D3F3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				79E3843C1645A2B9009B0DF1 /* Issue.png */,
+				79E3843D1645A2B9009B0DF1 /* Search.png */,
+				79E3843716459837009B0DF1 /* Folder.tiff */,
 				79813E601643816100D0F184 /* Group.tiff */,
 				79DF87C1162B52A900818741 /* Fonts & Colors.png */,
 				79DF87BC162A8E9D00818741 /* Text Editing.png */,
@@ -525,13 +556,6 @@
 				798DB78A1641ACA5007B4176 /* _TargetInclude.m */,
 			);
 			path = machine;
-			sourceTree = "<group>";
-		};
-		7939016D163D6F7200168CD5 /* Toolbar */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Toolbar;
 			sourceTree = "<group>";
 		};
 		793902391641670C00168CD5 /* Documents */ = {
@@ -656,18 +680,10 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
-		79813E5B16437CDC00D0F184 /* Cells */ = {
-			isa = PBXGroup;
-			children = (
-				79813E5D16437CF500D0F184 /* WCProjectCellView.h */,
-				79813E5E16437CF500D0F184 /* WCProjectCellView.m */,
-			);
-			name = Cells;
-			sourceTree = "<group>";
-		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
+				79BF21C21645B1E700E79CBA /* DMTabBar */,
 				79DF87A6162A8C6500818741 /* MASPreferences */,
 				79968CAF1608DB7A00F139BC /* WabbitCode */,
 				7962BDCE16215194006D5A7A /* WabbitEmu */,
@@ -742,7 +758,6 @@
 				795F5B5A1637717400C70449 /* WCDocumentController.m */,
 				7962BDB9162123D6006D5A7A /* WCExtendedAttributesManager.h */,
 				7962BDBA162123D7006D5A7A /* WCExtendedAttributesManager.m */,
-				7939016D163D6F7200168CD5 /* Toolbar */,
 				79DE43401638C046003D56EA /* Project */,
 				79FE36041619438A00DB7C6D /* Documents */,
 				79FE3606161943A000DB7C6D /* Window Controllers */,
@@ -767,8 +782,12 @@
 				79DF87C6162B52F400818741 /* WCFontsAndColorsView.xib */,
 				7939023E164167FE00168CD5 /* WCNewProjectWindow.xib */,
 				798DB7F41641B61E007B4176 /* WCProjectWindow.xib */,
+				79AFA4081645BD2900876655 /* WCProjectView.xib */,
+				79AFA40B1645BF3700876655 /* WCIssueView.xib */,
+				79AFA40E1645BF4000876655 /* WCSearchView.xib */,
 			);
 			name = Xibs;
+			path = en.lproj;
 			sourceTree = "<group>";
 		};
 		79968CD91608E96100F139BC /* Categories */ = {
@@ -830,10 +849,19 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		79BF21C21645B1E700E79CBA /* DMTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				79BF21C41645B21A00E79CBA /* DMTabBarItem.h */,
+				79BF21C51645B21A00E79CBA /* DMTabBarItem.m */,
+			);
+			path = DMTabBar;
+			sourceTree = "<group>";
+		};
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
-				79813E5B16437CDC00D0F184 /* Cells */,
+				79E3843216458863009B0DF1 /* Navigators */,
 				7939023A1641671B00168CD5 /* Window Controllers */,
 				793902391641670C00168CD5 /* Documents */,
 				79DE43421638C051003D56EA /* Model */,
@@ -886,6 +914,48 @@
 				79DF87AB162A8C8200818741 /* MASPreferencesWindowController.m */,
 			);
 			path = MASPreferences;
+			sourceTree = "<group>";
+		};
+		79E3843216458863009B0DF1 /* Navigators */ = {
+			isa = PBXGroup;
+			children = (
+				79E3843416458BBE009B0DF1 /* WCNavigatorControl.h */,
+				79E3843516458BBE009B0DF1 /* WCNavigatorControl.m */,
+				79E384401645A2FC009B0DF1 /* WCNavigatorItem.h */,
+				79E384451645A3FE009B0DF1 /* Issue */,
+				79E384411645A3A2009B0DF1 /* Search */,
+				79E3843316458876009B0DF1 /* Project */,
+			);
+			name = Navigators;
+			sourceTree = "<group>";
+		};
+		79E3843316458876009B0DF1 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				79E3842F16458840009B0DF1 /* WCProjectViewController.h */,
+				79E3843016458840009B0DF1 /* WCProjectViewController.m */,
+				79813E5D16437CF500D0F184 /* WCProjectCellView.h */,
+				79813E5E16437CF500D0F184 /* WCProjectCellView.m */,
+			);
+			name = Project;
+			sourceTree = "<group>";
+		};
+		79E384411645A3A2009B0DF1 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				79E384421645A3BC009B0DF1 /* WCSearchViewController.h */,
+				79E384431645A3BC009B0DF1 /* WCSearchViewController.m */,
+			);
+			name = Search;
+			sourceTree = "<group>";
+		};
+		79E384451645A3FE009B0DF1 /* Issue */ = {
+			isa = PBXGroup;
+			children = (
+				79E384461645A40C009B0DF1 /* WCIssueViewController.h */,
+				79E384471645A40C009B0DF1 /* WCIssueViewController.m */,
+			);
+			name = Issue;
 			sourceTree = "<group>";
 		};
 		79FE35FF1619431100DB7C6D /* Editor */ = {
@@ -1177,6 +1247,12 @@
 				79390240164167FE00168CD5 /* WCNewProjectWindow.xib in Resources */,
 				798DB7F61641B61E007B4176 /* WCProjectWindow.xib in Resources */,
 				79813E611643816100D0F184 /* Group.tiff in Resources */,
+				79E3843816459837009B0DF1 /* Folder.tiff in Resources */,
+				79E3843E1645A2B9009B0DF1 /* Issue.png in Resources */,
+				79E3843F1645A2B9009B0DF1 /* Search.png in Resources */,
+				79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */,
+				79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */,
+				79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1333,6 +1409,11 @@
 				79813E5F16437CF500D0F184 /* WCProjectCellView.m in Sources */,
 				79813E64164382D100D0F184 /* WCOutlineView.m in Sources */,
 				79813E67164383F100D0F184 /* NSOutlineView+WCExtensions.m in Sources */,
+				79E3843116458840009B0DF1 /* WCProjectViewController.m in Sources */,
+				79E3843616458BBE009B0DF1 /* WCNavigatorControl.m in Sources */,
+				79E384441645A3BC009B0DF1 /* WCSearchViewController.m in Sources */,
+				79E384481645A40C009B0DF1 /* WCIssueViewController.m in Sources */,
+				79BF21C61645B21A00E79CBA /* DMTabBarItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1345,6 +1426,7 @@
 				7939023F164167FE00168CD5 /* en */,
 			);
 			name = WCNewProjectWindow.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		7962BDD116215194006D5A7A /* InfoPlist.strings */ = {
@@ -1385,6 +1467,7 @@
 				7962BE0316225FB1006D5A7A /* en */,
 			);
 			name = WCJumpInWindow.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		7973D6D9160CF8DF004EDE62 /* WCTextView.xib */ = {
@@ -1393,6 +1476,7 @@
 				7973D6DA160CF8DF004EDE62 /* en */,
 			);
 			name = WCTextView.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		798DB7F41641B61E007B4176 /* WCProjectWindow.xib */ = {
@@ -1401,6 +1485,7 @@
 				798DB7F51641B61E007B4176 /* en */,
 			);
 			name = WCProjectWindow.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		79968CB21608DB7A00F139BC /* InfoPlist.strings */ = {
@@ -1425,6 +1510,7 @@
 				79968CBF1608DB7A00F139BC /* en */,
 			);
 			name = WCSourceFileWindow.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		79968CC11608DB7A00F139BC /* WCMainMenu.xib */ = {
@@ -1433,6 +1519,31 @@
 				79968CC21608DB7A00F139BC /* en */,
 			);
 			name = WCMainMenu.xib;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		79AFA4081645BD2900876655 /* WCProjectView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79AFA4091645BD2900876655 /* en */,
+			);
+			name = WCProjectView.xib;
+			sourceTree = "<group>";
+		};
+		79AFA40B1645BF3700876655 /* WCIssueView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79AFA40C1645BF3700876655 /* en */,
+			);
+			name = WCIssueView.xib;
+			sourceTree = "<group>";
+		};
+		79AFA40E1645BF4000876655 /* WCSearchView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79AFA40F1645BF4000876655 /* en */,
+			);
+			name = WCSearchView.xib;
 			sourceTree = "<group>";
 		};
 		79DF87B9162A8E1A00818741 /* WCGeneralView.xib */ = {
@@ -1441,6 +1552,7 @@
 				79DF87BA162A8E1A00818741 /* en */,
 			);
 			name = WCGeneralView.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		79DF87BE162A8ED100818741 /* WCTextEditingView.xib */ = {
@@ -1449,6 +1561,7 @@
 				79DF87BF162A8ED100818741 /* en */,
 			);
 			name = WCTextEditingView.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		79DF87C6162B52F400818741 /* WCFontsAndColorsView.xib */ = {
@@ -1457,6 +1570,7 @@
 				79DF87C7162B52F400818741 /* en */,
 			);
 			name = WCFontsAndColorsView.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
