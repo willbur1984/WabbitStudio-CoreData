@@ -126,6 +126,12 @@
 		79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA4081645BD2900876655 /* WCProjectView.xib */; };
 		79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA40B1645BF3700876655 /* WCIssueView.xib */; };
 		79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA40E1645BF4000876655 /* WCSearchView.xib */; };
+		79AFA42D1646DE4100876655 /* MMTabBarView.framework in Copy Private Frameworks */ = {isa = PBXBuildFile; fileRef = 79AFA4231646DDDF00876655 /* MMTabBarView.framework */; };
+		79AFA42E1646DE9A00876655 /* MMTabBarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AFA4231646DDDF00876655 /* MMTabBarView.framework */; };
+		79AFA4321646E0B800876655 /* WCTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4311646E0B800876655 /* WCTabViewController.m */; };
+		79AFA4351646E0DB00876655 /* WCTabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA4331646E0DB00876655 /* WCTabView.xib */; };
+		79AFA4391646E53A00876655 /* WCDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4371646E53A00876655 /* WCDocument.m */; };
+		79AFA43E1646E85A00876655 /* WCSymbolIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA43D1646E85A00876655 /* WCSymbolIndex.m */; };
 		79BF21C61645B21A00E79CBA /* DMTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BF21C51645B21A00E79CBA /* DMTabBarItem.m */; };
 		79C92CCA1610AE3D00BB6CDC /* WCCompletionWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CC91610AE3D00BB6CDC /* WCCompletionWindow.m */; };
 		79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C92CD71610E9C800BB6CDC /* QuartzCore.framework */; };
@@ -161,6 +167,37 @@
 		79FE36F7161A421C00DB7C6D /* WCBookmarkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F6161A421C00DB7C6D /* WCBookmarkManager.m */; };
 		79FE36FA161A69E800DB7C6D /* WCBookmarkScroller.m in Sources */ = {isa = PBXBuildFile; fileRef = 79FE36F9161A69E700DB7C6D /* WCBookmarkScroller.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		79AFA4221646DDDF00876655 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 06DB23A61609F5830071BDA0;
+			remoteInfo = MMTabBarView;
+		};
+		79AFA4241646DDF400876655 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 06DB23A51609F5820071BDA0;
+			remoteInfo = MMTabBarView;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		79AFA42C1646DE3500876655 /* Copy Private Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				79AFA42D1646DE4100876655 /* MMTabBarView.framework in Copy Private Frameworks */,
+			);
+			name = "Copy Private Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		7903F1AB160E3AB7000D3F3D /* WCSymbolScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolScanner.h; sourceTree = "<group>"; };
@@ -377,6 +414,14 @@
 		79AFA4091645BD2900876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCProjectView.xib; sourceTree = "<group>"; };
 		79AFA40C1645BF3700876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCIssueView.xib; sourceTree = "<group>"; };
 		79AFA40F1645BF4000876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCSearchView.xib; sourceTree = "<group>"; };
+		79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MMTabBarView.xcodeproj; path = MMTabBarView/MMTabBarView.xcodeproj; sourceTree = "<group>"; };
+		79AFA4301646E0B800876655 /* WCTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTabViewController.h; sourceTree = "<group>"; };
+		79AFA4311646E0B800876655 /* WCTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTabViewController.m; sourceTree = "<group>"; };
+		79AFA4341646E0DB00876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCTabView.xib; sourceTree = "<group>"; };
+		79AFA4361646E53A00876655 /* WCDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCDocument.h; sourceTree = "<group>"; };
+		79AFA4371646E53A00876655 /* WCDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDocument.m; sourceTree = "<group>"; };
+		79AFA43C1646E85A00876655 /* WCSymbolIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolIndex.h; sourceTree = "<group>"; };
+		79AFA43D1646E85A00876655 /* WCSymbolIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolIndex.m; sourceTree = "<group>"; };
 		79BF21C41645B21A00E79CBA /* DMTabBarItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMTabBarItem.h; path = DMTabBar/DMTabBar/DMTabBarItem.h; sourceTree = "<group>"; };
 		79BF21C51645B21A00E79CBA /* DMTabBarItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMTabBarItem.m; path = DMTabBar/DMTabBar/DMTabBarItem.m; sourceTree = "<group>"; };
 		79C92CC81610AE3D00BB6CDC /* WCCompletionWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionWindow.h; sourceTree = "<group>"; };
@@ -448,6 +493,7 @@
 			files = (
 				79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */,
 				79968CAA1608DB7A00F139BC /* Cocoa.framework in Frameworks */,
+				79AFA42E1646DE9A00876655 /* MMTabBarView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +729,7 @@
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
+				79AFA4111646DD6D00876655 /* MMTabBarView */,
 				79BF21C21645B1E700E79CBA /* DMTabBar */,
 				79DF87A6162A8C6500818741 /* MASPreferences */,
 				79968CAF1608DB7A00F139BC /* WabbitCode */,
@@ -785,6 +832,7 @@
 				79AFA4081645BD2900876655 /* WCProjectView.xib */,
 				79AFA40B1645BF3700876655 /* WCIssueView.xib */,
 				79AFA40E1645BF4000876655 /* WCSearchView.xib */,
+				79AFA4331646E0DB00876655 /* WCTabView.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -849,6 +897,40 @@
 			name = Classes;
 			sourceTree = "<group>";
 		};
+		79AFA4111646DD6D00876655 /* MMTabBarView */ = {
+			isa = PBXGroup;
+			children = (
+				79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */,
+			);
+			path = MMTabBarView;
+			sourceTree = "<group>";
+		};
+		79AFA41C1646DDDF00876655 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				79AFA4231646DDDF00876655 /* MMTabBarView.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		79AFA42F1646E09300876655 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				79AFA4301646E0B800876655 /* WCTabViewController.h */,
+				79AFA4311646E0B800876655 /* WCTabViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		79AFA43B1646E84200876655 /* Symbols */ = {
+			isa = PBXGroup;
+			children = (
+				79AFA43C1646E85A00876655 /* WCSymbolIndex.h */,
+				79AFA43D1646E85A00876655 /* WCSymbolIndex.m */,
+			);
+			name = Symbols;
+			sourceTree = "<group>";
+		};
 		79BF21C21645B1E700E79CBA /* DMTabBar */ = {
 			isa = PBXGroup;
 			children = (
@@ -861,6 +943,8 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				79AFA43B1646E84200876655 /* Symbols */,
+				79AFA42F1646E09300876655 /* View Controllers */,
 				79E3843216458863009B0DF1 /* Navigators */,
 				7939023A1641671B00168CD5 /* Window Controllers */,
 				793902391641670C00168CD5 /* Documents */,
@@ -1015,6 +1099,8 @@
 		79FE36041619438A00DB7C6D /* Documents */ = {
 			isa = PBXGroup;
 			children = (
+				79AFA4361646E53A00876655 /* WCDocument.h */,
+				79AFA4371646E53A00876655 /* WCDocument.m */,
 				79968CBB1608DB7A00F139BC /* WCSourceFileDocument.h */,
 				79968CBC1608DB7A00F139BC /* WCSourceFileDocument.m */,
 			);
@@ -1167,10 +1253,12 @@
 				79968CA11608DB7A00F139BC /* Sources */,
 				79968CA21608DB7A00F139BC /* Frameworks */,
 				79968CA31608DB7A00F139BC /* Resources */,
+				79AFA42C1646DE3500876655 /* Copy Private Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				79AFA4251646DDF400876655 /* PBXTargetDependency */,
 			);
 			name = WabbitCode;
 			productName = WabbitCode;
@@ -1196,6 +1284,12 @@
 			mainGroup = 79968C981608DB4600F139BC;
 			productRefGroup = 79968CA61608DB7A00F139BC /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 79AFA41C1646DDDF00876655 /* Products */;
+					ProjectRef = 79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				79968CA41608DB7A00F139BC /* WabbitCode */,
@@ -1203,6 +1297,16 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		79AFA4231646DDDF00876655 /* MMTabBarView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = MMTabBarView.framework;
+			remoteRef = 79AFA4221646DDDF00876655 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		7962BDC916215194006D5A7A /* Resources */ = {
@@ -1253,6 +1357,7 @@
 				79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */,
 				79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */,
 				79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */,
+				79AFA4351646E0DB00876655 /* WCTabView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1414,10 +1519,21 @@
 				79E384441645A3BC009B0DF1 /* WCSearchViewController.m in Sources */,
 				79E384481645A40C009B0DF1 /* WCIssueViewController.m in Sources */,
 				79BF21C61645B21A00E79CBA /* DMTabBarItem.m in Sources */,
+				79AFA4321646E0B800876655 /* WCTabViewController.m in Sources */,
+				79AFA4391646E53A00876655 /* WCDocument.m in Sources */,
+				79AFA43E1646E85A00876655 /* WCSymbolIndex.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		79AFA4251646DDF400876655 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MMTabBarView;
+			targetProxy = 79AFA4241646DDF400876655 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		7939023E164167FE00168CD5 /* WCNewProjectWindow.xib */ = {
@@ -1544,6 +1660,14 @@
 				79AFA40F1645BF4000876655 /* en */,
 			);
 			name = WCSearchView.xib;
+			sourceTree = "<group>";
+		};
+		79AFA4331646E0DB00876655 /* WCTabView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79AFA4341646E0DB00876655 /* en */,
+			);
+			name = WCTabView.xib;
 			sourceTree = "<group>";
 		};
 		79DF87B9162A8E1A00818741 /* WCGeneralView.xib */ = {
@@ -1683,6 +1807,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/MMTabBarView/MMTabBarView/MMTabBarView\"/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1710,6 +1835,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/MMTabBarView/MMTabBarView/MMTabBarView\"/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

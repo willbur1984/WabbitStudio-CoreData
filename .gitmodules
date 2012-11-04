@@ -4,3 +4,6 @@
 [submodule "DMTabBar"]
 	path = DMTabBar
 	url = git://github.com/malcommac/DMTabBar.git
+[submodule "MMTabBarView"]
+	path = MMTabBarView
+	url = git://github.com/MiMo42/MMTabBarView.git
