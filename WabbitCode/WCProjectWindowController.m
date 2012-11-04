@@ -18,6 +18,7 @@
 #import "WCSearchViewController.h"
 #import "WCIssueViewController.h"
 #import "NSArray+WCExtensions.h"
+#import "WCTabViewController.h"
 
 @interface WCProjectWindowController () <WCNavigatorControlDataSource,NSWindowDelegate,NSSplitViewDelegate>
 
@@ -25,6 +26,7 @@
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
 
 @property (strong,nonatomic) NSArray *navigatorItems;
+@property (readwrite,strong,nonatomic) WCTabViewController *tabViewController;
 
 @end
 
@@ -44,13 +46,7 @@
 - (void)windowDidLoad {
     [super windowDidLoad];
     
-    NSMutableArray *temp = [NSMutableArray arrayWithCapacity:0];
-    
-    [temp addObject:[[WCProjectViewController alloc] initWithProjectWindowController:self]];
-    [temp addObject:[[WCSearchViewController alloc] init]];
-    [temp addObject:[[WCIssueViewController alloc] init]];
-    
-    [self setNavigatorItems:temp];
+    [self setNavigatorItems:@[[[WCProjectViewController alloc] initWithProjectWindowController:self],[[WCSearchViewController alloc] init],[[WCIssueViewController alloc] init]]];
     
     [self.window setDelegate:self];
     
@@ -58,6 +54,10 @@
     
     [self.navigatorControl setDataSource:self];
     [self.navigatorControl setSelectedItemIdentifier:[[self.navigatorItems objectAtIndex:0] identifier]];
+    
+    [self setTabViewController:[[WCTabViewController alloc] init]];
+    [self.tabViewController.view setFrameSize:[self.mainSplitView.subviews.lastObject frame].size];
+    [self.mainSplitView.subviews.lastObject addSubview:self.tabViewController.view];
 }
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)view {

@@ -13,10 +13,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class WCProjectDocument;
+@class WCProjectDocument,WCTabViewController;
 
 @interface WCProjectWindowController : NSWindowController
 
 @property (readonly,nonatomic) WCProjectDocument *projectDocument;
+@property (readonly,strong,nonatomic) WCTabViewController *tabViewController;
 
 @end
