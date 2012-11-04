@@ -13,7 +13,7 @@
 
 #import "WCViewController.h"
 
-@class WCTextStorage,WCTextView;
+@class WCSourceFileDocument,WCTextView;
 @protocol WCTextViewControllerDelegate;
 
 @interface WCTextViewController : WCViewController
@@ -24,22 +24,15 @@
 
 @property (assign,nonatomic) BOOL showAddRemoveAssistantEditorButtons;
 
-- (id)initWithTextStorage:(WCTextStorage *)textStorage;
+- (id)initWithSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 
 - (IBAction)showRelatedItemsAction:(id)sender;
 - (IBAction)showDocumentItemsAction:(id)sender;
 
 @end
 
-@class WCSymbolScanner,WCFoldScanner,WCSymbolHighlighter;
-
 @protocol WCTextViewControllerDelegate <NSObject>
-- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController;
-- (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController;
-- (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController;
-- (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController;
-- (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController;
-
+@optional
 - (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
 - (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
 @end

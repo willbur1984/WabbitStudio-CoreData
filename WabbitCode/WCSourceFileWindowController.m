@@ -52,7 +52,7 @@
     
     [self.window setDelegate:self];
     
-    [self setTextViewController:[[WCTextViewController alloc] initWithTextStorage:self.textStorage]];
+    [self setTextViewController:[[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument]];
     [self.textViewController setDelegate:self];
     [self.textViewController.view setFrame:[self.window.contentView bounds]];
     [self.textViewController setShowAddRemoveAssistantEditorButtons:NO];
@@ -115,22 +115,6 @@
 }
 
 #pragma mark WCTextViewControllerDelegate
-- (WCSymbolScanner *)symbolScannerForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.symbolScanner;
-}
-- (WCFoldScanner *)foldScannerForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.foldScanner;
-}
-- (WCSymbolHighlighter *)symbolHighlighterForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.symbolHighlighter;
-}
-- (NSDocument *)documentForTextViewController:(WCTextViewController *)textViewController {
-    return self.document;
-}
-- (NSUndoManager *)undoManagerForTextViewController:(WCTextViewController *)textViewController {
-    return self.sourceFileDocument.undoManager;
-}
-
 - (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
     [self _addAssistantEditorForTextViewController:textViewController];
 }
@@ -186,7 +170,7 @@
     
     [self.assistantSplitViews addObject:splitView];
     
-    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithTextStorage:self.textStorage];
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument];
     
     [textViewController setDelegate:self];
     
@@ -260,7 +244,7 @@
     
     [self.assistantSplitViews addObject:splitView];
     
-    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithTextStorage:self.textStorage];
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument];
     
     [textViewController setDelegate:self];
     

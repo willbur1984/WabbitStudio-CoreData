@@ -36,6 +36,8 @@
 #import "WCSourceFileDocument.h"
 #import "WCDocumentController.h"
 #import "NSImage+WCExtensions.h"
+#import "WCProjectDocument.h"
+#import "File.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -46,6 +48,7 @@
 @property (weak,nonatomic) IBOutlet NSButton *removeButton;
 @property (weak,nonatomic) IBOutlet NSImageView *addRemoveDividerImageView;
 
+@property (weak,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (weak,nonatomic) WCTextStorage *textStorage;
 
 @property (strong,nonatomic) NSArray *jumpBarControlMenuSymbols;
@@ -228,15 +231,15 @@
 }
 
 - (NSUndoManager *)undoManagerForTextView:(NSTextView *)view {
-    return [self.delegate undoManagerForTextViewController:self];
+    return self.sourceFileDocument.undoManager;
 }
 
 #pragma mark WCTextViewDelegate
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView {
-    return [self.delegate symbolScannerForTextViewController:self];
+    return self.sourceFileDocument.symbolScanner;
 }
 - (WCFoldScanner *)foldScannerForTextView:(WCTextView *)textView {
-    return [self.delegate foldScannerForTextViewController:self];
+    return self.sourceFileDocument.foldScanner;
 }
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol {
     [textView setSelectedRange:NSRangeFromString(symbol.range)];
@@ -244,7 +247,7 @@
 }
 #pragma mark WCFoldViewDelegate
 - (WCFoldScanner *)foldScannerForFoldView:(WCFoldView *)foldView {
-    return [self.delegate foldScannerForTextViewController:self];
+    return self.sourceFileDocument.foldScanner;
 }
 #pragma mark WCBookmarkScrollerDelegate
 - (WCBookmarkManager *)bookmarkManagerForBookmarkScroller:(WCBookmarkScroller *)bookmarkScroller {
@@ -256,7 +259,7 @@
 
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
-    NSDocument *document = [self.delegate documentForTextViewController:self];
+    NSDocument *document = self.sourceFileDocument;
     NSURL *fileURL = document.fileURL;
     WCJumpBarComponentCell *cell;
     
@@ -279,7 +282,7 @@
     return @[ cell ];
 }
 - (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
-    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
+    WCSymbolScanner *symbolScanner = self.sourceFileDocument.symbolScanner;
     Symbol *symbol = [symbolScanner symbolForRange:self.textView.selectedRange];
     WCJumpBarComponentCell *cell;
     
@@ -297,11 +300,11 @@
     return cell;
 }
 - (NSImage *)jumpBarControl:(WCJumpBarControl *)jumpBarControl imageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    NSURL *fileURL = [[self.delegate documentForTextViewController:self] fileURL];
+    NSURL *fileURL = self.sourceFileDocument.fileURL;
     NSImage *image;
     
     if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
-        NSDocument *document = [self.delegate documentForTextViewController:self];
+        NSDocument *document = self.sourceFileDocument;
         
         if (document.isDocumentEdited)
             image = [image WC_unsavedImageIcon];
@@ -314,7 +317,7 @@
 }
 - (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl numberOfItemsInMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
     if (!self.jumpBarControlMenuSymbols) {
-        WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForTextViewController:self];
+        WCSymbolScanner *symbolScanner = self.sourceFileDocument.symbolScanner;
         
         [self setJumpBarControlMenuSymbols:symbolScanner.symbolsSortedByLocation];
     }
@@ -348,15 +351,16 @@
             return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.longValue];
         return nil;
     }
-    return [self.delegate documentForTextViewController:self].fileURL.path;
+    return self.sourceFileDocument.fileURL.path;
 }
 
 #pragma mark *** Public Methods ***
-- (id)initWithTextStorage:(WCTextStorage *)textStorage; {
+- (id)initWithSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
     if (!(self = [super init]))
         return nil;
     
-    [self setTextStorage:textStorage];
+    [self setSourceFileDocument:sourceFileDocument];
+    [self setTextStorage:sourceFileDocument.textStorage];
     
     return self;
 }
@@ -374,9 +378,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:WCSymbolScannerDidFinishScanningSymbolsNotification object:nil];
     
     if (_delegate) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:[self.delegate symbolScannerForTextViewController:self]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_symbolScannerDidFinishScanningSymbols:) name:WCSymbolScannerDidFinishScanningSymbolsNotification object:self.sourceFileDocument.symbolScanner];
 
-        id document = [self.delegate documentForTextViewController:self];
+        id document = self.sourceFileDocument;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_documentEditedDidChange:) name:WCSourceFileDocumentEditedDidChangeNotification object:document];
     }
@@ -417,7 +421,7 @@
 #pragma mark Notifications
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
-    [[self.delegate symbolHighlighterForTextViewController:self] symbolHighlightInVisibleRange];
+    [self.sourceFileDocument.symbolHighlighter symbolHighlightInVisibleRange];
 }
 - (void)_documentEditedDidChange:(NSNotification *)note {
     [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
@@ -429,7 +433,7 @@
     [self.textView setNeedsDisplay:YES];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
-    WCSymbolHighlighter *symbolHighlighter = [self.delegate symbolHighlighterForTextViewController:self];
+    WCSymbolHighlighter *symbolHighlighter = self.sourceFileDocument.symbolHighlighter;
     
     [NSObject cancelPreviousPerformRequestsWithTarget:symbolHighlighter selector:@selector(symbolHighlightInVisibleRange) object:nil];
     [symbolHighlighter performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
