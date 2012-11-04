@@ -14,6 +14,9 @@
 #import <Cocoa/Cocoa.h>
 
 extern NSString *const kProjectDocumentUTI;
+extern NSString *const kAssemblyFileUTI;
+extern NSString *const kIncludeFileUTI;
+extern NSString *const kActiveServerIncludeFileUTI;
 
 extern NSString *const kProjectEntityName;
 extern NSString *const kFileEntityName;
@@ -21,6 +24,7 @@ extern NSString *const kFileEntityName;
 @interface WCDocumentController : NSDocumentController
 
 @property (readonly,nonatomic) NSArray *unsavedDocumentURLs;
+@property (readonly,nonatomic) NSSet *sourceFileUTIs;
 
 - (BOOL)makeProjectDocumentForURL:(NSURL *)documentURL withContentsOfURL:(NSURL *)directoryURL error:(NSError *__autoreleasing *)outError;
 

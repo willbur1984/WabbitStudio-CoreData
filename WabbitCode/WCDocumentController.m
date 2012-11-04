@@ -18,7 +18,10 @@
 #import "WCDefines.h"
 #import "NSURL+WCExtensions.h"
 
-NSString *const kProjectDocumentUTI = @"org.revsoft.wabbitcode.project.current";
+NSString *const kProjectDocumentUTI = @"org.revsoft.wabbitcode.project";
+NSString *const kAssemblyFileUTI = @"org.revsoft.wabbitcode.assembly";
+NSString *const kIncludeFileUTI = @"org.revsoft.wabbitcode.include";
+NSString *const kActiveServerIncludeFileUTI = @"com.panic.coda.active-server-include-file";
 
 NSString *const kProjectEntityName = @"Project";
 NSString *const kFileEntityName = @"File";
@@ -96,6 +99,9 @@ NSString *const kFileEntityName = @"File";
     }
     
     return temp;
+}
+- (NSSet *)sourceFileUTIs {
+    return [NSSet setWithObjects:kAssemblyFileUTI,kIncludeFileUTI,kActiveServerIncludeFileUTI, nil];
 }
 
 @end
