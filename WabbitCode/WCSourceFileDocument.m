@@ -21,6 +21,7 @@
 #import "Bookmark.h"
 #import "NSTextView+WCExtensions.h"
 #import "NSURL+WCExtensions.h"
+#import "NSImage+WCExtensions.h"
 
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
@@ -44,7 +45,7 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 @implementation WCSourceFileDocument {
     dispatch_source_t _source;
 }
-
+#pragma mark *** Subclass Overrides ***
 - (id)initWithType:(NSString *)typeName error:(NSError *__autoreleasing *)outError {
     if (!(self = [super initWithType:typeName error:outError]))
         return nil;
@@ -152,22 +153,47 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 - (void)updateChangeCount:(NSDocumentChangeType)change {
     BOOL edited = self.isDocumentEdited;
     
+    [self willChangeValueForKey:@"icon"];
+    [self willChangeValueForKey:@"isEdited"];
     [super updateChangeCount:change];
+    [self didChangeValueForKey:@"icon"];
+    [self didChangeValueForKey:@"isEdited"];
     
     if (edited != self.isDocumentEdited)
         [[NSNotificationCenter defaultCenter] postNotificationName:WCSourceFileDocumentEditedDidChangeNotification object:self];
 }
 
 - (void)setFileURL:(NSURL *)url {
+    [self willChangeValueForKey:@"title"];
     [super setFileURL:url];
+    [self didChangeValueForKey:@"title"];
     
     [self _startWatchingDocument];
 }
+#pragma mark MMTabBarItem
+- (NSString *)title {
+    return self.displayName;
+}
+- (NSImage *)icon {
+    NSImage *retval = [self.fileURL WC_effectiveIcon];
+    
+    if (self.isDocumentEdited)
+        retval = [retval WC_unsavedImageIcon];
+    
+    return retval;
+}
+- (BOOL)isEdited {
+    return self.isDocumentEdited;
+}
+- (BOOL)hasCloseButton {
+    return YES;
+}
 
+#pragma mark WCSymbolScannerDelegate
 - (NSURL *)fileURLForSymbolScanner:(WCSymbolScanner *)symbolScanner {
     return self.fileURL;
 }
-
+#pragma mark WCSyntaxHighlighterDelegate
 - (WCSymbolHighlighter *)symbolHighlighterForSyntaxHighlighter:(WCSyntaxHighlighter *)syntaxHighlighter {
     return self.symbolHighlighter;
 }
@@ -178,11 +204,12 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 - (WCSymbolScanner *)symbolScannerForSymbolHighlighter:(WCSymbolHighlighter *)symbolHighlighter {
     return self.symbolScanner;
 }
-
+#pragma mark *** Public Methods ***
+#pragma mark Properties
 - (WCSourceFileWindowController *)sourceFileWindowController {
     return self.windowControllers.lastObject;
 }
-
+#pragma mark *** Private Methods ***
 - (void)_startWatchingDocument; {
     [self _stopWatchingDocument];
     
