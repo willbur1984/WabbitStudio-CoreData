@@ -19,5 +19,6 @@
 - (NSDate *)WC_contentModificationDate;
 - (BOOL)WC_isDirectory;
 - (NSURL *)WC_parentDirectory;
+- (NSString *)WC_typeIdentifier;
 
 @end

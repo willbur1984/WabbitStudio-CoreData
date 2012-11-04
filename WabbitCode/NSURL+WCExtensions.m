@@ -52,5 +52,14 @@
     
     return retval;
 }
+- (NSString *)WC_typeIdentifier; {
+    NSString *retval = nil;
+    NSError *outError;
+    
+    if (![self getResourceValue:&retval forKey:NSURLTypeIdentifierKey error:&outError])
+        WCLogObject(outError);
+    
+    return retval;
+}
 
 @end
