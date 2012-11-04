@@ -16,6 +16,9 @@
 #import "WCProjectDocument.h"
 #import "WCProjectWindowController.h"
 #import "WCProjectCellView.h"
+#import "WCTabViewController.h"
+#import "NSOutlineView+WCExtensions.h"
+#import "NSURL+WCExtensions.h"
 #import "Project.h"
 #import "File.h"
 
@@ -37,6 +40,8 @@
 - (void)loadView {
     [super loadView];
     
+    [self.outlineView setTarget:self];
+    [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
     [self.outlineView setDataSource:self];
 }
 #pragma mark NSOutlineViewDataSource
@@ -101,6 +106,15 @@
 #pragma mark Properties
 - (WCProjectDocument *)projectDocument {
     return self.projectWindowController.projectDocument;
+}
+#pragma mark Actions
+- (IBAction)_outlineViewDoubleAction:(NSOutlineView *)sender {
+    for (File *file in [sender WC_selectedItems]) {
+        WCSourceFileDocument *sfDocument = [self.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:file.uuid];
+        
+        if (sfDocument)
+            [self.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sfDocument];
+    }
 }
 
 @end
