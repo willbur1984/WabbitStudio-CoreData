@@ -68,7 +68,7 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>wcodeproject</string>
+				<string>wcodeproj</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>project</string>
@@ -82,49 +82,12 @@
 			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>org.revsoft.wabbitcode.project.current</string>
+				<string>org.revsoft.wabbitcode.project</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<false/>
 			<key>NSDocumentClass</key>
 			<string>WCProjectDocument</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>z80</string>
-				<string>asm</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>assembly</string>
-			<key>CFBundleTypeName</key>
-			<string>Z80 Assembly File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>org.revsoft.wabbitedit.assembly</string>
-			</array>
-			<key>NSDocumentClass</key>
-			<string>WCSourceFileDocument</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>inc</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>include</string>
-			<key>CFBundleTypeName</key>
-			<string>Z80 Include File</string>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>LSItemContentTypes</key>
-			<array>
-				<string>org.revsoft.wabbitedit.include</string>
-			</array>
-			<key>NSDocumentClass</key>
-			<string>WCSourceFileDocument</string>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
@@ -215,12 +178,12 @@
 			<key>UTTypeIconFile</key>
 			<string>project</string>
 			<key>UTTypeIdentifier</key>
-			<string>org.revsoft.wabbitcode.project.current</string>
+			<string>org.revsoft.wabbitcode.project</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
 				<array>
-					<string>wcodeproject</string>
+					<string>wcodeproj</string>
 				</array>
 				<key>public.mime-type</key>
 				<array>
@@ -255,45 +218,6 @@
 				<string>inc</string>
 				<string>INC</string>
 			</array>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.source-code</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Z80 Assembly File</string>
-			<key>UTTypeIconFile</key>
-			<string>assembly</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.revsoft.wabbitedit.assembly</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>z80</string>
-					<string>asm</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.source-code</string>
-			</array>
-			<key>UTTypeDescription</key>
-			<string>Z80 Include File</string>
-			<key>UTTypeIconFile</key>
-			<string>include</string>
-			<key>UTTypeIdentifier</key>
-			<string>org.revsoft.wabbitedit.include</string>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>inc</string>
-				</array>
-			</dict>
 		</dict>
 	</array>
 </dict>
