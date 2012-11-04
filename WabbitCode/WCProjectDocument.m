@@ -14,6 +14,14 @@
 #import "WCProjectDocument.h"
 #import "WCProjectWindowController.h"
 #import "WCDefines.h"
+#import "WCSourceFileDocument.h"
+#import "NSURL+WCExtensions.h"
+#import "WCDocumentController.h"
+#import "File.h"
+
+@interface WCProjectDocument ()
+@property (strong,nonatomic) NSMutableDictionary *mutableFileUUIDsToSourceFileDocuments;
+@end
 
 @implementation WCProjectDocument
 
@@ -21,7 +29,7 @@
     if (!(self = [super init]))
         return nil;
     
-    [self setUndoManager:nil];
+    [self setMutableFileUUIDsToSourceFileDocuments:[NSMutableDictionary dictionaryWithCapacity:0]];
     
     return self;
 }
@@ -30,6 +38,12 @@
     WCProjectWindowController *windowController = [[WCProjectWindowController alloc] init];
     
     [self addWindowController:windowController];
+}
+
+- (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
+    [super setManagedObjectContext:managedObjectContext];
+    
+    [managedObjectContext setUndoManager:nil];
 }
 
 - (NSString *)persistentStoreTypeForFileType:(NSString *)fileType {
@@ -42,7 +56,42 @@
     [options setObject:@true forKey:NSMigratePersistentStoresAutomaticallyOption];
     [options setObject:@true forKey:NSInferMappingModelAutomaticallyOption];
     
-    return [super configurePersistentStoreCoordinatorForURL:url ofType:fileType modelConfiguration:configuration storeOptions:options error:error];
+    BOOL retval = [super configurePersistentStoreCoordinatorForURL:url ofType:fileType modelConfiguration:configuration storeOptions:options error:error];
+    
+    if (retval) {
+        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+        
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.isGroup == %@",@false]];
+        
+        NSSet *UTIs = [[WCDocumentController sharedDocumentController] sourceFileUTIs];
+        
+        for (File *file in [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL]) {
+            NSURL *url = [NSURL fileURLWithPath:file.path isDirectory:NO];
+            NSString *uti = [url WC_typeIdentifier];
+            
+            if (![UTIs containsObject:uti])
+                continue;
+            
+            NSError *documentError;
+            WCSourceFileDocument *sourceFileDocument = [[WCSourceFileDocument alloc] initWithContentsOfURL:url ofType:uti error:&documentError];
+            
+            if (!sourceFileDocument) {
+                WCLogObject(documentError);
+                continue;
+            }
+            
+            [sourceFileDocument setUUID:file.uuid];
+            [sourceFileDocument setProjectDocument:self];
+            
+            [self.mutableFileUUIDsToSourceFileDocuments setObject:sourceFileDocument forKey:file.uuid];
+        }
+    }
+    
+    return retval;
+}
+
+- (NSDictionary *)fileUUIDsToSourceFileDocuments {
+    return [self.mutableFileUUIDsToSourceFileDocuments copy];
 }
 
 @end

@@ -15,4 +15,6 @@
 
 @interface WCProjectDocument : NSPersistentDocument
 
+@property (readonly,nonatomic) NSDictionary *fileUUIDsToSourceFileDocuments;
+
 @end
