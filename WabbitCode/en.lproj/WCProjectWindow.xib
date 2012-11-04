@@ -40,7 +40,7 @@
 				<string key="NSWindowRect">{{196, 240}, {800, 640}}</string>
 				<int key="NSWTFlags">1886912512</int>
 				<string key="NSWindowTitle">Window</string>
-				<string key="NSWindowClass">NSWindow</string>
+				<string key="NSWindowClass">WCWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<object class="NSView" key="NSWindowView" id="1006">
@@ -58,19 +58,20 @@
 										<object class="NSCustomView" id="323758956">
 											<reference key="NSNextResponder" ref="539781882"/>
 											<int key="NSvFlags">274</int>
-											<string key="NSFrameSize">{304, 617}</string>
+											<string key="NSFrameSize">{304, 618}</string>
 											<reference key="NSSuperview" ref="539781882"/>
 											<reference key="NSWindow"/>
+											<reference key="NSNextKeyView" ref="190464567"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<string key="NSClassName">NSView</string>
 										</object>
 										<object class="NSCustomView" id="77949193">
 											<reference key="NSNextResponder" ref="539781882"/>
 											<int key="NSvFlags">266</int>
-											<string key="NSFrame">{{0, 617}, {304, 23}}</string>
+											<string key="NSFrame">{{0, 618}, {304, 22}}</string>
 											<reference key="NSSuperview" ref="539781882"/>
 											<reference key="NSWindow"/>
-											<reference key="NSNextKeyView" ref="190464567"/>
+											<reference key="NSNextKeyView" ref="323758956"/>
 											<string key="NSReuseIdentifierKey">_NS:9</string>
 											<string key="NSClassName">WCNavigatorControl</string>
 										</object>
@@ -88,6 +89,7 @@
 									<string key="NSFrame">{{305, 0}, {495, 640}}</string>
 									<reference key="NSSuperview" ref="165173747"/>
 									<reference key="NSWindow"/>
+									<reference key="NSNextKeyView"/>
 									<string key="NSReuseIdentifierKey">_NS:13</string>
 									<string key="NSClassName">NSView</string>
 								</object>
@@ -284,6 +286,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCProjectWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">WCWindow</string>
+					<string key="superclassName">NSWindow</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WCWindow.h</string>
 					</object>
 				</object>
 			</array>
