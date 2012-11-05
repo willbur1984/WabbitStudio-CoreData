@@ -46,6 +46,8 @@ static char kWCFoldViewObservingContext;
 @property (readonly,nonatomic) WCTextView *sourceTextView;
 
 - (NSColor *)_colorForFold:(Fold *)fold;
+- (NSColor *)_highlightColorForFold:(Fold *)fold baseDepth:(int16_t)baseDepth;
+- (void)_drawArrowsForHighlightFoldInRect:(NSRect)rect;
 - (void)_updateCodeFoldingTrackingRect;
 @end
 
@@ -265,51 +267,30 @@ static char kWCFoldViewObservingContext;
     }
     
     if (self.foldToHighlight) {
-        NSRange range = NSRangeFromString(self.foldToHighlight.range);
-        NSRange contentRange = NSRangeFromString(self.foldToHighlight.contentRange);
-        NSUInteger numberOfLineRects;
-        NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
+        folds = [[self.delegate foldScannerForFoldView:self] foldsForRange:NSRangeFromString(self.foldToHighlight.range)];
         
-        if (!numberOfLineRects)
-            return;
-        
-        NSRect lineRect = NSZeroRect;
-        NSUInteger rectIndex;
-        
-        for (rectIndex=0; rectIndex<numberOfLineRects; rectIndex++)
-            lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
-        
-        NSRect foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(lineRect));
-        
-        [[NSColor WC_colorWithHexadecimalString:@"ededed"] setFill];
-        NSRectFill(foldRect);
-        
-        const CGFloat kTriangleHeight = 5;
-        NSBezierPath *path = [NSBezierPath bezierPath];
-        
-        if ([self.textStorage foldRangeForRange:contentRange].location == NSNotFound) {
-            [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMinY(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMidX(foldRect), NSMinY(foldRect) + kTriangleHeight)];
-            [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
-            [path closePath];
+        for (Fold *fold in folds) {
+            NSRange range = NSRangeFromString(fold.range);
+            NSUInteger numberOfLineRects;
+            NSRectArray lineRects = [self.textView.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textView.textContainer rectCount:&numberOfLineRects];
             
-            [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMaxY(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMaxY(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMidX(foldRect), NSMaxY(foldRect) - kTriangleHeight)];
-            [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMaxY(foldRect))];
-            [path closePath];
-        }
-        else {
-            [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMinY(foldRect) + (NSWidth(foldRect) * 0.5))];
-            [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect) + NSWidth(foldRect))];
-            [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
-            [path closePath];
+            if (!numberOfLineRects)
+                continue;
+            
+            NSRect lineRect = NSZeroRect;
+            NSUInteger rectIndex;
+            
+            for (rectIndex=0; rectIndex<numberOfLineRects; rectIndex++)
+                lineRect = NSUnionRect(lineRect, lineRects[rectIndex]);
+            
+            NSRect foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:lineRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(lineRect));
+            NSColor *foldColor = [self _highlightColorForFold:fold baseDepth:self.foldToHighlight.depth.shortValue];
+            
+            [foldColor setFill];
+            NSRectFill(foldRect);
         }
         
-        [[NSColor alternateSelectedControlColor] setFill];
-        [path fill];
+        [self _drawArrowsForHighlightFoldInRect:rect];
     }
 }
 #pragma mark Properties
@@ -327,6 +308,56 @@ static char kWCFoldViewObservingContext;
     int16_t depth = fold.depth.shortValue;
     
     return [NSColor colorWithCalibratedHue:baseColor.hueComponent saturation:baseColor.saturationComponent brightness:baseColor.brightnessComponent - (depth * kStepAmount) alpha:baseColor.alphaComponent];
+}
+- (NSColor *)_highlightColorForFold:(Fold *)fold baseDepth:(int16_t)baseDepth {
+    const CGFloat kStepAmount = 0.05;
+    NSColor *baseColor = [[NSColor WC_colorWithHexadecimalString:@"ededed"] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    int16_t depth = baseDepth - fold.depth.shortValue;
+    
+    return [NSColor colorWithCalibratedHue:baseColor.hueComponent saturation:baseColor.saturationComponent brightness:baseColor.brightnessComponent - (depth * kStepAmount) alpha:baseColor.alphaComponent];
+}
+- (void)_drawArrowsForHighlightFoldInRect:(NSRect)rect; {
+    NSRange range = NSRangeFromString(self.foldToHighlight.range);
+    NSRange contentRange = NSRangeFromString(self.foldToHighlight.contentRange);
+    NSUInteger numberOfRects;
+    NSRectArray rects = [self.textView.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textView.textContainer rectCount:&numberOfRects];
+    
+    if (!numberOfRects)
+        return;
+    
+    NSRect foldRect = NSZeroRect;
+    
+    for (NSUInteger rectIndex=0; rectIndex<numberOfRects; rectIndex++)
+        foldRect = NSUnionRect(foldRect, rects[rectIndex]);
+    
+    foldRect = NSMakeRect(NSMinX(rect), [self convertPoint:foldRect.origin fromView:self.clientView].y, kFoldViewWidth, NSHeight(foldRect));
+    
+    const CGFloat kTriangleHeight = 5;
+    NSBezierPath *path = [NSBezierPath bezierPath];
+    
+    if ([self.textStorage foldRangeForRange:contentRange].location == NSNotFound) {
+        [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMinY(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMidX(foldRect), NSMinY(foldRect) + kTriangleHeight)];
+        [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
+        [path closePath];
+        
+        [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMaxY(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMaxY(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMidX(foldRect), NSMaxY(foldRect) - kTriangleHeight)];
+        [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMaxY(foldRect))];
+        [path closePath];
+    }
+    else {
+        [path moveToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMaxX(foldRect), NSMinY(foldRect) + (NSWidth(foldRect) * 0.5))];
+        [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect) + NSWidth(foldRect))];
+        [path lineToPoint:NSMakePoint(NSMinX(foldRect), NSMinY(foldRect))];
+        [path closePath];
+    }
+    
+    [[NSColor alternateSelectedControlColor] setFill];
+    [path fill];
 }
 - (void)_updateCodeFoldingTrackingRect; {
     [self removeTrackingArea:self.foldTrackingRect];
