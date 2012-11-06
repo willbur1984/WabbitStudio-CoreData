@@ -27,6 +27,7 @@ extern NSString *const WCFoldScannerDidFinishScanningFoldsNotification;
 - (void)scanFolds;
 
 - (NSArray *)foldsForRange:(NSRange)range;
+- (NSArray *)foldsForRange:(NSRange)range depth:(int16_t)depth;
 - (Fold *)deepestFoldForRange:(NSRange)range;
 - (Fold *)topLevelFoldForRange:(NSRange)range;
 
