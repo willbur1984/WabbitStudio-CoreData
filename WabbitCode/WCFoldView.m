@@ -267,7 +267,7 @@ static char kWCFoldViewObservingContext;
     }
     
     if (self.foldToHighlight) {
-        folds = [[self.delegate foldScannerForFoldView:self] foldsForRange:NSRangeFromString(self.foldToHighlight.range)];
+        folds = [[self.delegate foldScannerForFoldView:self] foldsForRange:NSRangeFromString(self.foldToHighlight.range) depth:self.foldToHighlight.depth.shortValue];
         
         for (Fold *fold in folds) {
             NSRange range = NSRangeFromString(fold.range);
@@ -311,8 +311,8 @@ static char kWCFoldViewObservingContext;
 }
 - (NSColor *)_highlightColorForFold:(Fold *)fold baseDepth:(int16_t)baseDepth {
     const CGFloat kStepAmount = 0.05;
-    NSColor *baseColor = [[NSColor WC_colorWithHexadecimalString:@"ededed"] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-    int16_t depth = baseDepth - fold.depth.shortValue;
+    NSColor *baseColor = [[NSColor WC_colorWithHexadecimalString:@"ffffff"] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+    int16_t depth = fold.depth.shortValue - baseDepth;
     
     return [NSColor colorWithCalibratedHue:baseColor.hueComponent saturation:baseColor.saturationComponent brightness:baseColor.brightnessComponent - (depth * kStepAmount) alpha:baseColor.alphaComponent];
 }
