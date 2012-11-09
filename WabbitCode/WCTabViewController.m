@@ -65,8 +65,7 @@
 }
 
 - (WCTextViewController *)addTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
-    if (!sourceFileDocument)
-        return nil;
+    NSParameterAssert(sourceFileDocument);
     
     WCTextViewController *retval = [self.sourceFileDocumentsToTextViewControllers objectForKey:sourceFileDocument];
     
@@ -90,8 +89,7 @@
     return retval;
 }
 - (WCTextViewController *)selectTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
-    if (!sourceFileDocument)
-        return nil;
+    NSParameterAssert(sourceFileDocument);
     
     WCTextViewController *retval = [self.sourceFileDocumentsToTextViewControllers objectForKey:sourceFileDocument];
     
@@ -114,6 +112,8 @@
     return [self addTabBarItemForSourceFileDocument:sourceFileDocument];
 }
 - (void)removeTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
+    NSParameterAssert(sourceFileDocument);
+    
     WCTextViewController *textViewController = [self.sourceFileDocumentsToTextViewControllers objectForKey:sourceFileDocument];
     
     [textViewController cleanup];
