@@ -66,6 +66,7 @@ static char kWCTextViewObservingContext;
 - (void)_findSymbolRangesToHighlight;
 - (void)_jumpToDefinitionForRange:(NSRange)range;
 - (void)_drawContentRectsForFold:(Fold *)fold;
+- (void)_cleanupHoverLinkStuff;
 @end
 
 @implementation WCTextView
@@ -277,12 +278,7 @@ static char kWCTextViewObservingContext;
         }
     }
     else {
-        for (NSTrackingArea *trackingArea in self.hoverLinkTrackingAreas)
-            [self removeTrackingArea:trackingArea];
-        
-        [self.hoverLinkTrackingAreas removeAllObjects];
-        
-        [self setCurrentHoverLinkTrackingArea:nil];
+        [self _cleanupHoverLinkStuff];
     }
 }
 
@@ -403,7 +399,10 @@ static char kWCTextViewObservingContext;
 - (void)updateTrackingAreas {
     [super updateTrackingAreas];
     
-    if ([self.window.currentEvent WC_isOnlyCommandKeyPressed]) {
+    NSEvent *event = self.window.currentEvent;
+    
+    if (event.type == NSFlagsChanged && [event WC_isOnlyCommandKeyPressed]) {
+        
         for (NSTrackingArea *trackingArea in self.hoverLinkTrackingAreas)
             [self removeTrackingArea:trackingArea];
         
@@ -442,6 +441,9 @@ static char kWCTextViewObservingContext;
             
             range = NSMakeRange(NSMaxRange(effectiveRange), NSMaxRange(range) - NSMaxRange(effectiveRange));
         }
+    }
+    else {
+        [self _cleanupHoverLinkStuff];
     }
 }
 
@@ -1093,6 +1095,14 @@ static char kWCTextViewObservingContext;
         [[foldColors objectAtIndex:idx] setFill];
         NSRectFillList(drawRects, drawCount);
     }];
+}
+- (void)_cleanupHoverLinkStuff {
+    for (NSTrackingArea *trackingArea in self.hoverLinkTrackingAreas)
+        [self removeTrackingArea:trackingArea];
+    
+    [self.hoverLinkTrackingAreas removeAllObjects];
+    
+    [self setCurrentHoverLinkTrackingArea:nil];
 }
 #pragma mark Properties
 - (void)setToolTipTimer:(NSTimer *)toolTipTimer {
