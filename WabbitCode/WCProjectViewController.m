@@ -43,6 +43,7 @@
     [self.outlineView setTarget:self];
     [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
     [self.outlineView setDataSource:self];
+    [self.outlineView expandItem:[self.outlineView itemAtRow:0] expandChildren:NO];
 }
 #pragma mark NSOutlineViewDataSource
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(File *)item {
