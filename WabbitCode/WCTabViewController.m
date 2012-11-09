@@ -56,7 +56,7 @@
     [self.tabBarView setUseOverflowMenu:YES];
     [self.tabBarView setAllowsBackgroundTabClosing:YES];
     [self.tabBarView setSelectsTabsOnMouseDown:YES];
-    [self.tabBarView setAutomaticallyAnimates:NO];
+    [self.tabBarView setAutomaticallyAnimates:YES];
     [self.tabBarView setAlwaysShowActiveTab:YES];
     [self.tabBarView setAllowsScrubbing:NO];
     [self.tabBarView setTearOffStyle:MMTabBarTearOffMiniwindow];
