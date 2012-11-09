@@ -13,8 +13,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class WCSymbolIndex;
+
 @interface WCProjectDocument : NSPersistentDocument
 
 @property (readonly,nonatomic) NSDictionary *fileUUIDsToSourceFileDocuments;
+@property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
+@property (readonly,nonatomic) NSString *UUID;
 
 @end

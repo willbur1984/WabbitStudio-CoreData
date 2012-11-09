@@ -13,9 +13,14 @@
 
 #import "WCSymbolIndex.h"
 #import "WCProjectDocument.h"
+#import "WCSymbolScanner.h"
+#import "WCDefines.h"
 
 @interface WCSymbolIndex ()
 @property (weak,nonatomic) WCProjectDocument *projectDocument;
+@property (readwrite,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
+@property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @end
 
 @implementation WCSymbolIndex
@@ -26,7 +31,48 @@
     
     [self setProjectDocument:projectDocument];
     
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
+    
+    [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
+    [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
+    [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
+    [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType]];
+    [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    [self.managedObjectContext setUndoManager:nil];
+    [self.managedObjectContext setMergePolicy:NSOverwriteMergePolicy];
+    
     return self;
+}
+
+- (void)removeSymbolScanner:(WCSymbolScanner *)symbolScanner; {
+    [symbolScanner.managedObjectContext setParentContext:nil];
+}
+
+- (NSArray *)symbolsWithName:(NSString *)name; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",name]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:NO] ]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+- (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.type == %i AND self.name ==[cd] %@",type,name]];
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+- (NSArray *)symbolsWithPrefix:(NSString *)prefix; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+    
+    if (prefix.length)
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name BEGINSWITH[cd] %@",prefix]];
+    
+    [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)], [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:YES]]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
 @end

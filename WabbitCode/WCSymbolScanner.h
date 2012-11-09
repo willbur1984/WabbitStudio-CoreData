@@ -16,6 +16,7 @@
 
 extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
 
+@class WCSourceFileDocument;
 @protocol WCSymbolScannerDelegate;
 
 @interface WCSymbolScanner : NSObject
@@ -25,8 +26,9 @@ extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
 @property (readonly,weak,nonatomic) NSTextStorage *textStorage;
 @property (readonly,strong,nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly,nonatomic) NSArray *symbolsSortedByLocation;
+@property (readonly,copy,nonatomic) NSString *fileContainerUUID;
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage;
+- (id)initWithSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 
 - (void)scanSymbols;
 

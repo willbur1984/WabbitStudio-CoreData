@@ -14,6 +14,11 @@
 #import "WCSymbolScanner.h"
 #import "WCScanSymbolsOperation.h"
 #import "WCDefines.h"
+#import "WCSourceFileDocument.h"
+#import "WCTextStorage.h"
+#import "WCProjectDocument.h"
+#import "WCSymbolIndex.h"
+#import "NSString+WCExtensions.h"
 
 NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification = @"WCSymbolScannerDidFinishScanningSymbolsNotification";
 
@@ -26,6 +31,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 @property (strong,nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (strong,nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 @property (strong,nonatomic) NSMutableDictionary *symbolNamesToSymbolArrays;
+@property (readwrite,copy,nonatomic) NSString *fileContainerUUID;
 @end
 
 @implementation WCSymbolScanner
@@ -34,25 +40,37 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (id)initWithTextStorage:(NSTextStorage *)textStorage; {
+- (id)initWithSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
     if (!(self = [super init]))
         return nil;
     
-    [self setTextStorage:textStorage];
+    [self setFileContainerUUID:sourceFileDocument.UUID];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:textStorage];
+    [self setTextStorage:sourceFileDocument.textStorage];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textStorage];
     
     [self setOperationQueue:[[NSOperationQueue alloc] init]];
     [self.operationQueue setMaxConcurrentOperationCount:1];
     [self.operationQueue setName:kWCSymbolScannerOperationQueueName];
     
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
+    if (!sourceFileDocument.projectDocument) {
+        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
+        
+        [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
+        [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
+        [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
+    }
     
-    [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
-    [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
-    [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
     [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType]];
-    [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    
+    if (sourceFileDocument.projectDocument) {
+        [self.managedObjectContext setParentContext:sourceFileDocument.projectDocument.symbolIndex.managedObjectContext];
+    }
+    else {
+        [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+    }
+    
     [self.managedObjectContext setUndoManager:nil];
     [self.managedObjectContext setMergePolicy:NSOverwriteMergePolicy];
     
@@ -66,14 +84,14 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     
     WCScanSymbolsOperation *operation = [[WCScanSymbolsOperation alloc] initWithSymbolScanner:self];
     
-    __weak typeof (self) blockSelf = self;
+    __weak typeof (self) weakSelf = self;
     
     [operation setCompletionBlock:^{
         if (!operation.isCancelled) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [blockSelf.symbolNamesToSymbolArrays removeAllObjects];
+                [weakSelf.symbolNamesToSymbolArrays removeAllObjects];
                 
-                [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:blockSelf];
+                [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:weakSelf];
             });
         }
     }];
@@ -84,7 +102,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 - (Symbol *)symbolForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location <= %lu",range.location]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@ AND self.location <= %lu",self.fileContainerUUID,range.location]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
@@ -150,6 +168,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 - (NSArray *)symbolsSortedByLocation {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@",self.fileContainerUUID]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];

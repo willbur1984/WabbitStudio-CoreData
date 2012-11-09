@@ -30,6 +30,7 @@
 @property (assign,getter = isFinished) BOOL finished;
 @property (assign,getter = isCancelled) BOOL cancelled;
 @property (copy,nonatomic) NSURL *fileURL;
+@property (readwrite,strong,nonatomic) NSString *fileContainerUUID;
 @end
 
 @implementation WCScanSymbolsOperation
@@ -40,6 +41,7 @@
     
     [self setString:symbolScanner.textStorage.string];
     [self setFileURL:[symbolScanner.delegate fileURLForSymbolScanner:symbolScanner]];
+    [self setFileContainerUUID:symbolScanner.fileContainerUUID];
     [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType]];
     [self.managedObjectContext setParentContext:symbolScanner.managedObjectContext];
     [self.managedObjectContext setUndoManager:nil];
@@ -73,16 +75,20 @@
         do {
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
             
+            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.identifier == %@",self.fileContainerUUID]];
+            
             FileContainer *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
             
-            if (file) {
-                [self.managedObjectContext deleteObject:file];
+            if (!file) {
+                file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
+                
+                [file setIdentifier:self.fileContainerUUID];
             }
             
-            file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
-            
-            [file setIdentifier:[NSString WC_UUIDString]];
             [file setPath:self.fileURL.path];
+            
+            for (Symbol *symbol in file.symbols)
+                [self.managedObjectContext deleteObject:symbol];
             
             if (self.isCancelled)
                 break;
@@ -220,8 +226,13 @@
             
         } while (0);
         
-        if (!self.isCancelled)
-            [self.managedObjectContext save:NULL];
+        if (!self.isCancelled) {
+            if ([self.managedObjectContext save:NULL]) {
+                [self.managedObjectContext.parentContext performBlock:^{
+                    [self.managedObjectContext.parentContext save:NULL];
+                }];
+            }
+        }
         
         [self willChangeValueForKey:@"isExecuting"];
         [self willChangeValueForKey:@"isFinished"];

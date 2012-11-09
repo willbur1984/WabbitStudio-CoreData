@@ -17,10 +17,13 @@
 #import "WCSourceFileDocument.h"
 #import "NSURL+WCExtensions.h"
 #import "WCDocumentController.h"
+#import "WCSymbolIndex.h"
 #import "File.h"
+#import "Project.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMutableDictionary *mutableFileUUIDsToSourceFileDocuments;
+@property (readwrite,strong,nonatomic) WCSymbolIndex *symbolIndex;
 @end
 
 @implementation WCProjectDocument
@@ -59,6 +62,8 @@
     BOOL retval = [super configurePersistentStoreCoordinatorForURL:url ofType:fileType modelConfiguration:configuration storeOptions:options error:error];
     
     if (retval) {
+        [self setSymbolIndex:[[WCSymbolIndex alloc] initWithProjectDocument:self]];
+        
         NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
         
         [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.isGroup == %@",@false]];
@@ -73,21 +78,25 @@
                 continue;
             
             NSError *documentError;
-            WCSourceFileDocument *sourceFileDocument = [[WCSourceFileDocument alloc] initWithContentsOfURL:url ofType:uti error:&documentError];
+            WCSourceFileDocument *sourceFileDocument = [[WCSourceFileDocument alloc] initWithContentsOfURL:url ofType:uti projectDocument:self UUID:file.uuid error:&documentError];
             
             if (!sourceFileDocument) {
                 WCLogObject(documentError);
                 continue;
             }
             
-            [sourceFileDocument setUUID:file.uuid];
-            [sourceFileDocument setProjectDocument:self];
-            
             [self.mutableFileUUIDsToSourceFileDocuments setObject:sourceFileDocument forKey:file.uuid];
         }
     }
     
     return retval;
+}
+
+- (NSString *)UUID {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
+    Project *project = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+    
+    return project.uuid;
 }
 
 - (NSDictionary *)fileUUIDsToSourceFileDocuments {

@@ -26,4 +26,6 @@ extern NSString *const WCSourceFileDocumentEditedDidChangeNotification;
 @property (readonly,nonatomic) WCSourceFileWindowController *sourceFileWindowController;
 @property (weak,nonatomic) WCProjectDocument *projectDocument;
 
+- (id)initWithContentsOfURL:(NSURL *)url ofType:(NSString *)typeName projectDocument:(WCProjectDocument *)projectDocument UUID:(NSString *)UUID error:(NSError *__autoreleasing *)outError;
+
 @end

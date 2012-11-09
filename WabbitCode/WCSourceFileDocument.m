@@ -22,6 +22,7 @@
 #import "NSTextView+WCExtensions.h"
 #import "NSURL+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
+#import "WCGeometry.h"
 
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
@@ -55,7 +56,7 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolHighlighter:[[WCSymbolHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self.symbolHighlighter setDelegate:self];
-    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
+    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithSourceFileDocument:self]];
     [self.syntaxHighlighter setDelegate:self];
     [self.symbolScanner setDelegate:self];
     [self setFoldScanner:[[WCFoldScanner alloc] initWithTextStorage:self.textStorage]];
@@ -93,7 +94,7 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
     [self setSyntaxHighlighter:[[WCSyntaxHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self setSymbolHighlighter:[[WCSymbolHighlighter alloc] initWithTextStorage:self.textStorage]];
     [self.symbolHighlighter setDelegate:self];
-    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithTextStorage:self.textStorage]];
+    [self setSymbolScanner:[[WCSymbolScanner alloc] initWithSourceFileDocument:self]];
     [self.syntaxHighlighter setDelegate:self];
     [self.symbolScanner setDelegate:self];
     [self setFoldScanner:[[WCFoldScanner alloc] initWithTextStorage:self.textStorage]];
@@ -180,6 +181,8 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
     if (self.isDocumentEdited)
         retval = [retval WC_unsavedImageIcon];
     
+    [retval setSize:WC_NSSmallSize];
+    
     return retval;
 }
 - (BOOL)isEdited {
@@ -205,6 +208,12 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
     return self.symbolScanner;
 }
 #pragma mark *** Public Methods ***
+- (id)initWithContentsOfURL:(NSURL *)url ofType:(NSString *)typeName projectDocument:(WCProjectDocument *)projectDocument UUID:(NSString *)UUID error:(NSError *__autoreleasing *)outError; {
+    [self setProjectDocument:projectDocument];
+    [self setUUID:UUID];
+    
+    return [self initWithContentsOfURL:url ofType:typeName error:outError];
+}
 #pragma mark Properties
 - (WCSourceFileWindowController *)sourceFileWindowController {
     return self.windowControllers.lastObject;
