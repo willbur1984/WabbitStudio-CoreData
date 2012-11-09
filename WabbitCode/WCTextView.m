@@ -37,6 +37,7 @@
 #import "NSUserDefaults+WCExtensions.h"
 #import "WCFoldView.h"
 #import "WCArgumentPlaceholderCell.h"
+#import "FileContainer.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -1232,14 +1233,14 @@ static char kWCTextViewObservingContext;
             }
             
             if (symbol.arguments)
-                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 line %ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
             else
-                [string appendFormat:NSLocalizedString(@"%@ \u2192 line %ld\n%@\n", nil),symbol.name,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
         }
         else if ([symbol respondsToSelector:@selector(value)])
-            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 line %ld\n", nil),symbol.name,symbol.value,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 %@:%ld\n", nil),symbol.name,symbol.value,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
         else
-            [string appendFormat:NSLocalizedString(@"%@ \u2192 line %ld\n", nil),symbol.name,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
     }
     
     [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
