@@ -15,6 +15,7 @@
 #import "WCProjectDocument.h"
 #import "WCSymbolScanner.h"
 #import "WCDefines.h"
+#import "WCAppController.h"
 
 @interface WCSymbolIndex ()
 @property (weak,nonatomic) WCProjectDocument *projectDocument;
@@ -34,8 +35,12 @@
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
     
     [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
+    
+    NSURL *storeURL = [[[WCAppController sharedController] derivedDataDirectoryURL] URLByAppendingPathComponent:[projectDocument.UUID stringByAppendingPathExtension:@"sqlite"]];
+    NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption : @true, NSInferMappingModelAutomaticallyOption : @true};
+    
     [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
-    [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
+    [self.persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:options error:NULL];
     [self setManagedObjectContext:[[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType]];
     [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     [self.managedObjectContext setUndoManager:nil];
