@@ -19,11 +19,17 @@
 #import "WCIssueViewController.h"
 #import "NSArray+WCExtensions.h"
 #import "WCTabViewController.h"
+#import "WCSplitView.h"
+#import "NSColor+WCExtensions.h"
 
-@interface WCProjectWindowController () <WCNavigatorControlDataSource,NSWindowDelegate,NSSplitViewDelegate>
+static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.toolbar";
 
-@property (weak,nonatomic) IBOutlet NSSplitView *mainSplitView;
+@interface WCProjectWindowController () <WCNavigatorControlDataSource,NSWindowDelegate,NSSplitViewDelegate,NSToolbarDelegate>
+
+@property (weak,nonatomic) IBOutlet WCSplitView *mainSplitView;
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
+@property (weak,nonatomic) IBOutlet MMTabBarView *tabBarView;
+@property (weak,nonatomic) IBOutlet NSTabView *tabView;
 
 @property (strong,nonatomic) NSArray *navigatorItems;
 @property (readwrite,strong,nonatomic) WCTabViewController *tabViewController;
@@ -50,14 +56,20 @@
     
     [self.window setDelegate:self];
     
+    [self.mainSplitView setDividerColor:[NSColor colorWithCalibratedWhite:67.0/255.0 alpha:1]];
     [self.mainSplitView setDelegate:self];
     
     [self.navigatorControl setDataSource:self];
     [self.navigatorControl setSelectedItemIdentifier:[[self.navigatorItems objectAtIndex:0] identifier]];
     
-    [self setTabViewController:[[WCTabViewController alloc] init]];
-    [self.tabViewController.view setFrameSize:[self.mainSplitView.subviews.lastObject frame].size];
-    [self.mainSplitView.subviews.lastObject addSubview:self.tabViewController.view];
+    [self setTabViewController:[[WCTabViewController alloc] initWithTabBarView:self.tabBarView tabView:self.tabView]];
+    
+    NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:kProjectWindowToolbar];
+    
+    [toolbar setShowsBaselineSeparator:NO];
+    [toolbar setDelegate:self];
+    
+    [self.window setToolbar:toolbar];
 }
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)view {
@@ -66,6 +78,16 @@
             return NO;
     }
     return YES;
+}
+#pragma mark NSToolbarDelegate
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
+    return nil;
+}
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
+    return nil;
+}
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag {
+    return nil;
 }
 
 #pragma mark WCNavigatorControlDataSource

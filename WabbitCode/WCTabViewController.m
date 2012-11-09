@@ -22,32 +22,34 @@
 
 @interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate>
 
-@property (weak,nonatomic) IBOutlet MMTabBarView *tabBarView;
+@property (strong,nonatomic) MMTabBarView *tabBarView;
+@property (strong,nonatomic) NSTabView *tabView;
 @property (strong,nonatomic) NSMapTable *sourceFileDocumentsToTextViewControllers;
 @property (strong,nonatomic) NSMapTable *textViewControllersToSourceFileDocuments;
 @end
 
 @implementation WCTabViewController
+#pragma mark MMTabBarViewDelegate
+- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
+    [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
+}
+#pragma mark WCTextViewControllerDelegate
 
-- (id)init {
+#pragma mark *** Public Methods ***
+- (id)initWithTabBarView:(MMTabBarView *)tabBarView tabView:(NSTabView *)tabView; {
     if (!(self = [super init]))
         return nil;
     
     [self setSourceFileDocumentsToTextViewControllers:[NSMapTable mapTableWithWeakToStrongObjects]];
     [self setTextViewControllersToSourceFileDocuments:[NSMapTable mapTableWithWeakToWeakObjects]];
+    [self setTabBarView:tabBarView];
+    [self setTabView:tabView];
     
-    return self;
-}
-
-- (NSString *)nibName {
-    return @"WCTabView";
-}
-
-- (void)loadView {
-    [super loadView];
-    
+    [self.tabBarView setTabView:self.tabView];
+    [self.tabView setDelegate:(id<NSTabViewDelegate>)self.tabBarView];
+    [self.tabBarView setDelegate:self];
     [self.tabBarView setStyleNamed:@"Safari"];
-    [self.tabBarView setOnlyShowCloseOnHover:NO];
+    [self.tabBarView setOnlyShowCloseOnHover:YES];
     [self.tabBarView setCanCloseOnlyTab:YES];
     [self.tabBarView setHideForSingleTab:NO];
     [self.tabBarView setShowAddTabButton:NO];
@@ -58,15 +60,10 @@
     [self.tabBarView setAlwaysShowActiveTab:YES];
     [self.tabBarView setAllowsScrubbing:NO];
     [self.tabBarView setTearOffStyle:MMTabBarTearOffMiniwindow];
+    
+    return self;
 }
 
-#pragma mark MMTabBarViewDelegate
-- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
-    [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
-}
-#pragma mark WCTextViewControllerDelegate
-
-#pragma mark *** Public Methods ***
 - (WCTextViewController *)addTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
     if (!sourceFileDocument)
         return nil;

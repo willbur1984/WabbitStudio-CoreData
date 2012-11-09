@@ -13,9 +13,11 @@
 
 #import "WCViewController.h"
 
-@class WCSourceFileDocument,WCTextViewController;
+@class WCSourceFileDocument,WCTextViewController,MMTabBarView;
 
-@interface WCTabViewController : WCViewController
+@interface WCTabViewController : NSObject
+
+- (id)initWithTabBarView:(MMTabBarView *)tabBarView tabView:(NSTabView *)tabView;
 
 - (WCTextViewController *)addTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (WCTextViewController *)selectTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
