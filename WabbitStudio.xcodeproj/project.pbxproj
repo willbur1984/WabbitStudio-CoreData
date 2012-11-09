@@ -54,6 +54,7 @@
 		7959366D161639720085355E /* Fold.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366C161639720085355E /* Fold.m */; };
 		7959367016163F2B0085355E /* WCFoldMarker.m in Sources */ = {isa = PBXBuildFile; fileRef = 7959366F16163F2B0085355E /* WCFoldMarker.m */; };
 		795F5B5B1637717400C70449 /* WCDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 795F5B5A1637717400C70449 /* WCDocumentController.m */; };
+		7961CF4F164CAAE6005D5060 /* WCSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7961CF4E164CAAE6005D5060 /* WCSplitView.m */; };
 		7962BD99161FD689006D5A7A /* NSEvent+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */; };
 		7962BD9D161FDD3E006D5A7A /* WCWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BD9C161FDD3E006D5A7A /* WCWindow.m */; };
 		7962BDA81620A5A8006D5A7A /* WCMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BDA71620A5A8006D5A7A /* WCMenuController.m */; };
@@ -129,7 +130,6 @@
 		79AFA42D1646DE4100876655 /* MMTabBarView.framework in Copy Private Frameworks */ = {isa = PBXBuildFile; fileRef = 79AFA4231646DDDF00876655 /* MMTabBarView.framework */; };
 		79AFA42E1646DE9A00876655 /* MMTabBarView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79AFA4231646DDDF00876655 /* MMTabBarView.framework */; };
 		79AFA4321646E0B800876655 /* WCTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4311646E0B800876655 /* WCTabViewController.m */; };
-		79AFA4351646E0DB00876655 /* WCTabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA4331646E0DB00876655 /* WCTabView.xib */; };
 		79AFA4391646E53A00876655 /* WCDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4371646E53A00876655 /* WCDocument.m */; };
 		79AFA43E1646E85A00876655 /* WCSymbolIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA43D1646E85A00876655 /* WCSymbolIndex.m */; };
 		79BF21C61645B21A00E79CBA /* DMTabBarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BF21C51645B21A00E79CBA /* DMTabBarItem.m */; };
@@ -286,6 +286,8 @@
 		7959366F16163F2B0085355E /* WCFoldMarker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFoldMarker.m; sourceTree = "<group>"; };
 		795F5B591637717400C70449 /* WCDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCDocumentController.h; sourceTree = "<group>"; };
 		795F5B5A1637717400C70449 /* WCDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDocumentController.m; sourceTree = "<group>"; };
+		7961CF4D164CAAE6005D5060 /* WCSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSplitView.h; sourceTree = "<group>"; };
+		7961CF4E164CAAE6005D5060 /* WCSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSplitView.m; sourceTree = "<group>"; };
 		7962BD97161FD689006D5A7A /* NSEvent+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSEvent+WCExtensions.h"; sourceTree = "<group>"; };
 		7962BD98161FD689006D5A7A /* NSEvent+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSEvent+WCExtensions.m"; sourceTree = "<group>"; };
 		7962BD9B161FDD3E006D5A7A /* WCWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCWindow.h; sourceTree = "<group>"; };
@@ -417,7 +419,6 @@
 		79AFA41B1646DDDF00876655 /* MMTabBarView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MMTabBarView.xcodeproj; path = MMTabBarView/MMTabBarView.xcodeproj; sourceTree = "<group>"; };
 		79AFA4301646E0B800876655 /* WCTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTabViewController.h; sourceTree = "<group>"; };
 		79AFA4311646E0B800876655 /* WCTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTabViewController.m; sourceTree = "<group>"; };
-		79AFA4341646E0DB00876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCTabView.xib; sourceTree = "<group>"; };
 		79AFA4361646E53A00876655 /* WCDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCDocument.h; sourceTree = "<group>"; };
 		79AFA4371646E53A00876655 /* WCDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDocument.m; sourceTree = "<group>"; };
 		79AFA43C1646E85A00876655 /* WCSymbolIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolIndex.h; sourceTree = "<group>"; };
@@ -832,7 +833,6 @@
 				79AFA4081645BD2900876655 /* WCProjectView.xib */,
 				79AFA40B1645BF3700876655 /* WCIssueView.xib */,
 				79AFA40E1645BF4000876655 /* WCSearchView.xib */,
-				79AFA4331646E0DB00876655 /* WCTabView.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -1062,6 +1062,8 @@
 				79C92CEF161144B600BB6CDC /* WCTableView.m */,
 				79813E62164382D100D0F184 /* WCOutlineView.h */,
 				79813E63164382D100D0F184 /* WCOutlineView.m */,
+				7961CF4D164CAAE6005D5060 /* WCSplitView.h */,
+				7961CF4E164CAAE6005D5060 /* WCSplitView.m */,
 				79FE3607161943AF00DB7C6D /* Jump Bar */,
 			);
 			name = Views;
@@ -1357,7 +1359,6 @@
 				79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */,
 				79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */,
 				79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */,
-				79AFA4351646E0DB00876655 /* WCTabView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1522,6 +1523,7 @@
 				79AFA4321646E0B800876655 /* WCTabViewController.m in Sources */,
 				79AFA4391646E53A00876655 /* WCDocument.m in Sources */,
 				79AFA43E1646E85A00876655 /* WCSymbolIndex.m in Sources */,
+				7961CF4F164CAAE6005D5060 /* WCSplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1660,14 +1662,6 @@
 				79AFA40F1645BF4000876655 /* en */,
 			);
 			name = WCSearchView.xib;
-			sourceTree = "<group>";
-		};
-		79AFA4331646E0DB00876655 /* WCTabView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				79AFA4341646E0DB00876655 /* en */,
-			);
-			name = WCTabView.xib;
 			sourceTree = "<group>";
 		};
 		79DF87B9162A8E1A00818741 /* WCGeneralView.xib */ = {
