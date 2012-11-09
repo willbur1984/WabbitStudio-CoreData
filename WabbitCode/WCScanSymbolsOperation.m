@@ -127,7 +127,10 @@
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-                [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+                
+                NSString *value = [[self.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                
+                [entity setValue:[value stringByReplacingOccurrencesOfString:@"\t" withString:@" "]];
                 [entity setFile:file];
             }];
             
