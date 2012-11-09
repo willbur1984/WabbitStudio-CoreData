@@ -102,29 +102,28 @@ static const CGFloat kItemWidth = 32;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-    static NSGradient *gradient;
-    static NSGradient *nonKeyGradient;
-    static NSColor *separatorColor;
-    static NSColor *nonKeySeparatorColor;
+    static NSGradient *gradient, *keyGradient;
+    static NSColor *fillColor, *keyFillColor;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        gradient = [[NSGradient alloc] initWithStartingColor:[NSColor WC_colorWithHexadecimalString:@"dadada"] endingColor:[NSColor WC_colorWithHexadecimalString:@"bcbcbc"]];
-        nonKeyGradient = [[NSGradient alloc] initWithStartingColor:[NSColor WC_colorWithHexadecimalString:@"f6f6f6"] endingColor:[NSColor WC_colorWithHexadecimalString:@"dadada"]];
-        separatorColor = [NSColor WC_colorWithHexadecimalString:@"555555"];
-        nonKeySeparatorColor = [NSColor WC_colorWithHexadecimalString:@"808080"];
+        gradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:209.0/255.0 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:244.0/255.0 alpha:1.0]];
+        keyGradient = [[NSGradient alloc] initWithStartingColor:[NSColor colorWithCalibratedWhite:174.0/255.0 alpha:1.0] endingColor:[NSColor colorWithCalibratedWhite:211.0/255.0 alpha:1.0]];
+        keyFillColor = [NSColor colorWithCalibratedWhite:67.0/255.0 alpha:1.0];
+        fillColor = [NSColor colorWithCalibratedWhite:109.0/255.0 alpha:1.0];
     });
     
-    if (self.window.isKeyWindow)
-        [gradient drawInRect:self.bounds angle:-90];
-    else
-        [nonKeyGradient drawInRect:self.bounds angle:-90];
     
-    if (self.window.isKeyWindow)
-        [separatorColor setFill];
-    else
-        [nonKeySeparatorColor setFill];
+    if (self.window.isKeyWindow) {
+        
+        [keyGradient drawInRect:self.bounds angle:90];
+        [keyFillColor setFill];
+    }
+    else {
+        [gradient drawInRect:self.bounds angle:90];
+        [fillColor setFill];
+    }
     
-    NSRectFill(NSMakeRect(0, NSMinY(self.bounds), NSWidth(self.bounds), 1));
+    NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMinY(self.bounds), NSWidth(self.bounds), 1));
 }
 
 - (NSString *)view:(NSView *)view stringForToolTip:(NSToolTipTag)tag point:(NSPoint)point userData:(void *)data {
