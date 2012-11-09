@@ -150,7 +150,7 @@
                 NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
                 
                 [fetchRequest setResultType:NSCountResultType];
-                [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.location == %@",@(result.range.location)]];
+                [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file == %@ AND self.location == %@",file,@(result.range.location)]];
                 
                 NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
                 
