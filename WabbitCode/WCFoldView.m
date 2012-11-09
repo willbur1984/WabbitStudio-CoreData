@@ -310,7 +310,7 @@ static char kWCFoldViewObservingContext;
     return [NSColor colorWithCalibratedHue:baseColor.hueComponent saturation:baseColor.saturationComponent brightness:baseColor.brightnessComponent - (depth * kStepAmount) alpha:baseColor.alphaComponent];
 }
 - (NSColor *)_highlightColorForFold:(Fold *)fold baseDepth:(int16_t)baseDepth {
-    const CGFloat kStepAmount = 0.05;
+    const CGFloat kStepAmount = 0.08;
     NSColor *baseColor = [[NSColor WC_colorWithHexadecimalString:@"ffffff"] colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     int16_t depth = fold.depth.shortValue - baseDepth;
     
