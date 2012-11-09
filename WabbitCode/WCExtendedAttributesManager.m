@@ -116,7 +116,7 @@ static NSDictionary *kErrnoCodeToErrorString;
     size_t length = getxattr(path.fileSystemRepresentation, attribute.UTF8String, NULL, ULONG_MAX, 0, 0);
     
     if (length == ULONG_MAX || length == -1) {
-        WCLog(@"unable to retrieve attribute %@ at path %@, error %i, %@",attribute,path,errno,[kErrnoCodeToErrorString objectForKey:@(errno)]);
+//        WCLog(@"unable to retrieve attribute %@ at path %@, error %i, %@",attribute,path,errno,[kErrnoCodeToErrorString objectForKey:@(errno)]);
         return nil;
     }
     
