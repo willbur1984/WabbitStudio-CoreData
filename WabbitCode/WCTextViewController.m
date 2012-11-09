@@ -38,6 +38,8 @@
 #import "NSImage+WCExtensions.h"
 #import "WCProjectDocument.h"
 #import "File.h"
+#import "WCTabViewController.h"
+#import "WCProjectWindowController.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
 
@@ -242,8 +244,24 @@
     return self.sourceFileDocument.foldScanner;
 }
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol {
-    [textView setSelectedRange:NSRangeFromString(symbol.range)];
-    [textView scrollRangeToVisible:textView.selectedRange];
+    if ([symbol.file.identifier isEqualToString:self.sourceFileDocument.UUID]) {
+        [textView setSelectedRange:NSRangeFromString(symbol.range)];
+        [textView scrollRangeToVisible:textView.selectedRange];
+    }
+    else {
+        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:symbol.file.identifier];
+        
+        if (!sourceFileDocument) {
+            NSBeep();
+            return;
+        }
+        
+        WCTabViewController *tabViewController = self.sourceFileDocument.projectDocument.projectWindowController.tabViewController;
+        WCTextViewController *textViewController = [tabViewController addTabBarItemForSourceFileDocument:sourceFileDocument];
+        
+        [textViewController.textView setSelectedRange:NSRangeFromString(symbol.range)];
+        [textViewController.textView scrollRangeToVisible:textViewController.textView.selectedRange];
+    }
 }
 #pragma mark WCFoldViewDelegate
 - (WCFoldScanner *)foldScannerForFoldView:(WCFoldView *)foldView {

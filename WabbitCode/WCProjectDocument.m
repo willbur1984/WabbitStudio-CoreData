@@ -20,6 +20,7 @@
 #import "WCSymbolIndex.h"
 #import "File.h"
 #import "Project.h"
+#import "NSArray+WCExtensions.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMutableDictionary *mutableFileUUIDsToSourceFileDocuments;
@@ -98,9 +99,11 @@
     
     return project.uuid;
 }
-
 - (NSDictionary *)fileUUIDsToSourceFileDocuments {
     return [self.mutableFileUUIDsToSourceFileDocuments copy];
+}
+- (WCProjectWindowController *)projectWindowController {
+    return [self.windowControllers WC_firstObject];
 }
 
 @end
