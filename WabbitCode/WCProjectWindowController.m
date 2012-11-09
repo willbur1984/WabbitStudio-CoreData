@@ -21,6 +21,7 @@
 #import "WCTabViewController.h"
 #import "WCSplitView.h"
 #import "NSColor+WCExtensions.h"
+#import "WCTabView.h"
 
 static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.toolbar";
 
@@ -29,7 +30,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 @property (weak,nonatomic) IBOutlet WCSplitView *mainSplitView;
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
 @property (weak,nonatomic) IBOutlet MMTabBarView *tabBarView;
-@property (weak,nonatomic) IBOutlet NSTabView *tabView;
+@property (weak,nonatomic) IBOutlet WCTabView *tabView;
 
 @property (strong,nonatomic) NSArray *navigatorItems;
 @property (readwrite,strong,nonatomic) WCTabViewController *tabViewController;
@@ -61,6 +62,8 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     
     [self.navigatorControl setDataSource:self];
     [self.navigatorControl setSelectedItemIdentifier:[[self.navigatorItems objectAtIndex:0] identifier]];
+    
+    [self.tabView setEmptyString:NSLocalizedString(@"No Open Files", nil)];
     
     [self setTabViewController:[[WCTabViewController alloc] initWithTabBarView:self.tabBarView tabView:self.tabView]];
     
