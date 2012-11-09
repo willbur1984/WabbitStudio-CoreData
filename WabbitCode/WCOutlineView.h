@@ -15,4 +15,7 @@
 
 @interface WCOutlineView : NSOutlineView
 
+@property (copy,nonatomic) NSString *emptyString;
+@property (copy,nonatomic) NSAttributedString *emptyAttributedString;
+
 @end

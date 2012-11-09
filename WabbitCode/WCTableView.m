@@ -14,35 +14,53 @@
 #import "WCTableView.h"
 #import "WCGeometry.h"
 #import "WCDefines.h"
+#import "NSShadow+MCAdditions.h"
+#import "NSBezierPath+MCAdditions.h"
 
 @implementation WCTableView
 
-- (void)drawRect:(NSRect)dirtyRect {
-    [super drawRect:dirtyRect];
+- (void)drawBackgroundInClipRect:(NSRect)clipRect {
+    [super drawBackgroundInClipRect:clipRect];
     
-    if (self.numberOfRows == 0 && self.emptyAttributedString.length) {
-        static NSTextStorage *textStorage;
-        static NSLayoutManager *layoutManager;
-        static NSTextContainer *textContainer;
+    if (self.numberOfRows == 0 && self.emptyAttributedString.length > 0) {
+        static NSTextStorage *kTextStorage;
+        static NSLayoutManager *kLayoutManager;
+        static NSTextContainer *kTextContainer;
+        static NSShadow *kDropShadow;
+        static NSShadow *kInnerShadow;
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
-            textStorage = [[NSTextStorage alloc] init];
-            layoutManager = [[NSLayoutManager alloc] init];
+            kDropShadow = [[NSShadow alloc] initWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:1.0] offset:NSMakeSize(0, -1.0) blurRadius:1.0];
+            kInnerShadow = [[NSShadow alloc] initWithColor:[NSColor colorWithCalibratedWhite:141.0/255.0 alpha:1.0] offset:NSMakeSize(0.0, -1.0) blurRadius:1.0];
             
-            [textStorage addLayoutManager:layoutManager];
+            kTextStorage = [[NSTextStorage alloc] init];
+            kLayoutManager = [[NSLayoutManager alloc] init];
             
-            textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+            [kTextStorage addLayoutManager:kLayoutManager];
             
-            [layoutManager addTextContainer:textContainer];
+            kTextContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(CGFLOAT_MAX, CGFLOAT_MAX)];
+            
+            [kLayoutManager addTextContainer:kTextContainer];
         });
         
-        [textStorage replaceCharactersInRange:NSMakeRange(0, textStorage.length) withAttributedString:self.emptyAttributedString];
-        [layoutManager ensureLayoutForTextContainer:textContainer];
+        [kTextStorage replaceCharactersInRange:NSMakeRange(0, kTextStorage.length) withAttributedString:self.emptyAttributedString];
+        [kLayoutManager ensureLayoutForTextContainer:kTextContainer];
         
-        NSRect drawRect = [layoutManager usedRectForTextContainer:textContainer];
+        NSRect drawRect = [kLayoutManager usedRectForTextContainer:kTextContainer];
         NSRect centerRect = WC_NSRectCenter(drawRect, self.bounds);
+        NSRect borderRect = NSInsetRect(centerRect, -5, -5);
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:borderRect xRadius:5 yRadius:5];
         
-        [layoutManager drawGlyphsForGlyphRange:[layoutManager glyphRangeForTextContainer:textContainer] atPoint:centerRect.origin];
+        [NSGraphicsContext saveGraphicsState];
+		[kDropShadow set];
+		
+		[[NSColor colorWithCalibratedWhite:151.0/255.0 alpha:1.0] setFill];
+		[path fill];
+		[NSGraphicsContext restoreGraphicsState];
+		
+		[path fillWithInnerShadow:kInnerShadow];
+        
+        [kLayoutManager drawGlyphsForGlyphRange:[kLayoutManager glyphRangeForTextContainer:kTextContainer] atPoint:centerRect.origin];
     }
 }
 
@@ -50,7 +68,9 @@
     return self.emptyAttributedString.string;
 }
 - (void)setEmptyString:(NSString *)emptyString {
-    [self setEmptyAttributedString:[[NSAttributedString alloc] initWithString:emptyString]];
+    NSDictionary *attributes = @{NSFontAttributeName : [NSFont controlContentFontOfSize:[NSFont systemFontSizeForControlSize:NSRegularControlSize]], NSForegroundColorAttributeName : [NSColor whiteColor]};
+    
+    [self setEmptyAttributedString:[[NSAttributedString alloc] initWithString:emptyString attributes:attributes]];
 }
 
 - (void)setEmptyAttributedString:(NSAttributedString *)emptyAttributedString {
