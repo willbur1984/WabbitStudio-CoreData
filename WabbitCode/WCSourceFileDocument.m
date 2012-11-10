@@ -23,6 +23,7 @@
 #import "NSURL+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
 #import "WCGeometry.h"
+#import "NSString+WCExtensions.h"
 
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
@@ -88,6 +89,9 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
         if (!string)
             return NO;
     }
+    
+    if (!self.UUID)
+        [self setUUID:[NSString WC_UUIDString]];
     
     [self setStringEncoding:usedEncoding];
     [self setTextStorage:[[WCTextStorage alloc] initWithString:string attributes:[WCSyntaxHighlighter defaultAttributes]]];
