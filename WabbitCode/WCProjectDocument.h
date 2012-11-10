@@ -13,7 +13,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class WCSymbolIndex,WCProjectWindowController;
+@class WCSymbolIndex,WCProjectWindowController,WCSourceFileDocument,File;
 
 @interface WCProjectDocument : NSPersistentDocument
 
@@ -21,5 +21,7 @@
 @property (readonly,nonatomic) NSDictionary *fileUUIDsToSourceFileDocuments;
 @property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
 @property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
+
+- (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 
 @end

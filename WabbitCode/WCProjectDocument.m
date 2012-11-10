@@ -93,6 +93,14 @@
     return retval;
 }
 
+- (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",sourceFileDocument.UUID]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+
 - (NSString *)UUID {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
     Project *project = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
