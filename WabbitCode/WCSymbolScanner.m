@@ -71,6 +71,8 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
         [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
     }
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_managedObjectContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.managedObjectContext];
+    
     [self.managedObjectContext setUndoManager:nil];
     [self.managedObjectContext setMergePolicy:NSOverwriteMergePolicy];
     
@@ -83,17 +85,10 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.operationQueue cancelAllOperations];
     
     WCScanSymbolsOperation *operation = [[WCScanSymbolsOperation alloc] initWithSymbolScanner:self];
-    
     __weak typeof (self) weakSelf = self;
     
     [operation setCompletionBlock:^{
-        if (!operation.isCancelled) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.symbolNamesToSymbolArrays removeAllObjects];
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:weakSelf];
-            });
-        }
+        [weakSelf.symbolNamesToSymbolArrays removeAllObjects];
     }];
     
     [self.operationQueue addOperation:operation];
@@ -102,10 +97,12 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 - (Symbol *)symbolForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@ AND self.location <= %lu",self.fileContainerUUID,range.location]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@ AND self.location <= %@",self.fileContainerUUID,@(range.location)]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
-    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+    NSArray *results = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    
+    return results.lastObject;
 }
 - (NSArray *)symbolsWithName:(NSString *)name; {
     NSArray *retval = [self.symbolNamesToSymbolArrays objectForKey:name];
@@ -179,6 +176,15 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
         return;
     
     [self scanSymbols];
+}
+- (void)_managedObjectContextDidSave:(NSNotificationCenter *)note {
+    __weak typeof (self) weakSelf = self;
+    
+    [self.managedObjectContext.parentContext performBlock:^{
+        [weakSelf.managedObjectContext.parentContext save:NULL];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:weakSelf];
+    }];
 }
 
 @end
