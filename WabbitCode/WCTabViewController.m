@@ -19,6 +19,7 @@
 #import "WCDocumentController.h"
 #import "WCProjectDocument.h"
 #import "WCTextView.h"
+#import "File.h"
 
 @interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate>
 
@@ -32,6 +33,12 @@
 #pragma mark MMTabBarViewDelegate
 - (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
     [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
+}
+- (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
+    WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
+    File *file = [sourceFileDocument.projectDocument fileForSourceFileDocument:sourceFileDocument];
+    
+    return file.path.stringByAbbreviatingWithTildeInPath;
 }
 #pragma mark WCTextViewControllerDelegate
 
@@ -56,7 +63,7 @@
     [self.tabBarView setUseOverflowMenu:YES];
     [self.tabBarView setAllowsBackgroundTabClosing:YES];
     [self.tabBarView setSelectsTabsOnMouseDown:YES];
-    [self.tabBarView setAutomaticallyAnimates:YES];
+    [self.tabBarView setAutomaticallyAnimates:NO];
     [self.tabBarView setAlwaysShowActiveTab:YES];
     [self.tabBarView setAllowsScrubbing:NO];
     [self.tabBarView setTearOffStyle:MMTabBarTearOffMiniwindow];
