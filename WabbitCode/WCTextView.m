@@ -53,6 +53,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 static char kWCTextViewObservingContext;
 
 @interface WCTextView ()
+
 @property (weak,nonatomic) NSTimer *toolTipTimer;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
 @property (strong,nonatomic) NSTrackingArea *currentHoverLinkTrackingArea;
@@ -138,8 +139,8 @@ static char kWCTextViewObservingContext;
     [self setRichText:NO];
     [self setUsesFontPanel:NO];
     [self setUsesRuler:NO];
-    [self setUsesFindBar:YES];
-    [self setIncrementalSearchingEnabled:YES];
+    [self setUsesFindBar:NO];
+    [self setIncrementalSearchingEnabled:NO];
     
     [self setWrapping:[[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewWrapLinesUserDefaultsKey]];
     
@@ -826,7 +827,7 @@ static char kWCTextViewObservingContext;
 }
 
 - (IBAction)editAllInScopeAction:(id)sender; {
-    if (self.countOfSymbolRangesToHighlight > 0)
+    if (self.countOfSymbolRangesToHighlight > 1)
         [self setEditingSymbols:YES];
 }
 #pragma mark *** Private Methods ***
@@ -1151,11 +1152,11 @@ static char kWCTextViewObservingContext;
     [self.enclosingScrollView reflectScrolledClipView:self.enclosingScrollView.contentView];
 }
 - (void)setSymbolRangesToHighlight:(NSMutableIndexSet *)symbolRangesToHighlight {
-    NSUInteger prevCount = _symbolRangesToHighlight.count;
+    BOOL needsDisplay = (![_symbolRangesToHighlight isEqualToIndexSet:symbolRangesToHighlight]);
     
     _symbolRangesToHighlight = symbolRangesToHighlight;
     
-    if (prevCount != _symbolRangesToHighlight.count)
+    if (needsDisplay)
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
 }
 - (void)setEditingSymbols:(BOOL)editingSymbols {
