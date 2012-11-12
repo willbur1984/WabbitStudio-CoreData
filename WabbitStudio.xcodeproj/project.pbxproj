@@ -82,6 +82,18 @@
 		7962BE0416225FB1006D5A7A /* WCJumpInWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7962BE0216225FB1006D5A7A /* WCJumpInWindow.xib */; };
 		7962BE071622627D006D5A7A /* WCSearchFieldBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BE061622627C006D5A7A /* WCSearchFieldBackgroundView.m */; };
 		7962BE0A16226D3B006D5A7A /* WCJumpInCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */; };
+		79736AB0164F3568003F7F66 /* WCFindableTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AAF164F3568003F7F66 /* WCFindableTextView.m */; };
+		79736AB4164F3643003F7F66 /* WCFindBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AB3164F3643003F7F66 /* WCFindBarViewController.m */; };
+		79736AB7164F3656003F7F66 /* WCFindBarBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AB6164F3655003F7F66 /* WCFindBarBackgroundView.m */; };
+		79736ABA164F3666003F7F66 /* WCFindBarView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79736AB8164F3666003F7F66 /* WCFindBarView.xib */; };
+		79736ABD164F430B003F7F66 /* WCFindableScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736ABC164F430B003F7F66 /* WCFindableScrollView.m */; };
+		79736AC016505719003F7F66 /* FindNoWrapIndicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 79736ABE16505719003F7F66 /* FindNoWrapIndicator.png */; };
+		79736AC116505719003F7F66 /* FindNoWrapIndicatorReverse.png in Resources */ = {isa = PBXBuildFile; fileRef = 79736ABF16505719003F7F66 /* FindNoWrapIndicatorReverse.png */; };
+		79736AC41650625C003F7F66 /* WCFindBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AC31650625C003F7F66 /* WCFindBarTextField.m */; };
+		79736AC7165062BF003F7F66 /* WCFindBarSearchField.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AC6165062BF003F7F66 /* WCFindBarSearchField.m */; };
+		79736ACA1650ABE2003F7F66 /* WCFindBarSearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AC91650ABE1003F7F66 /* WCFindBarSearchFieldCell.m */; };
+		79736ACD1650AC23003F7F66 /* WCFindBarFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736ACC1650AC22003F7F66 /* WCFindBarFieldEditor.m */; };
+		79736AD01650B182003F7F66 /* WCFindBarTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -335,6 +347,27 @@
 		7962BE0816226D3A006D5A7A /* WCJumpInCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpInCellView.h; sourceTree = "<group>"; };
 		7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpInCellView.m; sourceTree = "<group>"; };
 		79710684160B5CAD00C4951A /* WCDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCDefines.h; sourceTree = "<group>"; };
+		79736AAE164F3568003F7F66 /* WCFindableTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindableTextView.h; sourceTree = "<group>"; };
+		79736AAF164F3568003F7F66 /* WCFindableTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindableTextView.m; sourceTree = "<group>"; };
+		79736AB2164F3643003F7F66 /* WCFindBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarViewController.h; sourceTree = "<group>"; };
+		79736AB3164F3643003F7F66 /* WCFindBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarViewController.m; sourceTree = "<group>"; };
+		79736AB5164F3655003F7F66 /* WCFindBarBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarBackgroundView.h; sourceTree = "<group>"; };
+		79736AB6164F3655003F7F66 /* WCFindBarBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarBackgroundView.m; sourceTree = "<group>"; };
+		79736AB9164F3666003F7F66 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCFindBarView.xib; sourceTree = "<group>"; };
+		79736ABB164F430B003F7F66 /* WCFindableScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindableScrollView.h; sourceTree = "<group>"; };
+		79736ABC164F430B003F7F66 /* WCFindableScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindableScrollView.m; sourceTree = "<group>"; };
+		79736ABE16505719003F7F66 /* FindNoWrapIndicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FindNoWrapIndicator.png; sourceTree = "<group>"; };
+		79736ABF16505719003F7F66 /* FindNoWrapIndicatorReverse.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FindNoWrapIndicatorReverse.png; sourceTree = "<group>"; };
+		79736AC21650625C003F7F66 /* WCFindBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarTextField.h; sourceTree = "<group>"; };
+		79736AC31650625C003F7F66 /* WCFindBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarTextField.m; sourceTree = "<group>"; };
+		79736AC5165062BE003F7F66 /* WCFindBarSearchField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarSearchField.h; sourceTree = "<group>"; };
+		79736AC6165062BF003F7F66 /* WCFindBarSearchField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarSearchField.m; sourceTree = "<group>"; };
+		79736AC81650ABE1003F7F66 /* WCFindBarSearchFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarSearchFieldCell.h; sourceTree = "<group>"; };
+		79736AC91650ABE1003F7F66 /* WCFindBarSearchFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarSearchFieldCell.m; sourceTree = "<group>"; };
+		79736ACB1650AC22003F7F66 /* WCFindBarFieldEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarFieldEditor.h; sourceTree = "<group>"; };
+		79736ACC1650AC22003F7F66 /* WCFindBarFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarFieldEditor.m; sourceTree = "<group>"; };
+		79736ACE1650B180003F7F66 /* WCFindBarTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarTextFieldCell.h; sourceTree = "<group>"; };
+		79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarTextFieldCell.m; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
 		7973D6D6160CF83A004EDE62 /* WCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextViewController.h; sourceTree = "<group>"; };
@@ -546,6 +579,8 @@
 				7962BDF116221899006D5A7A /* project.icns */,
 				7962BDAF1620D838006D5A7A /* FindWrapIndicator.tiff */,
 				7962BDB01620D838006D5A7A /* FindWrapIndicatorReverse.tiff */,
+				79736ABE16505719003F7F66 /* FindNoWrapIndicator.png */,
+				79736ABF16505719003F7F66 /* FindNoWrapIndicatorReverse.png */,
 				7903F1E6160EBF3B000D3F3D /* GCJumpBarAccessorySeparator.png */,
 				793D23011613DB4300742605 /* GCJumpBarAccessorySeparator@2x.png */,
 				7903F1E8160EBF3B000D3F3D /* GCJumpBarSeparator.png */,
@@ -733,6 +768,31 @@
 			name = Headers;
 			sourceTree = "<group>";
 		};
+		79736AB1164F35D8003F7F66 /* Find Bar */ = {
+			isa = PBXGroup;
+			children = (
+				79736ABB164F430B003F7F66 /* WCFindableScrollView.h */,
+				79736ABC164F430B003F7F66 /* WCFindableScrollView.m */,
+				79736AAE164F3568003F7F66 /* WCFindableTextView.h */,
+				79736AAF164F3568003F7F66 /* WCFindableTextView.m */,
+				79736AB2164F3643003F7F66 /* WCFindBarViewController.h */,
+				79736AB3164F3643003F7F66 /* WCFindBarViewController.m */,
+				79736AB5164F3655003F7F66 /* WCFindBarBackgroundView.h */,
+				79736AB6164F3655003F7F66 /* WCFindBarBackgroundView.m */,
+				79736AC21650625C003F7F66 /* WCFindBarTextField.h */,
+				79736AC31650625C003F7F66 /* WCFindBarTextField.m */,
+				79736ACE1650B180003F7F66 /* WCFindBarTextFieldCell.h */,
+				79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */,
+				79736AC5165062BE003F7F66 /* WCFindBarSearchField.h */,
+				79736AC6165062BF003F7F66 /* WCFindBarSearchField.m */,
+				79736AC81650ABE1003F7F66 /* WCFindBarSearchFieldCell.h */,
+				79736AC91650ABE1003F7F66 /* WCFindBarSearchFieldCell.m */,
+				79736ACB1650AC22003F7F66 /* WCFindBarFieldEditor.h */,
+				79736ACC1650AC22003F7F66 /* WCFindBarFieldEditor.m */,
+			);
+			name = "Find Bar";
+			sourceTree = "<group>";
+		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
@@ -841,6 +901,7 @@
 				79AFA4081645BD2900876655 /* WCProjectView.xib */,
 				79AFA40B1645BF3700876655 /* WCIssueView.xib */,
 				79AFA40E1645BF4000876655 /* WCSearchView.xib */,
+				79736AB8164F3666003F7F66 /* WCFindBarView.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -1053,6 +1114,7 @@
 		79FE35FF1619431100DB7C6D /* Editor */ = {
 			isa = PBXGroup;
 			children = (
+				79736AB1164F35D8003F7F66 /* Find Bar */,
 				7962BDFE16225E18006D5A7A /* Jump In */,
 				79FE36031619436C00DB7C6D /* Completion */,
 				79FE36081619442800DB7C6D /* Model */,
@@ -1369,6 +1431,9 @@
 				79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */,
 				79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */,
 				79AFA4101645BF4000876655 /* WCSearchView.xib in Resources */,
+				79736ABA164F3666003F7F66 /* WCFindBarView.xib in Resources */,
+				79736AC016505719003F7F66 /* FindNoWrapIndicator.png in Resources */,
+				79736AC116505719003F7F66 /* FindNoWrapIndicatorReverse.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1536,6 +1601,15 @@
 				7961CF4F164CAAE6005D5060 /* WCSplitView.m in Sources */,
 				7961CF52164CB2FD005D5060 /* WCAppController.m in Sources */,
 				7961CF55164CB86B005D5060 /* WCTabView.m in Sources */,
+				79736AB0164F3568003F7F66 /* WCFindableTextView.m in Sources */,
+				79736AB4164F3643003F7F66 /* WCFindBarViewController.m in Sources */,
+				79736AB7164F3656003F7F66 /* WCFindBarBackgroundView.m in Sources */,
+				79736ABD164F430B003F7F66 /* WCFindableScrollView.m in Sources */,
+				79736AC41650625C003F7F66 /* WCFindBarTextField.m in Sources */,
+				79736AC7165062BF003F7F66 /* WCFindBarSearchField.m in Sources */,
+				79736ACA1650ABE2003F7F66 /* WCFindBarSearchFieldCell.m in Sources */,
+				79736ACD1650AC23003F7F66 /* WCFindBarFieldEditor.m in Sources */,
+				79736AD01650B182003F7F66 /* WCFindBarTextFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1598,6 +1672,14 @@
 			);
 			name = WCJumpInWindow.xib;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		79736AB8164F3666003F7F66 /* WCFindBarView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79736AB9164F3666003F7F66 /* en */,
+			);
+			name = WCFindBarView.xib;
 			sourceTree = "<group>";
 		};
 		7973D6D9160CF8DF004EDE62 /* WCTextView.xib */ = {
