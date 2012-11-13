@@ -94,6 +94,7 @@
 		79736ACA1650ABE2003F7F66 /* WCFindBarSearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736AC91650ABE1003F7F66 /* WCFindBarSearchFieldCell.m */; };
 		79736ACD1650AC23003F7F66 /* WCFindBarFieldEditor.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736ACC1650AC22003F7F66 /* WCFindBarFieldEditor.m */; };
 		79736AD01650B182003F7F66 /* WCFindBarTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */; };
+		79736B0E1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79736B0D1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m */; };
 		7973D6D4160CF7F4004EDE62 /* WCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D3160CF7F4004EDE62 /* WCViewController.m */; };
 		7973D6D8160CF83A004EDE62 /* WCTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6D7160CF83A004EDE62 /* WCTextViewController.m */; };
 		7973D6DB160CF8DF004EDE62 /* WCTextView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7973D6D9160CF8DF004EDE62 /* WCTextView.xib */; };
@@ -368,6 +369,8 @@
 		79736ACC1650AC22003F7F66 /* WCFindBarFieldEditor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarFieldEditor.m; sourceTree = "<group>"; };
 		79736ACE1650B180003F7F66 /* WCFindBarTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCFindBarTextFieldCell.h; sourceTree = "<group>"; };
 		79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarTextFieldCell.m; sourceTree = "<group>"; };
+		79736B0C1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCVerticallyCenteredTextFieldCell.h; sourceTree = "<group>"; };
+		79736B0D1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCVerticallyCenteredTextFieldCell.m; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
 		7973D6D6160CF83A004EDE62 /* WCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextViewController.h; sourceTree = "<group>"; };
@@ -727,6 +730,8 @@
 			children = (
 				7962BDF616224485006D5A7A /* WCTransparentButtonCell.h */,
 				7962BDF716224485006D5A7A /* WCTransparentButtonCell.m */,
+				79736B0C1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.h */,
+				79736B0D1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -1610,6 +1615,7 @@
 				79736ACA1650ABE2003F7F66 /* WCFindBarSearchFieldCell.m in Sources */,
 				79736ACD1650AC23003F7F66 /* WCFindBarFieldEditor.m in Sources */,
 				79736AD01650B182003F7F66 /* WCFindBarTextFieldCell.m in Sources */,
+				79736B0E1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
