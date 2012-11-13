@@ -163,6 +163,11 @@
         
         return self.unsavedFileURLs.count;
     }
+    else {
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:menu.title];
+        
+        return file.files.count;
+    }
     return 0;
 }
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(NSInteger)index shouldCancel:(BOOL)shouldCancel {
@@ -185,6 +190,25 @@
         [item setTarget:self];
         [item setTag:index];
         [item setAction:@selector(_unsavedFilesMenuItemAction:)];
+    }
+    else {
+        File *parent = [self.sourceFileDocument.projectDocument fileWithUUID:menu.title];
+        File *file = [parent.files objectAtIndex:index];
+        
+        [item setTitle:file.name];
+        [item setRepresentedObject:file.uuid];
+        [item setImage:[self.sourceFileDocument.projectDocument imageForFile:file]];
+        [item.image setSize:WC_NSSmallSize];
+        [item setTarget:self];
+        [item setAction:@selector(_jumpBarControlMenuItemAction:)];
+        
+        if (file.files.count > 0) {
+            NSMenu *childMenu = [[NSMenu alloc] initWithTitle:file.uuid];
+            
+            [childMenu setDelegate:self];
+            
+            [item setSubmenu:childMenu];
+        }
     }
     return YES;
 }
@@ -257,7 +281,7 @@
         }
         
         WCTabViewController *tabViewController = self.sourceFileDocument.projectDocument.projectWindowController.tabViewController;
-        WCTextViewController *textViewController = [tabViewController addTabBarItemForSourceFileDocument:sourceFileDocument];
+        WCTextViewController *textViewController = [tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
         
         [textViewController.textView setSelectedRange:NSRangeFromString(symbol.range)];
         [textViewController.textView scrollRangeToVisible:textViewController.textView.selectedRange];
@@ -277,27 +301,55 @@
 
 #pragma mark WCJumpBarControlDataSource
 - (NSArray *)jumpBarComponentCellsForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
-    NSDocument *document = self.sourceFileDocument;
+    WCSourceFileDocument *document = self.sourceFileDocument;
     NSURL *fileURL = document.fileURL;
-    WCJumpBarComponentCell *cell;
     
-    if (fileURL)
-        cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
-    else
-        cell = [[WCJumpBarComponentCell alloc] initTextCell:document.displayName];
-    
-    NSImage *image;
-    
-    if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
+    if (document.projectDocument) {
+        File *documentFile = [document.projectDocument fileForSourceFileDocument:document];
+        File *file = documentFile;
+        NSMutableArray *cells = [NSMutableArray arrayWithCapacity:0];
         
+        do {
+            
+            WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:file.name];
+            
+            [cell setRepresentedObject:file.uuid];
+            [cell setImage:[document.projectDocument imageForFile:file]];
+            
+            [cells insertObject:cell atIndex:0];
+            
+            file = file.file;
+            
+        } while (file.file);
         
-        if (document.isDocumentEdited)
-            [cell setImage:[image WC_unsavedImageIcon]];
-        else
-            [cell setImage:image];
+        WCJumpBarComponentCell *projectCell = [[WCJumpBarComponentCell alloc] initTextCell:file.name];
+        
+        [projectCell setRepresentedObject:file.uuid];
+        [projectCell setImage:[document.projectDocument imageForFile:file]];
+        
+        [cells insertObject:projectCell atIndex:0];
+        
+        return cells;
     }
-    
-    return @[ cell ];
+    else {
+        WCJumpBarComponentCell *cell;
+        
+        if (fileURL)
+            cell = [[WCJumpBarComponentCell alloc] initTextCell:fileURL.path.lastPathComponent];
+        else
+            cell = [[WCJumpBarComponentCell alloc] initTextCell:document.displayName];
+        
+        NSImage *image;
+        
+        if ([fileURL getResourceValue:&image forKey:NSURLEffectiveIconKey error:NULL]) {
+            if (document.isDocumentEdited)
+                [cell setImage:[image WC_unsavedImageIcon]];
+            else
+                [cell setImage:image];
+        }
+        
+        return @[ cell ];
+    }
 }
 - (WCJumpBarComponentCell *)symbolPathComponentCellForJumpBarControl:(WCJumpBarControl *)jumpBarControl {
     WCSymbolScanner *symbolScanner = self.sourceFileDocument.symbolScanner;
@@ -331,34 +383,78 @@
 }
 #pragma mark WCJumpBarControlDelegate
 - (BOOL)jumpBarControl:(WCJumpBarControl *)jumpBarControl shouldPopUpMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    return (jumpBarControl.pathComponentCells.lastObject == pathComponentCell);
+    return YES;
 }
 - (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl numberOfItemsInMenuForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    if (!self.jumpBarControlMenuSymbols) {
-        WCSymbolScanner *symbolScanner = self.sourceFileDocument.symbolScanner;
-        
-        [self setJumpBarControlMenuSymbols:symbolScanner.symbolsSortedByLocation];
+    if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell) {
+        if (!self.jumpBarControlMenuSymbols) {
+            WCSymbolScanner *symbolScanner = self.sourceFileDocument.symbolScanner;
+            
+            [self setJumpBarControlMenuSymbols:symbolScanner.symbolsSortedByLocation];
+        }
+        return self.jumpBarControlMenuSymbols.count;
     }
-    return self.jumpBarControlMenuSymbols.count;
+    else {
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:pathComponentCell.representedObject];
+        
+        return (file.file) ? file.file.files.count : 1;
+    }
 }
 - (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl updateItem:(NSMenuItem *)item atIndex:(NSInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
-    
-    [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
-    [item setTitle:symbol.name];
+    if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell) {
+        Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
+        
+        [item setSubmenu:nil];
+        [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbol:symbol]];
+        [item setTitle:symbol.name];
+    }
+    else {
+        File *child = [self.sourceFileDocument.projectDocument fileWithUUID:pathComponentCell.representedObject];
+        File *file = (child.file) ? [child.file.files objectAtIndex:index] : child;
+        
+        [item setTitle:file.name];
+        [item setImage:[self.sourceFileDocument.projectDocument imageForFile:file]];
+        [item.image setSize:WC_NSSmallSize];
+        
+        if (file.files.count > 0) {
+            NSMenu *menu = [[NSMenu alloc] initWithTitle:file.uuid];
+            
+            [menu setDelegate:self];
+            
+            [item setSubmenu:menu];
+        }
+    }
 }
 
 - (NSInteger)jumpBarControl:(WCJumpBarControl *)jumpBarControl highlightedItemIndexForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    return [self.jumpBarControlMenuSymbols WC_symbolIndexForRange:self.textView.selectedRange];
+    if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell)
+        return [self.jumpBarControlMenuSymbols WC_symbolIndexForRange:self.textView.selectedRange];
+    else {
+        return 0;
+    }
 }
 - (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl menuDidCloseForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
     [self setJumpBarControlMenuSymbols:nil];
 }
 - (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl didSelectItem:(NSMenuItem *)item atIndex:(NSUInteger)index forPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
-    Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
-    
-    [self.textView setSelectedRange:NSRangeFromString(symbol.range)];
-    [self.textView scrollRangeToVisible:self.textView.selectedRange];
+    if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell) {
+        Symbol *symbol = [self.jumpBarControlMenuSymbols objectAtIndex:index];
+        
+        [self.textView setSelectedRange:NSRangeFromString(symbol.range)];
+        [self.textView scrollRangeToVisible:self.textView.selectedRange];
+    }
+    else {
+        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:item.representedObject];
+        
+        if (!sourceFileDocument) {
+            NSBeep();
+            return;
+        }
+        
+        WCTabViewController *tabViewController = self.sourceFileDocument.projectDocument.projectWindowController.tabViewController;
+        
+        [tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
+    }
 }
 
 - (NSString *)jumpBarControl:(WCJumpBarControl *)jumpBarControl toolTipForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell atIndex:(NSUInteger)index {
@@ -368,6 +464,11 @@
         if (symbol)
             return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.longValue];
         return nil;
+    }
+    else if (self.sourceFileDocument.projectDocument) {
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:pathComponentCell.representedObject];
+        
+        return file.path;
     }
     return self.sourceFileDocument.fileURL.path;
 }
@@ -435,7 +536,18 @@
 - (IBAction)_removeAssistantEditorAction:(id)sender {
     [self.delegate removeAssistantEditorForTextViewController:self];
 }
-
+- (IBAction)_jumpBarControlMenuItemAction:(NSMenuItem *)sender {
+    WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:sender.representedObject];
+    
+    if (!sourceFileDocument) {
+        NSBeep();
+        return;
+    }
+    
+    WCTabViewController *tabViewController = self.sourceFileDocument.projectDocument.projectWindowController.tabViewController;
+    
+    [tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
+}
 #pragma mark Notifications
 - (void)_symbolScannerDidFinishScanningSymbols:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];
