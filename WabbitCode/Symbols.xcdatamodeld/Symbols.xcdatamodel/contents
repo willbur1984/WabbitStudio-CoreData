@@ -8,9 +8,9 @@
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="FileContainer" representedClassName="FileContainer" syncable="YES">
-        <attribute name="identifier" attributeType="String" syncable="YES"/>
         <attribute name="path" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="symbols" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Symbol" inverseName="file" inverseEntity="Symbol" syncable="YES"/>
+        <attribute name="uuid" attributeType="String" syncable="YES"/>
+        <relationship name="symbols" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Symbol" inverseName="fileContainer" inverseEntity="Symbol" syncable="YES"/>
     </entity>
     <entity name="Label" representedClassName="Label" parentEntity="Symbol" syncable="YES"/>
     <entity name="Macro" representedClassName="Macro" parentEntity="Symbol" syncable="YES">
@@ -23,7 +23,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <relationship name="file" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="FileContainer" inverseName="symbols" inverseEntity="FileContainer" syncable="YES"/>
+        <relationship name="fileContainer" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="FileContainer" inverseName="symbols" inverseEntity="FileContainer" syncable="YES"/>
     </entity>
     <elements>
         <element name="Define" positionX="160" positionY="192" width="128" height="75"/>

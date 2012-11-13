@@ -82,7 +82,7 @@
             if (!file) {
                 file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
                 
-                [file setIdentifier:self.fileContainerUUID];
+                [file setUuid:self.fileContainerUUID];
             }
             
             [file setPath:self.fileURL.path];
@@ -131,7 +131,7 @@
                 NSString *value = [[self.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                 
                 [entity setValue:[value stringByReplacingOccurrencesOfString:@"\t" withString:@" "]];
-                [entity setFile:file];
+                [entity setFileContainer:file];
             }];
             
             if (self.isCancelled)
@@ -165,7 +165,7 @@
                 [entity setRange:NSStringFromRange(result.range)];
                 [entity setName:[self.string substringWithRange:result.range]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-                [entity setFile:file];
+                [entity setFileContainer:file];
             }];
             
             if (self.isCancelled)
@@ -184,7 +184,7 @@
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-                [entity setFile:file];
+                [entity setFileContainer:file];
                 
                 [[WCSyntaxHighlighter expandedDefineRegex] enumerateMatchesInString:self.string options:0 range:[self.string lineRangeForRange:result.range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                     NSRange argumentsRange = [result rangeAtIndex:2];
@@ -214,7 +214,7 @@
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
                 [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
                 [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
-                [entity setFile:file];
+                [entity setFileContainer:file];
                 
                 [[WCSyntaxHighlighter expandedMacroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(result.range.location, self.string.length - result.range.location) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                     NSRange argumentsRange = [result rangeAtIndex:2];

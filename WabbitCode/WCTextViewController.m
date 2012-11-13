@@ -268,12 +268,12 @@
     return self.sourceFileDocument.foldScanner;
 }
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol {
-    if ([symbol.file.identifier isEqualToString:self.sourceFileDocument.UUID]) {
+    if ([symbol.fileContainer.uuid isEqualToString:self.sourceFileDocument.UUID]) {
         [textView setSelectedRange:NSRangeFromString(symbol.range)];
         [textView scrollRangeToVisible:textView.selectedRange];
     }
     else {
-        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:symbol.file.identifier];
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:symbol.fileContainer.uuid];
         WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument sourceFileDocumentForFile:file];
         
         if (!sourceFileDocument) {
@@ -464,7 +464,7 @@
         Symbol *symbol = pathComponentCell.representedObject;
         
         if (symbol)
-            return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.longValue];
+            return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.longValue];
         return nil;
     }
     else if (self.sourceFileDocument.projectDocument) {

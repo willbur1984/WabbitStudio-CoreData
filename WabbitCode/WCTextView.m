@@ -1039,7 +1039,7 @@ static char kWCTextViewObservingContext;
         [menu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
         
         for (Symbol *symbol in symbols) {
-            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue] action:@selector(_jumpToDefinitionMenuItemAction:) keyEquivalent:@""];
+            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue] action:@selector(_jumpToDefinitionMenuItemAction:) keyEquivalent:@""];
             
             [item setTarget:self];
             [item setRepresentedObject:symbol];
@@ -1244,14 +1244,14 @@ static char kWCTextViewObservingContext;
             }
             
             if (symbol.arguments)
-                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
             else
-                [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
         }
         else if ([symbol respondsToSelector:@selector(value)])
-            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 %@:%ld\n", nil),symbol.name,symbol.value,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 %@:%ld\n", nil),symbol.name,symbol.value,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
         else
-            [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n", nil),symbol.name,symbol.file.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
     }
     
     [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
