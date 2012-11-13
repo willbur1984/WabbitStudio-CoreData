@@ -97,7 +97,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 - (Symbol *)symbolForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@ AND self.location <= %@",self.fileContainerUUID,@(range.location)]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.fileContainer.uuid == %@ AND self.location <= %@",self.fileContainerUUID,@(range.location)]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     NSArray *results = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
@@ -165,7 +165,7 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
 - (NSArray *)symbolsSortedByLocation {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file.identifier == %@",self.fileContainerUUID]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.fileContainer.uuid == %@",self.fileContainerUUID]];
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];

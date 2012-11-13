@@ -75,7 +75,7 @@
         do {
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
             
-            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.identifier == %@",self.fileContainerUUID]];
+            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",self.fileContainerUUID]];
             
             FileContainer *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
             
@@ -151,7 +151,7 @@
                 NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
                 
                 [fetchRequest setResultType:NSCountResultType];
-                [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file == %@ AND self.location == %@",file,@(result.range.location)]];
+                [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.location == %@",file,@(result.range.location)]];
                 
                 NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
                 
