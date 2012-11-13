@@ -64,6 +64,10 @@
     }
 }
 
+- (BOOL)preservesContentDuringLiveResize {
+    return NO;
+}
+
 - (NSString *)emptyString {
     return self.emptyAttributedString.string;
 }
