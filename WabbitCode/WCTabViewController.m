@@ -38,7 +38,7 @@
     WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
     File *file = [sourceFileDocument.projectDocument fileForSourceFileDocument:sourceFileDocument];
     
-    return file.path.stringByAbbreviatingWithTildeInPath;
+    return file.path;
 }
 #pragma mark WCTextViewControllerDelegate
 
