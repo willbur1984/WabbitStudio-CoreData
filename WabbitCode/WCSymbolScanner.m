@@ -178,12 +178,6 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self scanSymbols];
 }
 - (void)_managedObjectContextDidSave:(NSNotificationCenter *)note {
-    __weak typeof (self) weakSelf = self;
-    
-    [self.managedObjectContext.parentContext performBlockAndWait:^{
-        [weakSelf.managedObjectContext.parentContext save:NULL];
-    }];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:self];
 }
 

@@ -371,6 +371,7 @@
 		79736ACF1650B181003F7F66 /* WCFindBarTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCFindBarTextFieldCell.m; sourceTree = "<group>"; };
 		79736B0C1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCVerticallyCenteredTextFieldCell.h; sourceTree = "<group>"; };
 		79736B0D1651BD54003F7F66 /* WCVerticallyCenteredTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCVerticallyCenteredTextFieldCell.m; sourceTree = "<group>"; };
+		79736B1216520870003F7F66 /* WCSymbolsProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WCSymbolsProvider.h; sourceTree = "<group>"; };
 		7973D6D2160CF7F4004EDE62 /* WCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCViewController.h; sourceTree = "<group>"; };
 		7973D6D3160CF7F4004EDE62 /* WCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCViewController.m; sourceTree = "<group>"; };
 		7973D6D6160CF83A004EDE62 /* WCTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextViewController.h; sourceTree = "<group>"; };
@@ -554,6 +555,7 @@
 				7903F1AC160E3AB7000D3F3D /* WCSymbolScanner.m */,
 				7903F1AF160E3D62000D3F3D /* WCScanSymbolsOperation.h */,
 				7903F1B0160E3D62000D3F3D /* WCScanSymbolsOperation.m */,
+				79736B1216520870003F7F66 /* WCSymbolsProvider.h */,
 				7903F1D4160E794B000D3F3D /* Model */,
 			);
 			name = Symbols;

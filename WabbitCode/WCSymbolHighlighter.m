@@ -18,6 +18,7 @@
 #import "WCDefines.h"
 #import "NSTextView+WCExtensions.h"
 #import "WCTextStorage.h"
+#import "WCSymbolIndex.h"
 
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -58,7 +59,7 @@
     if (!range.length)
         return;
     
-    WCSymbolScanner *symbolScanner = [self.delegate symbolScannerForSymbolHighlighter:self];
+    id <WCSymbolsProvider> symbolsProvider = [self.delegate symbolsProviderForSymbolHighlighter:self];
     
     [self.textStorage beginEditing];
     
@@ -74,8 +75,8 @@
             
             while (highlightRange.length) {
                 if ((value = [self.textStorage attribute:kSymbolAttributeName atIndex:highlightRange.location longestEffectiveRange:&symbolRange inRange:highlightRange])) {
-                    NSString *name = [self.textStorage.string substringWithRange:symbolRange];
-                    NSArray *symbols = [symbolScanner symbolsWithName:name];
+                    NSString *name = [self.textStorage.string substringWithRange:symbolRange];                    
+                    NSArray *symbols = [symbolsProvider symbolsWithName:name];
                     Symbol *symbol = [symbols WC_firstObject];
                     
                     switch (symbol.type.intValue) {

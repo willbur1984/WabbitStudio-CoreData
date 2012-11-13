@@ -79,13 +79,16 @@
             
             FileContainer *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
             
-            if (file)
-                [self.managedObjectContext deleteObject:file];
+            if (!file) {
+                file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
+                
+                [file setIdentifier:self.fileContainerUUID];
+            }
             
-            file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
-            
-            [file setIdentifier:self.fileContainerUUID];
             [file setPath:self.fileURL.path];
+            
+            for (Symbol *symbol in file.symbols)
+                [self.managedObjectContext deleteObject:symbol];
             
             if (self.isCancelled)
                 break;
@@ -230,10 +233,15 @@
         if (!self.isCancelled) {
             if ([self.managedObjectContext save:NULL]) {
                 __weak typeof (self) weakSelf = self;
+                __weak NSManagedObjectContext *parentContext = weakSelf.managedObjectContext.parentContext;
                 
-                [self.managedObjectContext.parentContext performBlock:^{
-                    [weakSelf.managedObjectContext.parentContext save:NULL];
-                }];
+                while (parentContext) {
+                    [parentContext performBlockAndWait:^{
+                        [parentContext save:NULL];
+                    }];
+                    
+                    parentContext = parentContext.parentContext;
+                }
             }
         }
         

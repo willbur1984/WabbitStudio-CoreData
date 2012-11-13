@@ -24,6 +24,8 @@
 #import "NSImage+WCExtensions.h"
 #import "WCGeometry.h"
 #import "NSString+WCExtensions.h"
+#import "WCProjectDocument.h"
+#import "WCSymbolIndex.h"
 
 NSString *const WCSourceFileDocumentSelectedRangeAttributeName = @"org.revsoft.source-file-document.selected-range";
 NSString *const WCSourceFileDocumentBookmarksAttributeName = @"org.revsoft.source-file-document.bookmarks";
@@ -207,8 +209,8 @@ NSString *const WCSourceFileDocumentEditedDidChangeNotification = @"WCSourceFile
 - (WCSymbolScanner *)symbolScannerForSyntaxHighligher:(WCSyntaxHighlighter *)syntaxHighlighter {
     return self.symbolScanner;
 }
-
-- (WCSymbolScanner *)symbolScannerForSymbolHighlighter:(WCSymbolHighlighter *)symbolHighlighter {
+#pragma mark WCSymbolHighlighterDelegate
+- (id<WCSymbolsProvider>)symbolsProviderForSymbolHighlighter:(WCSymbolHighlighter *)symbolHighlighter {
     return self.symbolScanner;
 }
 #pragma mark *** Public Methods ***
