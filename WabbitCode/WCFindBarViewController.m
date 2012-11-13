@@ -31,10 +31,13 @@
 
 @property (assign,nonatomic) NSTextView *textView;
 @property (readwrite,copy,nonatomic) NSIndexSet *findRanges;
+@property (readwrite,assign,nonatomic) BOOL findRangesAreDirty;
+@property (weak,nonatomic) NSTimer *editedTimer;
 @property (strong,nonatomic) NSMutableIndexSet *mutableFindRanges;
 @property (strong,nonatomic) NSRegularExpression *findRegularExpression;
 
 - (void)_find;
+- (void)_findAndHighlightNearestRange:(BOOL)highlightNearestRange;
 - (void)_setupSearchFieldMenu;
 - (void)_setupPopUpButton;
 - (void)_updateStatusTextFieldWithNumberOfMatches:(NSUInteger)numberOfMatches;
@@ -45,6 +48,10 @@
 
 @implementation WCFindBarViewController
 #pragma mark *** Subclass Overrides ***
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (NSString *)nibName {
     return @"WCFindBarView";
 }
@@ -80,6 +87,12 @@
     [self _setupPopUpButton];
     
     [self setMatchingStyle:WCFindBarViewControllerMatchingStyleTextual];
+}
+
+- (void)cleanup {
+    [super cleanup];
+    
+    [self setEditedTimer:nil];
 }
 #pragma mark NSResponder
 - (void)performTextFinderAction:(id)sender; {
@@ -162,8 +175,12 @@
     }
     else if (commandSelector == @selector(insertNewline:)) {
         if ([control isKindOfClass:[NSSearchField class]]) {
-            if (self.mutableFindRanges.count > 0)
-                [self findNextAction:nil];
+            if (self.mutableFindRanges.count > 0) {
+                if (self.findRangesAreDirty)
+                    [self findAction:nil];
+                else
+                    [self findNextAction:nil];
+            }
             else if (self.searchField.stringValue.length > 0)
                 [self findAction:nil];
         }
@@ -233,6 +250,8 @@ static const CGFloat kReplaceViewHeight = 44;
 - (void)showFindBar:(BOOL)showFindBar showReplace:(BOOL)showReplace completion:(void (^)(void))completion; {
     if (showFindBar) {
         if (!self.view.superview) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_textStorageDidProcessEditing:) name:NSTextStorageDidProcessEditingNotification object:self.textView.textStorage];
+            
             [self.textView.enclosingScrollView addSubview:self.view];
             
             NSString *string = [[NSPasteboard pasteboardWithName:NSFindPboard] stringForType:NSPasteboardTypeString];
@@ -266,6 +285,8 @@ static const CGFloat kReplaceViewHeight = 44;
         if (!self.view.superview)
             return;
         
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSTextStorageDidProcessEditingNotification object:nil];
+        
         [self.view removeFromSuperview];
         [self.textView.enclosingScrollView tile];
         [self.textView.window makeFirstResponder:self.textView];
@@ -273,6 +294,10 @@ static const CGFloat kReplaceViewHeight = 44;
         if (completion)
             completion();
     }
+}
+
++ (NSDictionary *)findRangeAttributes; {
+    return @{NSBackgroundColorAttributeName : [[NSColor yellowColor] colorWithAlphaComponent:0.75], NSUnderlineColorAttributeName : [NSColor orangeColor]};
 }
 #pragma mark Properties
 - (void)setViewMode:(WCFindBarViewControllerViewMode)viewMode {
@@ -316,9 +341,14 @@ static const CGFloat kReplaceViewHeight = 44;
     
     [self _find];
 }
+- (void)setEditedTimer:(NSTimer *)editedTimer {
+    [_editedTimer invalidate];
+    
+    _editedTimer = editedTimer;
+}
 #pragma mark Actions
 - (IBAction)findAction:(id)sender; {
-    [self _find];
+    [self _findAndHighlightNearestRange:YES];
 }
 - (IBAction)findNextAction:(id)sender; {
     if (self.searchField.stringValue.length == 0) {
@@ -488,6 +518,9 @@ static const CGFloat kReplaceViewHeight = 44;
 }
 #pragma mark *** Private Methods ***
 - (void)_find; {
+    [self _findAndHighlightNearestRange:NO];
+}
+- (void)_findAndHighlightNearestRange:(BOOL)highlightNearestRange; {
     [self.mutableFindRanges removeAllIndexes];
     
     NSString *searchString = self.searchField.stringValue;
@@ -581,7 +614,7 @@ static const CGFloat kReplaceViewHeight = 44;
     [self setFindRanges:self.mutableFindRanges];
     [self _updateStatusTextFieldWithNumberOfMatches:numberOfMatches];
     
-    if (numberOfMatches > 0) {
+    if (numberOfMatches > 0 && highlightNearestRange) {
         NSRange range = [self _findNextRangeIncludingSelectedRange:YES didWrap:NULL];
         
         [self.textView setSelectedRange:range];
@@ -592,6 +625,8 @@ static const CGFloat kReplaceViewHeight = 44;
         
         [pasteboard clearContents];
         [pasteboard writeObjects:@[self.searchField.stringValue]];
+        
+        [self setFindRangesAreDirty:NO];
     }
 }
 - (NSRange)_findNextRangeIncludingSelectedRange:(BOOL)includeSelectedRange didWrap:(BOOL *)didWrap; {
@@ -819,7 +854,7 @@ static const NSInteger kDotMatchesNewlinesItemTag = 2006;
     [self showFindBar:NO completion:nil];
 }
 - (IBAction)_searchFieldAction:(NSSearchField *)sender {
-    [self _find];
+    [self findAction:nil];
 }
 - (IBAction)_matchingStyleAction:(NSMenuItem *)sender {
     [self setMatchingStyle:sender.tag];
@@ -856,6 +891,15 @@ static const NSInteger kDotMatchesNewlinesItemTag = 2006;
 }
 - (IBAction)_popUpButtonAction:(NSMenuItem *)sender {
     [self setViewMode:sender.tag];
+}
+#pragma mark Notifications
+- (void)_textStorageDidProcessEditing:(NSNotification *)note {
+    if (!([note.object editedMask] & NSTextStorageEditedCharacters))
+        return;
+    
+    [self setFindRangesAreDirty:YES];
+    
+    [self setEditedTimer:[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(_find) userInfo:nil repeats:NO]];
 }
 
 @end

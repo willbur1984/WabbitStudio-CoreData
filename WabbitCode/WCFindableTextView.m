@@ -28,6 +28,8 @@ static char kWCFindableTextViewObservingContext;
 @implementation WCFindableTextView
 - (void)dealloc {
     [self.findBarViewController removeObserver:self forKeyPath:@"findRanges" context:&kWCFindableTextViewObservingContext];
+    [self.findBarViewController removeObserver:self forKeyPath:@"findRangesAreDirty" context:&kWCFindableTextViewObservingContext];
+    [self.findBarViewController cleanup];
 }
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -58,7 +60,8 @@ static char kWCFindableTextViewObservingContext;
 - (void)drawViewBackgroundInRect:(NSRect)rect {
     [super drawViewBackgroundInRect:rect];
     
-    if (self.findBarViewController.view.superview && self.findBarViewController.findRanges.count > 0) {
+    if (self.findBarViewController.view.superview && self.findBarViewController.findRanges.count > 0 && !self.findBarViewController.findRangesAreDirty) {
+        NSDictionary *findRangeAttributes = [WCFindBarViewController findRangeAttributes];
         __unsafe_unretained typeof (self) weakSelf = self;
         
         [self.findBarViewController.findRanges enumerateRangesInRange:[self WC_visibleRange] options:0 usingBlock:^(NSRange range, BOOL *stop) {
@@ -71,14 +74,14 @@ static char kWCFindableTextViewObservingContext;
             for (NSUInteger rectIndex=0; rectIndex<rectCount; rectIndex++) {
                 NSRect temp = rects[rectIndex];
                 
-                [[NSColor yellowColor] setFill];
-                NSRectFill(temp);
+                [[findRangeAttributes objectForKey:NSBackgroundColorAttributeName] setFill];
+                NSRectFillUsingOperation(temp, NSCompositeSourceOver);
                 
                 temp.origin.y += temp.size.height - 2;
                 temp.size.height = 2;
                 
-                [[NSColor orangeColor] setFill];
-                NSRectFill(temp);
+                [[findRangeAttributes objectForKey:NSUnderlineColorAttributeName] setFill];
+                NSRectFillUsingOperation(temp, NSCompositeSourceOver);
             }
         }];
     }
@@ -87,6 +90,9 @@ static char kWCFindableTextViewObservingContext;
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &kWCFindableTextViewObservingContext) {
         if ([keyPath isEqualToString:@"findRanges"]) {
+            [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
+        }
+        else if ([keyPath isEqualToString:@"findRangesAreDirty"]) {
             [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
         }
     }
@@ -109,5 +115,6 @@ static char kWCFindableTextViewObservingContext;
     [self setFindBarViewController:[[WCFindBarViewController alloc] initWithTextView:self]];
     
     [self.findBarViewController addObserver:self forKeyPath:@"findRanges" options:0 context:&kWCFindableTextViewObservingContext];
+    [self.findBarViewController addObserver:self forKeyPath:@"findRangesAreDirty" options:0 context:&kWCFindableTextViewObservingContext];
 }
 @end

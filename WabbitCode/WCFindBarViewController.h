@@ -40,6 +40,9 @@ typedef NS_ENUM(NSInteger, WCFindBarViewControllerMatchingType) {
 @property (assign,nonatomic) BOOL anchorsMatchLines;
 @property (assign,nonatomic) BOOL dotMatchesNewlines;
 @property (readonly,copy,nonatomic) NSIndexSet *findRanges;
+@property (readonly,assign,nonatomic) BOOL findRangesAreDirty;
+
++ (NSDictionary *)findRangeAttributes;
 
 - (id)initWithTextView:(NSTextView *)textView;
 
