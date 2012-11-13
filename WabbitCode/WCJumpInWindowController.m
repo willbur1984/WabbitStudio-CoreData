@@ -50,7 +50,7 @@
     
     [self.window setDelegate:self];
     
-    [self.tableView setEmptyAttributedString:[[NSAttributedString alloc] initWithString:NSLocalizedString(@"Type Line Number", nil) attributes:@{NSFontAttributeName : [NSFont boldSystemFontOfSize:18],NSForegroundColorAttributeName : [NSColor lightGrayColor]}]];
+    [self.tableView setEmptyString:NSLocalizedString(@"Type Line Number", nil)];
     [self.tableView setDataSource:self];
     [self.tableView setDelegate:self];
     [self.tableView setTarget:self];
