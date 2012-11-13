@@ -123,8 +123,9 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
     }];
     
     [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.textStorage.string options:0 range:range usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        if (result.range.length == 1 &&
-            [self.textStorage.string characterAtIndex:result.range.location] == '_')
+        if (result.range.length == 1 && [self.textStorage.string characterAtIndex:result.range.location] == '_')
+            return;
+        else if (NSMaxRange(result.range) < self.textStorage.length && [self.textStorage.string characterAtIndex:NSMaxRange(result.range)] == '(')
             return;
         
         [self.textStorage addAttributes:@{ NSForegroundColorAttributeName : [NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1], kTokenAttributeName : @true, kSymbolAttributeName : @true } range:result.range];
