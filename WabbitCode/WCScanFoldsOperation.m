@@ -54,17 +54,26 @@
     [self setExecuting:YES];
     [self didChangeValueForKey:@"isExecuting"];
     
+    __weak typeof (self) weakSelf = self;
+    
     [self.managedObjectContext performBlock:^{
         NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
         
-        for (Fold *fold in [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL])
-            [self.managedObjectContext deleteObject:fold];
+        for (Fold *fold in [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL])
+            [weakSelf.managedObjectContext deleteObject:fold];
         
         NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.*?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
         NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
         
-        [commentRegex enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [commentRegex enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
             [comments addObject:[NSValue valueWithRange:result.range]];
+        }];
+        
+        NSRegularExpression *stringRegex = [NSRegularExpression regularExpressionWithPattern:@"\".*?\"" options:0 error:NULL];
+        NSMutableArray *strings = [NSMutableArray arrayWithCapacity:0];
+        
+        [stringRegex enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [strings addObject:[NSValue valueWithRange:result.range]];
         }];
         
         [comments sortUsingComparator:^NSComparisonResult(NSValue *obj1, NSValue *obj2) {
@@ -80,8 +89,8 @@
         
         NSMutableArray *foldMarkers = [NSMutableArray arrayWithCapacity:0];
         
-        [[WCFoldMarker foldStartMarkerRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            NSString *name = [[self.string substringWithRange:result.range] lowercaseString];
+        [[WCFoldMarker foldStartMarkerRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSString *name = [[weakSelf.string substringWithRange:result.range] lowercaseString];
             WCFoldMarkerType type;
             
             if ([name isEqualToString:@"#comment"])
@@ -96,11 +105,16 @@
             if (NSLocationInRange(result.range.location, commentRange) && type != WCFoldMarkerTypeCommentStart)
                 return;
             
+            NSRange stringRange = [strings WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, stringRange))
+                return;
+            
             [foldMarkers addObject:[[WCFoldMarker alloc] initWithType:type range:result.range]];
         }];
         
-        [[WCFoldMarker foldEndMarkerRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-            NSString *name = [[self.string substringWithRange:result.range] lowercaseString];
+        [[WCFoldMarker foldEndMarkerRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSString *name = [[weakSelf.string substringWithRange:result.range] lowercaseString];
             WCFoldMarkerType type;
             
             if ([name isEqualToString:@"#endcomment"])
@@ -113,6 +127,11 @@
             NSRange commentRange = [comments WC_rangeForRange:result.range];
             
             if (NSLocationInRange(result.range.location, commentRange) && type != WCFoldMarkerTypeCommentEnd)
+                return;
+            
+            NSRange stringRange = [strings WC_rangeForRange:result.range];
+            
+            if (NSLocationInRange(result.range.location, stringRange))
                 return;
             
             [foldMarkers addObject:[[WCFoldMarker alloc] initWithType:type range:result.range]];
@@ -149,7 +168,7 @@
                         (startFoldMarker.type == WCFoldMarkerTypeMacroStart && endFoldMarker.type == WCFoldMarkerTypeMacroEnd) ||
                         (startFoldMarker.type == WCFoldMarkerTypeIfStart && endFoldMarker.type == WCFoldMarkerTypeIfEnd)) {
                         
-                        NSRange range = [self.string lineRangeForRange:NSUnionRange(startFoldMarker.range, endFoldMarker.range)];
+                        NSRange range = [weakSelf.string lineRangeForRange:NSUnionRange(startFoldMarker.range, endFoldMarker.range)];
                         NSUInteger firstCharIndex = NSMaxRange(startFoldMarker.range);
                         NSUInteger lastCharIndex = endFoldMarker.range.location;
                         NSRange contentRange = NSMakeRange(firstCharIndex, lastCharIndex - firstCharIndex);
@@ -183,7 +202,7 @@
                                 (startFoldMarker.type == WCFoldMarkerTypeMacroStart && endFoldMarker.type == WCFoldMarkerTypeMacroEnd) ||
                                 (startFoldMarker.type == WCFoldMarkerTypeIfStart && endFoldMarker.type == WCFoldMarkerTypeIfEnd)) {
                                 
-                                NSRange range = [self.string lineRangeForRange:NSUnionRange(startFoldMarker.range, endFoldMarker.range)];
+                                NSRange range = [weakSelf.string lineRangeForRange:NSUnionRange(startFoldMarker.range, endFoldMarker.range)];
                                 NSUInteger firstCharIndex = NSMaxRange(startFoldMarker.range);
                                 NSUInteger lastCharIndex = endFoldMarker.range.location;
                                 NSRange contentRange = NSMakeRange(firstCharIndex, lastCharIndex - firstCharIndex);

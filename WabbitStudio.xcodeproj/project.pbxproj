@@ -968,6 +968,13 @@
 			name = Categories;
 			sourceTree = "<group>";
 		};
+		799F6CC4165311A600C33C61 /* Open Quickly */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Open Quickly";
+			sourceTree = "<group>";
+		};
 		79A87C20161DF39000C1A568 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -1058,6 +1065,7 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				799F6CC4165311A600C33C61 /* Open Quickly */,
 				79AFA43B1646E84200876655 /* Symbols */,
 				79AFA42F1646E09300876655 /* View Controllers */,
 				79E3843216458863009B0DF1 /* Navigators */,
