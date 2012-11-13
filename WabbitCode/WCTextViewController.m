@@ -273,7 +273,8 @@
         [textView scrollRangeToVisible:textView.selectedRange];
     }
     else {
-        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:symbol.file.identifier];
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:symbol.file.identifier];
+        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument sourceFileDocumentForFile:file];
         
         if (!sourceFileDocument) {
             NSBeep();
@@ -444,7 +445,8 @@
         [self.textView scrollRangeToVisible:self.textView.selectedRange];
     }
     else {
-        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:item.representedObject];
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:item.representedObject];
+        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument sourceFileDocumentForFile:file];
         
         if (!sourceFileDocument) {
             NSBeep();
@@ -537,7 +539,8 @@
     [self.delegate removeAssistantEditorForTextViewController:self];
 }
 - (IBAction)_jumpBarControlMenuItemAction:(NSMenuItem *)sender {
-    WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:sender.representedObject];
+    File *file = [self.sourceFileDocument.projectDocument fileWithUUID:sender.representedObject];
+    WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument sourceFileDocumentForFile:file];
     
     if (!sourceFileDocument) {
         NSBeep();

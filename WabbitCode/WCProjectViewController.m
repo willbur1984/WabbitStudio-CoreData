@@ -111,7 +111,7 @@
 #pragma mark Actions
 - (IBAction)_outlineViewDoubleAction:(NSOutlineView *)sender {
     for (File *file in [sender WC_selectedItems]) {
-        WCSourceFileDocument *sfDocument = [self.projectDocument.fileUUIDsToSourceFileDocuments objectForKey:file.uuid];
+        WCSourceFileDocument *sfDocument = [self.projectDocument sourceFileDocumentForFile:file];
         
         if (sfDocument)
             [self.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sfDocument];

@@ -24,7 +24,8 @@
 #import "NSImage+WCExtensions.h"
 
 @interface WCProjectDocument ()
-@property (strong,nonatomic) NSMutableDictionary *mutableFileUUIDsToSourceFileDocuments;
+@property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
+@property (strong,nonatomic) NSMutableSet *mutableSourceFileDocuments;
 @property (readwrite,strong,nonatomic) WCSymbolIndex *symbolIndex;
 @end
 
@@ -34,7 +35,8 @@
     if (!(self = [super init]))
         return nil;
     
-    [self setMutableFileUUIDsToSourceFileDocuments:[NSMutableDictionary dictionaryWithCapacity:0]];
+    [self setMutableFileUUIDsToSourceFileDocuments:[NSMapTable mapTableWithStrongToWeakObjects]];
+    [self setMutableSourceFileDocuments:[NSMutableSet setWithCapacity:0]];
     
     return self;
 }
@@ -88,6 +90,7 @@
             }
             
             [self.mutableFileUUIDsToSourceFileDocuments setObject:sourceFileDocument forKey:file.uuid];
+            [self.mutableSourceFileDocuments addObject:sourceFileDocument];
         }
         
         fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
@@ -100,6 +103,10 @@
     }
     
     return retval;
+}
+
+- (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file; {
+    return [self.mutableFileUUIDsToSourceFileDocuments objectForKey:file.uuid];
 }
 
 - (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {

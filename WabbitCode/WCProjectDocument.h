@@ -18,9 +18,10 @@
 @interface WCProjectDocument : NSPersistentDocument
 
 @property (readonly,nonatomic) NSString *UUID;
-@property (readonly,nonatomic) NSDictionary *fileUUIDsToSourceFileDocuments;
 @property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
 @property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
+
+- (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
 
 - (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (File *)fileWithUUID:(NSString *)UUID;
