@@ -37,6 +37,9 @@
     [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
     
     NSURL *storeURL = [[[WCAppController sharedController] derivedDataDirectoryURL] URLByAppendingPathComponent:[projectDocument.UUID stringByAppendingPathExtension:@"sqlite"]];
+    
+    [[NSFileManager defaultManager] removeItemAtURL:storeURL error:NULL];
+    
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption : @true, NSInferMappingModelAutomaticallyOption : @true};
     
     [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
