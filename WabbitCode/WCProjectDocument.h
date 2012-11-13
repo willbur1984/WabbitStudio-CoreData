@@ -23,5 +23,7 @@
 @property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
 
 - (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
+- (File *)fileWithUUID:(NSString *)UUID;
+- (NSImage *)imageForFile:(File *)file;
 
 @end

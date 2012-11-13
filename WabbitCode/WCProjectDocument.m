@@ -21,6 +21,7 @@
 #import "File.h"
 #import "Project.h"
 #import "NSArray+WCExtensions.h"
+#import "NSImage+WCExtensions.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMutableDictionary *mutableFileUUIDsToSourceFileDocuments;
@@ -88,6 +89,14 @@
             
             [self.mutableFileUUIDsToSourceFileDocuments setObject:sourceFileDocument forKey:file.uuid];
         }
+        
+        fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+        
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file == nil"]];
+        
+        File *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+        
+        [self.mutableFileUUIDsToSourceFileDocuments setObject:self forKey:file.uuid];
     }
     
     return retval;
@@ -99,6 +108,30 @@
     [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",sourceFileDocument.UUID]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+- (File *)fileWithUUID:(NSString *)UUID; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",UUID]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+- (NSImage *)imageForFile:(File *)file; {
+    if (file.isGroupValue)
+        return [NSImage imageNamed:@"Group.tiff"];
+    
+    WCSourceFileDocument *sourceFileDocument = [self.fileUUIDsToSourceFileDocuments objectForKey:file.uuid];
+    NSImage *retval = nil;
+    
+    if ([sourceFileDocument.fileURL getResourceValue:&retval forKey:NSURLEffectiveIconKey error:NULL]) {
+        if (sourceFileDocument.isDocumentEdited)
+            retval = [retval WC_unsavedImageIcon];
+    }
+    else {
+        retval = [[NSWorkspace sharedWorkspace] iconForFile:file.path];
+    }
+    
+    return retval;
 }
 
 - (NSString *)UUID {
