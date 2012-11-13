@@ -135,8 +135,9 @@
                 break;
             
             [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                if (result.range.length == 1 &&
-                    [self.string characterAtIndex:result.range.location] == '_')
+                if (result.range.length == 1 && [self.string characterAtIndex:result.range.location] == '_')
+                    return;
+                else if (NSMaxRange(result.range) < self.string.length && [self.string characterAtIndex:NSMaxRange(result.range)] == '(')
                     return;
                 
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
