@@ -2,6 +2,11 @@
 
 @implementation File
 
-// Custom logic goes here.
+- (NSImage *)image {
+    return [[NSWorkspace sharedWorkspace] iconForFile:self.path];
+}
+- (NSString *)fileUUID; {
+    return self.uuid;
+}
 
 @end

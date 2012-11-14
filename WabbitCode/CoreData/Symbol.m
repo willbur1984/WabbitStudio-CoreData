@@ -10,5 +10,8 @@
 - (NSString *)path {
     return self.fileContainer.path;
 }
+- (NSString *)fileUUID; {
+    return self.fileContainer.uuid;
+}
 
 @end
