@@ -346,6 +346,7 @@
 							<string key="NSFrame">{{384, 12}, {82, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
+							<reference key="NSNextKeyView"/>
 							<string key="NSReuseIdentifierKey">_NS:9</string>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="2314174">
@@ -494,7 +495,7 @@
 									<int key="NSvFlags">266</int>
 									<string key="NSFrame">{{25, 5}, {452, 14}}</string>
 									<reference key="NSSuperview" ref="283736251"/>
-									<reference key="NSNextKeyView" ref="729211830"/>
+									<reference key="NSNextKeyView" ref="553183423"/>
 									<string key="NSReuseIdentifierKey">_NS:20</string>
 									<string key="NSAntiCompressionPriority">{250, 750}</string>
 									<bool key="NSEnabled">YES</bool>
@@ -623,6 +624,14 @@
 						<array class="NSMutableArray" key="children">
 							<reference ref="67607959"/>
 							<reference ref="283736251"/>
+							<object class="NSCustomView" id="553183423">
+								<nil key="NSNextResponder"/>
+								<int key="NSvFlags">268</int>
+								<string key="NSFrame">{{1, 39}, {477, 36}}</string>
+								<reference key="NSNextKeyView" ref="729211830"/>
+								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<string key="NSClassName">WCJumpInRowView</string>
+							</object>
 						</array>
 						<reference key="parent" ref="824114481"/>
 					</object>
@@ -724,6 +733,11 @@
 						<reference key="object" ref="999725977"/>
 						<reference key="parent" ref="1024808513"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">194</int>
+						<reference key="object" ref="553183423"/>
+						<reference key="parent" ref="943245978"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -752,8 +766,11 @@
 				<boolean value="YES" key="19.isInViewBasedMode"/>
 				<array key="19.prototypeCellViews">
 					<reference ref="283736251"/>
+					<reference ref="553183423"/>
 				</array>
 				<string key="190.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="194.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="194.userInterfaceItemIdentifier">NSTableViewRowViewKey</string>
 				<string key="2.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="22.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="27.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -767,10 +784,18 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">192</int>
+			<int key="maxID">194</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">NSTableRowView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/NSTableRowView.h</string>
+					</object>
+				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">WCJumpInCellView</string>
 					<string key="superclassName">NSTableCellView</string>
@@ -788,6 +813,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCJumpInCellView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">WCJumpInRowView</string>
+					<string key="superclassName">NSTableRowView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WCJumpInRowView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

@@ -133,6 +133,11 @@
 		79968CD71608E91100F139BC /* WCLineNumberView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CD61608E91100F139BC /* WCLineNumberView.m */; };
 		79968CDC1608E97400F139BC /* NSColor+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CDB1608E97400F139BC /* NSColor+WCExtensions.m */; };
 		79968CEF1608FB6500F139BC /* NSArray+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */; };
+		799F6CC71653126300C33C61 /* WCOpenQuicklyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F6CC61653126300C33C61 /* WCOpenQuicklyWindowController.m */; };
+		799F6CCA1653128200C33C61 /* WCOpenQuicklyWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 799F6CC81653128200C33C61 /* WCOpenQuicklyWindow.xib */; };
+		799F6CCD165316A000C33C61 /* WCOpenQuicklyItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F6CCC165316A000C33C61 /* WCOpenQuicklyItem.m */; };
+		799F6CD016531F4000C33C61 /* WCOpenQuicklyOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F6CCF16531F3F00C33C61 /* WCOpenQuicklyOperation.m */; };
+		799F6CD316533DFE00C33C61 /* WCJumpInRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = 799F6CD216533DFE00C33C61 /* WCJumpInRowView.m */; };
 		79A87C25161DF3BA00C1A568 /* Completions.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79A87C23161DF3BA00C1A568 /* Completions.xcdatamodeld */; };
 		79AFA40A1645BD2900876655 /* WCProjectView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA4081645BD2900876655 /* WCProjectView.xib */; };
 		79AFA40D1645BF3700876655 /* WCIssueView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79AFA40B1645BF3700876655 /* WCIssueView.xib */; };
@@ -451,6 +456,15 @@
 		79968CDB1608E97400F139BC /* NSColor+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+WCExtensions.m"; sourceTree = "<group>"; };
 		79968CED1608FB6500F139BC /* NSArray+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+WCExtensions.h"; sourceTree = "<group>"; };
 		79968CEE1608FB6500F139BC /* NSArray+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+WCExtensions.m"; sourceTree = "<group>"; };
+		799F6CC51653126300C33C61 /* WCOpenQuicklyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCOpenQuicklyWindowController.h; sourceTree = "<group>"; };
+		799F6CC61653126300C33C61 /* WCOpenQuicklyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCOpenQuicklyWindowController.m; sourceTree = "<group>"; };
+		799F6CC91653128200C33C61 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCOpenQuicklyWindow.xib; sourceTree = "<group>"; };
+		799F6CCB165316A000C33C61 /* WCOpenQuicklyItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCOpenQuicklyItem.h; sourceTree = "<group>"; };
+		799F6CCC165316A000C33C61 /* WCOpenQuicklyItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCOpenQuicklyItem.m; sourceTree = "<group>"; };
+		799F6CCE16531F3F00C33C61 /* WCOpenQuicklyOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCOpenQuicklyOperation.h; sourceTree = "<group>"; };
+		799F6CCF16531F3F00C33C61 /* WCOpenQuicklyOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCOpenQuicklyOperation.m; sourceTree = "<group>"; };
+		799F6CD116533DFE00C33C61 /* WCJumpInRowView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCJumpInRowView.h; sourceTree = "<group>"; };
+		799F6CD216533DFE00C33C61 /* WCJumpInRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCJumpInRowView.m; sourceTree = "<group>"; };
 		79A87C24161DF3BA00C1A568 /* Completions.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Completions.xcdatamodel; sourceTree = "<group>"; };
 		79AFA4091645BD2900876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCProjectView.xib; sourceTree = "<group>"; };
 		79AFA40C1645BF3700876655 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCIssueView.xib; sourceTree = "<group>"; };
@@ -767,6 +781,8 @@
 				7962BE0916226D3A006D5A7A /* WCJumpInCellView.m */,
 				7962BE051622627C006D5A7A /* WCSearchFieldBackgroundView.h */,
 				7962BE061622627C006D5A7A /* WCSearchFieldBackgroundView.m */,
+				799F6CD116533DFE00C33C61 /* WCJumpInRowView.h */,
+				799F6CD216533DFE00C33C61 /* WCJumpInRowView.m */,
 			);
 			name = "Jump In";
 			sourceTree = "<group>";
@@ -929,6 +945,7 @@
 				79AFA40B1645BF3700876655 /* WCIssueView.xib */,
 				79AFA40E1645BF4000876655 /* WCSearchView.xib */,
 				79736AB8164F3666003F7F66 /* WCFindBarView.xib */,
+				799F6CC81653128200C33C61 /* WCOpenQuicklyWindow.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -971,6 +988,12 @@
 		799F6CC4165311A600C33C61 /* Open Quickly */ = {
 			isa = PBXGroup;
 			children = (
+				799F6CC51653126300C33C61 /* WCOpenQuicklyWindowController.h */,
+				799F6CC61653126300C33C61 /* WCOpenQuicklyWindowController.m */,
+				799F6CCE16531F3F00C33C61 /* WCOpenQuicklyOperation.h */,
+				799F6CCF16531F3F00C33C61 /* WCOpenQuicklyOperation.m */,
+				799F6CCB165316A000C33C61 /* WCOpenQuicklyItem.h */,
+				799F6CCC165316A000C33C61 /* WCOpenQuicklyItem.m */,
 			);
 			name = "Open Quickly";
 			sourceTree = "<group>";
@@ -1488,6 +1511,7 @@
 				79736ABA164F3666003F7F66 /* WCFindBarView.xib in Resources */,
 				79736AC016505719003F7F66 /* FindNoWrapIndicator.png in Resources */,
 				79736AC116505719003F7F66 /* FindNoWrapIndicatorReverse.png in Resources */,
+				799F6CCA1653128200C33C61 /* WCOpenQuicklyWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1671,6 +1695,10 @@
 				79BEFEBF1652A1A6001B4C96 /* _Label.m in Sources */,
 				79BEFEC01652A1A6001B4C96 /* _Macro.m in Sources */,
 				79BEFEC11652A1A6001B4C96 /* _Symbol.m in Sources */,
+				799F6CC71653126300C33C61 /* WCOpenQuicklyWindowController.m in Sources */,
+				799F6CCD165316A000C33C61 /* WCOpenQuicklyItem.m in Sources */,
+				799F6CD016531F4000C33C61 /* WCOpenQuicklyOperation.m in Sources */,
+				799F6CD316533DFE00C33C61 /* WCJumpInRowView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1793,6 +1821,14 @@
 			);
 			name = WCMainMenu.xib;
 			path = ..;
+			sourceTree = "<group>";
+		};
+		799F6CC81653128200C33C61 /* WCOpenQuicklyWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				799F6CC91653128200C33C61 /* en */,
+			);
+			name = WCOpenQuicklyWindow.xib;
 			sourceTree = "<group>";
 		};
 		79AFA4081645BD2900876655 /* WCProjectView.xib */ = {
