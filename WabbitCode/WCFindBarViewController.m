@@ -297,7 +297,7 @@ static const CGFloat kReplaceViewHeight = 44;
 }
 
 + (NSDictionary *)findRangeAttributes; {
-    return @{NSBackgroundColorAttributeName : [[NSColor yellowColor] colorWithAlphaComponent:0.75], NSUnderlineColorAttributeName : [NSColor orangeColor]};
+    return @{NSBackgroundColorAttributeName : [[NSColor yellowColor] colorWithAlphaComponent:0.5], NSUnderlineColorAttributeName : [[NSColor orangeColor] colorWithAlphaComponent:0.6], NSUnderlineStyleAttributeName : @(NSUnderlineStyleThick|NSUnderlinePatternSolid)};
 }
 #pragma mark Properties
 - (void)setViewMode:(WCFindBarViewControllerViewMode)viewMode {
@@ -536,6 +536,10 @@ static const CGFloat kReplaceViewHeight = 44;
         
         if (self.ignoreCase)
             options |= NSRegularExpressionCaseInsensitive;
+        if (self.anchorsMatchLines)
+            options |= NSRegularExpressionAnchorsMatchLines;
+        if (self.dotMatchesNewlines)
+            options |= NSRegularExpressionDotMatchesLineSeparators;
         
         NSError *outError;
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:self.searchField.stringValue options:options error:&outError];
@@ -625,6 +629,12 @@ static const CGFloat kReplaceViewHeight = 44;
         
         [pasteboard clearContents];
         [pasteboard writeObjects:@[self.searchField.stringValue]];
+        
+        NSMutableArray *recents = [self.searchField.recentSearches mutableCopy];
+        
+        [recents insertObject:self.searchField.stringValue atIndex:0];
+        
+        [self.searchField setRecentSearches:recents];
         
         [self setFindRangesAreDirty:NO];
     }
