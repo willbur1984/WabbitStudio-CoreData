@@ -29,6 +29,4 @@
 - (IBAction)removeAssistantEditorAction:(id)sender;
 - (IBAction)resetEditorAction:(id)sender;
 
-- (IBAction)jumpInAction:(id)sender;
-
 @end

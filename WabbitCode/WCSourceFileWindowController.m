@@ -22,7 +22,6 @@
 #import "NSEvent+WCExtensions.h"
 #import "WCExtendedAttributesManager.h"
 #import "NSView+WCExtensions.h"
-#import "WCJumpInWindowController.h"
 
 @interface WCSourceFileWindowController () <WCTextViewControllerDelegate,NSSplitViewDelegate,NSUserInterfaceValidations,NSWindowDelegate>
 
@@ -199,9 +198,6 @@
     // TODO: what should this method do? what exactly does Xcode do?
 }
 
-- (IBAction)jumpInAction:(id)sender; {
-    [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self.currentTextViewController.textView];
-}
 #pragma mark Properties
 - (WCTextViewController *)currentTextViewController {
     id firstResponder = self.window.firstResponder;

@@ -38,6 +38,7 @@
 #import "WCFoldView.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "FileContainer.h"
+#import "WCJumpInWindowController.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -396,6 +397,12 @@ static char kWCTextViewObservingContext;
     [super viewWillMoveToWindow:newWindow];
     
     [self setToolTipTimer:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignKeyNotification object:nil];
+    
+    if (newWindow) {
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowDidResignKey:) name:NSWindowDidResignKeyNotification object:newWindow];
+    }
 }
 - (void)updateTrackingAreas {
     [super updateTrackingAreas];
@@ -829,6 +836,10 @@ static char kWCTextViewObservingContext;
 - (IBAction)editAllInScopeAction:(id)sender; {
     if (self.countOfSymbolRangesToHighlight > 1)
         [self setEditingSymbols:YES];
+}
+
+- (IBAction)jumpInAction:(id)sender; {
+    [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self];
 }
 #pragma mark *** Private Methods ***
 - (void)_findSymbolRangesToHighlight; {
@@ -1291,6 +1302,9 @@ static char kWCTextViewObservingContext;
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
     
+}
+- (void)_windowDidResignKey:(NSNotification *)note {
+    [self _cleanupHoverLinkStuff];
 }
 
 @end

@@ -47,6 +47,8 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefa
 
 - (IBAction)editAllInScopeAction:(id)sender;
 
+- (IBAction)jumpInAction:(id)sender;
+
 @end
 
 @class WCSymbolScanner,Symbol,WCFoldScanner;
