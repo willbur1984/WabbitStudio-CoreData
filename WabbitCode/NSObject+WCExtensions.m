@@ -46,4 +46,16 @@
         [[NSUserDefaultsController sharedUserDefaultsController] removeObserver:self forKeyPath:[@"values." stringByAppendingString:key] context:context];
 }
 
+- (void)WC_performBlockOnMainThread:(void (^)(void))block; {
+    [self WC_performBlockOnMainThread:block synchronous:NO];
+}
+- (void)WC_performBlockOnMainThread:(void (^)(void))block synchronous:(BOOL)synchronous; {
+    if (synchronous) {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
+    else {
+        dispatch_async(dispatch_get_main_queue(), block);
+    }
+}
+
 @end
