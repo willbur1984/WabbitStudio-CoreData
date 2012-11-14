@@ -82,5 +82,8 @@
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
+- (Symbol *)symbolWithObjectID:(NSManagedObjectID *)objectID; {
+    return (Symbol *)[self.managedObjectContext objectRegisteredForID:objectID];
+}
 
 @end

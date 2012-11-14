@@ -28,4 +28,6 @@
 - (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
 - (NSArray *)symbolsWithPrefix:(NSString *)prefix;
 
+- (Symbol *)symbolWithObjectID:(NSManagedObjectID *)objectID;
+
 @end
