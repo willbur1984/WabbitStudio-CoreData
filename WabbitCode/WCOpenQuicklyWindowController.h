@@ -1,8 +1,8 @@
 //
-//  WCProjectDocument.h
+//  WCOpenQuicklyWindowController.h
 //  WabbitStudio
 //
-//  Created by William Towe on 10/26/12.
+//  Created by William Towe on 11/13/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,20 +13,17 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class WCSymbolIndex,WCProjectWindowController,WCSourceFileDocument,File;
+@class WCProjectDocument;
 
-@interface WCProjectDocument : NSPersistentDocument
+@interface WCOpenQuicklyWindowController : NSWindowController
 
-@property (readonly,nonatomic) NSString *UUID;
-@property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
-@property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
+@property (readonly,weak,nonatomic) WCProjectDocument *projectDocument;
+@property (readonly,nonatomic) NSString *searchString;
+@property (strong,nonatomic) NSArray *openQuicklyItems;
 
-- (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
++ (WCOpenQuicklyWindowController *)sharedWindowController;
 
-- (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
-- (File *)fileWithUUID:(NSString *)UUID;
-- (NSImage *)imageForFile:(File *)file;
-
-- (IBAction)openQuicklyAction:(id)sender;
+- (void)showOpenQuicklyWindowForProjectDocument:(WCProjectDocument *)projectDocument;
+- (void)hideOpenQuicklyWindow;
 
 @end

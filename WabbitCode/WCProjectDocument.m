@@ -22,6 +22,7 @@
 #import "Project.h"
 #import "NSArray+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
+#import "WCOpenQuicklyWindowController.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
@@ -139,6 +140,10 @@
     }
     
     return retval;
+}
+
+- (IBAction)openQuicklyAction:(id)sender; {
+    [[WCOpenQuicklyWindowController sharedWindowController] showOpenQuicklyWindowForProjectDocument:self];
 }
 
 - (NSString *)UUID {

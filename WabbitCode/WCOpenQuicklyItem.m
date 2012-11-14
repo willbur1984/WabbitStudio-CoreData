@@ -1,8 +1,8 @@
 //
-//  WCProjectDocument.h
+//  WCOpenQuicklyItem.m
 //  WabbitStudio
 //
-//  Created by William Towe on 10/26/12.
+//  Created by William Towe on 11/13/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -11,22 +11,22 @@
 // 
 //  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Cocoa/Cocoa.h>
+#import "WCOpenQuicklyItem.h"
 
-@class WCSymbolIndex,WCProjectWindowController,WCSourceFileDocument,File;
+@interface WCOpenQuicklyItem ()
+@property (readwrite,strong,nonatomic) NSManagedObjectID *objectID;
 
-@interface WCProjectDocument : NSPersistentDocument
+@end
 
-@property (readonly,nonatomic) NSString *UUID;
-@property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
-@property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
+@implementation WCOpenQuicklyItem
 
-- (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
-
-- (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
-- (File *)fileWithUUID:(NSString *)UUID;
-- (NSImage *)imageForFile:(File *)file;
-
-- (IBAction)openQuicklyAction:(id)sender;
+- (id)initWithObjectID:(NSManagedObjectID *)objectID; {
+    if (!(self = [super init]))
+        return nil;
+    
+    [self setObjectID:objectID];
+    
+    return self;
+}
 
 @end
