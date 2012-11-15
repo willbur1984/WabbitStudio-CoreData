@@ -16,6 +16,9 @@
 #import "WCDefines.h"
 #import "WCTableView.h"
 #import "WCJumpInCellView.h"
+#import "WCSourceFileDocument.h"
+#import "WCProjectDocument.h"
+#import "File.h"
 
 @interface WCJumpInWindowController () <NSWindowDelegate,NSTableViewDataSource,NSTableViewDelegate,NSTextFieldDelegate>
 
@@ -64,6 +67,11 @@
         [[NSApplication sharedApplication] stopModal];
     return YES;
 }
+- (void)windowWillClose:(NSNotification *)notification {
+    [self.searchField setStringValue:@""];
+    [self setLineNumber:NSNotFound];
+    [self setTextView:nil];
+}
 
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView {
     return (self.lineNumber == NSNotFound) ? 0 : 1;
@@ -75,25 +83,35 @@
         cell = [tableView makeViewWithIdentifier:tableColumn.identifier owner:self];
     }
     
-    NSDocument *document = [self.textView.window.windowController document];
+    WCSourceFileDocument *sourceFileDocument = [self.delegate sourceFileDocumentForJumpInWindowController:self];
     
-    [cell.imageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:document.fileURL.path]];
-    [cell.textField setStringValue:document.displayName];
+    [cell.imageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:sourceFileDocument.fileURL.path]];
+    [cell.textField setStringValue:sourceFileDocument.displayName];
     
     NSMutableString *string = [NSMutableString stringWithCapacity:0];
-    NSArray *pathComponents = document.fileURL.path.stringByAbbreviatingWithTildeInPath.pathComponents;
     
-    [pathComponents enumerateObjectsUsingBlock:^(NSString *path, NSUInteger pathIndex, BOOL *stop) {
-        if ([path rangeOfString:@"~" options:NSLiteralSearch].location == NSNotFound) {
-            if (pathIndex == pathComponents.count - 1)
-                [string appendString:path];
-            else
-                [string appendFormat:NSLocalizedString(@"%@ \u25B6 ", nil),path];
-        }
-    }];
+    if (sourceFileDocument.projectDocument) {
+        File *file = [sourceFileDocument.projectDocument fileForSourceFileDocument:sourceFileDocument];
+        
+        do {
+            
+            [string insertString:[NSString stringWithFormat:NSLocalizedString(@" \u25B6 %@", nil),file.name] atIndex:0];
+            
+            file = file.file;
+            
+        } while (file.file);
+        
+        [string insertString:file.name atIndex:0];
+    }
+    else {
+        if (sourceFileDocument.fileURL)
+            [string appendString:[sourceFileDocument.fileURL.path.pathComponents componentsJoinedByString:@" \u25B6 "]];
+        else
+            [string appendString:sourceFileDocument.displayName];
+    }
     
     if (self.lineNumber != NSNotFound)
-        [string appendFormat:NSLocalizedString(@" \u25B6 %lu", nil),self.lineNumber + 1];
+        [string appendFormat:NSLocalizedString(@":%ld", nil),self.lineNumber + 1];
     
     [cell.pathTextField setStringValue:string];
     
@@ -126,17 +144,13 @@
 - (void)showJumpInWindowForTextView:(NSTextView *)textView; {
     [self setTextView:textView];
     
-    [self.window setTitle:[NSString stringWithFormat:NSLocalizedString(@"Jump in \"%@\"", nil),[[self.textView.window.windowController document] displayName]]];
+    [self.window setTitle:[NSString stringWithFormat:NSLocalizedString(@"Jump in \"%@\"", nil),[[self.delegate sourceFileDocumentForJumpInWindowController:self] displayName]]];
     
     [[NSApplication sharedApplication] runModalForWindow:self.window];
 }
 - (void)hideJumpInWindow; {
-    [self.window orderOut:nil];
+    [self.window performClose:nil];
     [[NSApplication sharedApplication] stopModal];
-    
-    [self.searchField setStringValue:@""];
-    [self setLineNumber:NSNotFound];
-    [self setTextView:nil];
 }
 
 - (IBAction)_jumpInAction:(id)sender; {

@@ -13,11 +13,21 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class WCSourceFileDocument;
+@protocol WCJumpInWindowControllerDelegate;
+
 @interface WCJumpInWindowController : NSWindowController
+
+@property (assign,nonatomic) id <WCJumpInWindowControllerDelegate> delegate;
 
 + (WCJumpInWindowController *)sharedWindowController;
 
 - (void)showJumpInWindowForTextView:(NSTextView *)textView;
 - (void)hideJumpInWindow;
 
+@end
+
+@protocol WCJumpInWindowControllerDelegate <NSObject>
+@required
+- (WCSourceFileDocument *)sourceFileDocumentForJumpInWindowController:(WCJumpInWindowController *)windowController;
 @end

@@ -40,8 +40,9 @@
 #import "File.h"
 #import "WCTabViewController.h"
 #import "WCProjectWindowController.h"
+#import "WCJumpInWindowController.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,NSMenuDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate>
 
 @property (readwrite,assign,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
@@ -464,7 +465,7 @@
         Symbol *symbol = pathComponentCell.representedObject;
         
         if (symbol)
-            return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.longValue];
+            return [NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.displayLineNumber];
         return nil;
     }
     else if (self.sourceFileDocument.projectDocument) {
@@ -474,7 +475,10 @@
     }
     return self.sourceFileDocument.fileURL.path;
 }
-
+#pragma mark WCJumpInWindowControllerDelegate
+- (WCSourceFileDocument *)sourceFileDocumentForJumpInWindowController:(WCJumpInWindowController *)windowController {
+    return self.sourceFileDocument;
+}
 #pragma mark *** Public Methods ***
 - (id)initWithSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument; {
     if (!(self = [super init]))
@@ -491,6 +495,11 @@
 }
 - (IBAction)showDocumentItemsAction:(id)sender; {
     [self.jumpBarControl showPopUpMenuForPathComponentCell:self.jumpBarControl.pathComponentCells.lastObject];
+}
+
+- (IBAction)jumpInAction:(id)sender; {
+    [[WCJumpInWindowController sharedWindowController] setDelegate:self];
+    [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self.textView];
 }
 #pragma mark Properties
 - (void)setDelegate:(id<WCTextViewControllerDelegate>)delegate {

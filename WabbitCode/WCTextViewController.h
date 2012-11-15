@@ -29,6 +29,8 @@
 - (IBAction)showRelatedItemsAction:(id)sender;
 - (IBAction)showDocumentItemsAction:(id)sender;
 
+- (IBAction)jumpInAction:(id)sender;
+
 @end
 
 @protocol WCTextViewControllerDelegate <NSObject>
