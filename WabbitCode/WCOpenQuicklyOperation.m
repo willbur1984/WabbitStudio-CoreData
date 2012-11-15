@@ -17,7 +17,7 @@
 #import "WCProjectDocument.h"
 #import "WCSymbolIndex.h"
 #import "Symbol.h"
-#import "File.h"
+#import "FileContainer.h"
 #import "NSObject+WCExtensions.h"
 #import "WCDefines.h"
 
@@ -78,12 +78,54 @@
                 
                 if (!result)
                     continue;
+                else if (self.isCancelled)
+                    break;
                 
                 WCOpenQuicklyItem *item = [[WCOpenQuicklyItem alloc] initWithObjectID:symbol.objectID];
                 
                 [item setName:symbol.name];
                 [item setImage:symbol.image];
                 [item setFileUUID:symbol.fileUUID];
+                
+                NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
+                
+                for (NSUInteger captureIndex=1; captureIndex<result.numberOfRanges; captureIndex++)
+                    [ranges addIndexesInRange:[result rangeAtIndex:captureIndex]];
+                
+                [item setRanges:ranges];
+                
+                __block NSUInteger numberOfRanges = 0;
+                
+                [ranges enumerateRangesUsingBlock:^(NSRange range, BOOL *stop) {
+                    numberOfRanges++;
+                }];
+                
+                [item setNumberOfContiguousRanges:numberOfRanges];
+                
+                [items addObject:item];
+            }
+            
+            if (self.isCancelled)
+                break;
+            
+            fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
+            
+            NSArray *files = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+            
+            for (FileContainer *file in files) {
+                NSString *name = file.path.lastPathComponent;
+                NSTextCheckingResult *result = [regex firstMatchInString:name options:0 range:NSMakeRange(0, name.length)];
+                
+                if (!result)
+                    continue;
+                else if (self.isCancelled)
+                    break;
+                
+                WCOpenQuicklyItem *item = [[WCOpenQuicklyItem alloc] initWithObjectID:nil];
+                
+                [item setName:name];
+                [item setImage:[[NSWorkspace sharedWorkspace] iconForFile:file.path]];
+                [item setFileUUID:file.uuid];
                 
                 NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
                 
