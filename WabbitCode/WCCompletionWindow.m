@@ -342,7 +342,7 @@
     __unsafe_unretained typeof (self) blockSelf = self;
     
     [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
-        [context setDuration:0.3];
+        [context setDuration:0.25];
         
         [blockSelf.animator setAlphaValue:0];
     } completionHandler:^{
