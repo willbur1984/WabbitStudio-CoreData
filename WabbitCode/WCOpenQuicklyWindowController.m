@@ -86,6 +86,18 @@ static char kWCOpenQuicklyWindowControllerObservingContext;
     [self.statusTextField setHidden:YES];
 }
 
+- (BOOL)windowShouldClose:(id)sender {
+    if (self.window.isModalPanel)
+        [[NSApplication sharedApplication] stopModal];
+    return YES;
+}
+- (void)windowWillClose:(NSNotification *)notification {
+    [self.searchField setStringValue:@""];
+    [self.pathControl setURL:nil];
+    [self setOpenQuicklyItems:nil];
+    [self setProjectDocument:nil];
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &kWCOpenQuicklyWindowControllerObservingContext) {
         if ([keyPath isEqualToString:@"operationCount"]) {
@@ -151,7 +163,7 @@ static char kWCOpenQuicklyWindowControllerObservingContext;
     Symbol *symbol = [self.projectDocument.symbolIndex symbolWithObjectID:item.objectID];
     
     if (symbol) {
-        [pathString appendFormat:NSLocalizedString(@" \u25B6 %@", nil),symbol.range];
+        [pathString appendFormat:NSLocalizedString(@":%ld", nil),symbol.displayLineNumber];
     }
     
     [cell.pathTextField setStringValue:pathString];
@@ -222,13 +234,8 @@ static char kWCOpenQuicklyWindowControllerObservingContext;
     [[NSApplication sharedApplication] runModalForWindow:self.window];
 }
 - (void)hideOpenQuicklyWindow; {
-    [self.window orderOut:nil];
+    [self.window performClose:nil];
     [[NSApplication sharedApplication] stopModal];
-    
-    [self.searchField setStringValue:@""];
-    [self.pathControl setURL:nil];
-    [self setOpenQuicklyItems:nil];
-    [self setProjectDocument:nil];
 }
 
 - (NSString *)searchString {
@@ -257,6 +264,9 @@ static char kWCOpenQuicklyWindowControllerObservingContext;
     File *file = [self.projectDocument fileWithUUID:openQuicklyItem.fileUUID];
     WCSourceFileDocument *sourceFileDocument = [self.projectDocument sourceFileDocumentForFile:file];
     WCTextViewController *textViewController = [self.projectDocument.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
+    
+    [textViewController.textView.window makeFirstResponder:textViewController.textView];
+    
     Symbol *symbol = [self.projectDocument.symbolIndex symbolWithObjectID:openQuicklyItem.objectID];
     
     if (symbol) {
