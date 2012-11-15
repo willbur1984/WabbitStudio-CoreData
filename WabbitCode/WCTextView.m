@@ -38,7 +38,6 @@
 #import "WCFoldView.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "FileContainer.h"
-#import "WCJumpInWindowController.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -630,31 +629,49 @@ static char kWCTextViewObservingContext;
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
-            [[NSColor darkGrayColor] setStroke];
-            [[[NSColor lightGrayColor] colorWithAlphaComponent:0.35] setFill];
+            [[NSColor blackColor] setStroke];
+            [[NSColor colorWithCalibratedWhite:0 alpha:0.05] setFill];
             
             const NSInteger dashCount = 2;
+            const NSRange selectedRange = self.selectedRange;
+            __unsafe_unretained typeof (self) weakSelf = self;
             
             [self.symbolRangesToHighlight enumerateRangesInRange:[self WC_visibleRange] options:0 usingBlock:^(NSRange range, BOOL *stop) {
                 NSUInteger rectCount;
-                NSRectArray rects = [self.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:self.textContainer rectCount:&rectCount];
+                NSRectArray rects = [weakSelf.layoutManager rectArrayForCharacterRange:range withinSelectedCharacterRange:WC_NSNotFoundRange inTextContainer:weakSelf.textContainer rectCount:&rectCount];
                 
                 if (rectCount == 0)
                     return;
                 
-                NSRect rect = rects[0];
+                NSRect rect = NSInsetRect(rects[0], -2, 0);
                 
                 if (![self needsToDrawRect:rect])
                     return;
                 
-                NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:rect xRadius:3 yRadius:3];
-                CGFloat dash[dashCount] = {3,1};
+                const CGFloat dash[dashCount] = {4,2};
                 
-                [path setLineDash:dash count:dashCount phase:0];
-                [path stroke];
-                
-                if (self.isEditingSymbols)
-                    [path fill];
+                if (weakSelf.isEditingSymbols) {
+                    NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
+                    
+                    [path setLineWidth:0.5];
+                    [path setLineDash:dash count:dashCount phase:0];
+                    [path stroke];
+                    
+                    if (!NSLocationInRange(selectedRange.location, range))
+                        [path fill];
+                }
+                else {
+                    NSBezierPath *path = [NSBezierPath bezierPath];
+                    
+                    [path setLineWidth:0.5];
+                    [path setLineDash:dash count:dashCount phase:0];
+                    
+                    [path moveToPoint:NSMakePoint(NSMinX(rect), NSMidY(rect))];
+                    [path lineToPoint:NSMakePoint(NSMinX(rect), NSMaxY(rect))];
+                    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMaxY(rect))];
+                    [path lineToPoint:NSMakePoint(NSMaxX(rect), NSMidY(rect))];
+                    [path stroke];
+                }
             }];
         }
     }
@@ -707,6 +724,7 @@ static char kWCTextViewObservingContext;
 - (IBAction)complete:(id)sender {
     [[WCCompletionWindow sharedInstance] showCompletionWindowForTextView:self];
 }
+
 #pragma mark *** Public Methods ***
 + (NSRegularExpression *)completionRegex; {
     static NSRegularExpression *retval;
@@ -836,10 +854,6 @@ static char kWCTextViewObservingContext;
 - (IBAction)editAllInScopeAction:(id)sender; {
     if (self.countOfSymbolRangesToHighlight > 1)
         [self setEditingSymbols:YES];
-}
-
-- (IBAction)jumpInAction:(id)sender; {
-    [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self];
 }
 #pragma mark *** Private Methods ***
 - (void)_findSymbolRangesToHighlight; {
@@ -1255,14 +1269,14 @@ static char kWCTextViewObservingContext;
             }
             
             if (symbol.arguments)
-                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@(%@) \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.arguments,symbol.fileContainer.path.lastPathComponent,symbol.displayLineNumber,value];
             else
-                [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1,value];
+                [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n%@\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.displayLineNumber,value];
         }
         else if ([symbol respondsToSelector:@selector(value)])
-            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 %@:%ld\n", nil),symbol.name,symbol.value,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ = %@ \u2192 %@:%ld\n", nil),symbol.name,symbol.value,symbol.fileContainer.path.lastPathComponent,symbol.displayLineNumber];
         else
-            [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.lineNumber.integerValue + 1];
+            [string appendFormat:NSLocalizedString(@"%@ \u2192 %@:%ld\n", nil),symbol.name,symbol.fileContainer.path.lastPathComponent,symbol.displayLineNumber];
     }
     
     [string deleteCharactersInRange:NSMakeRange(string.length - 1, 1)];
@@ -1291,6 +1305,8 @@ static char kWCTextViewObservingContext;
     
     if (![self.symbolRangesToHighlight containsIndex:self.selectedRange.location])
         [self setEditingSymbols:NO];
+    else if (self.isEditingSymbols && [self.symbolRangesToHighlight containsIndex:self.selectedRange.location])
+        [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewFocusFollowsSelectionUserDefaultsKey])
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
