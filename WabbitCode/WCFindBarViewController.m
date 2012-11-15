@@ -118,11 +118,9 @@
         case NSTextFinderActionReplaceAndFind:
             [self replaceAndFindAction:nil];
             break;
-        case NSTextFinderActionSetSearchString: {
-            id plist = [[NSPasteboard pasteboardWithName:NSFindPboard] propertyListForType:NSPasteboardTypeTextFinderOptions];
-            
-            WCLogObject(plist);
-        }
+        case NSTextFinderActionSetSearchString:
+            [self.searchField setStringValue:[self.textView.string substringWithRange:self.textView.selectedRange]];
+            [self findAction:nil];
             break;
         case NSTextFinderActionShowReplaceInterface:
             [self showFindBar:YES showReplace:YES completion:nil];
@@ -150,6 +148,10 @@
             case NSTextFinderActionSelectAll:
             case NSTextFinderActionSelectAllInSelection:
                 if (!self.textView.isSelectable)
+                    return NO;
+                break;
+            case NSTextFinderActionSetSearchString:
+                if (self.textView.selectedRange.length == 0)
                     return NO;
                 break;
             default:
@@ -267,15 +269,14 @@ static const CGFloat kReplaceViewHeight = 44;
             [self _setReplaceViewsHidden:NO];
             [self.searchField setNextKeyView:self.replaceTextField];
             [self.replaceTextField setNextKeyView:self.textView];
-            [self.textView.window makeFirstResponder:self.replaceTextField];
         }
         else {
             [self.view setFrameSize:NSMakeSize(NSWidth(self.view.frame), kFindViewHeight)];
             [self _setReplaceViewsHidden:YES];
             [self.searchField setNextKeyView:self.textView];
-            [self.textView.window makeFirstResponder:self.searchField];
         }
         
+        [self.textView.window makeFirstResponder:self.searchField];
         [self.textView.enclosingScrollView tile];
         
         if (completion)
