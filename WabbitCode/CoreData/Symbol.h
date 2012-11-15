@@ -10,5 +10,7 @@ typedef NS_ENUM(NSInteger, SymbolType) {
 };
 
 @interface Symbol : _Symbol <WCCompletionItemDataSource,WCOpenQuicklyDataSource> {}
-// Custom logic goes here.
+
+@property (readonly,nonatomic) int64_t displayLineNumber;
+
 @end

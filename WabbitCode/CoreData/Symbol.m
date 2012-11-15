@@ -4,6 +4,10 @@
 
 @implementation Symbol
 
+- (int64_t)displayLineNumber {
+    return (self.lineNumber.longLongValue + 1);
+}
+
 - (NSImage *)image {
     return [[WCSymbolImageManager sharedManager] imageForSymbol:self];
 }
