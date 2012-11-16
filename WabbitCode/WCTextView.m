@@ -629,7 +629,7 @@ static char kWCTextViewObservingContext;
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
-            [[NSColor blackColor] setStroke];
+            [[NSColor darkGrayColor] setStroke];
             [[NSColor colorWithCalibratedWhite:0 alpha:0.05] setFill];
             
             const NSInteger dashCount = 2;
@@ -653,7 +653,6 @@ static char kWCTextViewObservingContext;
                 if (weakSelf.isEditingSymbols) {
                     NSBezierPath *path = [NSBezierPath bezierPathWithRect:rect];
                     
-                    [path setLineWidth:0.5];
                     [path setLineDash:dash count:dashCount phase:0];
                     [path stroke];
                     
@@ -663,7 +662,6 @@ static char kWCTextViewObservingContext;
                 else {
                     NSBezierPath *path = [NSBezierPath bezierPath];
                     
-                    [path setLineWidth:0.5];
                     [path setLineDash:dash count:dashCount phase:0];
                     
                     [path moveToPoint:NSMakePoint(NSMinX(rect), NSMidY(rect))];
