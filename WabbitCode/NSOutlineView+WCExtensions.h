@@ -15,7 +15,13 @@
 
 @interface NSOutlineView (WCExtensions)
 
+- (id)WC_clickedItem;
+- (NSArray *)WC_clickedItems;
+
 - (id)WC_selectedItem;
 - (NSArray *)WC_selectedItems;
+
+- (id)WC_clickedOrSelectedItem;
+- (NSArray *)WC_clickedOrSelectedItems;
 
 @end

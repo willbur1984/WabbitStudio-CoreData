@@ -16,6 +16,19 @@
 
 @implementation NSOutlineView (WCExtensions)
 
+- (id)WC_clickedItem; {
+    return [[self WC_clickedItems] WC_firstObject];
+}
+- (NSArray *)WC_clickedItems; {
+    if (self.clickedRow == -1)
+        return nil;
+    
+    if ([self.selectedRowIndexes containsIndex:self.clickedRow])
+        return [self WC_selectedItems];
+    
+    return @[[self itemAtRow:self.clickedRow]];
+}
+
 - (id)WC_selectedItem; {
     return [[self WC_selectedItems] WC_firstObject];
 }
@@ -29,6 +42,18 @@
         if (item)
             [retval addObject:item];
     }];
+    
+    return retval;
+}
+
+- (id)WC_clickedOrSelectedItem; {
+    return [[self WC_clickedOrSelectedItems] WC_firstObject];
+}
+- (NSArray *)WC_clickedOrSelectedItems; {
+    NSArray *retval = [self WC_clickedItems];
+    
+    if (retval.count == 0)
+        retval = [self WC_selectedItems];
     
     return retval;
 }
