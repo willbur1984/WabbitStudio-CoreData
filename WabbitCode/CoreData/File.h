@@ -2,5 +2,7 @@
 #import "WCOpenQuicklyItem.h"
 
 @interface File : _File <WCOpenQuicklyDataSource> {}
-// Custom logic goes here.
+
+- (void)sortChildrenUsingComparator:(NSComparator)comparator recursively:(BOOL)recursively;
+
 @end
