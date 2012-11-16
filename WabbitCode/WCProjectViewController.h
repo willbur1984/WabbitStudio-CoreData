@@ -20,4 +20,16 @@
 
 - (id)initWithProjectWindowController:(WCProjectWindowController *)windowController;
 
+- (IBAction)showInFinderAction:(id)sender;
+- (IBAction)openWithExternalEditor:(id)sender;
+- (IBAction)newGroupAction:(id)sender;
+- (IBAction)newGroupFromSelection:(id)sender;
+- (IBAction)ungroupSelectionAction:(id)sender;
+- (IBAction)sortByNameAction:(id)sender;
+- (IBAction)sortByTypeAction:(id)sender;
+- (IBAction)addFilesToProject:(id)sender;
+- (IBAction)deleteAction:(id)sender;
+- (IBAction)renameAction:(id)sender;
+- (IBAction)openInSeparateEditorAction:(id)sender;
+
 @end

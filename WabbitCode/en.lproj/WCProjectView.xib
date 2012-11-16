@@ -194,7 +194,6 @@
 								<string key="NSFrame">{{0, 120}, {240, 15}}</string>
 								<reference key="NSSuperview" ref="297092245"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:60</string>
 								<int key="NSsFlags">1</int>
 								<reference key="NSTarget" ref="297092245"/>
@@ -287,7 +286,7 @@
 									<string key="NSAntiCompressionPriority">{250, 750}</string>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSTextFieldCell" key="NSCell" id="321544482">
-										<int key="NSCellFlags">67108928</int>
+										<int key="NSCellFlags">337641537</int>
 										<int key="NSCellFlags2">272631808</int>
 										<string key="NSContents">Table View Cell</string>
 										<reference key="NSSupport" ref="761355957"/>
@@ -318,6 +317,14 @@
 						<reference key="destination" ref="585710741"/>
 					</object>
 					<int key="connectionID">22</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">_textFieldAction:</string>
+						<reference key="source" ref="316064548"/>
+						<reference key="destination" ref="585710741"/>
+					</object>
+					<int key="connectionID">25</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -461,7 +468,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">23</int>
+			<int key="maxID">25</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -476,6 +483,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WCProjectCellView</string>
 					<string key="superclassName">NSTableCellView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">_textFieldAction:</string>
+						<string key="NS.object.0">NSTextField</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">_textFieldAction:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">_textFieldAction:</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCProjectCellView.h</string>
@@ -484,15 +502,74 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WCProjectViewController</string>
 					<string key="superclassName">WCViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="addFilesToProject:">id</string>
+						<string key="deleteAction:">id</string>
+						<string key="newGroupAction:">id</string>
+						<string key="newGroupFromSelection:">id</string>
+						<string key="openInSeparateEditorAction:">id</string>
+						<string key="openWithExternalEditor:">id</string>
+						<string key="renameAction:">id</string>
+						<string key="showInFinderAction:">id</string>
+						<string key="sortByNameAction:">id</string>
+						<string key="sortByTypeAction:">id</string>
+						<string key="ungroupSelectionAction:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="addFilesToProject:">
+							<string key="name">addFilesToProject:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="deleteAction:">
+							<string key="name">deleteAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="newGroupAction:">
+							<string key="name">newGroupAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="newGroupFromSelection:">
+							<string key="name">newGroupFromSelection:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openInSeparateEditorAction:">
+							<string key="name">openInSeparateEditorAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openWithExternalEditor:">
+							<string key="name">openWithExternalEditor:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="renameAction:">
+							<string key="name">renameAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="showInFinderAction:">
+							<string key="name">showInFinderAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="sortByNameAction:">
+							<string key="name">sortByNameAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="sortByTypeAction:">
+							<string key="name">sortByTypeAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="ungroupSelectionAction:">
+							<string key="name">ungroupSelectionAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">outlineView</string>
-						<string key="NS.object.0">NSOutlineView</string>
+						<string key="NS.object.0">WCOutlineView</string>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<string key="NS.key.0">outlineView</string>
 						<object class="IBToOneOutletInfo" key="NS.object.0">
 							<string key="name">outlineView</string>
-							<string key="candidateClassName">NSOutlineView</string>
+							<string key="candidateClassName">WCOutlineView</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
