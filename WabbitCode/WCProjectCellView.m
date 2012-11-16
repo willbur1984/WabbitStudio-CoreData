@@ -39,4 +39,8 @@
     return (File *)self.objectValue;
 }
 
+- (IBAction)_textFieldAction:(NSTextField *)sender {
+    [self.file setName:sender.stringValue];
+}
+
 @end
