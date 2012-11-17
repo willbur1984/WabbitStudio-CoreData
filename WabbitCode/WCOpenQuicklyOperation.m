@@ -27,12 +27,19 @@
 @property (strong,nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (assign,getter = isExecuting) BOOL executing;
 @property (assign,getter = isFinished) BOOL finished;
+@property (assign,getter = isCancelled) BOOL cancelled;
 @end
 
 @implementation WCOpenQuicklyOperation
 
 - (BOOL)isConcurrent {
     return YES;
+}
+
+- (void)cancel {
+    [self willChangeValueForKey:@"isCancelled"];
+    [self setCancelled:YES];
+    [self didChangeValueForKey:@"isCancelled"];
 }
 
 - (void)main {
@@ -58,8 +65,8 @@
             
             NSMutableString *pattern = [NSMutableString stringWithCapacity:0];
             
-            for (NSUInteger patternIndex=0; patternIndex<self.string.length; patternIndex++) {
-                NSString *subPattern = [NSRegularExpression escapedPatternForString:[self.string substringWithRange:NSMakeRange(patternIndex, 1)]];
+            for (NSUInteger patternIndex=0; patternIndex<weakSelf.string.length; patternIndex++) {
+                NSString *subPattern = [NSRegularExpression escapedPatternForString:[weakSelf.string substringWithRange:NSMakeRange(patternIndex, 1)]];
                 
                 [pattern appendFormat:@"[^%@]*(%@)",subPattern,subPattern];
             }
@@ -78,7 +85,7 @@
                 
                 if (!result)
                     continue;
-                else if (self.isCancelled)
+                else if (weakSelf.isCancelled)
                     break;
                 
                 WCOpenQuicklyItem *item = [[WCOpenQuicklyItem alloc] initWithObjectID:symbol.objectID];
@@ -105,7 +112,7 @@
                 [items addObject:item];
             }
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
             fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
@@ -118,7 +125,7 @@
                 
                 if (!result)
                     continue;
-                else if (self.isCancelled)
+                else if (weakSelf.isCancelled)
                     break;
                 
                 WCOpenQuicklyItem *item = [[WCOpenQuicklyItem alloc] initWithObjectID:nil];
@@ -145,7 +152,7 @@
                 [items addObject:item];
             }
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
             [items sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"self" ascending:NO comparator:^NSComparisonResult(WCOpenQuicklyItem *obj1, WCOpenQuicklyItem *obj2) {
@@ -182,18 +189,18 @@
             
         } while (0);
         
-        if (!self.isCancelled) {
+        if (!weakSelf.isCancelled) {
             [weakSelf WC_performBlockOnMainThread:^{
                 [weakSelf.windowController setOpenQuicklyItems:items];
             }];
         }
         
-        [self willChangeValueForKey:@"isExecuting"];
-        [self willChangeValueForKey:@"isFinished"];
-        [self setExecuting:NO];
-        [self setFinished:YES];
-        [self didChangeValueForKey:@"isExecuting"];
-        [self didChangeValueForKey:@"isFinished"];
+        [weakSelf willChangeValueForKey:@"isExecuting"];
+        [weakSelf willChangeValueForKey:@"isFinished"];
+        [weakSelf setExecuting:NO];
+        [weakSelf setFinished:YES];
+        [weakSelf didChangeValueForKey:@"isExecuting"];
+        [weakSelf didChangeValueForKey:@"isFinished"];
     }];
 }
 
