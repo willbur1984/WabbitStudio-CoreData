@@ -990,10 +990,10 @@
 			children = (
 				799F6CC51653126300C33C61 /* WCOpenQuicklyWindowController.h */,
 				799F6CC61653126300C33C61 /* WCOpenQuicklyWindowController.m */,
-				799F6CCE16531F3F00C33C61 /* WCOpenQuicklyOperation.h */,
-				799F6CCF16531F3F00C33C61 /* WCOpenQuicklyOperation.m */,
 				799F6CCB165316A000C33C61 /* WCOpenQuicklyItem.h */,
 				799F6CCC165316A000C33C61 /* WCOpenQuicklyItem.m */,
+				799F6CCE16531F3F00C33C61 /* WCOpenQuicklyOperation.h */,
+				799F6CCF16531F3F00C33C61 /* WCOpenQuicklyOperation.m */,
 			);
 			name = "Open Quickly";
 			sourceTree = "<group>";
