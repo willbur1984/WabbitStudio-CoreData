@@ -46,6 +46,24 @@
     return retval;
 }
 
+- (void)WC_setSelectedItem:(id)item; {
+    [self WC_setSelectedItems:@[item]];
+}
+- (void)WC_setSelectedItems:(NSArray *)items; {
+    NSMutableIndexSet *rows = [NSMutableIndexSet indexSet];
+    
+    for (id item in items) {
+        NSInteger row = [self rowForItem:item];
+        
+        if (row == -1)
+            continue;
+        
+        [rows addIndex:row];
+    }
+    
+    [self selectRowIndexes:rows byExtendingSelection:NO];
+}
+
 - (id)WC_clickedOrSelectedItem; {
     return [[self WC_clickedOrSelectedItems] WC_firstObject];
 }

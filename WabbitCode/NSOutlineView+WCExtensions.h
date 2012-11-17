@@ -21,6 +21,9 @@
 - (id)WC_selectedItem;
 - (NSArray *)WC_selectedItems;
 
+- (void)WC_setSelectedItem:(id)item;
+- (void)WC_setSelectedItems:(NSArray *)items;
+
 - (id)WC_clickedOrSelectedItem;
 - (NSArray *)WC_clickedOrSelectedItems;
 
