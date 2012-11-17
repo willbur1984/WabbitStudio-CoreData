@@ -32,7 +32,7 @@
 
 - (void)cleanup; {
     [self.view WC_setViewController:nil];
-    [self.view removeFromSuperviewWithoutNeedingDisplay];
+    [self.view removeFromSuperview];
 }
 
 - (void)viewWillAppear; {
