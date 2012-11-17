@@ -74,6 +74,14 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     
     [self.window setToolbar:toolbar];
 }
+#pragma mark NSWindowDelegate
+- (void)windowWillClose:(NSNotification *)notification {
+    [self.navigatorControl setDataSource:nil];
+    
+    for (WCViewController *viewController in self.navigatorItems)
+        [viewController cleanup];
+}
+
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)view {
     if (splitView == self.mainSplitView) {
@@ -84,7 +92,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 }
 #pragma mark NSToolbarDelegate
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    return nil;
+    return @[NSToolbarFlexibleSpaceItemIdentifier];
 }
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
     return nil;
