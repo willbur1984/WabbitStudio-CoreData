@@ -49,7 +49,7 @@ NSString *const kFileEntityName = @"File";
     
     [[NSFileManager defaultManager] removeItemAtURL:documentURL error:NULL];
     
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSXMLStoreType configuration:nil URL:documentURL options:nil error:outError])
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:documentURL options:nil error:outError])
         return NO;
     
     NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
