@@ -22,6 +22,7 @@
 #import "Project.h"
 #import "File.h"
 #import "WCOutlineView.h"
+#import "NSArray+WCExtensions.h"
 
 @interface WCProjectViewController () <NSOutlineViewDataSource,NSOutlineViewDelegate,NSUserInterfaceValidations>
 
@@ -44,16 +45,17 @@
     [super loadView];
     
     [self.outlineView setEmptyString:NSLocalizedString(@"No Filter Results", nil)];
-    [self _setupOutlineViewContextualMenu];
     [self.outlineView setTarget:self];
     [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
     [self.outlineView setDataSource:self];
     [self.outlineView expandItem:[self.outlineView itemAtRow:0] expandChildren:NO];
+    
+    [self _setupOutlineViewContextualMenu];
 }
 #pragma mark NSOutlineViewDataSource
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(File *)item {
     if (item) {
-        return (item.files.count > 0);
+        return (item.isGroup.boolValue || item.files.count > 0);
     }
     return YES;
 }
@@ -131,10 +133,49 @@
     
 }
 - (IBAction)newGroupAction:(id)sender {
+    File *file = [self.outlineView WC_clickedOrSelectedItem];
+    NSUInteger index = 0;
     
+    if (!file.isGroupValue) {
+        index = [file.file.files indexOfObject:file] + 1;
+        file = file.file;
+    }
+    
+    File *group = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.projectDocument.managedObjectContext];
+    
+    [group setPath:file.path];
+    [group setName:NSLocalizedString(@"New Group", nil)];
+    [group setIsGroup:@true];
+    
+    [file.filesSet insertObject:group atIndex:index];
+    
+    [self.outlineView reloadItem:file reloadChildren:YES];
+    [self.outlineView WC_setSelectedItem:group];
+    [self.outlineView editColumn:0 row:[self.outlineView rowForItem:group] withEvent:nil select:YES];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone];
 }
 - (IBAction)newGroupFromSelection:(id)sender {
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
+    File *file = [files WC_firstObject];
+    NSUInteger index = [file.file.files indexOfObject:file];
+    File *group = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.projectDocument.managedObjectContext];
     
+    [group setPath:file.file.path];
+    [group setName:NSLocalizedString(@"New Group", nil)];
+    [group setIsGroup:@true];
+    
+    // insert our new group first
+    [file.file.filesSet insertObject:group atIndex:index];
+    
+    // move files into our new group
+    [group.filesSet addObjectsFromArray:files];
+    
+    [self.outlineView reloadData];
+    [self.outlineView WC_setSelectedItem:group];
+    [self.outlineView editColumn:0 row:[self.outlineView rowForItem:group] withEvent:nil select:YES];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone];
 }
 - (IBAction)ungroupSelectionAction:(id)sender {
     
