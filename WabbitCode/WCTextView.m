@@ -643,7 +643,7 @@ static char kWCTextViewObservingContext;
                 if (rectCount == 0)
                     return;
                 
-                NSRect rect = NSInsetRect(rects[0], -2, 0);
+                NSRect rect = NSInsetRect(rects[0], -1, 0);
                 
                 if (![self needsToDrawRect:rect])
                     return;
