@@ -405,7 +405,7 @@
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSPathCell" key="NSCell" id="519604574">
 								<int key="NSCellFlags">337641473</int>
-								<int key="NSCellFlags2">0</int>
+								<int key="NSCellFlags2">33554432</int>
 								<object class="NSURL" key="NSContents">
 									<nil key="NS.base"/>
 									<string key="NS.relative">file://localhost/Applications/</string>
@@ -1019,25 +1019,6 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WCOpenQuicklyWindowController</string>
 					<string key="superclassName">NSWindowController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="_openQuicklyAction:">id</string>
-						<string key="_searchFieldAction:">id</string>
-						<string key="_tableViewDoubleClick:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="_openQuicklyAction:">
-							<string key="name">_openQuicklyAction:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="_searchFieldAction:">
-							<string key="name">_searchFieldAction:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="_tableViewDoubleClick:">
-							<string key="name">_tableViewDoubleClick:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="openButton">NSButton</string>
 						<string key="pathControl">NSPathControl</string>
