@@ -417,6 +417,7 @@
         [item setTitle:file.name];
         [item setImage:[self.sourceFileDocument.projectDocument imageForFile:file]];
         [item.image setSize:WC_NSSmallSize];
+        [item setRepresentedObject:file.uuid];
         
         if (file.files.count > 0) {
             NSMenu *menu = [[NSMenu alloc] initWithTitle:file.uuid];
