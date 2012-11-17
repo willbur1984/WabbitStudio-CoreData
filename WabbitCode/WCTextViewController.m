@@ -432,7 +432,9 @@
     if (jumpBarControl.pathComponentCells.lastObject == pathComponentCell)
         return [self.jumpBarControlMenuSymbols WC_symbolIndexForRange:self.textView.selectedRange];
     else {
-        return 0;
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:pathComponentCell.representedObject];
+        
+        return [file.file.files indexOfObject:file];
     }
 }
 - (void)jumpBarControl:(WCJumpBarControl *)jumpBarControl menuDidCloseForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
