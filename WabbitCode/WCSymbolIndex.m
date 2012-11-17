@@ -52,10 +52,6 @@
     return self;
 }
 
-- (void)removeSymbolScanner:(WCSymbolScanner *)symbolScanner; {
-    [symbolScanner.managedObjectContext setParentContext:nil];
-}
-
 - (NSArray *)symbolsWithName:(NSString *)name; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
     

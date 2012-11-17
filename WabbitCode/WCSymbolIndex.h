@@ -22,8 +22,6 @@
 
 - (id)initWithProjectDocument:(WCProjectDocument *)projectDocument;
 
-- (void)removeSymbolScanner:(WCSymbolScanner *)symbolScanner;
-
 - (NSArray *)symbolsWithName:(NSString *)name;
 - (NSArray *)symbolsOfType:(SymbolType)type withName:(NSString *)name;
 - (NSArray *)symbolsWithPrefix:(NSString *)prefix;
