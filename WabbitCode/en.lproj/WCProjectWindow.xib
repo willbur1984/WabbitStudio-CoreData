@@ -39,7 +39,7 @@
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
 				<string key="NSWindowRect">{{196, 240}, {1024, 640}}</string>
-				<int key="NSWTFlags">1886912512</int>
+				<int key="NSWTFlags">813170688</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">WCWindow</string>
 				<nil key="NSViewClass"/>
@@ -343,6 +343,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WCNavigatorControl</string>
 					<string key="superclassName">NSControl</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">_buttonAction:</string>
+						<string key="NS.object.0">NSButton</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">_buttonAction:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">_buttonAction:</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">containerView</string>
 						<string key="NS.object.0">NSView</string>
