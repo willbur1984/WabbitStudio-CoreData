@@ -42,6 +42,13 @@
     return self;
 }
 
+- (void)close {
+    [super close];
+    
+    for (WCSourceFileDocument *sourceFileDocument in self.mutableSourceFileDocuments)
+        [sourceFileDocument close];
+}
+
 - (void)makeWindowControllers {
     WCProjectWindowController *windowController = [[WCProjectWindowController alloc] init];
     
@@ -55,7 +62,7 @@
 }
 
 - (NSString *)persistentStoreTypeForFileType:(NSString *)fileType {
-    return NSXMLStoreType;
+    return NSSQLiteStoreType;
 }
 
 - (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
