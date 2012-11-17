@@ -71,32 +71,34 @@
     [self setExecuting:YES];
     [self didChangeValueForKey:@"isExecuting"];
     
+    __weak typeof (self) weakSelf = self;
+    
     [self.managedObjectContext performBlock:^{
         do {
             NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"FileContainer"];
             
-            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",self.fileContainerUUID]];
+            [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.uuid == %@",weakSelf.fileContainerUUID]];
             
-            FileContainer *file = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+            FileContainer *file = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
             
             if (!file) {
-                file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:self.managedObjectContext];
+                file = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:weakSelf.managedObjectContext];
                 
-                [file setUuid:self.fileContainerUUID];
+                [file setUuid:weakSelf.fileContainerUUID];
             }
             
-            [file setPath:self.fileURL.path];
+            [file setPath:weakSelf.fileURL.path];
             
             for (Symbol *symbol in file.symbols)
-                [self.managedObjectContext deleteObject:symbol];
+                [weakSelf.managedObjectContext deleteObject:symbol];
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
             NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.*?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
             NSMutableArray *comments = [NSMutableArray arrayWithCapacity:0];
             
-            [commentRegex enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [commentRegex enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 [comments addObject:[NSValue valueWithRange:result.range]];
             }];
             
@@ -111,36 +113,36 @@
                 return NSOrderedSame;
             }];
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
-            [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
                 
-                Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:self.managedObjectContext];
+                Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeEquate)];
                 [entity setLocation:@(result.range.location)];
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setName:[weakSelf.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([weakSelf.string WC_lineNumberForRange:result.range])];
                 
-                NSString *value = [[self.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+                NSString *value = [[weakSelf.string substringWithRange:[result rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
                 
                 [entity setValue:[value stringByReplacingOccurrencesOfString:@"\t" withString:@" "]];
                 [entity setFileContainer:file];
             }];
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
-            [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-                if (result.range.length == 1 && [self.string characterAtIndex:result.range.location] == '_')
+            [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                if (result.range.length == 1 && [weakSelf.string characterAtIndex:result.range.location] == '_')
                     return;
-                else if (NSMaxRange(result.range) < self.string.length && [self.string characterAtIndex:NSMaxRange(result.range)] == '(')
+                else if (NSMaxRange(result.range) < weakSelf.string.length && [weakSelf.string characterAtIndex:NSMaxRange(result.range)] == '(')
                     return;
                 
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
@@ -153,76 +155,76 @@
                 [fetchRequest setResultType:NSCountResultType];
                 [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.location == %@",file,@(result.range.location)]];
                 
-                NSArray *fetchResult = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+                NSArray *fetchResult = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
                 
                 if ([fetchResult.lastObject unsignedIntegerValue] > 0)
                     return;
                 
-                Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:self.managedObjectContext];
+                Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeLabel)];
                 [entity setLocation:@(result.range.location)];
                 [entity setRange:NSStringFromRange(result.range)];
-                [entity setName:[self.string substringWithRange:result.range]];
-                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setName:[weakSelf.string substringWithRange:result.range]];
+                [entity setLineNumber:@([weakSelf.string WC_lineNumberForRange:result.range])];
                 [entity setFileContainer:file];
             }];
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
-            [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
                 
-                Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:self.managedObjectContext];
+                Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeDefine)];
                 [entity setLocation:@(result.range.location)];
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setName:[weakSelf.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([weakSelf.string WC_lineNumberForRange:result.range])];
                 [entity setFileContainer:file];
                 
-                [[WCSyntaxHighlighter expandedDefineRegex] enumerateMatchesInString:self.string options:0 range:[self.string lineRangeForRange:result.range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [[WCSyntaxHighlighter expandedDefineRegex] enumerateMatchesInString:weakSelf.string options:0 range:[weakSelf.string lineRangeForRange:result.range] usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                     NSRange argumentsRange = [result rangeAtIndex:2];
                     
                     if (argumentsRange.length > 0)
-                        [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
+                        [entity setArguments:[weakSelf.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
                     
-                    [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+                    [entity setValue:[[weakSelf.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                     
                     *stop = YES;
                 }];
             }];
             
-            if (self.isCancelled)
+            if (weakSelf.isCancelled)
                 break;
             
-            [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(0, self.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
                 
-                Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:self.managedObjectContext];
+                Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeMacro)];
                 [entity setLocation:@(result.range.location)];
                 [entity setRange:NSStringFromRange([result rangeAtIndex:1])];
-                [entity setName:[self.string substringWithRange:[result rangeAtIndex:1]]];
-                [entity setLineNumber:@([self.string WC_lineNumberForRange:result.range])];
+                [entity setName:[weakSelf.string substringWithRange:[result rangeAtIndex:1]]];
+                [entity setLineNumber:@([weakSelf.string WC_lineNumberForRange:result.range])];
                 [entity setFileContainer:file];
                 
-                [[WCSyntaxHighlighter expandedMacroRegex] enumerateMatchesInString:self.string options:0 range:NSMakeRange(result.range.location, self.string.length - result.range.location) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [[WCSyntaxHighlighter expandedMacroRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(result.range.location, weakSelf.string.length - result.range.location) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                     NSRange argumentsRange = [result rangeAtIndex:2];
                     
                     if (argumentsRange.length > 0)
-                        [entity setArguments:[self.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
+                        [entity setArguments:[weakSelf.string substringWithRange:NSMakeRange(argumentsRange.location + 1, argumentsRange.length - 2)]];
 
-                    [entity setValue:[[self.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
+                    [entity setValue:[[weakSelf.string substringWithRange:[result rangeAtIndex:3]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]];
                     
                     *stop = YES;
                 }];
@@ -230,9 +232,8 @@
             
         } while (0);
         
-        if (!self.isCancelled) {
-            if ([self.managedObjectContext save:NULL]) {
-                __weak typeof (self) weakSelf = self;
+        if (!weakSelf.isCancelled) {
+            if ([weakSelf.managedObjectContext save:NULL]) {
                 __weak NSManagedObjectContext *parentContext = weakSelf.managedObjectContext.parentContext;
                 
                 while (parentContext) {
@@ -245,12 +246,12 @@
             }
         }
         
-        [self willChangeValueForKey:@"isExecuting"];
-        [self willChangeValueForKey:@"isFinished"];
-        [self setExecuting:NO];
-        [self setFinished:YES];
-        [self didChangeValueForKey:@"isExecuting"];
-        [self didChangeValueForKey:@"isFinished"];
+        [weakSelf willChangeValueForKey:@"isExecuting"];
+        [weakSelf willChangeValueForKey:@"isFinished"];
+        [weakSelf setExecuting:NO];
+        [weakSelf setFinished:YES];
+        [weakSelf didChangeValueForKey:@"isExecuting"];
+        [weakSelf didChangeValueForKey:@"isFinished"];
     }];
 }
 
