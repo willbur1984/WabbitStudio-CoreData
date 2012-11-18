@@ -92,7 +92,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 }
 #pragma mark NSToolbarDelegate
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
-    return @[NSToolbarFlexibleSpaceItemIdentifier];
+    return nil;
 }
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar *)toolbar {
     return nil;
