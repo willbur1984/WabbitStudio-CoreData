@@ -62,7 +62,7 @@
 }
 
 - (NSString *)persistentStoreTypeForFileType:(NSString *)fileType {
-    return NSSQLiteStoreType;
+    return NSBinaryStoreType;
 }
 
 - (BOOL)configurePersistentStoreCoordinatorForURL:(NSURL *)url ofType:(NSString *)fileType modelConfiguration:(NSString *)configuration storeOptions:(NSDictionary *)storeOptions error:(NSError *__autoreleasing *)error {
