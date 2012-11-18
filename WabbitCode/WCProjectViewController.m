@@ -23,8 +23,9 @@
 #import "File.h"
 #import "WCOutlineView.h"
 #import "NSArray+WCExtensions.h"
+#import "WCDefines.h"
 
-@interface WCProjectViewController () <NSOutlineViewDataSource,NSOutlineViewDelegate,NSUserInterfaceValidations>
+@interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations>
 
 @property (weak,nonatomic) IBOutlet WCOutlineView *outlineView;
 
@@ -48,6 +49,7 @@
     [self.outlineView setTarget:self];
     [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
     [self.outlineView setDataSource:self];
+    [self.outlineView setDelegate:self];
     [self.outlineView expandItem:[self.outlineView itemAtRow:0] expandChildren:NO];
     
     [self _setupOutlineViewContextualMenu];
@@ -86,6 +88,14 @@
     
     return cell;
 }
+#pragma mark WCOutlineViewDelegate
+- (BOOL)validateDeleteActionInOutlineView:(WCOutlineView *)outlineView {
+    return YES;
+}
+- (void)deleteActionInOutlineView:(WCOutlineView *)outlineView {
+    [self deleteAction:nil];
+}
+
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
     if ([anItem action] == @selector(sortByNameAction:) ||
@@ -96,6 +106,16 @@
         
         for (File *file in items) {
             if (!file.isGroupValue)
+                return NO;
+        }
+    }
+    else if ([anItem action] == @selector(deleteAction:) ||
+             [anItem action] == @selector(delete:)) {
+        
+        NSArray *items = [self.outlineView WC_clickedOrSelectedItems];
+        
+        for (File *file in items) {
+            if (!file.file)
                 return NO;
         }
     }
@@ -127,18 +147,47 @@
 }
 #pragma mark Actions
 - (IBAction)showInFinderAction:(id)sender {
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
     
+    if (files.count == 0) {
+        NSBeep();
+        return;
+    }
+    
+    NSMutableArray *urls = [NSMutableArray arrayWithCapacity:files.count];
+    
+    for (File *file in files)
+        [urls addObject:[NSURL fileURLWithPath:file.path isDirectory:file.isGroupValue]];
+    
+    [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:urls];
 }
 - (IBAction)openWithExternalEditor:(id)sender {
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
     
+    if (files.count == 0) {
+        NSBeep();
+        return;
+    }
+    
+    for (File *file in files)
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:file.path isDirectory:file.isGroupValue]];
 }
 - (IBAction)newGroupAction:(id)sender {
     File *file = [self.outlineView WC_clickedOrSelectedItem];
+    
+    if (!file) {
+        NSBeep();
+        return;
+    }
+    
     NSUInteger index = 0;
     
     if (!file.isGroupValue) {
         index = [file.file.files indexOfObject:file] + 1;
         file = file.file;
+    }
+    else {
+        [self.outlineView expandItem:file];
     }
     
     File *group = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.projectDocument.managedObjectContext];
@@ -149,7 +198,12 @@
     
     [file.filesSet insertObject:group atIndex:index];
     
+    // stop the outline view from animating the new group in
+    [NSAnimationContext beginGrouping];
+    [[NSAnimationContext currentContext] setDuration:0];
     [self.outlineView reloadItem:file reloadChildren:YES];
+    [NSAnimationContext endGrouping];
+    
     [self.outlineView WC_setSelectedItem:group];
     [self.outlineView editColumn:0 row:[self.outlineView rowForItem:group] withEvent:nil select:YES];
     
@@ -181,22 +235,75 @@
     
 }
 - (IBAction)sortByNameAction:(id)sender; {
-    for (File *file in [self.outlineView WC_clickedOrSelectedItems]) {
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
+    
+    for (File *file in files) {
         [file sortChildrenUsingComparator:^NSComparisonResult(File *obj1, File *obj2) {
             return [obj1.name localizedStandardCompare:obj2.name];
         } recursively:YES];
     }
     
-    [self.outlineView reloadData];
+    for (File *file in files)
+        [self.outlineView reloadItem:file reloadChildren:YES];
 }
 - (IBAction)sortByTypeAction:(id)sender; {
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
     
+    for (File *file in files) {
+        [file sortChildrenUsingComparator:^NSComparisonResult(File *obj1, File *obj2) {
+            return [obj1.uti localizedStandardCompare:obj2.uti];
+        } recursively:YES];
+    }
+    
+    for (File *file in files)
+        [self.outlineView reloadItem:file reloadChildren:YES];
 }
 - (IBAction)addFilesToProject:(id)sender {
     
 }
 - (IBAction)deleteAction:(id)sender {
+    BOOL confirm = NO;
+    NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
     
+    for (File *file in files) {
+        if (file.flattenedFilesInclusive.count > 0) {
+            confirm = YES;
+            break;
+        }
+    }
+    
+    if (confirm) {
+        NSString *defaultButton = (files.count == 1) ? NSLocalizedString(@"Remove Reference", nil) : NSLocalizedString(@"Remove References", nil);
+        NSString *messageText = (files.count == 1) ? [NSString stringWithFormat:NSLocalizedString(@"Do you want to move the file \"%@\" to the trash, or only remove the reference to it?", nil),[files.lastObject name]] : [NSString stringWithFormat:NSLocalizedString(@"Do you want to move the %lu selected files to the trash, or only remove the references to them?", nil),files.count];
+        NSAlert *alert = [NSAlert alertWithMessageText:messageText defaultButton:defaultButton alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:NSLocalizedString(@"Move to Trash", nil) informativeTextWithFormat:@""];
+        
+        switch ([alert runModal]) {
+                // remove reference
+            case NSAlertDefaultReturn:
+                
+                break;
+                // cancel
+            case NSAlertAlternateReturn:
+                
+                break;
+                // move to trash
+            case NSAlertOtherReturn:
+                
+                break;
+            default:
+                break;
+        }
+    }
+    else {
+        for (File *file in files)
+            [self.projectDocument.managedObjectContext deleteObject:file];
+        
+        [self.projectDocument.managedObjectContext processPendingChanges];
+        
+        [self.outlineView reloadData];
+        
+        [self.projectDocument updateChangeCount:NSChangeDone];
+    }
 }
 - (IBAction)renameAction:(id)sender {
     id item = [self.outlineView WC_clickedOrSelectedItem];
@@ -231,7 +338,7 @@
     [menu addItem:[NSMenuItem separatorItem]];
     [menu addItemWithTitle:NSLocalizedString(@"Add Files to Project", nil) action:@selector(addFilesToProject:) keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
-    [menu addItemWithTitle:NSLocalizedString(@"Delete…", nil) action:@selector(deleteAction:) keyEquivalent:@""];
+    [menu addItemWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteAction:) keyEquivalent:@""];
     [menu addItemWithTitle:NSLocalizedString(@"Rename", nil) action:@selector(renameAction:) keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
     [menu addItemWithTitle:NSLocalizedString(@"Open in Separate Editor", nil) action:@selector(openInSeparateEditorAction:) keyEquivalent:@""];
