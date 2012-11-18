@@ -13,9 +13,21 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol WCOutlineViewDelegate;
+
 @interface WCOutlineView : NSOutlineView
+
+@property (assign,nonatomic) id <WCOutlineViewDelegate> delegate;
 
 @property (copy,nonatomic) NSString *emptyString;
 @property (copy,nonatomic) NSAttributedString *emptyAttributedString;
 
+- (IBAction)delete:(id)sender;
+
+@end
+
+@protocol WCOutlineViewDelegate <NSOutlineViewDelegate>
+@optional
+- (BOOL)validateDeleteActionInOutlineView:(WCOutlineView *)outlineView;
+- (void)deleteActionInOutlineView:(WCOutlineView *)outlineView;
 @end

@@ -19,7 +19,23 @@
 #import "NSShadow+MCAdditions.h"
 #import "NSBezierPath+MCAdditions.h"
 
+@interface WCOutlineView () <NSUserInterfaceValidations>
+
+@end
+
 @implementation WCOutlineView
+
+- (void)keyDown:(NSEvent *)theEvent {
+    switch (theEvent.keyCode) {
+        case KEY_CODE_DELETE:
+        case KEY_CODE_DELETE_FORWARD:
+            [self delete:nil];
+            return;
+        default:
+            [super keyDown:theEvent];
+            break;
+    }
+}
 
 - (void)mouseDown:(NSEvent *)theEvent {
     if (theEvent.type == NSLeftMouseDown && theEvent.clickCount == 2) {
@@ -91,6 +107,24 @@
     return NO;
 }
 
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
+    if ([anItem action] == @selector(delete:)) {
+        if ([self.delegate respondsToSelector:@selector(validateDeleteActionInOutlineView:)])
+            return [self.delegate validateDeleteActionInOutlineView:self];
+        
+        return NO;
+    }
+    return [super validateUserInterfaceItem:anItem];
+}
+
+@dynamic delegate;
+- (id<WCOutlineViewDelegate>)delegate {
+    return (id<WCOutlineViewDelegate>)[super delegate];
+}
+- (void)setDelegate:(id<WCOutlineViewDelegate>)delegate {
+    [super setDelegate:delegate];
+}
+
 - (NSString *)emptyString {
     return self.emptyAttributedString.string;
 }
@@ -104,6 +138,13 @@
     _emptyAttributedString = emptyAttributedString;
     
     [self setNeedsDisplay:YES];
+}
+
+- (IBAction)delete:(id)sender; {
+    if ([self.delegate respondsToSelector:@selector(deleteActionInOutlineView:)])
+        [self.delegate deleteActionInOutlineView:self];
+    else
+        NSBeep();
 }
 
 @end
