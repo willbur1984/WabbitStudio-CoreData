@@ -38,7 +38,7 @@ NSString *const kFileEntityName = @"File";
 }
 
 - (BOOL)makeProjectDocumentForURL:(NSURL *)documentURL withContentsOfURL:(NSURL *)directoryURL error:(NSError *__autoreleasing *)outError {
-    NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtURL:directoryURL includingPropertiesForKeys:@[NSURLIsDirectoryKey,NSURLParentDirectoryURLKey] options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsPackageDescendants errorHandler:^BOOL(NSURL *url, NSError *error) {
+    NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtURL:directoryURL includingPropertiesForKeys:@[NSURLIsDirectoryKey,NSURLParentDirectoryURLKey,NSURLTypeIdentifierKey] options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsPackageDescendants errorHandler:^BOOL(NSURL *url, NSError *error) {
         WCLog(@"%@ %@",url,error);
         return YES;
     }];
@@ -49,7 +49,7 @@ NSString *const kFileEntityName = @"File";
     
     [[NSFileManager defaultManager] removeItemAtURL:documentURL error:NULL];
     
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:documentURL options:nil error:outError])
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:documentURL options:nil error:outError])
         return NO;
     
     NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
@@ -67,6 +67,8 @@ NSString *const kFileEntityName = @"File";
     
     [projectFile setName:documentURL.lastPathComponent];
     [projectFile setPath:documentURL.path];
+    [projectFile setUti:kProjectDocumentUTI];
+    
     [project setFile:projectFile];
     
     [URLsToFiles setObject:projectFile forKey:directoryURL];
@@ -77,6 +79,7 @@ NSString *const kFileEntityName = @"File";
         
         [file setName:url.lastPathComponent];
         [file setPath:url.path];
+        [file setUti:[url WC_typeIdentifier]];
         
         [[parentFile filesSet] addObject:file];
         
