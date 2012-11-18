@@ -7,7 +7,7 @@
 extern const struct FileAttributes {
 	__unsafe_unretained NSString *isGroup;
 	__unsafe_unretained NSString *path;
-	__unsafe_unretained NSString *url;
+	__unsafe_unretained NSString *uti;
 } FileAttributes;
 
 extern const struct FileRelationships {
@@ -31,7 +31,7 @@ extern const struct FileFetchedProperties {
 
 
 
-@class NSObject;
+
 
 @interface FileID : NSManagedObjectID {}
 @end
@@ -65,10 +65,10 @@ extern const struct FileFetchedProperties {
 
 
 
-@property (nonatomic, strong) id url;
+@property (nonatomic, strong) NSString* uti;
 
 
-//- (BOOL)validateUrl:(id*)value_ error:(NSError**)error_;
+//- (BOOL)validateUti:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -156,8 +156,8 @@ extern const struct FileFetchedProperties {
 
 
 
-- (id)primitiveUrl;
-- (void)setPrimitiveUrl:(id)value;
+- (NSString*)primitiveUti;
+- (void)setPrimitiveUti:(NSString*)value;
 
 
 

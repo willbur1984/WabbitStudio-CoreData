@@ -6,7 +6,7 @@
 const struct FileAttributes FileAttributes = {
 	.isGroup = @"isGroup",
 	.path = @"path",
-	.url = @"url",
+	.uti = @"uti",
 };
 
 const struct FileRelationships FileRelationships = {
@@ -91,7 +91,7 @@ const struct FileFetchedProperties FileFetchedProperties = {
 
 
 
-@dynamic url;
+@dynamic uti;
 
 
 
