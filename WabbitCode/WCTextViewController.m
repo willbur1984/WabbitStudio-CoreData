@@ -569,7 +569,9 @@
     [self.sourceFileDocument.symbolHighlighter symbolHighlightInVisibleRange];
 }
 - (void)_documentEditedDidChange:(NSNotification *)note {
-    [self.jumpBarControl reloadImageForPathComponentCell:[self.jumpBarControl.pathComponentCells WC_firstObject]];
+    NSArray *cells = self.jumpBarControl.pathComponentCells;
+    
+    [self.jumpBarControl reloadImageForPathComponentCell:[cells objectAtIndex:cells.count - 2]];
 }
 - (void)_textStorageDidFold:(NSNotification *)note {
     [self.textView setNeedsDisplay:YES];
