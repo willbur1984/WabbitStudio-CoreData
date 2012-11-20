@@ -24,6 +24,8 @@
 #import "WCOutlineView.h"
 #import "NSArray+WCExtensions.h"
 #import "WCDefines.h"
+#import "WCSourceFileDocument.h"
+#import "ProjectSetting.h"
 
 @interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations>
 
@@ -31,9 +33,10 @@
 
 @property (assign,nonatomic) WCProjectWindowController *projectWindowController;
 @property (readonly,nonatomic) WCProjectDocument *projectDocument;
-@property (strong,nonatomic) Project *project;
+@property (assign,nonatomic) BOOL ignoreChanges;
 
 - (void)_setupOutlineViewContextualMenu;
+- (void)_restoreFromProjectSetting;
 @end
 
 @implementation WCProjectViewController
@@ -50,9 +53,9 @@
     [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
     [self.outlineView setDataSource:self];
     [self.outlineView setDelegate:self];
-    [self.outlineView expandItem:[self.outlineView itemAtRow:0] expandChildren:NO];
     
     [self _setupOutlineViewContextualMenu];
+    [self _restoreFromProjectSetting];
 }
 #pragma mark NSOutlineViewDataSource
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(File *)item {
@@ -71,7 +74,7 @@
     if (item) {
         return [item.files objectAtIndex:index];
     }
-    return self.project.file;
+    return self.projectDocument.project.file;
 }
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(File *)item {
     return item;
@@ -87,6 +90,31 @@
     }
     
     return cell;
+}
+#pragma mark NSOutlineViewDelegate
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification {
+    if (self.ignoreChanges)
+        return;
+    
+    [self.projectDocument.projectSetting setProjectSelectedFiles:[NSSet setWithArray:[self.outlineView WC_selectedItems]]];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+}
+- (void)outlineViewItemDidCollapse:(NSNotification *)notification {
+    if (self.ignoreChanges)
+        return;
+    
+    [self.projectDocument.projectSetting setProjectExpandedFiles:[NSOrderedSet orderedSetWithArray:[self.outlineView WC_expandedItems]]];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+}
+- (void)outlineViewItemDidExpand:(NSNotification *)notification {
+    if (self.ignoreChanges)
+        return;
+    
+    [self.projectDocument.projectSetting setProjectExpandedFiles:[NSOrderedSet orderedSetWithArray:[self.outlineView WC_expandedItems]]];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
 }
 #pragma mark WCOutlineViewDelegate
 - (BOOL)validateDeleteActionInOutlineView:(WCOutlineView *)outlineView {
@@ -138,10 +166,6 @@
         return nil;
     
     [self setProjectWindowController:windowController];
-    
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kProjectEntityName];
-    
-    [self setProject:[self.projectDocument.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject];
     
     return self;
 }
@@ -345,6 +369,16 @@
     
     [self.outlineView setMenu:menu];
 }
+- (void)_restoreFromProjectSetting; {
+    [self setIgnoreChanges:YES];
+    
+    ProjectSetting *projectSetting = self.projectDocument.projectSetting;
+    
+    [self.outlineView WC_expandItems:projectSetting.projectExpandedFiles.array];
+    [self.outlineView WC_setSelectedItems:projectSetting.projectSelectedFiles.allObjects];
+    
+    [self setIgnoreChanges:NO];
+}
 #pragma mark Properties
 - (WCProjectDocument *)projectDocument {
     return self.projectWindowController.projectDocument;
@@ -354,7 +388,7 @@
     for (File *file in [sender WC_selectedItems]) {
         WCSourceFileDocument *sfDocument = [self.projectDocument sourceFileDocumentForFile:file];
         
-        if (sfDocument)
+        if (sfDocument && [sfDocument isKindOfClass:[WCSourceFileDocument class]])
             [self.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sfDocument];
     }
 }
