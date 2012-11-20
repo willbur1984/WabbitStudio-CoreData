@@ -23,6 +23,7 @@
 #import "NSArray+WCExtensions.h"
 #import "NSImage+WCExtensions.h"
 #import "WCOpenQuicklyWindowController.h"
+#import "ProjectSetting.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
@@ -113,6 +114,10 @@
     return retval;
 }
 
++ (BOOL)autosavesInPlace {
+    return YES;
+}
+
 - (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file; {
     return [self.mutableFileUUIDsToSourceFileDocuments objectForKey:file.uuid];
 }
@@ -164,6 +169,30 @@
 }
 - (WCProjectWindowController *)projectWindowController {
     return [self.windowControllers WC_firstObject];
+}
+- (Project *)project {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kProjectEntityName];
+    
+    [fetchRequest setFetchLimit:1];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+- (ProjectSetting *)projectSetting {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kProjectSettingEntityName];
+    
+    [fetchRequest setFetchLimit:1];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.shortUserName == %@",NSUserName()]];
+    
+    ProjectSetting *retval = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+    
+    if (!retval) {
+        retval = [NSEntityDescription insertNewObjectForEntityForName:kProjectSettingEntityName inManagedObjectContext:self.managedObjectContext];
+        
+        [retval setShortUserName:NSUserName()];
+        [retval setProject:self.project];
+    }
+    
+    return retval;
 }
 
 @end
