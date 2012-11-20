@@ -17,6 +17,8 @@ extern const struct FileRelationships {
 	__unsafe_unretained NSString *include;
 	__unsafe_unretained NSString *issues;
 	__unsafe_unretained NSString *project;
+	__unsafe_unretained NSString *projectExpandedFilesProjectSettings;
+	__unsafe_unretained NSString *projectSelectedFilesProjectSettings;
 } FileRelationships;
 
 extern const struct FileFetchedProperties {
@@ -28,6 +30,8 @@ extern const struct FileFetchedProperties {
 @class TargetInclude;
 @class Issue;
 @class Project;
+@class ProjectSetting;
+@class ProjectSetting;
 
 
 
@@ -116,6 +120,20 @@ extern const struct FileFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet* projectExpandedFilesProjectSettings;
+
+- (NSMutableSet*)projectExpandedFilesProjectSettingsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet* projectSelectedFilesProjectSettings;
+
+- (NSMutableSet*)projectSelectedFilesProjectSettingsSet;
+
+
+
+
 
 @end
 
@@ -135,6 +153,16 @@ extern const struct FileFetchedProperties {
 - (void)removeIssues:(NSSet*)value_;
 - (void)addIssuesObject:(Issue*)value_;
 - (void)removeIssuesObject:(Issue*)value_;
+
+- (void)addProjectExpandedFilesProjectSettings:(NSSet*)value_;
+- (void)removeProjectExpandedFilesProjectSettings:(NSSet*)value_;
+- (void)addProjectExpandedFilesProjectSettingsObject:(ProjectSetting*)value_;
+- (void)removeProjectExpandedFilesProjectSettingsObject:(ProjectSetting*)value_;
+
+- (void)addProjectSelectedFilesProjectSettings:(NSSet*)value_;
+- (void)removeProjectSelectedFilesProjectSettings:(NSSet*)value_;
+- (void)addProjectSelectedFilesProjectSettingsObject:(ProjectSetting*)value_;
+- (void)removeProjectSelectedFilesProjectSettingsObject:(ProjectSetting*)value_;
 
 @end
 
@@ -190,6 +218,16 @@ extern const struct FileFetchedProperties {
 
 - (Project*)primitiveProject;
 - (void)setPrimitiveProject:(Project*)value;
+
+
+
+- (NSMutableSet*)primitiveProjectExpandedFilesProjectSettings;
+- (void)setPrimitiveProjectExpandedFilesProjectSettings:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveProjectSelectedFilesProjectSettings;
+- (void)setPrimitiveProjectSelectedFilesProjectSettings:(NSMutableSet*)value;
 
 
 @end

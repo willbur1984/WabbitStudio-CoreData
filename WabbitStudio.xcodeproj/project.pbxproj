@@ -164,6 +164,8 @@
 		79C92CD81610E9C800BB6CDC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C92CD71610E9C800BB6CDC /* QuartzCore.framework */; };
 		79C92CF0161144B600BB6CDC /* WCTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CEF161144B600BB6CDC /* WCTableView.m */; };
 		79C92CF316114A1300BB6CDC /* WCCompletionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C92CF216114A1300BB6CDC /* WCCompletionItem.m */; };
+		79CFE8C9165B174A0044D345 /* ProjectSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CFE8C8165B174A0044D345 /* ProjectSetting.m */; };
+		79CFE8CC165B17580044D345 /* _ProjectSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CFE8CB165B17580044D345 /* _ProjectSetting.m */; };
 		79DE43461638C09E003D56EA /* Projects.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79DE43441638C09E003D56EA /* Projects.xcdatamodeld */; };
 		79DF87AC162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
 		79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
@@ -509,6 +511,10 @@
 		79C92CEF161144B600BB6CDC /* WCTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTableView.m; sourceTree = "<group>"; };
 		79C92CF116114A1300BB6CDC /* WCCompletionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCCompletionItem.h; sourceTree = "<group>"; };
 		79C92CF216114A1300BB6CDC /* WCCompletionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCCompletionItem.m; sourceTree = "<group>"; };
+		79CFE8C7165B174A0044D345 /* ProjectSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectSetting.h; sourceTree = "<group>"; };
+		79CFE8C8165B174A0044D345 /* ProjectSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectSetting.m; sourceTree = "<group>"; };
+		79CFE8CA165B17580044D345 /* _ProjectSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _ProjectSetting.h; sourceTree = "<group>"; };
+		79CFE8CB165B17580044D345 /* _ProjectSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _ProjectSetting.m; sourceTree = "<group>"; };
 		79DE43451638C09E003D56EA /* Projects.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Projects.xcdatamodel; sourceTree = "<group>"; };
 		79DF87A8162A8C8200818741 /* MASPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesViewController.h; sourceTree = "<group>"; };
 		79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MASPreferencesWindow.xib; sourceTree = "<group>"; };
@@ -663,6 +669,8 @@
 		7939012C163AC18A00168CD5 /* machine */ = {
 			isa = PBXGroup;
 			children = (
+				79CFE8CA165B17580044D345 /* _ProjectSetting.h */,
+				79CFE8CB165B17580044D345 /* _ProjectSetting.m */,
 				798DB7751641ACA5007B4176 /* _Breakpoint.h */,
 				798DB7761641ACA5007B4176 /* _Breakpoint.m */,
 				798DB7791641ACA5007B4176 /* _File.h */,
@@ -1129,6 +1137,8 @@
 				798DB7A91641ACAF007B4176 /* TargetDefine.m */,
 				798DB7AA1641ACAF007B4176 /* TargetInclude.h */,
 				798DB7AB1641ACAF007B4176 /* TargetInclude.m */,
+				79CFE8C7165B174A0044D345 /* ProjectSetting.h */,
+				79CFE8C8165B174A0044D345 /* ProjectSetting.m */,
 				7939012C163AC18A00168CD5 /* machine */,
 			);
 			name = Classes;
@@ -1699,6 +1709,8 @@
 				799F6CCD165316A000C33C61 /* WCOpenQuicklyItem.m in Sources */,
 				799F6CD016531F4000C33C61 /* WCOpenQuicklyOperation.m in Sources */,
 				799F6CD316533DFE00C33C61 /* WCJumpInRowView.m in Sources */,
+				79CFE8C9165B174A0044D345 /* ProjectSetting.m in Sources */,
+				79CFE8CC165B17580044D345 /* _ProjectSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

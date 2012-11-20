@@ -16,6 +16,8 @@ const struct FileRelationships FileRelationships = {
 	.include = @"include",
 	.issues = @"issues",
 	.project = @"project",
+	.projectExpandedFilesProjectSettings = @"projectExpandedFilesProjectSettings",
+	.projectSelectedFilesProjectSettings = @"projectSelectedFilesProjectSettings",
 };
 
 const struct FileFetchedProperties FileFetchedProperties = {
@@ -147,6 +149,32 @@ const struct FileFetchedProperties FileFetchedProperties = {
 
 @dynamic project;
 
+	
+
+@dynamic projectExpandedFilesProjectSettings;
+
+	
+- (NSMutableSet*)projectExpandedFilesProjectSettingsSet {
+	[self willAccessValueForKey:@"projectExpandedFilesProjectSettings"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectExpandedFilesProjectSettings"];
+  
+	[self didAccessValueForKey:@"projectExpandedFilesProjectSettings"];
+	return result;
+}
+	
+
+@dynamic projectSelectedFilesProjectSettings;
+
+	
+- (NSMutableSet*)projectSelectedFilesProjectSettingsSet {
+	[self willAccessValueForKey:@"projectSelectedFilesProjectSettings"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectSelectedFilesProjectSettings"];
+  
+	[self didAccessValueForKey:@"projectSelectedFilesProjectSettings"];
+	return result;
+}
 	
 
 

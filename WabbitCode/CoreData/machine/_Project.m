@@ -10,6 +10,7 @@ const struct ProjectRelationships ProjectRelationships = {
 	.breakpoints = @"breakpoints",
 	.file = @"file",
 	.issues = @"issues",
+	.projectSettings = @"projectSettings",
 	.targets = @"targets",
 };
 
@@ -75,6 +76,19 @@ const struct ProjectFetchedProperties ProjectFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"issues"];
   
 	[self didAccessValueForKey:@"issues"];
+	return result;
+}
+	
+
+@dynamic projectSettings;
+
+	
+- (NSMutableSet*)projectSettingsSet {
+	[self willAccessValueForKey:@"projectSettings"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectSettings"];
+  
+	[self didAccessValueForKey:@"projectSettings"];
 	return result;
 }
 	

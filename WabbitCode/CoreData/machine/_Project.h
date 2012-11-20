@@ -11,6 +11,7 @@ extern const struct ProjectRelationships {
 	__unsafe_unretained NSString *breakpoints;
 	__unsafe_unretained NSString *file;
 	__unsafe_unretained NSString *issues;
+	__unsafe_unretained NSString *projectSettings;
 	__unsafe_unretained NSString *targets;
 } ProjectRelationships;
 
@@ -20,6 +21,7 @@ extern const struct ProjectFetchedProperties {
 @class Breakpoint;
 @class File;
 @class Issue;
+@class ProjectSetting;
 @class Target;
 
 
@@ -57,6 +59,13 @@ extern const struct ProjectFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet* projectSettings;
+
+- (NSMutableSet*)projectSettingsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet* targets;
 
 - (NSMutableSet*)targetsSet;
@@ -78,6 +87,11 @@ extern const struct ProjectFetchedProperties {
 - (void)removeIssues:(NSSet*)value_;
 - (void)addIssuesObject:(Issue*)value_;
 - (void)removeIssuesObject:(Issue*)value_;
+
+- (void)addProjectSettings:(NSSet*)value_;
+- (void)removeProjectSettings:(NSSet*)value_;
+- (void)addProjectSettingsObject:(ProjectSetting*)value_;
+- (void)removeProjectSettingsObject:(ProjectSetting*)value_;
 
 - (void)addTargets:(NSSet*)value_;
 - (void)removeTargets:(NSSet*)value_;
@@ -102,6 +116,11 @@ extern const struct ProjectFetchedProperties {
 
 - (NSMutableSet*)primitiveIssues;
 - (void)setPrimitiveIssues:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveProjectSettings;
+- (void)setPrimitiveProjectSettings:(NSMutableSet*)value;
 
 
 
