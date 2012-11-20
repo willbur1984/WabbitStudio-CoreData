@@ -20,6 +20,7 @@ extern NSString *const kActiveServerIncludeFileUTI;
 
 extern NSString *const kProjectEntityName;
 extern NSString *const kFileEntityName;
+extern NSString *const kProjectSettingEntityName;
 
 @interface WCDocumentController : NSDocumentController
 

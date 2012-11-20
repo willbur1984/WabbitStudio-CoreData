@@ -25,6 +25,7 @@ NSString *const kActiveServerIncludeFileUTI = @"com.panic.coda.active-server-inc
 
 NSString *const kProjectEntityName = @"Project";
 NSString *const kFileEntityName = @"File";
+NSString *const kProjectSettingEntityName = @"ProjectSetting";
 
 @implementation WCDocumentController
 
