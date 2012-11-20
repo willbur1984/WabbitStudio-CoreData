@@ -13,6 +13,7 @@
 
 #import "NSOutlineView+WCExtensions.h"
 #import "NSArray+WCExtensions.h"
+#import "WCDefines.h"
 
 @implementation NSOutlineView (WCExtensions)
 
@@ -74,6 +75,23 @@
         retval = [self WC_selectedItems];
     
     return retval;
+}
+
+- (NSArray *)WC_expandedItems; {
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:0];
+    
+    for (NSInteger row=0; row<self.numberOfRows; row++) {
+        id item = [self itemAtRow:row];
+        
+        if ([self isItemExpanded:item])
+            [retval addObject:item];
+    }
+    
+    return retval;
+}
+- (void)WC_expandItems:(NSArray *)items; {
+    for (id item in items)
+        [self expandItem:item];
 }
 
 @end

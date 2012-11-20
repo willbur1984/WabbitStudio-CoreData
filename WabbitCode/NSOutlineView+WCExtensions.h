@@ -27,4 +27,7 @@
 - (id)WC_clickedOrSelectedItem;
 - (NSArray *)WC_clickedOrSelectedItems;
 
+- (NSArray *)WC_expandedItems;
+- (void)WC_expandItems:(NSArray *)items;
+
 @end
