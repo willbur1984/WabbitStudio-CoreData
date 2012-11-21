@@ -32,6 +32,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 @property (weak,nonatomic) IBOutlet MMTabBarView *tabBarView;
 
 @property (strong,nonatomic) NSArray *navigatorItems;
+@property (readonly,nonatomic) WCProjectViewController *projectViewController;
 @property (readwrite,strong,nonatomic) WCTabViewController *tabViewController;
 
 @end
@@ -44,13 +45,15 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     
     return self;
 }
-
+#pragma mark NSResponder
 - (id)supplementalTargetForAction:(SEL)action sender:(id)sender {
     if ([self.tabViewController respondsToSelector:action])
         return self.tabViewController;
+    else if ([self.projectViewController respondsToSelector:action])
+        return self.projectViewController;
     return nil;
 }
-
+#pragma mark NSWindowController
 - (NSString *)windowNibName {
     return @"WCProjectWindow";
 }
@@ -134,5 +137,9 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 }
 #pragma mark Actions
 
-
+#pragma mark *** Private Methods ***
+#pragma mark Properties
+- (WCProjectViewController *)projectViewController {
+    return [self.navigatorItems objectAtIndex:0];
+}
 @end
