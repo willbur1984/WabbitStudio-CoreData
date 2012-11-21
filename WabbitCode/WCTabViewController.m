@@ -327,15 +327,28 @@
     }
     
     WCTextViewController *textViewController = nil;
+    NSSplitView *currentSplitView = nil;
+    NSSplitView *parentSplitView = nil;
     
-    NSSplitView *currentSplitView = (NSSplitView *)currentAssistantTextViewController.view.superview;
-    NSSplitView *parentSplitView = (NSSplitView *)currentSplitView.superview;
-    
-    for (NSView *view in currentSplitView.subviews) {
-        if ([view WC_viewController] != currentAssistantTextViewController) {
-            textViewController = (WCTextViewController *)[view WC_viewController];
-            break;
+    for (NSSplitView *splitView in [self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController]) {
+        for (NSView *view in splitView.subviews) {
+            if ([view WC_viewController] == currentAssistantTextViewController) {
+                currentSplitView = splitView;
+                parentSplitView = (NSSplitView *)currentSplitView.superview;
+                
+                for (NSView *sView in splitView.subviews) {
+                    if ([sView WC_viewController] != currentAssistantTextViewController) {
+                        textViewController = (WCTextViewController *)[sView WC_viewController];
+                        break;
+                    }
+                }
+                
+                break;
+            }
         }
+        
+        if (textViewController)
+            break;
     }
     
     NSParameterAssert(textViewController);
