@@ -15,12 +15,19 @@
 
 @class WCSourceFileDocument,WCTextViewController,MMTabBarView;
 
-@interface WCTabViewController : NSObject
+@interface WCTabViewController : WCViewController <NSUserInterfaceValidations>
 
-- (id)initWithTabBarView:(MMTabBarView *)tabBarView tabView:(NSTabView *)tabView;
+- (id)initWithTabBarView:(MMTabBarView *)tabBarView;
 
 - (WCTextViewController *)addTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (WCTextViewController *)selectTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (void)removeTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
+
+- (IBAction)showStandardEditorAction:(id)sender;
+
+- (IBAction)showAssistantEditorAction:(id)sender;
+- (IBAction)addAssistantEditorAction:(id)sender;
+- (IBAction)removeAssistantEditorAction:(id)sender;
+- (IBAction)resetEditorAction:(id)sender;
 
 @end

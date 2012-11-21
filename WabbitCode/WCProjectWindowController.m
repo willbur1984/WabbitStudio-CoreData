@@ -30,7 +30,6 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 @property (weak,nonatomic) IBOutlet WCSplitView *mainSplitView;
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
 @property (weak,nonatomic) IBOutlet MMTabBarView *tabBarView;
-@property (weak,nonatomic) IBOutlet WCTabView *tabView;
 
 @property (strong,nonatomic) NSArray *navigatorItems;
 @property (readwrite,strong,nonatomic) WCTabViewController *tabViewController;
@@ -44,6 +43,12 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
         return nil;
     
     return self;
+}
+
+- (id)supplementalTargetForAction:(SEL)action sender:(id)sender {
+    if ([self.tabViewController respondsToSelector:action])
+        return self.tabViewController;
+    return nil;
 }
 
 - (NSString *)windowNibName {
@@ -63,9 +68,9 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     [self.navigatorControl setDataSource:self];
     [self.navigatorControl setSelectedItemIdentifier:[[self.navigatorItems objectAtIndex:0] identifier]];
     
-    [self.tabView setEmptyString:NSLocalizedString(@"No Open Files", nil)];
-    
-    [self setTabViewController:[[WCTabViewController alloc] initWithTabBarView:self.tabBarView tabView:self.tabView]];
+    [self setTabViewController:[[WCTabViewController alloc] initWithTabBarView:self.tabBarView]];
+    [self.tabViewController.view setFrameSize:[self.mainSplitView.subviews.lastObject frame].size];
+    [self.mainSplitView.subviews.lastObject addSubview:self.tabViewController.view];
     
     NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:kProjectWindowToolbar];
     
@@ -100,6 +105,8 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag {
     return nil;
 }
+#pragma mark NSUserInterfaceValidations
+
 
 #pragma mark WCNavigatorControlDataSource
 - (NSInteger)numberOfItemsInNavigatorControl:(WCNavigatorControl *)navigatorControl {
@@ -125,5 +132,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 - (WCProjectDocument *)projectDocument {
     return (WCProjectDocument *)self.document;
 }
+#pragma mark Actions
+
 
 @end

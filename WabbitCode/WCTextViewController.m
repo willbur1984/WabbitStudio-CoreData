@@ -133,12 +133,19 @@
     
     [self.relatedFilesPopUpButton setMenu:menu];
     
-    // add/remove assistant editor
-    [self.addButton setTarget:self];
-    [self.addButton setAction:@selector(_addAssistantEditorAction:)];
-    
-    [self.removeButton setTarget:self];
-    [self.removeButton setAction:@selector(_removeAssistantEditorAction:)];
+    if (self.showAddRemoveAssistantEditorButtons) {
+        // add/remove assistant editor
+        [self.addButton setTarget:self];
+        [self.addButton setAction:@selector(_addAssistantEditorAction:)];
+        
+        [self.removeButton setTarget:self];
+        [self.removeButton setAction:@selector(_removeAssistantEditorAction:)];
+    }
+    else {
+        [self.addButton removeFromSuperviewWithoutNeedingDisplay];
+        [self.removeButton removeFromSuperviewWithoutNeedingDisplay];
+        [self.addRemoveDividerImageView removeFromSuperviewWithoutNeedingDisplay];
+    }
 }
 
 - (void)cleanup {
@@ -489,6 +496,7 @@
     
     [self setSourceFileDocument:sourceFileDocument];
     [self setTextStorage:sourceFileDocument.textStorage];
+    [self setShowAddRemoveAssistantEditorButtons:YES];
     
     return self;
 }
@@ -504,6 +512,7 @@
     [[WCJumpInWindowController sharedWindowController] setDelegate:self];
     [[WCJumpInWindowController sharedWindowController] showJumpInWindowForTextView:self.textView];
 }
+
 #pragma mark Properties
 - (void)setDelegate:(id<WCTextViewControllerDelegate>)delegate {
     _delegate = delegate;
@@ -519,15 +528,6 @@
     }
 }
 
-- (void)setShowAddRemoveAssistantEditorButtons:(BOOL)showAddRemoveAssistantEditorButtons {
-    _showAddRemoveAssistantEditorButtons = showAddRemoveAssistantEditorButtons;
-    
-    if (!showAddRemoveAssistantEditorButtons) {
-        [self.addButton removeFromSuperviewWithoutNeedingDisplay];
-        [self.removeButton removeFromSuperviewWithoutNeedingDisplay];
-        [self.addRemoveDividerImageView removeFromSuperviewWithoutNeedingDisplay];
-    }
-}
 #pragma mark *** Private Methods ***
 
 #pragma mark Actions

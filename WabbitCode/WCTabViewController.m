@@ -20,37 +20,37 @@
 #import "WCProjectDocument.h"
 #import "WCTextView.h"
 #import "File.h"
+#import "WCTabView.h"
+#import "NSView+WCExtensions.h"
+#import "WCDefines.h"
+#import "NSEvent+WCExtensions.h"
 
-@interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate>
+@interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate,NSSplitViewDelegate>
+
+@property (weak,nonatomic) IBOutlet WCTabView *tabView;
 
 @property (strong,nonatomic) MMTabBarView *tabBarView;
-@property (strong,nonatomic) NSTabView *tabView;
 @property (strong,nonatomic) NSMapTable *sourceFileDocumentsToTextViewControllers;
 @property (strong,nonatomic) NSMapTable *textViewControllersToSourceFileDocuments;
+@property (strong,nonatomic) NSMapTable *textViewControllersToAssistantTextViewControllers;
+@property (strong,nonatomic) NSMapTable *textViewControllersToAssistantTextViewControllerMutableSets;
+@property (strong,nonatomic) NSMapTable *textViewControllersToAssistantSplitViewMutableSets;
+@property (readonly,nonatomic) WCTextViewController *currentTextViewController;
+@property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
+
+- (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
+- (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
 @end
 
 @implementation WCTabViewController
-#pragma mark MMTabBarViewDelegate
-- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
-    [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
+- (NSString *)nibName {
+    return @"WCTabView";
 }
-- (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
-    WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
-    File *file = [sourceFileDocument.projectDocument fileForSourceFileDocument:sourceFileDocument];
-    
-    return file.path;
-}
-#pragma mark WCTextViewControllerDelegate
 
-#pragma mark *** Public Methods ***
-- (id)initWithTabBarView:(MMTabBarView *)tabBarView tabView:(NSTabView *)tabView; {
-    if (!(self = [super init]))
-        return nil;
+- (void)loadView {
+    [super loadView];
     
-    [self setSourceFileDocumentsToTextViewControllers:[NSMapTable mapTableWithWeakToStrongObjects]];
-    [self setTextViewControllersToSourceFileDocuments:[NSMapTable mapTableWithWeakToWeakObjects]];
-    [self setTabBarView:tabBarView];
-    [self setTabView:tabView];
+    [self.tabView setEmptyString:NSLocalizedString(@"No Open Files", nil)];
     
     [self.tabBarView setTabView:self.tabView];
     [self.tabView setDelegate:(id<NSTabViewDelegate>)self.tabBarView];
@@ -67,6 +67,71 @@
     [self.tabBarView setAlwaysShowActiveTab:YES];
     [self.tabBarView setAllowsScrubbing:NO];
     [self.tabBarView setTearOffStyle:MMTabBarTearOffMiniwindow];
+}
+
+- (void)cleanup {
+    [super cleanup];
+    
+    for (NSSet *textViewControllers in self.textViewControllersToAssistantTextViewControllerMutableSets.objectEnumerator) {
+        for (WCTextViewController *textViewController in textViewControllers)
+            [textViewController cleanup];
+    }
+    
+    for (WCTextViewController *textViewController in self.sourceFileDocumentsToTextViewControllers.objectEnumerator)
+        [textViewController cleanup];
+}
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
+    if ([anItem action] == @selector(addAssistantEditorAction:)) {
+        return ([[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:self.currentTextViewController] count] >= 1);
+    }
+    else if ([anItem action] == @selector(removeAssistantEditorAction:)) {
+        return ([[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:self.currentTextViewController] count] >= 2);
+    }
+    return YES;
+}
+#pragma mark NSSplitViewDelegate
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
+    return NO;
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    return proposedMinimumPosition + floor(amount * 0.25);
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    return proposedMaximumPosition - floor(amount * 0.25);
+}
+#pragma mark MMTabBarViewDelegate
+- (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
+    [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
+}
+- (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
+    WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
+    File *file = [sourceFileDocument.projectDocument fileForSourceFileDocument:sourceFileDocument];
+    
+    return file.path;
+}
+#pragma mark WCTextViewControllerDelegate
+- (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
+    [self _addAssistantEditorForTextViewController:textViewController];
+}
+- (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
+    [self _removeAssistantEditorForTextViewController:textViewController];
+}
+#pragma mark *** Public Methods ***
+- (id)initWithTabBarView:(MMTabBarView *)tabBarView; {
+    if (!(self = [super init]))
+        return nil;
+    
+    [self setSourceFileDocumentsToTextViewControllers:[NSMapTable mapTableWithWeakToStrongObjects]];
+    [self setTextViewControllersToSourceFileDocuments:[NSMapTable mapTableWithWeakToWeakObjects]];
+    [self setTabBarView:tabBarView];
+    [self setTextViewControllersToAssistantSplitViewMutableSets:[NSMapTable mapTableWithWeakToStrongObjects]];
+    [self setTextViewControllersToAssistantTextViewControllerMutableSets:[NSMapTable mapTableWithWeakToStrongObjects]];
+    [self setTextViewControllersToAssistantTextViewControllers:[NSMapTable mapTableWithWeakToStrongObjects]];
     
     return self;
 }
@@ -80,9 +145,16 @@
         NSTabViewItem *item = [[NSTabViewItem alloc] initWithIdentifier:sourceFileDocument];
         WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:sourceFileDocument];
         
+        [textViewController setShowAddRemoveAssistantEditorButtons:NO];
         [textViewController setDelegate:self];
         
-        [item setView:textViewController.view];
+        NSView *containerView = [[NSView alloc] initWithFrame:self.tabView.frame];
+        
+        [containerView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+        [textViewController.view setFrameSize:containerView.frame.size];
+        [containerView addSubview:textViewController.view];
+        
+        [item setView:containerView];
         [item setInitialFirstResponder:textViewController.textView];
         
         [self.sourceFileDocumentsToTextViewControllers setObject:textViewController forKey:sourceFileDocument];
@@ -128,6 +200,179 @@
     [self.sourceFileDocumentsToTextViewControllers removeObjectForKey:sourceFileDocument];
     [self.textViewControllersToSourceFileDocuments removeObjectForKey:textViewController];
 }
-#pragma mark *** Private Methods ***
+#pragma mark Actions
+- (IBAction)showStandardEditorAction:(id)sender; {
+    WCTextViewController *currentTextViewController = self.currentTextViewController;
+    
+    if ([[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] count] == 0) {
+        [currentTextViewController.textView WC_makeFirstResponder];
+        return;
+    }
+    
+    for (WCTextViewController *textViewController in [self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController])
+        [textViewController cleanup];
+    for (NSSplitView *splitView in [self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController])
+        [splitView removeFromSuperviewWithoutNeedingDisplay];
+    
+    [self.textViewControllersToAssistantSplitViewMutableSets removeObjectForKey:currentTextViewController];
+    [self.textViewControllersToAssistantTextViewControllerMutableSets removeObjectForKey:currentTextViewController];
+    [self.textViewControllersToAssistantTextViewControllers removeObjectForKey:currentTextViewController];
+    
+    [currentTextViewController.view setFrame:[self.tabView.selectedTabViewItem.view bounds]];
+    [self.tabView.selectedTabViewItem.view addSubview:currentTextViewController.view];
+    
+    [currentTextViewController.textView WC_makeFirstResponder];
+}
 
+- (IBAction)showAssistantEditorAction:(id)sender; {
+    WCTextViewController *currentTextViewController = self.currentTextViewController;
+    
+    if ([self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController]) {
+        WCTextViewController *assistantTextViewController = [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController];
+        
+        [assistantTextViewController.textView WC_makeFirstResponder];
+        return;
+    }
+    
+    BOOL vertical = NO;
+    NSSplitView *splitView = [[NSSplitView alloc] initWithFrame:currentTextViewController.view.bounds];
+    
+    [splitView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [splitView setVertical:vertical];
+    [splitView setDividerStyle:(vertical)?NSSplitViewDividerStyleThin:NSSplitViewDividerStylePaneSplitter];
+    [splitView setDelegate:self];
+    
+    NSMutableSet *temp = [NSMutableSet setWithCapacity:0];
+    
+    [temp addObject:splitView];
+    
+    [self.textViewControllersToAssistantSplitViewMutableSets setObject:temp forKey:currentTextViewController];
+    
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:[self.textViewControllersToSourceFileDocuments objectForKey:currentTextViewController]];
+    
+    [textViewController setDelegate:self];
+    
+    temp = [NSMutableSet setWithCapacity:0];
+    
+    [temp addObject:textViewController];
+    
+    [self.textViewControllersToAssistantTextViewControllerMutableSets setObject:temp forKey:currentTextViewController];
+    [self.textViewControllersToAssistantTextViewControllers setObject:textViewController forKey:currentTextViewController];
+    
+    NSView *superview = currentTextViewController.view.superview;
+    
+    [splitView addSubview:currentTextViewController.view];
+    [splitView addSubview:textViewController.view];
+    [splitView adjustSubviews];
+    
+    CGFloat amount = (vertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    [splitView setPosition:floor((amount - splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    
+    [superview addSubview:splitView];
+    
+    [textViewController.textView WC_makeFirstResponder];
+}
+- (IBAction)addAssistantEditorAction:(id)sender; {
+    [self _addAssistantEditorForTextViewController:self.currentAssistantTextViewController];
+}
+- (IBAction)removeAssistantEditorAction:(id)sender; {
+    [self _removeAssistantEditorForTextViewController:self.currentAssistantTextViewController];
+}
+- (IBAction)resetEditorAction:(id)sender; {
+    // TODO: i don't really know what this method is supposed to do :(
+}
+#pragma mark *** Private Methods ***
+- (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController; {
+    NSSplitView *currentSplitView = (NSSplitView *)currentAssistantTextViewController.view.superview;
+    
+    BOOL vertical = [NSEvent WC_isOptionKeyPressed];
+    NSSplitView *splitView = [[NSSplitView alloc] initWithFrame:currentAssistantTextViewController.view.bounds];
+    
+    [splitView setAutoresizingMask:NSViewWidthSizable|NSViewHeightSizable];
+    [splitView setVertical:vertical];
+    [splitView setDividerStyle:(vertical)?NSSplitViewDividerStyleThin:NSSplitViewDividerStylePaneSplitter];
+    [splitView setDelegate:self];
+    
+    WCTextViewController *currentTextViewController = self.currentTextViewController;
+    
+    [[self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController] addObject:splitView];
+    
+    WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:[self.textViewControllersToSourceFileDocuments objectForKey:currentTextViewController]];
+    
+    [textViewController setDelegate:self];
+    
+    [[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] addObject:textViewController];
+    
+    [splitView addSubview:currentAssistantTextViewController.view];
+    [splitView addSubview:textViewController.view];
+    [splitView adjustSubviews];
+    
+    CGFloat amount = (vertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    [splitView setPosition:floor((amount - splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
+    
+    [currentSplitView addSubview:splitView];
+    
+    [textViewController.textView WC_makeFirstResponder];
+}
+- (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController; {
+    WCTextViewController *currentTextViewController = self.currentTextViewController;
+    
+    if (currentAssistantTextViewController == [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController] &&
+        [[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] count] == 1) {
+        
+        [self showStandardEditorAction:nil];
+        return;
+    }
+    
+    WCTextViewController *textViewController = nil;
+    
+    NSSplitView *currentSplitView = (NSSplitView *)currentAssistantTextViewController.view.superview;
+    NSSplitView *parentSplitView = (NSSplitView *)currentSplitView.superview;
+    
+    for (NSView *view in currentSplitView.subviews) {
+        if ([view WC_viewController] != currentAssistantTextViewController) {
+            textViewController = (WCTextViewController *)[view WC_viewController];
+            break;
+        }
+    }
+    
+    NSParameterAssert(textViewController);
+    
+    [currentSplitView removeFromSuperviewWithoutNeedingDisplay];
+    [currentAssistantTextViewController cleanup];
+    
+    [parentSplitView addSubview:textViewController.view];
+    
+    [textViewController.textView WC_makeFirstResponder];
+    
+    [[self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController] removeObject:currentSplitView];
+    [[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] removeObject:currentAssistantTextViewController];
+    
+    if (currentAssistantTextViewController == [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController])
+        [self.textViewControllersToAssistantTextViewControllers setObject:textViewController forKey:currentTextViewController];
+}
+#pragma mark Properties
+- (WCTextViewController *)currentTextViewController {
+    NSView *view = self.tabView.selectedTabViewItem.view;
+    
+    for (WCTextViewController *textViewController in self.textViewControllersToSourceFileDocuments.keyEnumerator) {
+        if ([textViewController.view isDescendantOf:view])
+            return textViewController;
+    }
+    
+    return nil;
+}
+- (WCTextViewController *)currentAssistantTextViewController {
+    WCTextViewController *currentTextViewController = self.currentTextViewController;
+    NSView *firstResponder = (NSView *)self.tabBarView.window.firstResponder;
+    
+    for (WCTextViewController *textViewController in [self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController]) {
+        if ([firstResponder isDescendantOf:textViewController.view])
+            return textViewController;
+    }
+    
+    return [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController];
+}
 @end
