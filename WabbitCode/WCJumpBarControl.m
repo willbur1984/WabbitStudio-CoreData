@@ -77,9 +77,6 @@
     return [self.delegate jumpBarControl:self numberOfItemsInMenuForPathComponentCell:self.clickedJumpBarComponentCell];
 }
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(NSInteger)index shouldCancel:(BOOL)shouldCancel {
-    if (shouldCancel)
-        return NO;
-    
     [self.delegate jumpBarControl:self updateItem:item atIndex:index forPathComponentCell:self.clickedJumpBarComponentCell];
     
     [item setTag:index];
@@ -112,9 +109,11 @@
 - (void)reloadImageForPathComponentCell:(WCJumpBarComponentCell *)pathComponentCell {
     if ([self.dataSource respondsToSelector:@selector(jumpBarControl:imageForPathComponentCell:)]) {
         NSImage *image = [self.dataSource jumpBarControl:self imageForPathComponentCell:pathComponentCell];
-        WCJumpBarComponentCell *cell = [pathComponentCell copy];
+        WCJumpBarComponentCell *cell = [[WCJumpBarComponentCell alloc] initTextCell:pathComponentCell.stringValue];
         
         [cell setImage:image];
+        [cell setTag:pathComponentCell.tag];
+        [cell setRepresentedObject:pathComponentCell.representedObject];
         
         NSMutableArray *temp = [self.pathComponentCells mutableCopy];
         
