@@ -10,12 +10,11 @@
 #import <CoreData/CoreData.h>
 #import "WCFoldMarker.h"
 
-typedef enum {
+typedef NS_ENUM(int16_t, FoldType) {
     FoldTypeComment = WCFoldMarkerTypeCommentStart,
     FoldTypeMacro = WCFoldMarkerTypeMacroStart,
     FoldTypeIf = WCFoldMarkerTypeIfStart
-    
-} FoldType;
+};
 
 @class Fold;
 

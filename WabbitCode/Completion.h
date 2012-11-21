@@ -1,13 +1,13 @@
 #import "_Completion.h"
 #import "WCCompletionItem.h"
 
-typedef enum {
+typedef NS_ENUM(int16_t, CompletionType) {
     CompletionTypeOperationalCode = 0,
     CompletionTypeRegister,
     CompletionTypeConditionalRegister,
     CompletionTypeDirective,
     CompletionTypePreProcessor
-} CompletionType;
+};
 
 @interface Completion : _Completion <WCCompletionItemDataSource> {}
 // Custom logic goes here.

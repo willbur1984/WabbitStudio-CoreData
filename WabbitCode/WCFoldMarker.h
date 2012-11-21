@@ -13,15 +13,14 @@
 
 #import <Foundation/Foundation.h>
 
-typedef enum {
+typedef NS_ENUM(int16_t, WCFoldMarkerType) {
     WCFoldMarkerTypeMacroStart,
 	WCFoldMarkerTypeMacroEnd,
 	WCFoldMarkerTypeIfStart,
 	WCFoldMarkerTypeIfEnd,
 	WCFoldMarkerTypeCommentStart,
 	WCFoldMarkerTypeCommentEnd
-    
-} WCFoldMarkerType;
+};
 
 @interface WCFoldMarker : NSObject
 

@@ -2,7 +2,7 @@
 #import "WCCompletionItem.h"
 #import "WCOpenQuicklyItem.h"
 
-typedef NS_ENUM(NSInteger, SymbolType) {
+typedef NS_ENUM(int16_t, SymbolType) {
     SymbolTypeLabel = 1,
     SymbolTypeEquate,
     SymbolTypeDefine,
