@@ -38,6 +38,7 @@
 #import "WCFoldView.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "FileContainer.h"
+#import "WCHUDStatusWindow.h"
 
 NSString *const WCTextViewFocusFollowsSelectionUserDefaultsKey = @"WCTextViewFocusFollowsSelectionUserDefaultsKey";
 NSString *const WCTextViewPageGuideUserDefaultsKey = @"WCTextViewPageGuideUserDefaultsKey";
@@ -630,7 +631,7 @@ static char kWCTextViewObservingContext;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]) {
         if (self.countOfSymbolRangesToHighlight > 1) {
             [[NSColor darkGrayColor] setStroke];
-            [[NSColor colorWithCalibratedWhite:0 alpha:0.05] setFill];
+            [[NSColor colorWithCalibratedWhite:0 alpha:0.08] setFill];
             
             const NSInteger dashCount = 2;
             const NSRange selectedRange = self.selectedRange;
@@ -1050,6 +1051,7 @@ static char kWCTextViewObservingContext;
     
     if (!symbols.count) {
         NSBeep();
+        [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Not Found", nil) inView:self.enclosingScrollView];
         return;
     }
     else if (symbols.count == 1) {
