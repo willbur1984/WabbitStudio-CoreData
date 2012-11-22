@@ -16,5 +16,6 @@
 @interface NSParagraphStyle (WCExtensions)
 
 + (NSParagraphStyle *)WC_rightAlignedParagraphStyle;
++ (NSParagraphStyle *)WC_centerAlignedParagraphStyle;
 
 @end

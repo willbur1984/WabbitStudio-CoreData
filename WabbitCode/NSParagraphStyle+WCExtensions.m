@@ -22,5 +22,12 @@
     
     return retval;
 }
++ (NSParagraphStyle *)WC_centerAlignedParagraphStyle; {
+    NSMutableParagraphStyle *retval = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
+    
+    [retval setAlignment:NSCenterTextAlignment];
+    
+    return retval;
+}
 
 @end
