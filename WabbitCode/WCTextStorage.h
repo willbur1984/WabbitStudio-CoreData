@@ -24,7 +24,7 @@ extern NSString *const WCTextStorageFoldRangeUserInfoKey;
 
 @interface WCTextStorage : NSTextStorage
 
-@property (assign,nonatomic) id <WCTextStorageDelegate> delegate;
+@property (unsafe_unretained,nonatomic) id <WCTextStorageDelegate> delegate;
 
 @property (readonly,strong,nonatomic) WCBookmarkManager *bookmarkManager;
 

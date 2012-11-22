@@ -27,7 +27,7 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefa
 
 @interface WCTextView : WCFindableTextView
 
-@property (weak,nonatomic) id <WCTextViewDelegate> delegate;
+@property (unsafe_unretained,nonatomic) id <WCTextViewDelegate> delegate;
 
 @property (strong,nonatomic) Fold *focusFold;
 

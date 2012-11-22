@@ -19,7 +19,7 @@
 
 @property (weak,nonatomic) IBOutlet NSView *containerView;
 
-@property (assign,nonatomic) id <WCNavigatorControlDataSource> dataSource;
+@property (unsafe_unretained,nonatomic) id <WCNavigatorControlDataSource> dataSource;
 
 @property (strong,nonatomic) id <NSCopying,NSObject> selectedItemIdentifier;
 

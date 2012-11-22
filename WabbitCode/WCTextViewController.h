@@ -18,9 +18,9 @@
 
 @interface WCTextViewController : WCViewController
 
-@property (readonly,assign,nonatomic) IBOutlet WCTextView *textView;
+@property (readonly,unsafe_unretained,nonatomic) IBOutlet WCTextView *textView;
 
-@property (assign,nonatomic) id <WCTextViewControllerDelegate> delegate;
+@property (unsafe_unretained,nonatomic) id <WCTextViewControllerDelegate> delegate;
 
 @property (assign,nonatomic) BOOL showAddRemoveAssistantEditorButtons;
 

@@ -41,10 +41,11 @@
 #import "WCTabViewController.h"
 #import "WCProjectWindowController.h"
 #import "WCJumpInWindowController.h"
+#import "WCHUDStatusWindow.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate>
 
-@property (readwrite,assign,nonatomic) IBOutlet WCTextView *textView;
+@property (readwrite,unsafe_unretained,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 @property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
 @property (weak,nonatomic) IBOutlet NSButton *addButton;
@@ -286,6 +287,7 @@
         
         if (!sourceFileDocument) {
             NSBeep();
+            [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Not Found", nil) inView:textView.enclosingScrollView];
             return;
         }
         
