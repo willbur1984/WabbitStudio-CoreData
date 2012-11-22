@@ -3,6 +3,8 @@
 
 @interface File : _File <WCOpenQuicklyDataSource> {}
 
+@property (readonly,nonatomic) NSString *directoryPath;
+
 @property (readonly,nonatomic) NSArray *flattenedFiles;
 @property (readonly,nonatomic) NSArray *flattenedFilesInclusive;
 

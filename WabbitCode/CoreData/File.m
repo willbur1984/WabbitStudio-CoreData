@@ -14,6 +14,15 @@
     }
 }
 
+- (NSString *)directoryPath {
+    if (self.project)
+        return self.path.stringByDeletingLastPathComponent;
+    else if (self.isGroupValue)
+        return self.path;
+    else
+        return self.file.directoryPath;
+}
+
 - (NSArray *)flattenedFiles {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:self.entity.name];
     
