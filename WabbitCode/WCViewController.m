@@ -20,6 +20,10 @@
 
 @implementation WCViewController
 
+- (void)dealloc {
+    [self cleanup];
+}
+
 - (id)init {
     return [self initWithNibName:self.nibName bundle:self.nibBundle];
 }
