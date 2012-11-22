@@ -14,6 +14,7 @@
 #import "WCHUDStatusWindow.h"
 #import "WCHUDStatusContentView.h"
 #import "WCGeometry.h"
+#import "NSParagraphStyle+WCExtensions.h"
 
 @interface WCHUDStatusWindow ()
 @property (weak,nonatomic) NSTimer *fadeTimer;
@@ -55,6 +56,24 @@
     return retval;
 }
 
+- (void)showString:(NSString *)string inView:(NSView *)view; {
+    NSParameterAssert(string);
+    NSParameterAssert(view);
+    
+    NSDictionary *attributes = @{NSForegroundColorAttributeName : [NSColor whiteColor], NSFontAttributeName : [NSFont boldSystemFontOfSize:22], NSParagraphStyleAttributeName : [NSParagraphStyle WC_centerAlignedParagraphStyle]};
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:string attributes:attributes];
+    
+    [self showAttributedString:attributedString inView:view];
+}
+- (void)showAttributedString:(NSAttributedString *)attributedString inView:(NSView *)view; {
+    NSImage *image = [[NSImage alloc] initWithSize:attributedString.size];
+    
+    [image lockFocus];
+    [attributedString drawAtPoint:NSZeroPoint];
+    [image unlockFocus];
+    
+    [self showImage:image inView:view];
+}
 - (void)showImage:(NSImage *)image inView:(NSView *)view; {
     [self showImage:image inView:view drawBackground:YES];
 }

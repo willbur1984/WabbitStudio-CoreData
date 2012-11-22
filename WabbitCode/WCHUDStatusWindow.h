@@ -17,6 +17,8 @@
 
 + (WCHUDStatusWindow *)sharedInstance;
 
+- (void)showString:(NSString *)string inView:(NSView *)view;
+- (void)showAttributedString:(NSAttributedString *)attributedString inView:(NSView *)view;
 - (void)showImage:(NSImage *)image inView:(NSView *)view;
 - (void)showImage:(NSImage *)image inView:(NSView *)view drawBackground:(BOOL)drawBackground;
 - (void)hideHUDStatusWindowAnimated:(BOOL)animated;
