@@ -22,12 +22,16 @@
 @property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
 @property (readonly,nonatomic) Project *project;
 @property (readonly,nonatomic) ProjectSetting *projectSetting;
+@property (readonly,nonatomic) NSSet *filePaths;
 
 - (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
 
 - (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (File *)fileWithUUID:(NSString *)UUID;
 - (NSImage *)imageForFile:(File *)file;
+
+- (NSArray *)addFilesForURLs:(NSArray *)URLs toParentFile:(File *)parentFile atIndex:(NSUInteger)index;
+- (void)removeFiles:(NSArray *)files moveToTrash:(BOOL)moveToTrash;
 
 - (IBAction)openQuicklyAction:(id)sender;
 

@@ -24,6 +24,7 @@
 #import "NSImage+WCExtensions.h"
 #import "WCOpenQuicklyWindowController.h"
 #import "ProjectSetting.h"
+#import "WCAddToProjectAccessoryViewController.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
@@ -32,7 +33,7 @@
 @end
 
 @implementation WCProjectDocument
-
+#pragma mark *** Subclass Overrides ***
 - (id)init {
     if (!(self = [super init]))
         return nil;
@@ -42,7 +43,7 @@
     
     return self;
 }
-
+#pragma mark NSDocument
 - (void)close {
     [super close];
     
@@ -56,6 +57,10 @@
     [self addWindowController:windowController];
 }
 
++ (BOOL)autosavesInPlace {
+    return YES;
+}
+#pragma mark NSPersistentDocument
 - (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     [super setManagedObjectContext:managedObjectContext];
     
@@ -113,11 +118,7 @@
     
     return retval;
 }
-
-+ (BOOL)autosavesInPlace {
-    return YES;
-}
-
+#pragma mark *** Public Methods ***
 - (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file; {
     return [self.mutableFileUUIDsToSourceFileDocuments objectForKey:file.uuid];
 }
@@ -140,7 +141,7 @@
     if (file.isGroupValue)
         return [NSImage imageNamed:@"Group.tiff"];
     
-    WCSourceFileDocument *sourceFileDocument = [self.fileUUIDsToSourceFileDocuments objectForKey:file.uuid];
+    WCSourceFileDocument *sourceFileDocument = [self sourceFileDocumentForFile:file];
     NSImage *retval = nil;
     
     if ([sourceFileDocument.fileURL getResourceValue:&retval forKey:NSURLEffectiveIconKey error:NULL]) {
@@ -154,18 +155,138 @@
     return retval;
 }
 
+- (NSArray *)addFilesForURLs:(NSArray *)URLs toParentFile:(File *)parentFile atIndex:(NSUInteger)index; {
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray *newFiles = [NSMutableArray arrayWithCapacity:0];
+    NSSet *filePaths = self.filePaths;
+    NSSet *UTIs = [[WCDocumentController sharedDocumentController] sourceFileUTIs];
+    NSMutableDictionary *URLsToFiles = [NSMutableDictionary dictionaryWithCapacity:0];
+    BOOL copyFiles = [[NSUserDefaults standardUserDefaults] boolForKey:WCAddToProjectAccessoryViewControllerCopyItemsIntoDestinationGroupsFolderUserDefaultsKey];
+    NSURL *directoryURL = [NSURL fileURLWithPath:parentFile.directoryPath isDirectory:YES];
+    
+    [URLsToFiles setObject:parentFile forKey:directoryURL];
+    
+    for (NSURL *url in URLs) {
+        NSURL *newURL = url;
+        
+        if (copyFiles) {
+            NSURL *copyURL = [directoryURL URLByAppendingPathComponent:url.lastPathComponent];
+            NSError *copyError;
+            if (![[NSFileManager defaultManager] copyItemAtURL:url toURL:copyURL error:&copyError]) {
+                WCLogObject(copyError);
+                continue;
+            }
+            
+            newURL = copyURL;
+        }
+        
+        if ([filePaths containsObject:newURL.path])
+            continue;
+        
+        File *newFile = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.managedObjectContext];
+        
+        [newFile setName:newURL.lastPathComponent];
+        [newFile setPath:newURL.path];
+        [newFile setUti:[newURL WC_typeIdentifier]];
+        
+        [parentFile.filesSet insertObject:newFile atIndex:(index++)];
+        
+        if ([newURL WC_isDirectory]) {
+            [newFile setIsGroup:@true];
+            
+            [URLsToFiles setObject:newFile forKey:newURL];
+            
+            NSDirectoryEnumerator *directoryEnumerator = [[NSFileManager defaultManager] enumeratorAtURL:newURL includingPropertiesForKeys:@[NSURLIsDirectoryKey,NSURLParentDirectoryURLKey,NSURLTypeIdentifierKey] options:NSDirectoryEnumerationSkipsHiddenFiles|NSDirectoryEnumerationSkipsPackageDescendants errorHandler:^BOOL(NSURL *url, NSError *error) {
+                WCLog(@"%@ %@",url,error);
+                return YES;
+            }];
+            
+            for (NSURL *childURL in directoryEnumerator) {
+                File *childParentFile = [URLsToFiles objectForKey:[childURL WC_parentDirectory]];
+                
+                if (!childParentFile)
+                    continue;
+                
+                File *childNewFile = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.managedObjectContext];
+                
+                [childNewFile setName:childURL.lastPathComponent];
+                [childNewFile setPath:childURL.path];
+                [childNewFile setUti:[childURL WC_typeIdentifier]];
+                
+                [childParentFile.filesSet addObject:childNewFile];
+                
+                if ([childURL WC_isDirectory]) {
+                    [childNewFile setIsGroup:@true];
+                    
+                    [URLsToFiles setObject:childNewFile forKey:childURL];
+                }
+                
+                [newFiles addObject:childNewFile];
+            }
+        }
+        
+        [newFiles addObject:newFile];
+        [retval addObject:newFile];
+    }
+    
+    for (File *newFile in newFiles) {
+        if (![UTIs containsObject:newFile.uti])
+            continue;
+        
+        NSError *documentError;
+        WCSourceFileDocument *sourceFileDocument = [[WCSourceFileDocument alloc] initWithContentsOfURL:[NSURL fileURLWithPath:newFile.path isDirectory:NO] ofType:newFile.uti projectDocument:self UUID:newFile.uuid error:&documentError];
+        
+        if (!sourceFileDocument) {
+            WCLogObject(documentError);
+            continue;
+        }
+        
+        [self.mutableFileUUIDsToSourceFileDocuments setObject:sourceFileDocument forKey:newFile.uuid];
+        [self.mutableSourceFileDocuments addObject:sourceFileDocument];
+    }
+    
+    [self.managedObjectContext processPendingChanges];
+    
+    return retval;
+}
+- (void)removeFiles:(NSArray *)files moveToTrash:(BOOL)moveToTrash; {
+    for (File *file in files) {
+        WCSourceFileDocument *document = [self sourceFileDocumentForFile:file];
+        
+        if (document) {
+            [document close];
+            
+            [self.mutableFileUUIDsToSourceFileDocuments removeObjectForKey:file.uuid];
+            [self.mutableSourceFileDocuments removeObject:document];
+        }
+    }
+    
+    if (moveToTrash) {
+        NSMutableArray *urls = [NSMutableArray arrayWithCapacity:files.count];
+        
+        for (File *file in files)
+            [urls addObject:[NSURL fileURLWithPath:file.path isDirectory:file.isGroupValue]];
+        
+        [[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:nil];
+    }
+    
+    for (File *file in files)
+        [self.managedObjectContext deleteObject:file];
+    
+    [self.managedObjectContext processPendingChanges];
+    
+    [self updateChangeCount:NSChangeDone];
+}
+#pragma mark Actions
 - (IBAction)openQuicklyAction:(id)sender; {
     [[WCOpenQuicklyWindowController sharedWindowController] showOpenQuicklyWindowForProjectDocument:self];
 }
-
+#pragma mark Properties
 - (NSString *)UUID {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
     Project *project = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
     
     return project.uuid;
-}
-- (NSDictionary *)fileUUIDsToSourceFileDocuments {
-    return [self.mutableFileUUIDsToSourceFileDocuments copy];
 }
 - (WCProjectWindowController *)projectWindowController {
     return [self.windowControllers WC_firstObject];
@@ -193,6 +314,14 @@
     }
     
     return retval;
+}
+- (NSSet *)filePaths {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+    
+    [fetchRequest setResultType:NSDictionaryResultType];
+    [fetchRequest setPropertiesToFetch:@[@"path"]];
+    
+    return [NSSet setWithArray:[[self.managedObjectContext executeFetchRequest:fetchRequest error:NULL] valueForKey:@"path"]];
 }
 
 @end
