@@ -167,6 +167,8 @@
 		79CFE8C9165B174A0044D345 /* ProjectSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CFE8C8165B174A0044D345 /* ProjectSetting.m */; };
 		79CFE8CC165B17580044D345 /* _ProjectSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CFE8CB165B17580044D345 /* _ProjectSetting.m */; };
 		79CFE8FB165C24960044D345 /* WCTabView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79CFE8F9165C24960044D345 /* WCTabView.xib */; };
+		79CFE8FE165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79CFE8FD165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m */; };
+		79CFE901165D880D0044D345 /* WCAddToProjectAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79CFE8FF165D880D0044D345 /* WCAddToProjectAccessoryView.xib */; };
 		79DE43461638C09E003D56EA /* Projects.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 79DE43441638C09E003D56EA /* Projects.xcdatamodeld */; };
 		79DF87AC162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
 		79DF87AD162A8C8200818741 /* MASPreferencesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */; };
@@ -517,6 +519,9 @@
 		79CFE8CA165B17580044D345 /* _ProjectSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _ProjectSetting.h; sourceTree = "<group>"; };
 		79CFE8CB165B17580044D345 /* _ProjectSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _ProjectSetting.m; sourceTree = "<group>"; };
 		79CFE8FA165C24960044D345 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCTabView.xib; sourceTree = "<group>"; };
+		79CFE8FC165D87E90044D345 /* WCAddToProjectAccessoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCAddToProjectAccessoryViewController.h; sourceTree = "<group>"; };
+		79CFE8FD165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCAddToProjectAccessoryViewController.m; sourceTree = "<group>"; };
+		79CFE900165D880D0044D345 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCAddToProjectAccessoryView.xib; sourceTree = "<group>"; };
 		79DE43451638C09E003D56EA /* Projects.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Projects.xcdatamodel; sourceTree = "<group>"; };
 		79DF87A8162A8C8200818741 /* MASPreferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MASPreferencesViewController.h; sourceTree = "<group>"; };
 		79DF87A9162A8C8200818741 /* MASPreferencesWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MASPreferencesWindow.xib; sourceTree = "<group>"; };
@@ -957,6 +962,7 @@
 				79736AB8164F3666003F7F66 /* WCFindBarView.xib */,
 				799F6CC81653128200C33C61 /* WCOpenQuicklyWindow.xib */,
 				79CFE8F9165C24960044D345 /* WCTabView.xib */,
+				79CFE8FF165D880D0044D345 /* WCAddToProjectAccessoryView.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -1179,6 +1185,8 @@
 				79E3843016458840009B0DF1 /* WCProjectViewController.m */,
 				79813E5D16437CF500D0F184 /* WCProjectCellView.h */,
 				79813E5E16437CF500D0F184 /* WCProjectCellView.m */,
+				79CFE8FC165D87E90044D345 /* WCAddToProjectAccessoryViewController.h */,
+				79CFE8FD165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -1526,6 +1534,7 @@
 				79736AC116505719003F7F66 /* FindNoWrapIndicatorReverse.png in Resources */,
 				799F6CCA1653128200C33C61 /* WCOpenQuicklyWindow.xib in Resources */,
 				79CFE8FB165C24960044D345 /* WCTabView.xib in Resources */,
+				79CFE901165D880D0044D345 /* WCAddToProjectAccessoryView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1715,6 +1724,7 @@
 				799F6CD316533DFE00C33C61 /* WCJumpInRowView.m in Sources */,
 				79CFE8C9165B174A0044D345 /* ProjectSetting.m in Sources */,
 				79CFE8CC165B17580044D345 /* _ProjectSetting.m in Sources */,
+				79CFE8FE165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1877,6 +1887,14 @@
 				79CFE8FA165C24960044D345 /* en */,
 			);
 			name = WCTabView.xib;
+			sourceTree = "<group>";
+		};
+		79CFE8FF165D880D0044D345 /* WCAddToProjectAccessoryView.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79CFE900165D880D0044D345 /* en */,
+			);
+			name = WCAddToProjectAccessoryView.xib;
 			sourceTree = "<group>";
 		};
 		79DF87B9162A8E1A00818741 /* WCGeneralView.xib */ = {
