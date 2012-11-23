@@ -62,6 +62,7 @@
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
     
     [openPanel setMessage:NSLocalizedString(@"Choose a folder to create your project from.", nil)];
+    [openPanel setPrompt:NSLocalizedString(@"Create", nil)];
     [openPanel setCanChooseFiles:NO];
     [openPanel setCanChooseDirectories:YES];
     [openPanel beginSheetModalForWindow:self.window completionHandler:^(NSInteger result) {
