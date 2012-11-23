@@ -26,14 +26,18 @@
 #import "WCDefines.h"
 #import "WCSourceFileDocument.h"
 #import "ProjectSetting.h"
+#import "NSURL+WCExtensions.h"
+#import "WCAddToProjectAccessoryViewController.h"
 
-@interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations>
+@interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations,NSOpenSavePanelDelegate>
 
 @property (weak,nonatomic) IBOutlet WCOutlineView *outlineView;
 
 @property (assign,nonatomic) WCProjectWindowController *projectWindowController;
 @property (readonly,nonatomic) WCProjectDocument *projectDocument;
 @property (assign,nonatomic) BOOL ignoreChanges;
+@property (strong,nonatomic) NSSet *filePaths;
+@property (strong,nonatomic) WCAddToProjectAccessoryViewController *accessoryViewController;
 
 - (void)_setupOutlineViewContextualMenu;
 - (void)_restoreFromProjectSetting;
@@ -122,6 +126,13 @@
 }
 - (void)deleteActionInOutlineView:(WCOutlineView *)outlineView {
     [self deleteAction:nil];
+}
+#pragma mark NSOpenSavePanelDelegate
+- (BOOL)panel:(id)sender shouldEnableURL:(NSURL *)url {
+    if ([url WC_isDirectory])
+        return YES;
+    
+    return (![self.filePaths containsObject:url.path]);
 }
 
 #pragma mark NSUserInterfaceValidations
@@ -216,7 +227,7 @@
     
     File *group = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.projectDocument.managedObjectContext];
     
-    [group setPath:file.path];
+    [group setPath:file.directoryPath];
     [group setName:NSLocalizedString(@"New Group", nil)];
     [group setIsGroup:@true];
     
@@ -239,7 +250,7 @@
     NSUInteger index = [file.file.files indexOfObject:file];
     File *group = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:self.projectDocument.managedObjectContext];
     
-    [group setPath:file.file.path];
+    [group setPath:file.file.directoryPath];
     [group setName:NSLocalizedString(@"New Group", nil)];
     [group setIsGroup:@true];
     
@@ -282,8 +293,42 @@
     for (File *file in files)
         [self.outlineView reloadItem:file reloadChildren:YES];
 }
-- (IBAction)addFilesToProject:(id)sender {
+- (IBAction)addFilesToProjectAction:(id)sender {
+    [self setFilePaths:self.projectDocument.filePaths];
     
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    
+    [openPanel setCanChooseDirectories:YES];
+    [openPanel setAllowsMultipleSelection:YES];
+    [openPanel setDelegate:self];
+    [openPanel setTitle:[NSString stringWithFormat:NSLocalizedString(@"Add Files to \"%@\"", nil),self.projectDocument.displayName]];
+    [openPanel setPrompt:NSLocalizedString(@"Add", nil)];
+    [openPanel setMessage:NSLocalizedString(@"Choose files and directorieis to add to the project.", nil)];
+    
+    [self setAccessoryViewController:[[WCAddToProjectAccessoryViewController alloc] init]];
+    [openPanel setAccessoryView:self.accessoryViewController.view];
+    
+    __unsafe_unretained typeof (self) weakSelf = self;
+    File *file = [self.outlineView WC_clickedOrSelectedItem];
+    NSUInteger insertIndex = 0;
+    
+    if (!file.isGroupValue) {
+        insertIndex = [file.file.files indexOfObject:file] + 1;
+        file = file.file;
+    }
+    
+    [openPanel beginSheetModalForWindow:self.view.window completionHandler:^(NSInteger result) {
+        [weakSelf setFilePaths:nil];
+        [weakSelf setAccessoryViewController:nil];
+        
+        if (result != NSFileHandlingPanelOKButton)
+            return;
+        
+        NSArray *files = [weakSelf.projectDocument addFilesForURLs:[openPanel URLs] toParentFile:file atIndex:insertIndex];
+        
+        [weakSelf.outlineView reloadItem:file reloadChildren:YES];
+        [weakSelf.outlineView WC_setSelectedItems:files];
+    }];
 }
 - (IBAction)deleteAction:(id)sender {
     BOOL confirm = NO;
@@ -304,29 +349,22 @@
         switch ([alert runModal]) {
                 // remove reference
             case NSAlertDefaultReturn:
-                
+                [self.projectDocument removeFiles:files moveToTrash:NO];
                 break;
                 // cancel
             case NSAlertAlternateReturn:
-                
                 break;
                 // move to trash
             case NSAlertOtherReturn:
-                
+                [self.projectDocument removeFiles:files moveToTrash:YES];
                 break;
             default:
                 break;
         }
     }
     else {
-        for (File *file in files)
-            [self.projectDocument.managedObjectContext deleteObject:file];
-        
-        [self.projectDocument.managedObjectContext processPendingChanges];
-        
+        [self.projectDocument removeFiles:files moveToTrash:NO];
         [self.outlineView reloadData];
-        
-        [self.projectDocument updateChangeCount:NSChangeDone];
     }
 }
 - (IBAction)renameAction:(id)sender {
@@ -360,7 +398,7 @@
     [menu addItemWithTitle:NSLocalizedString(@"Sort by Name", nil) action:@selector(sortByNameAction:) keyEquivalent:@""];
     [menu addItemWithTitle:NSLocalizedString(@"Sort by Type", nil) action:@selector(sortByTypeAction:) keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
-    [menu addItemWithTitle:NSLocalizedString(@"Add Files to Project", nil) action:@selector(addFilesToProject:) keyEquivalent:@""];
+    [menu addItemWithTitle:NSLocalizedString(@"Add Files to Project", nil) action:@selector(addFilesToProjectAction:) keyEquivalent:@""];
     [menu addItem:[NSMenuItem separatorItem]];
     [menu addItemWithTitle:NSLocalizedString(@"Delete", nil) action:@selector(deleteAction:) keyEquivalent:@""];
     [menu addItemWithTitle:NSLocalizedString(@"Rename", nil) action:@selector(renameAction:) keyEquivalent:@""];

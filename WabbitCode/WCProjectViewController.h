@@ -27,7 +27,7 @@
 - (IBAction)ungroupSelectionAction:(id)sender;
 - (IBAction)sortByNameAction:(id)sender;
 - (IBAction)sortByTypeAction:(id)sender;
-- (IBAction)addFilesToProject:(id)sender;
+- (IBAction)addFilesToProjectAction:(id)sender;
 - (IBAction)deleteAction:(id)sender;
 - (IBAction)renameAction:(id)sender;
 - (IBAction)openInSeparateEditorAction:(id)sender;
