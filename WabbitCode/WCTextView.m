@@ -53,7 +53,7 @@ static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrac
 
 static char kWCTextViewObservingContext;
 
-@interface WCTextView ()
+@interface WCTextView () <NSUserInterfaceValidations>
 
 @property (weak,nonatomic) NSTimer *toolTipTimer;
 @property (strong,nonatomic) NSMutableSet *hoverLinkTrackingAreas;
@@ -723,6 +723,11 @@ static char kWCTextViewObservingContext;
 - (IBAction)complete:(id)sender {
     [[WCCompletionWindow sharedInstance] showCompletionWindowForTextView:self];
 }
+#pragma mark NSUserInterfaceValidations
+- (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
+    
+    return [super validateUserInterfaceItem:anItem];
+}
 
 #pragma mark *** Public Methods ***
 + (NSRegularExpression *)completionRegex; {
@@ -753,11 +758,22 @@ static char kWCTextViewObservingContext;
 }
 
 - (IBAction)foldAction:(id)sender; {
-    [(WCTextStorage *)self.textStorage foldRange:self.selectedRange];
+    Fold *fold = [[self.delegate foldScannerForTextView:self] deepestFoldForRange:self.selectedRange];
+    
+    if (!fold) {
+        NSBeep();
+        return;
+    }
+    
+    [(WCTextStorage *)self.textStorage foldRange:NSRangeFromString(fold.contentRange)];
 }
 - (IBAction)unfoldAction:(id)sender; {
     if (![(WCTextStorage *)self.textStorage unfoldRange:self.selectedRange effectiveRange:NULL])
         NSBeep();
+}
+- (IBAction)unfoldAllAction:(id)sender; {
+    for (Fold *fold in [[self.delegate foldScannerForTextView:self] rootLevelFoldsForRange:NSMakeRange(0, self.string.length)])
+        [(WCTextStorage *)self.textStorage unfoldRange:NSRangeFromString(fold.contentRange) effectiveRange:NULL];
 }
 
 - (IBAction)toggleBookmarkAction:(id)sender; {

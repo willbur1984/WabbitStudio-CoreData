@@ -37,6 +37,7 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefa
 
 - (IBAction)foldAction:(id)sender;
 - (IBAction)unfoldAction:(id)sender;
+- (IBAction)unfoldAllAction:(id)sender;
 
 - (IBAction)toggleBookmarkAction:(id)sender;
 - (IBAction)nextBookmarkAction:(id)sender;
