@@ -88,6 +88,14 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     [self.operationQueue addOperation:operation];
 }
 
+- (NSArray *)rootLevelFoldsForRange:(NSRange)range; {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.depth == 0 AND self.location < %lu AND self.endLocation > %lu",NSMaxRange(range),range.location]];
+    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
 - (NSArray *)foldsForRange:(NSRange)range {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
     
@@ -111,6 +119,9 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"depth" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES] ]];
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
+}
+- (NSArray *)topLevelFoldsForRange:(NSRange)range; {
+    
 }
 - (Fold *)topLevelFoldForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
