@@ -18,7 +18,9 @@ extern const struct FileRelationships {
 	__unsafe_unretained NSString *issues;
 	__unsafe_unretained NSString *project;
 	__unsafe_unretained NSString *projectExpandedFilesProjectSettings;
+	__unsafe_unretained NSString *projectOpenTabFilesProjectSettings;
 	__unsafe_unretained NSString *projectSelectedFilesProjectSettings;
+	__unsafe_unretained NSString *projectSelectedTabFileProjectSettings;
 } FileRelationships;
 
 extern const struct FileFetchedProperties {
@@ -30,6 +32,8 @@ extern const struct FileFetchedProperties {
 @class TargetInclude;
 @class Issue;
 @class Project;
+@class ProjectSetting;
+@class ProjectSetting;
 @class ProjectSetting;
 @class ProjectSetting;
 
@@ -127,9 +131,23 @@ extern const struct FileFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet* projectOpenTabFilesProjectSettings;
+
+- (NSMutableSet*)projectOpenTabFilesProjectSettingsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet* projectSelectedFilesProjectSettings;
 
 - (NSMutableSet*)projectSelectedFilesProjectSettingsSet;
+
+
+
+
+@property (nonatomic, strong) NSSet* projectSelectedTabFileProjectSettings;
+
+- (NSMutableSet*)projectSelectedTabFileProjectSettingsSet;
 
 
 
@@ -159,10 +177,20 @@ extern const struct FileFetchedProperties {
 - (void)addProjectExpandedFilesProjectSettingsObject:(ProjectSetting*)value_;
 - (void)removeProjectExpandedFilesProjectSettingsObject:(ProjectSetting*)value_;
 
+- (void)addProjectOpenTabFilesProjectSettings:(NSSet*)value_;
+- (void)removeProjectOpenTabFilesProjectSettings:(NSSet*)value_;
+- (void)addProjectOpenTabFilesProjectSettingsObject:(ProjectSetting*)value_;
+- (void)removeProjectOpenTabFilesProjectSettingsObject:(ProjectSetting*)value_;
+
 - (void)addProjectSelectedFilesProjectSettings:(NSSet*)value_;
 - (void)removeProjectSelectedFilesProjectSettings:(NSSet*)value_;
 - (void)addProjectSelectedFilesProjectSettingsObject:(ProjectSetting*)value_;
 - (void)removeProjectSelectedFilesProjectSettingsObject:(ProjectSetting*)value_;
+
+- (void)addProjectSelectedTabFileProjectSettings:(NSSet*)value_;
+- (void)removeProjectSelectedTabFileProjectSettings:(NSSet*)value_;
+- (void)addProjectSelectedTabFileProjectSettingsObject:(ProjectSetting*)value_;
+- (void)removeProjectSelectedTabFileProjectSettingsObject:(ProjectSetting*)value_;
 
 @end
 
@@ -226,8 +254,18 @@ extern const struct FileFetchedProperties {
 
 
 
+- (NSMutableSet*)primitiveProjectOpenTabFilesProjectSettings;
+- (void)setPrimitiveProjectOpenTabFilesProjectSettings:(NSMutableSet*)value;
+
+
+
 - (NSMutableSet*)primitiveProjectSelectedFilesProjectSettings;
 - (void)setPrimitiveProjectSelectedFilesProjectSettings:(NSMutableSet*)value;
+
+
+
+- (NSMutableSet*)primitiveProjectSelectedTabFileProjectSettings;
+- (void)setPrimitiveProjectSelectedTabFileProjectSettings:(NSMutableSet*)value;
 
 
 @end

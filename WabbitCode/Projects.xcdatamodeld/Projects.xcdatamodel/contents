@@ -18,7 +18,9 @@
         <relationship name="issues" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Issue" inverseName="file" inverseEntity="Issue" syncable="YES"/>
         <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="file" inverseEntity="Project" syncable="YES"/>
         <relationship name="projectExpandedFilesProjectSettings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProjectSetting" inverseName="projectExpandedFiles" inverseEntity="ProjectSetting" syncable="YES"/>
+        <relationship name="projectOpenTabFilesProjectSettings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProjectSetting" inverseName="projectOpenTabFiles" inverseEntity="ProjectSetting" syncable="YES"/>
         <relationship name="projectSelectedFilesProjectSettings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProjectSetting" inverseName="projectSelectedFiles" inverseEntity="ProjectSetting" syncable="YES"/>
+        <relationship name="projectSelectedTabFileProjectSettings" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ProjectSetting" inverseName="projectSelectedTabFile" inverseEntity="ProjectSetting" syncable="YES"/>
     </entity>
     <entity name="FileBreakpoint" representedClassName="FileBreakpoint" parentEntity="Breakpoint" syncable="YES">
         <attribute name="range" optional="YES" attributeType="String" syncable="YES"/>
@@ -48,7 +50,9 @@
         <attribute name="shortUserName" attributeType="String" syncable="YES"/>
         <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="projectSettings" inverseEntity="Project" syncable="YES"/>
         <relationship name="projectExpandedFiles" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="File" inverseName="projectExpandedFilesProjectSettings" inverseEntity="File" syncable="YES"/>
+        <relationship name="projectOpenTabFiles" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="File" inverseName="projectOpenTabFilesProjectSettings" inverseEntity="File" syncable="YES"/>
         <relationship name="projectSelectedFiles" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="File" inverseName="projectSelectedFilesProjectSettings" inverseEntity="File" syncable="YES"/>
+        <relationship name="projectSelectedTabFile" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="File" inverseName="projectSelectedTabFileProjectSettings" inverseEntity="File" syncable="YES"/>
     </entity>
     <entity name="Target" representedClassName="Target" parentEntity="Item" syncable="YES">
         <attribute name="active" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -70,14 +74,14 @@
     </entity>
     <elements>
         <element name="Breakpoint" positionX="-47" positionY="240" width="128" height="120"/>
-        <element name="File" positionX="286" positionY="117" width="128" height="210"/>
+        <element name="File" positionX="286" positionY="117" width="128" height="240"/>
         <element name="FileBreakpoint" positionX="-54" positionY="387" width="128" height="90"/>
         <element name="Issue" positionX="108" positionY="225" width="128" height="135"/>
         <element name="Item" positionX="-20" positionY="-144" width="128" height="75"/>
         <element name="Project" positionX="-36" positionY="30" width="128" height="120"/>
+        <element name="ProjectSetting" positionX="160" positionY="192" width="128" height="135"/>
         <element name="Target" positionX="-236" positionY="108" width="128" height="165"/>
         <element name="TargetDefine" positionX="-423" positionY="297" width="128" height="75"/>
         <element name="TargetInclude" positionX="-272" positionY="387" width="128" height="75"/>
-        <element name="ProjectSetting" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

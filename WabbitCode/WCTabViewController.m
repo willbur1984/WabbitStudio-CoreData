@@ -24,6 +24,7 @@
 #import "NSView+WCExtensions.h"
 #import "WCDefines.h"
 #import "NSEvent+WCExtensions.h"
+#import "ProjectSetting.h"
 
 @interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate,NSSplitViewDelegate>
 
@@ -37,6 +38,7 @@
 @property (strong,nonatomic) NSMapTable *textViewControllersToAssistantSplitViewMutableSets;
 @property (readonly,nonatomic) WCTextViewController *currentTextViewController;
 @property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
+@property (assign,nonatomic) BOOL ignoreChanges;
 
 - (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
 - (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
@@ -67,6 +69,24 @@
     [self.tabBarView setAlwaysShowActiveTab:YES];
     [self.tabBarView setAllowsScrubbing:NO];
     [self.tabBarView setTearOffStyle:MMTabBarTearOffMiniwindow];
+    
+    [self setIgnoreChanges:YES];
+    
+    WCProjectDocument *projectDocument = [self.delegate projectDocumentForTabViewController:self];
+    
+    for (File *file in projectDocument.projectSetting.projectOpenTabFiles) {
+        WCSourceFileDocument *document = [projectDocument sourceFileDocumentForFile:file];
+        
+        [self addTabBarItemForSourceFileDocument:document];
+    }
+    
+    if (projectDocument.projectSetting.projectSelectedTabFile) {
+        WCSourceFileDocument *document = [projectDocument sourceFileDocumentForFile:projectDocument.projectSetting.projectSelectedTabFile];
+        
+        [self selectTabBarItemForSourceFileDocument:document];
+    }
+    
+    [self setIgnoreChanges:NO];
 }
 
 - (void)cleanup {
@@ -105,8 +125,34 @@
     return proposedMaximumPosition - floor(amount * 0.25);
 }
 #pragma mark MMTabBarViewDelegate
+- (void)tabViewDidChangeNumberOfTabViewItems:(NSTabView *)tabView {
+    if (self.ignoreChanges)
+        return;
+    
+    WCProjectDocument *projectDocument = [self.delegate projectDocumentForTabViewController:self];
+    NSMutableArray *files = [NSMutableArray arrayWithCapacity:tabView.numberOfTabViewItems];
+    
+    for (NSTabViewItem *item in tabView.tabViewItems) {
+        File *file = [projectDocument fileForSourceFileDocument:item.identifier];
+        
+        [files addObject:file];
+    }
+    
+    [projectDocument.projectSetting setProjectOpenTabFiles:[NSOrderedSet orderedSetWithArray:files]];
+    [projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+}
 - (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
     [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
+}
+- (void)tabView:(NSTabView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem {
+    if (self.ignoreChanges)
+        return;
+    
+    WCProjectDocument *projectDocument = [self.delegate projectDocumentForTabViewController:self];
+    File *file = [projectDocument fileForSourceFileDocument:tabViewItem.identifier];
+    
+    [projectDocument.projectSetting setProjectSelectedTabFile:file];
+    [projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
 }
 - (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
     WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
@@ -197,6 +243,14 @@
     
     [textViewController cleanup];
     
+    for (WCTextViewController *assistantTextViewController in [self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:textViewController])
+        [assistantTextViewController cleanup];
+    for (NSSplitView *splitView in [self.textViewControllersToAssistantSplitViewMutableSets objectForKey:textViewController])
+        [splitView removeFromSuperviewWithoutNeedingDisplay];
+    
+    [self.textViewControllersToAssistantSplitViewMutableSets removeObjectForKey:textViewController];
+    [self.textViewControllersToAssistantTextViewControllers removeObjectForKey:textViewController];
+    [self.textViewControllersToAssistantTextViewControllerMutableSets removeObjectForKey:textViewController];
     [self.sourceFileDocumentsToTextViewControllers removeObjectForKey:sourceFileDocument];
     [self.textViewControllersToSourceFileDocuments removeObjectForKey:textViewController];
 }

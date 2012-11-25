@@ -13,9 +13,12 @@
 
 #import "WCViewController.h"
 
-@class WCSourceFileDocument,WCTextViewController,MMTabBarView;
+@class WCSourceFileDocument,WCTextViewController,MMTabBarView,WCProjectDocument;
+@protocol WCTabViewControllerDelegate;
 
 @interface WCTabViewController : WCViewController <NSUserInterfaceValidations>
+
+@property (unsafe_unretained,nonatomic) id <WCTabViewControllerDelegate> delegate;
 
 - (id)initWithTabBarView:(MMTabBarView *)tabBarView;
 
@@ -30,4 +33,9 @@
 - (IBAction)removeAssistantEditorAction:(id)sender;
 - (IBAction)resetEditorAction:(id)sender;
 
+@end
+
+@protocol WCTabViewControllerDelegate <NSObject>
+@required
+- (WCProjectDocument *)projectDocumentForTabViewController:(WCTabViewController *)tabViewController;
 @end

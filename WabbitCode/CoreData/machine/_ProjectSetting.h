@@ -11,13 +11,17 @@ extern const struct ProjectSettingAttributes {
 extern const struct ProjectSettingRelationships {
 	__unsafe_unretained NSString *project;
 	__unsafe_unretained NSString *projectExpandedFiles;
+	__unsafe_unretained NSString *projectOpenTabFiles;
 	__unsafe_unretained NSString *projectSelectedFiles;
+	__unsafe_unretained NSString *projectSelectedTabFile;
 } ProjectSettingRelationships;
 
 extern const struct ProjectSettingFetchedProperties {
 } ProjectSettingFetchedProperties;
 
 @class Project;
+@class File;
+@class File;
 @class File;
 @class File;
 
@@ -58,9 +62,23 @@ extern const struct ProjectSettingFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSOrderedSet* projectOpenTabFiles;
+
+- (NSMutableOrderedSet*)projectOpenTabFilesSet;
+
+
+
+
 @property (nonatomic, strong) NSSet* projectSelectedFiles;
 
 - (NSMutableSet*)projectSelectedFilesSet;
+
+
+
+
+@property (nonatomic, strong) File* projectSelectedTabFile;
+
+//- (BOOL)validateProjectSelectedTabFile:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -74,6 +92,11 @@ extern const struct ProjectSettingFetchedProperties {
 - (void)removeProjectExpandedFiles:(NSOrderedSet*)value_;
 - (void)addProjectExpandedFilesObject:(File*)value_;
 - (void)removeProjectExpandedFilesObject:(File*)value_;
+
+- (void)addProjectOpenTabFiles:(NSOrderedSet*)value_;
+- (void)removeProjectOpenTabFiles:(NSOrderedSet*)value_;
+- (void)addProjectOpenTabFilesObject:(File*)value_;
+- (void)removeProjectOpenTabFilesObject:(File*)value_;
 
 - (void)addProjectSelectedFiles:(NSSet*)value_;
 - (void)removeProjectSelectedFiles:(NSSet*)value_;
@@ -102,8 +125,18 @@ extern const struct ProjectSettingFetchedProperties {
 
 
 
+- (NSMutableOrderedSet*)primitiveProjectOpenTabFiles;
+- (void)setPrimitiveProjectOpenTabFiles:(NSMutableOrderedSet*)value;
+
+
+
 - (NSMutableSet*)primitiveProjectSelectedFiles;
 - (void)setPrimitiveProjectSelectedFiles:(NSMutableSet*)value;
+
+
+
+- (File*)primitiveProjectSelectedTabFile;
+- (void)setPrimitiveProjectSelectedTabFile:(File*)value;
 
 
 @end

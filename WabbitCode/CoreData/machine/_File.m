@@ -17,7 +17,9 @@ const struct FileRelationships FileRelationships = {
 	.issues = @"issues",
 	.project = @"project",
 	.projectExpandedFilesProjectSettings = @"projectExpandedFilesProjectSettings",
+	.projectOpenTabFilesProjectSettings = @"projectOpenTabFilesProjectSettings",
 	.projectSelectedFilesProjectSettings = @"projectSelectedFilesProjectSettings",
+	.projectSelectedTabFileProjectSettings = @"projectSelectedTabFileProjectSettings",
 };
 
 const struct FileFetchedProperties FileFetchedProperties = {
@@ -164,6 +166,19 @@ const struct FileFetchedProperties FileFetchedProperties = {
 }
 	
 
+@dynamic projectOpenTabFilesProjectSettings;
+
+	
+- (NSMutableSet*)projectOpenTabFilesProjectSettingsSet {
+	[self willAccessValueForKey:@"projectOpenTabFilesProjectSettings"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectOpenTabFilesProjectSettings"];
+  
+	[self didAccessValueForKey:@"projectOpenTabFilesProjectSettings"];
+	return result;
+}
+	
+
 @dynamic projectSelectedFilesProjectSettings;
 
 	
@@ -173,6 +188,19 @@ const struct FileFetchedProperties FileFetchedProperties = {
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectSelectedFilesProjectSettings"];
   
 	[self didAccessValueForKey:@"projectSelectedFilesProjectSettings"];
+	return result;
+}
+	
+
+@dynamic projectSelectedTabFileProjectSettings;
+
+	
+- (NSMutableSet*)projectSelectedTabFileProjectSettingsSet {
+	[self willAccessValueForKey:@"projectSelectedTabFileProjectSettings"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"projectSelectedTabFileProjectSettings"];
+  
+	[self didAccessValueForKey:@"projectSelectedTabFileProjectSettings"];
 	return result;
 }
 	

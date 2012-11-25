@@ -25,7 +25,7 @@
 
 static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.toolbar";
 
-@interface WCProjectWindowController () <WCNavigatorControlDataSource,NSWindowDelegate,NSSplitViewDelegate,NSToolbarDelegate>
+@interface WCProjectWindowController () <WCNavigatorControlDataSource,WCTabViewControllerDelegate,NSWindowDelegate,NSSplitViewDelegate,NSToolbarDelegate>
 
 @property (weak,nonatomic) IBOutlet WCSplitView *mainSplitView;
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
@@ -72,6 +72,7 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     [self.navigatorControl setSelectedItemIdentifier:[[self.navigatorItems objectAtIndex:0] identifier]];
     
     [self setTabViewController:[[WCTabViewController alloc] initWithTabBarView:self.tabBarView]];
+    [self.tabViewController setDelegate:self];
     [self.tabViewController.view setFrameSize:[self.mainSplitView.subviews.lastObject frame].size];
     [self.mainSplitView.subviews.lastObject addSubview:self.tabViewController.view];
     
@@ -110,6 +111,10 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
 }
 #pragma mark NSUserInterfaceValidations
 
+#pragma mark WCTabViewControllerDelegate
+- (WCProjectDocument *)projectDocumentForTabViewController:(WCTabViewController *)tabViewController {
+    return self.projectDocument;
+}
 
 #pragma mark WCNavigatorControlDataSource
 - (NSInteger)numberOfItemsInNavigatorControl:(WCNavigatorControl *)navigatorControl {

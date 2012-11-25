@@ -10,7 +10,9 @@ const struct ProjectSettingAttributes ProjectSettingAttributes = {
 const struct ProjectSettingRelationships ProjectSettingRelationships = {
 	.project = @"project",
 	.projectExpandedFiles = @"projectExpandedFiles",
+	.projectOpenTabFiles = @"projectOpenTabFiles",
 	.projectSelectedFiles = @"projectSelectedFiles",
+	.projectSelectedTabFile = @"projectSelectedTabFile",
 };
 
 const struct ProjectSettingFetchedProperties ProjectSettingFetchedProperties = {
@@ -73,6 +75,19 @@ const struct ProjectSettingFetchedProperties ProjectSettingFetchedProperties = {
 }
 	
 
+@dynamic projectOpenTabFiles;
+
+	
+- (NSMutableOrderedSet*)projectOpenTabFilesSet {
+	[self willAccessValueForKey:@"projectOpenTabFiles"];
+  
+	NSMutableOrderedSet *result = (NSMutableOrderedSet*)[self mutableOrderedSetValueForKey:@"projectOpenTabFiles"];
+  
+	[self didAccessValueForKey:@"projectOpenTabFiles"];
+	return result;
+}
+	
+
 @dynamic projectSelectedFiles;
 
 	
@@ -84,6 +99,10 @@ const struct ProjectSettingFetchedProperties ProjectSettingFetchedProperties = {
 	[self didAccessValueForKey:@"projectSelectedFiles"];
 	return result;
 }
+	
+
+@dynamic projectSelectedTabFile;
+
 	
 
 
