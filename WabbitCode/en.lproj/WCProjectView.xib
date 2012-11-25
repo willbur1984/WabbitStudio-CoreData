@@ -194,6 +194,7 @@
 								<string key="NSFrame">{{0, 120}, {240, 15}}</string>
 								<reference key="NSSuperview" ref="297092245"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:60</string>
 								<int key="NSsFlags">1</int>
 								<reference key="NSTarget" ref="297092245"/>
@@ -325,6 +326,14 @@
 						<reference key="destination" ref="585710741"/>
 					</object>
 					<int key="connectionID">25</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="585710741"/>
+						<reference key="destination" ref="316064548"/>
+					</object>
+					<int key="connectionID">26</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -468,13 +477,24 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">25</int>
+			<int key="maxID">26</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">WCOutlineView</string>
 					<string key="superclassName">NSOutlineView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">delete:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">delete:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">delete:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCOutlineView.h</string>
@@ -503,7 +523,7 @@
 					<string key="className">WCProjectViewController</string>
 					<string key="superclassName">WCViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="addFilesToProject:">id</string>
+						<string key="addFilesToProjectAction:">id</string>
 						<string key="deleteAction:">id</string>
 						<string key="newGroupAction:">id</string>
 						<string key="newGroupFromSelection:">id</string>
@@ -516,8 +536,8 @@
 						<string key="ungroupSelectionAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="addFilesToProject:">
-							<string key="name">addFilesToProject:</string>
+						<object class="IBActionInfo" key="addFilesToProjectAction:">
+							<string key="name">addFilesToProjectAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="deleteAction:">

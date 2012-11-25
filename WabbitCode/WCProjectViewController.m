@@ -127,6 +127,9 @@
 - (void)deleteActionInOutlineView:(WCOutlineView *)outlineView {
     [self deleteAction:nil];
 }
+- (void)returnActionInOutlineView:(WCOutlineView *)outlineView {
+    [self _outlineViewDoubleAction:outlineView];
+}
 #pragma mark NSOpenSavePanelDelegate
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL *)url {
     if ([url WC_isDirectory])
