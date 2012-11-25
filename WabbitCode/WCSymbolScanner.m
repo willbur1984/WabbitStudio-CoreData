@@ -66,12 +66,14 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     
     if (sourceFileDocument.projectDocument) {
         [self.managedObjectContext setParentContext:sourceFileDocument.projectDocument.symbolIndex.managedObjectContext];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_managedObjectContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.managedObjectContext.parentContext];
     }
     else {
         [self.managedObjectContext setPersistentStoreCoordinator:self.persistentStoreCoordinator];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_managedObjectContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.managedObjectContext];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_managedObjectContextDidSave:) name:NSManagedObjectContextDidSaveNotification object:self.managedObjectContext];
     
     [self.managedObjectContext setUndoManager:nil];
     [self.managedObjectContext setMergePolicy:NSOverwriteMergePolicy];
