@@ -120,9 +120,6 @@ static NSString *const kWCFoldScannerOperationQueueName = @"org.revsoft.wabbitco
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
 }
-- (NSArray *)topLevelFoldsForRange:(NSRange)range; {
-    
-}
 - (Fold *)topLevelFoldForRange:(NSRange)range; {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Fold"];
     
