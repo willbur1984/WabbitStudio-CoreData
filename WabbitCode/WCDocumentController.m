@@ -33,7 +33,7 @@ NSString *const kProjectSettingEntityName = @"ProjectSetting";
     if (!(self = [super init]))
         return nil;
 
-    [self setAutosavingDelay:20];
+//    [self setAutosavingDelay:20];
     
     return self;
 }
@@ -50,7 +50,7 @@ NSString *const kProjectSettingEntityName = @"ProjectSetting";
     
     [[NSFileManager defaultManager] removeItemAtURL:documentURL error:NULL];
     
-    if (![persistentStoreCoordinator addPersistentStoreWithType:NSBinaryStoreType configuration:nil URL:documentURL options:nil error:outError])
+    if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:documentURL options:nil error:outError])
         return NO;
     
     NSManagedObjectContext *managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
