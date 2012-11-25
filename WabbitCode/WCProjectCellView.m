@@ -16,8 +16,10 @@
 #import "File.h"
 #import "WCDefines.h"
 
-@interface WCProjectCellView ()
+@interface WCProjectCellView () <NSTextFieldDelegate>
+
 @property (readonly,nonatomic) File *file;
+
 @end
 
 @implementation WCProjectCellView
@@ -32,8 +34,14 @@
         if (self.file.isGroupValue)
             [self.imageView setImage:[NSImage imageNamed:@"Group.tiff"]];
         else
-            [self.imageView setImage:[[NSWorkspace sharedWorkspace] iconForFile:self.file.path]];
+            [self.imageView setImage:[[NSWorkspace sharedWorkspace] iconForFileType:self.file.uti]];
     }
+}
+
+- (BOOL)control:(NSControl *)control textShouldEndEditing:(NSText *)fieldEditor {
+    if (control == self.textField)
+        return (fieldEditor.string.length > 0);
+    return YES;
 }
 
 - (File *)file {
@@ -41,7 +49,9 @@
 }
 
 - (IBAction)_textFieldAction:(NSTextField *)sender {
-    [self.file setName:sender.stringValue];
+    if (self.file.isGroupValue) {
+        [self.file setName:sender.stringValue];
+    }
 }
 
 @end
