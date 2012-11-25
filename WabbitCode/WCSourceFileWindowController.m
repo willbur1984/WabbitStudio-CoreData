@@ -53,8 +53,8 @@
     
     [self setTextViewController:[[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument]];
     [self.textViewController setDelegate:self];
-    [self.textViewController.view setFrame:[self.window.contentView bounds]];
     [self.textViewController setShowAddRemoveAssistantEditorButtons:NO];
+    [self.textViewController.view setFrame:[self.window.contentView bounds]];
     [self.window.contentView addSubview:self.textViewController.view];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_windowWillStartLiveResize:) name:NSWindowWillStartLiveResizeNotification object:self.window];
