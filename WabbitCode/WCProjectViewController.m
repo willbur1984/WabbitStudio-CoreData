@@ -93,6 +93,8 @@
         [cell setIdentifier:tableColumn.identifier];
     }
     
+    [cell setOutlineView:outlineView];
+    
     return cell;
 }
 #pragma mark NSOutlineViewDelegate

@@ -15,4 +15,6 @@
 
 @interface WCProjectCellView : NSTableCellView
 
+@property (unsafe_unretained,nonatomic) IBOutlet NSOutlineView *outlineView;
+
 @end

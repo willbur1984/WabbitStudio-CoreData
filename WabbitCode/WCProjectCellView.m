@@ -43,6 +43,33 @@
         return (fieldEditor.string.length > 0);
     return YES;
 }
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)commandSelector {
+    if (commandSelector == @selector(insertTab:)) {
+        NSInteger numberOfRows = self.outlineView.numberOfRows;
+        NSInteger row = [self.outlineView rowForItem:self.objectValue];
+        
+        if ((++row) >= numberOfRows)
+            row = 0;
+        
+        [self.outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+        [self.outlineView editColumn:0 row:row withEvent:nil select:YES];
+        
+        return YES;
+    }
+    else if (commandSelector == @selector(insertBacktab:)) {
+        NSInteger numberOfRows = self.outlineView.numberOfRows;
+        NSInteger row = [self.outlineView rowForItem:self.objectValue];
+        
+        if ((--row) < 0)
+            row = numberOfRows - 1;
+        
+        [self.outlineView selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+        [self.outlineView editColumn:0 row:row withEvent:nil select:YES];
+        
+        return YES;
+    }
+    return NO;
+}
 
 - (File *)file {
     return (File *)self.objectValue;
