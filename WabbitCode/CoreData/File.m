@@ -39,7 +39,7 @@
 }
 
 - (NSImage *)image {
-    return [[NSWorkspace sharedWorkspace] iconForFile:self.path];
+    return [[NSWorkspace sharedWorkspace] iconForFileType:self.uti];
 }
 - (NSString *)fileUUID; {
     return self.uuid;
