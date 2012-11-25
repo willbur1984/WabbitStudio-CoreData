@@ -881,13 +881,14 @@ static char kWCTextViewObservingContext;
     }
     
     NSString *symbolName = [[self.string substringWithRange:symbolRange] lowercaseString];
-    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName];
+//    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] symbolsWithName:symbolName];
     
-    if (symbols.count == 0) {
-        [self setCountOfSymbolRangesToHighlight:0];
-        [self setSymbolRangesToHighlight:nil];
-        return;
-    }
+    // TODO: should this be limited to only symbols that are defined?
+//    if (symbols.count == 0) {
+//        [self setCountOfSymbolRangesToHighlight:0];
+//        [self setSymbolRangesToHighlight:nil];
+//        return;
+//    }
     
     __block NSUInteger countOfSymbolRanges = 0;
     NSMutableIndexSet *temp = [NSMutableIndexSet indexSet];
