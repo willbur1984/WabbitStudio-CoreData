@@ -30,4 +30,6 @@
 @optional
 - (BOOL)validateDeleteActionInOutlineView:(WCOutlineView *)outlineView;
 - (void)deleteActionInOutlineView:(WCOutlineView *)outlineView;
+
+- (void)returnActionInOutlineView:(WCOutlineView *)outlineView;
 @end

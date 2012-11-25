@@ -31,10 +31,18 @@
         case KEY_CODE_DELETE_FORWARD:
             [self delete:nil];
             return;
+        case KEY_CODE_RETURN:
+        case KEY_CODE_ENTER:
+            if ([self.delegate respondsToSelector:@selector(returnActionInOutlineView:)]) {
+                [self.delegate returnActionInOutlineView:self];
+                return;
+            }
+            break;
         default:
-            [super keyDown:theEvent];
             break;
     }
+    
+    [super keyDown:theEvent];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
