@@ -23,7 +23,7 @@
     if (self.drawBackground) {
         NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:5 yRadius:5];
         
-        [[NSColor colorWithCalibratedWhite:0 alpha:0.75] setFill];
+        [[NSColor colorWithCalibratedWhite:0 alpha:0.5] setFill];
         [path fill];
     }
 }
