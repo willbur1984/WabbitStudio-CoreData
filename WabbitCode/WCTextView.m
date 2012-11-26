@@ -19,6 +19,8 @@
 #import "NSString+WCExtensions.h"
 #import "WCArgumentPlaceholderCell.h"
 #import "Macro.h"
+#import "Label.h"
+#import "CalledLabel.h"
 #import "WCCompletionWindow.h"
 #import "WCTextStorage.h"
 #import "WCSymbolImageManager.h"
@@ -81,6 +83,7 @@ static char kWCTextViewObservingContext;
     [retval addItemWithTitle:NSLocalizedString(@"Paste", nil) action:@selector(paste:) keyEquivalent:@""];
     [retval addItem:[NSMenuItem separatorItem]];
     
+    [retval addItemWithTitle:NSLocalizedString(@"Jump to Caller", nil) action:@selector(jumpToCallerAction:) keyEquivalent:@""];
     [retval addItemWithTitle:NSLocalizedString(@"Jump to Definition", nil) action:@selector(jumpToDefinitionAction:) keyEquivalent:@""];
     [retval addItem:[NSMenuItem separatorItem]];
     
@@ -753,6 +756,67 @@ static char kWCTextViewObservingContext;
         [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];
 }
 #pragma mark Actions
+- (IBAction)jumpToCallerAction:(id)sender; {
+    NSRange symbolRange = [self.string WC_symbolRangeForRange:self.selectedRange];
+    
+    if (symbolRange.location == NSNotFound) {
+        NSBeep();
+        [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Not Found", nil) inView:self.enclosingScrollView];
+        return;
+    }
+    
+    NSArray *symbols = [[self.delegate symbolScannerForTextView:self] calledLabelsWithName:[self.string substringWithRange:self.selectedRange]];
+    
+    if (symbols.count == 0) {
+        NSBeep();
+        [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Not Found", nil) inView:self.enclosingScrollView];
+        return;
+    }
+    
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"CalledLabel"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.labelName ==[cd] %@",[symbols.lastObject name]]];
+    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"fileContainer.path" ascending:YES],[NSSortDescriptor sortDescriptorWithKey:@"location" ascending:YES]]];
+    
+    NSMenu *menu = [[NSMenu alloc] initWithTitle:@""];
+    
+    [menu setShowsStateColumn:NO];
+    [menu setFont:[NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+    
+    CalledLabel *currentCalledLabel = nil;
+    
+    for (CalledLabel *calledLabel in [[self.delegate symbolScannerForTextView:self].managedObjectContext executeFetchRequest:fetchRequest error:NULL]) {
+        if (![currentCalledLabel.fileContainer isEqual:calledLabel.fileContainer]) {
+            currentCalledLabel = calledLabel;
+            
+            NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 (%@)", nil),calledLabel.fileContainer.path.lastPathComponent,calledLabel.fileContainer.path.stringByAbbreviatingWithTildeInPath] action:NULL keyEquivalent:@""];
+            
+            [item setImage:[[NSWorkspace sharedWorkspace] iconForFile:calledLabel.fileContainer.path]];
+            [item.image setSize:WC_NSSmallSize];
+        }
+        
+        NSMenuItem *item = [menu addItemWithTitle:[NSString stringWithFormat:NSLocalizedString(@"%@ \u2192 %@:%ld", nil),calledLabel.name,calledLabel.fileContainer.path.lastPathComponent,calledLabel.displayLineNumber] action:@selector(_jumpToCallerMenuItemAction:) keyEquivalent:@""];
+        
+        [item setImage:[[WCSymbolImageManager sharedManager] imageForSymbolType:SymbolTypeLabel]];
+        [item setRepresentedObject:calledLabel];
+        [item setIndentationLevel:1];
+    }
+    
+    if (menu.numberOfItems == 0) {
+        NSBeep();
+        [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Caller(s) Not Found", nil) inView:self.enclosingScrollView];
+        return;
+    }
+    
+    NSUInteger glyphIndex = [self.layoutManager glyphIndexForCharacterAtIndex:symbolRange.location];
+    NSRect lineFragmentRect = [self.layoutManager lineFragmentRectForGlyphAtIndex:glyphIndex effectiveRange:NULL];
+    NSPoint glyphLocation = [self.layoutManager locationForGlyphAtIndex:glyphIndex];
+    
+    lineFragmentRect.origin.x += glyphLocation.x;
+    lineFragmentRect.origin.y += NSHeight(lineFragmentRect);
+    
+    [menu popUpMenuPositioningItem:nil atLocation:lineFragmentRect.origin inView:self];
+}
 - (IBAction)jumpToDefinitionAction:(id)sender; {
     [self _jumpToDefinitionForRange:self.selectedRange];
 }
@@ -1214,6 +1278,10 @@ static char kWCTextViewObservingContext;
 - (IBAction)_jumpToDefinitionMenuItemAction:(NSMenuItem *)sender {
     if ([self.delegate respondsToSelector:@selector(textView:jumpToDefinitionForSymbol:)])
         [self.delegate textView:self jumpToDefinitionForSymbol:sender.representedObject];
+}
+- (IBAction)_jumpToCallerMenuItemAction:(NSMenuItem *)sender {
+    if ([self.delegate respondsToSelector:@selector(textView:jumpToCallerForCalledLabel:)])
+        [self.delegate textView:self jumpToCallerForCalledLabel:sender.representedObject];
 }
 #pragma mark Callbacks
 - (void)_toolTipTimerCallback:(NSTimer *)timer {

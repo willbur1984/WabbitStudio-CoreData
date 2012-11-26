@@ -40,6 +40,10 @@ extern NSString *const WCSymbolScannerDidFinishScanningSymbolsNotification;
 
 + (NSRegularExpression *)symbolRegex;
 
++ (NSRegularExpression *)calledLabelRegex;
++ (NSRegularExpression *)calledLabelWithConditionalRegisterRegex;
+- (NSArray *)calledLabelsWithName:(NSString *)name;
+
 @end
 
 @protocol WCSymbolScannerDelegate <NSObject>

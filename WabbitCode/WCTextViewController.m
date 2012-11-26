@@ -42,6 +42,7 @@
 #import "WCProjectWindowController.h"
 #import "WCJumpInWindowController.h"
 #import "WCHUDStatusWindow.h"
+#import "CalledLabel.h"
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate>
 
@@ -295,6 +296,28 @@
         WCTextViewController *textViewController = [tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
         
         [textViewController.textView setSelectedRange:NSRangeFromString(symbol.range)];
+        [textViewController.textView scrollRangeToVisible:textViewController.textView.selectedRange];
+    }
+}
+- (void)textView:(WCTextView *)textView jumpToCallerForCalledLabel:(CalledLabel *)calledLabel {
+    if ([calledLabel.fileContainer.uuid isEqualToString:self.sourceFileDocument.UUID]) {
+        [textView setSelectedRange:NSRangeFromString(calledLabel.range)];
+        [textView scrollRangeToVisible:textView.selectedRange];
+    }
+    else {
+        File *file = [self.sourceFileDocument.projectDocument fileWithUUID:calledLabel.fileContainer.uuid];
+        WCSourceFileDocument *sourceFileDocument = [self.sourceFileDocument.projectDocument sourceFileDocumentForFile:file];
+        
+        if (!sourceFileDocument) {
+            NSBeep();
+            [[WCHUDStatusWindow sharedInstance] showString:NSLocalizedString(@"Symbol Not Found", nil) inView:textView.enclosingScrollView];
+            return;
+        }
+        
+        WCTabViewController *tabViewController = self.sourceFileDocument.projectDocument.projectWindowController.tabViewController;
+        WCTextViewController *textViewController = [tabViewController selectTabBarItemForSourceFileDocument:sourceFileDocument];
+        
+        [textViewController.textView setSelectedRange:NSRangeFromString(calledLabel.range)];
         [textViewController.textView scrollRangeToVisible:textViewController.textView.selectedRange];
     }
 }

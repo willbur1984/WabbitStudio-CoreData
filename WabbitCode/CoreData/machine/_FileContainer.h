@@ -10,12 +10,14 @@ extern const struct FileContainerAttributes {
 } FileContainerAttributes;
 
 extern const struct FileContainerRelationships {
+	__unsafe_unretained NSString *calledLabels;
 	__unsafe_unretained NSString *symbols;
 } FileContainerRelationships;
 
 extern const struct FileContainerFetchedProperties {
 } FileContainerFetchedProperties;
 
+@class CalledLabel;
 @class Symbol;
 
 
@@ -50,6 +52,13 @@ extern const struct FileContainerFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSSet* calledLabels;
+
+- (NSMutableSet*)calledLabelsSet;
+
+
+
+
 @property (nonatomic, strong) NSSet* symbols;
 
 - (NSMutableSet*)symbolsSet;
@@ -61,6 +70,11 @@ extern const struct FileContainerFetchedProperties {
 @end
 
 @interface _FileContainer (CoreDataGeneratedAccessors)
+
+- (void)addCalledLabels:(NSSet*)value_;
+- (void)removeCalledLabels:(NSSet*)value_;
+- (void)addCalledLabelsObject:(CalledLabel*)value_;
+- (void)removeCalledLabelsObject:(CalledLabel*)value_;
 
 - (void)addSymbols:(NSSet*)value_;
 - (void)removeSymbols:(NSSet*)value_;
@@ -82,6 +96,11 @@ extern const struct FileContainerFetchedProperties {
 - (void)setPrimitiveUuid:(NSString*)value;
 
 
+
+
+
+- (NSMutableSet*)primitiveCalledLabels;
+- (void)setPrimitiveCalledLabels:(NSMutableSet*)value;
 
 
 

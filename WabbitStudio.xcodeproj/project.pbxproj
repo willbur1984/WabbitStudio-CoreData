@@ -98,6 +98,8 @@
 		7973D6E1160CFD57004EDE62 /* WCSyntaxHighlighter.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E0160CFD57004EDE62 /* WCSyntaxHighlighter.m */; };
 		7973D6E4160D2274004EDE62 /* WCToolTipWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */; };
 		797E92FC1631B6EC00F7851A /* NSImage+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */; };
+		798088F816630BEB0025B1CB /* CalledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 798088F716630BEB0025B1CB /* CalledLabel.m */; };
+		798088FB16630BF80025B1CB /* _CalledLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 798088FA16630BF80025B1CB /* _CalledLabel.m */; };
 		79813E5F16437CF500D0F184 /* WCProjectCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E5E16437CF500D0F184 /* WCProjectCellView.m */; };
 		79813E611643816100D0F184 /* Group.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 79813E601643816100D0F184 /* Group.tiff */; };
 		79813E64164382D100D0F184 /* WCOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E63164382D100D0F184 /* WCOutlineView.m */; };
@@ -393,6 +395,10 @@
 		7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCToolTipWindow.m; sourceTree = "<group>"; };
 		797E92FA1631B6EB00F7851A /* NSImage+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSImage+WCExtensions.h"; sourceTree = "<group>"; };
 		797E92FB1631B6EB00F7851A /* NSImage+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSImage+WCExtensions.m"; sourceTree = "<group>"; };
+		798088F616630BEB0025B1CB /* CalledLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CalledLabel.h; sourceTree = "<group>"; };
+		798088F716630BEB0025B1CB /* CalledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CalledLabel.m; sourceTree = "<group>"; };
+		798088F916630BF80025B1CB /* _CalledLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _CalledLabel.h; sourceTree = "<group>"; };
+		798088FA16630BF80025B1CB /* _CalledLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _CalledLabel.m; sourceTree = "<group>"; };
 		79813E5D16437CF500D0F184 /* WCProjectCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCProjectCellView.h; sourceTree = "<group>"; };
 		79813E5E16437CF500D0F184 /* WCProjectCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCProjectCellView.m; sourceTree = "<group>"; };
 		79813E601643816100D0F184 /* Group.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = Group.tiff; sourceTree = "<group>"; };
@@ -655,6 +661,8 @@
 		7903F1FB160FB7F8000D3F3D /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				798088F616630BEB0025B1CB /* CalledLabel.h */,
+				798088F716630BEB0025B1CB /* CalledLabel.m */,
 				79BEFE9E1652A198001B4C96 /* Define.h */,
 				79BEFE9F1652A198001B4C96 /* Define.m */,
 				79BEFEA01652A198001B4C96 /* Equate.h */,
@@ -1077,6 +1085,8 @@
 		79BEFE921652A0B1001B4C96 /* machine */ = {
 			isa = PBXGroup;
 			children = (
+				798088F916630BF80025B1CB /* _CalledLabel.h */,
+				798088FA16630BF80025B1CB /* _CalledLabel.m */,
 				79BEFEB01652A1A6001B4C96 /* _Define.h */,
 				79BEFEB11652A1A6001B4C96 /* _Define.m */,
 				79BEFEB21652A1A6001B4C96 /* _Equate.h */,
@@ -1725,6 +1735,8 @@
 				79CFE8C9165B174A0044D345 /* ProjectSetting.m in Sources */,
 				79CFE8CC165B17580044D345 /* _ProjectSetting.m in Sources */,
 				79CFE8FE165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m in Sources */,
+				798088F816630BEB0025B1CB /* CalledLabel.m in Sources */,
+				798088FB16630BF80025B1CB /* _CalledLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

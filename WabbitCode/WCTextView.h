@@ -33,6 +33,7 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefa
 
 + (NSRegularExpression *)completionRegex;
 
+- (IBAction)jumpToCallerAction:(id)sender;
 - (IBAction)jumpToDefinitionAction:(id)sender;
 
 - (IBAction)foldAction:(id)sender;
@@ -50,11 +51,12 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefa
 
 @end
 
-@class WCSymbolScanner,Symbol,WCFoldScanner;
+@class WCSymbolScanner,Symbol,WCFoldScanner,CalledLabel;
 
 @protocol WCTextViewDelegate <NSTextViewDelegate>
 - (WCSymbolScanner *)symbolScannerForTextView:(WCTextView *)textView;
 - (WCFoldScanner *)foldScannerForTextView:(WCTextView *)textView;
 @optional
 - (void)textView:(WCTextView *)textView jumpToDefinitionForSymbol:(Symbol *)symbol;
+- (void)textView:(WCTextView *)textView jumpToCallerForCalledLabel:(CalledLabel *)calledLabel;
 @end

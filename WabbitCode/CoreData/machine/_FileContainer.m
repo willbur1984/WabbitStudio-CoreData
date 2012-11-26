@@ -9,6 +9,7 @@ const struct FileContainerAttributes FileContainerAttributes = {
 };
 
 const struct FileContainerRelationships FileContainerRelationships = {
+	.calledLabels = @"calledLabels",
 	.symbols = @"symbols",
 };
 
@@ -61,6 +62,19 @@ const struct FileContainerFetchedProperties FileContainerFetchedProperties = {
 
 
 
+
+@dynamic calledLabels;
+
+	
+- (NSMutableSet*)calledLabelsSet {
+	[self willAccessValueForKey:@"calledLabels"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"calledLabels"];
+  
+	[self didAccessValueForKey:@"calledLabels"];
+	return result;
+}
+	
 
 @dynamic symbols;
 

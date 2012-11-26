@@ -150,6 +150,16 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
 
+- (NSArray *)calledLabelsWithName:(NSString *)name; {
+    NSParameterAssert(name);
+    
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Label"];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.isCalled == YES AND self.name ==[cd] %@",name]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+
 + (NSRegularExpression *)symbolRegex; {
     static NSRegularExpression *retval;
     static dispatch_once_t onceToken;
@@ -157,6 +167,22 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
         retval = [[NSRegularExpression alloc] initWithPattern:@"[A-Za-z0-9_!?.]+" options:0 error:NULL];
     });
     return retval;
+}
++ (NSRegularExpression *)calledLabelRegex; {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"\\b(?:call|jp|jr)\\s+([A-Za-z0-9_!?]+)\\b" options:0 error:NULL];
+    });
+    return retval;
+}
++ (NSRegularExpression *)calledLabelWithConditionalRegisterRegex {
+    static NSRegularExpression *retval;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		retval = [[NSRegularExpression alloc] initWithPattern:@"\\b(?:call|jp|jr)\\s+(?:nz|nv|nc|po|pe|c|p|m|n|z|v),\\s*([A-Za-z0-9_!?]+)\\b" options:0 error:NULL];
+	});
+	return retval;
 }
 
 - (void)setDelegate:(id<WCSymbolScannerDelegate>)delegate {

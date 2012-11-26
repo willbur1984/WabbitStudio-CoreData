@@ -5,6 +5,7 @@
 #import "Symbol.h"
 
 extern const struct LabelAttributes {
+	__unsafe_unretained NSString *isCalled;
 } LabelAttributes;
 
 extern const struct LabelRelationships {
@@ -12,6 +13,7 @@ extern const struct LabelRelationships {
 
 extern const struct LabelFetchedProperties {
 } LabelFetchedProperties;
+
 
 
 
@@ -27,6 +29,18 @@ extern const struct LabelFetchedProperties {
 
 
 
+@property (nonatomic, strong) NSNumber* isCalled;
+
+
+@property BOOL isCalledValue;
+- (BOOL)isCalledValue;
+- (void)setIsCalledValue:(BOOL)value_;
+
+//- (BOOL)validateIsCalled:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 
 @end
@@ -36,6 +50,15 @@ extern const struct LabelFetchedProperties {
 @end
 
 @interface _Label (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveIsCalled;
+- (void)setPrimitiveIsCalled:(NSNumber*)value;
+
+- (BOOL)primitiveIsCalledValue;
+- (void)setPrimitiveIsCalledValue:(BOOL)value_;
+
+
 
 
 @end

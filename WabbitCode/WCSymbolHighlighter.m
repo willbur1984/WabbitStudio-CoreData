@@ -19,6 +19,7 @@
 #import "NSTextView+WCExtensions.h"
 #import "WCTextStorage.h"
 #import "WCSymbolIndex.h"
+#import "Label.h"
 
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
@@ -82,6 +83,9 @@
                     switch (symbol.type.intValue) {
                         case SymbolTypeLabel:
                             [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:symbolRange];
+                            
+                            if ([(Label *)symbol isCalledValue])
+                                [self.textStorage addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle|NSUnderlinePatternSolid) range:symbolRange];
                             break;
                         case SymbolTypeEquate:
                             [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:symbolRange];
@@ -94,6 +98,7 @@
                             break;
                         default:
                             [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:symbolRange];
+                            [self.textStorage removeAttribute:NSUnderlineStyleAttributeName range:symbolRange];
                             break;
                     }
                 }
