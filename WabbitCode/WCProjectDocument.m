@@ -142,15 +142,10 @@
         return [NSImage imageNamed:@"Group.tiff"];
     
     WCSourceFileDocument *sourceFileDocument = [self sourceFileDocumentForFile:file];
-    NSImage *retval = nil;
+    NSImage *retval = [[NSWorkspace sharedWorkspace] iconForFileType:file.uti];
     
-    if ([sourceFileDocument.fileURL getResourceValue:&retval forKey:NSURLEffectiveIconKey error:NULL]) {
-        if (sourceFileDocument.isDocumentEdited)
-            retval = [retval WC_unsavedImageIcon];
-    }
-    else {
-        retval = [[NSWorkspace sharedWorkspace] iconForFile:file.path];
-    }
+    if (sourceFileDocument.isDocumentEdited && file.project == nil)
+        retval = [retval WC_unsavedImageIcon];
     
     return retval;
 }
