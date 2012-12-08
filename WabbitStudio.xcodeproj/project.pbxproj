@@ -20,6 +20,7 @@
 		7903F1F6160FAE08000D3F3D /* WCSymbolImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F5160FAE07000D3F3D /* WCSymbolImageManager.m */; };
 		7903F1FA160FB323000D3F3D /* NSBezierPath+StrokeExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */; };
 		7903F207160FDE9E000D3F3D /* WCArgumentPlaceholderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */; };
+		790AFB2A1672F51100DEF234 /* WCTabWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 790AFB291672F51100DEF234 /* WCTabWindow.m */; };
 		79129113160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */; };
 		7912911A160ABD5100ADFAB5 /* WCTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79129119160ABD5100ADFAB5 /* WCTextView.m */; };
 		79390160163B673100168CD5 /* WCProjectDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 7939015E163B673100168CD5 /* WCProjectDocument.m */; };
@@ -257,6 +258,8 @@
 		7903F1F9160FB2C3000D3F3D /* NSBezierPath+StrokeExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSBezierPath+StrokeExtensions.m"; sourceTree = "<group>"; };
 		7903F205160FDE9D000D3F3D /* WCArgumentPlaceholderCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCArgumentPlaceholderCell.h; sourceTree = "<group>"; };
 		7903F206160FDE9D000D3F3D /* WCArgumentPlaceholderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCArgumentPlaceholderCell.m; sourceTree = "<group>"; };
+		790AFB281672F51100DEF234 /* WCTabWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTabWindow.h; sourceTree = "<group>"; };
+		790AFB291672F51100DEF234 /* WCTabWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCTabWindow.m; sourceTree = "<group>"; };
 		79129111160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSParagraphStyle+WCExtensions.h"; sourceTree = "<group>"; };
 		79129112160AB1C200ADFAB5 /* NSParagraphStyle+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSParagraphStyle+WCExtensions.m"; sourceTree = "<group>"; };
 		79129118160ABD5100ADFAB5 /* WCTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCTextView.h; sourceTree = "<group>"; };
@@ -1256,6 +1259,8 @@
 				7973D6E3160D2274004EDE62 /* WCToolTipWindow.m */,
 				7962BD9B161FDD3E006D5A7A /* WCWindow.h */,
 				7962BD9C161FDD3E006D5A7A /* WCWindow.m */,
+				790AFB281672F51100DEF234 /* WCTabWindow.h */,
+				790AFB291672F51100DEF234 /* WCTabWindow.m */,
 				7962BDA91620C13C006D5A7A /* WCHUDStatusWindow.h */,
 				7962BDAA1620C13C006D5A7A /* WCHUDStatusWindow.m */,
 				7962BDAC1620C4F8006D5A7A /* WCHUDStatusContentView.h */,
@@ -1737,6 +1742,7 @@
 				79CFE8FE165D87EA0044D345 /* WCAddToProjectAccessoryViewController.m in Sources */,
 				798088F816630BEB0025B1CB /* CalledLabel.m in Sources */,
 				798088FB16630BF80025B1CB /* _CalledLabel.m in Sources */,
+				790AFB2A1672F51100DEF234 /* WCTabWindow.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

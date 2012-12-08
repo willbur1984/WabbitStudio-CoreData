@@ -40,7 +40,7 @@
 				<string key="NSWindowRect">{{196, 240}, {1024, 640}}</string>
 				<int key="NSWTFlags">813170688</int>
 				<string key="NSWindowTitle">Window</string>
-				<string key="NSWindowClass">WCWindow</string>
+				<string key="NSWindowClass">WCTabWindow</string>
 				<nil key="NSViewClass"/>
 				<nil key="NSUserInterfaceItemIdentifier"/>
 				<string key="NSWindowContentMinSize">{1024, 640}</string>
@@ -355,6 +355,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">WCTabWindow</string>
+					<string key="superclassName">WCWindow</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WCTabWindow.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

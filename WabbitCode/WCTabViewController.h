@@ -13,12 +13,16 @@
 
 #import "WCViewController.h"
 
-@class WCSourceFileDocument,WCTextViewController,MMTabBarView,WCProjectDocument;
+@class WCSourceFileDocument,WCTextViewController,MMTabBarView,WCProjectDocument,WCTabView;
 @protocol WCTabViewControllerDelegate;
 
 @interface WCTabViewController : WCViewController <NSUserInterfaceValidations>
 
+@property (readonly,weak,nonatomic) IBOutlet WCTabView *tabView;
+
 @property (unsafe_unretained,nonatomic) id <WCTabViewControllerDelegate> delegate;
+
+@property (readonly,strong,nonatomic) MMTabBarView *tabBarView;
 
 - (id)initWithTabBarView:(MMTabBarView *)tabBarView;
 

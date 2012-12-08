@@ -22,10 +22,13 @@
 #import "WCSplitView.h"
 #import "NSColor+WCExtensions.h"
 #import "WCTabView.h"
+#import "WCTabWindow.h"
+#import "MMTabBarView.h"
+#import "MMAttachedTabBarButton.h"
 
 static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.toolbar";
 
-@interface WCProjectWindowController () <WCNavigatorControlDataSource,WCTabViewControllerDelegate,NSWindowDelegate,NSSplitViewDelegate,NSToolbarDelegate>
+@interface WCProjectWindowController () <WCNavigatorControlDataSource,WCTabViewControllerDelegate,WCTabWindowDelegate,NSWindowDelegate,NSSplitViewDelegate,NSToolbarDelegate>
 
 @property (weak,nonatomic) IBOutlet WCSplitView *mainSplitView;
 @property (weak,nonatomic) IBOutlet WCNavigatorControl *navigatorControl;
@@ -90,6 +93,10 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     for (WCViewController *viewController in self.navigatorItems)
         [viewController cleanup];
 }
+#pragma mark WCTabWindowDelegate
+- (WCTabViewController *)tabViewControllerForTabWindow:(WCTabWindow *)tabWindow {
+    return self.tabViewController;
+}
 
 #pragma mark NSSplitViewDelegate
 - (BOOL)splitView:(NSSplitView *)splitView shouldAdjustSizeOfSubview:(NSView *)view {
@@ -141,7 +148,32 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     return (WCProjectDocument *)self.document;
 }
 #pragma mark Actions
-
+- (IBAction)selectNextTabAction:(id)sender; {
+    NSTabViewItem *selectedItem = self.tabBarView.tabView.selectedTabViewItem;
+    
+    if (selectedItem) {
+        NSArray *buttons = self.tabBarView.orderedAttachedButtons;
+        NSInteger buttonIndex = [self.tabBarView indexOfAttachedButton:[self.tabBarView attachedButtonForTabViewItem:selectedItem]];
+        
+        if ((++buttonIndex) >= buttons.count)
+            buttonIndex = 0;
+        
+        [self.tabBarView.tabView selectTabViewItem:[[buttons objectAtIndex:buttonIndex] tabViewItem]];
+    }
+}
+- (IBAction)selectPreviousTabAction:(id)sender; {
+    NSTabViewItem *selectedItem = self.tabBarView.tabView.selectedTabViewItem;
+    
+    if (selectedItem) {
+        NSArray *buttons = self.tabBarView.orderedAttachedButtons;
+        NSInteger buttonIndex = [self.tabBarView indexOfAttachedButton:[self.tabBarView attachedButtonForTabViewItem:selectedItem]];
+        
+        if ((--buttonIndex) >= buttons.count)
+            buttonIndex = buttons.count - 1;
+        
+        [self.tabBarView.tabView selectTabViewItem:[[buttons objectAtIndex:buttonIndex] tabViewItem]];
+    }
+}
 #pragma mark *** Private Methods ***
 #pragma mark Properties
 - (WCProjectViewController *)projectViewController {

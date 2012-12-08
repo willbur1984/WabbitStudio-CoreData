@@ -28,9 +28,9 @@
 
 @interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate,NSSplitViewDelegate>
 
-@property (weak,nonatomic) IBOutlet WCTabView *tabView;
+@property (readwrite,weak,nonatomic) IBOutlet WCTabView *tabView;
 
-@property (strong,nonatomic) MMTabBarView *tabBarView;
+@property (readwrite,strong,nonatomic) MMTabBarView *tabBarView;
 @property (strong,nonatomic) NSMapTable *sourceFileDocumentsToTextViewControllers;
 @property (strong,nonatomic) NSMapTable *textViewControllersToSourceFileDocuments;
 @property (strong,nonatomic) NSMapTable *textViewControllersToAssistantTextViewControllers;
