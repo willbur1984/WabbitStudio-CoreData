@@ -50,6 +50,7 @@ NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey = @"WCTextViewIndent
 NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey = @"WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey";
 NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey = @"WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey";
 NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey = @"WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey";
+NSString *const WCTextViewTabWidthUserDefaultsKey = @"WCTextViewTabWidthUserDefaultsKey";
 
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
@@ -96,7 +97,7 @@ static char kWCTextViewObservingContext;
 }
 
 + (NSSet *)WC_userDefaultsKeysToObserve {
-    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey,WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey,WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey, nil];
+    return [NSSet setWithObjects:WCTextViewFocusFollowsSelectionUserDefaultsKey,WCTextViewPageGuideUserDefaultsKey,WCTextViewPageGuideColumnUserDefaultsKey,WCTextViewWrapLinesUserDefaultsKey,WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey, nil];
 }
 
 #pragma mark NSKeyValueObserving
@@ -115,12 +116,6 @@ static char kWCTextViewObservingContext;
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewWrapLinesUserDefaultsKey]]) {
             [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
             [self setWrapping:[[object valueForKeyPath:keyPath] boolValue]];
-        }
-        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesUserDefaultsKey]]) {
-            [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
-        }
-        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey]]) {
-            [self setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
         }
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey]]) {
             [self setNeedsDisplayInRect:self.visibleRect avoidAdditionalLayout:YES];

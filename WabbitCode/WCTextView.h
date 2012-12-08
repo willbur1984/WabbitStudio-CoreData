@@ -21,6 +21,7 @@ extern NSString *const WCTextViewIndentWrappedLinesUserDefaultsKey;
 extern NSString *const WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey;
 extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey;
 extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey;
+extern NSString *const WCTextViewTabWidthUserDefaultsKey;
 
 @class Fold;
 @protocol WCTextViewDelegate;

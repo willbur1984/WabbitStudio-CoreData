@@ -19,6 +19,7 @@
 #import "WCTextView.h"
 #import "NSUserDefaults+WCExtensions.h"
 #import "WCSyntaxHighlighter.h"
+#import "WCDefines.h"
 
 NSString *const WCTextStorageFoldAttributeName = @"WCTextStorageFoldAttributeName";
 
@@ -31,6 +32,8 @@ static char kWCTextStorageObservingContext;
 @interface WCTextStorage ()
 @property (strong,nonatomic) NSMutableAttributedString *attributedString;
 @property (readwrite,strong,nonatomic) WCBookmarkManager *bookmarkManager;
+
+- (void)_updateParagraphStyle;
 @end
 
 @implementation WCTextStorage
@@ -124,20 +127,23 @@ static char kWCTextStorageObservingContext;
 }
 
 + (NSSet *)WC_userDefaultsKeysToObserve {
-    return [NSSet setWithObjects:WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey, nil];
+    return [NSSet setWithObjects:WCTextViewWrapLinesUserDefaultsKey,WCTextViewIndentWrappedLinesUserDefaultsKey,WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey,WCTextViewTabWidthUserDefaultsKey, nil];
 }
 
 #pragma mark NSKeyValueObserving
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &kWCTextStorageObservingContext) {
         if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewWrapLinesUserDefaultsKey]]) {
-            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+            [self _updateParagraphStyle];
         }
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesUserDefaultsKey]]) {
-            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+            [self _updateParagraphStyle];
         }
         else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey]]) {
-            [self addAttribute:NSParagraphStyleAttributeName value:self.paragraphStyle range:NSMakeRange(0, self.length)];
+            [self _updateParagraphStyle];
+        }
+        else if ([keyPath isEqualToString:[@"values." stringByAppendingString:WCTextViewTabWidthUserDefaultsKey]]) {
+            [self _updateParagraphStyle];
         }
     }
     else {
@@ -162,6 +168,19 @@ static char kWCTextStorageObservingContext;
         
         [retval setHeadIndent:tempSize.width];
     }
+    
+    NSUInteger tabWidth = [[[NSUserDefaults standardUserDefaults] objectForKey:WCTextViewTabWidthUserDefaultsKey] unsignedIntegerValue];
+    NSMutableString *temp = [NSMutableString stringWithCapacity:tabWidth];
+    
+    for (NSUInteger tempIndex=0; tempIndex<tabWidth; tempIndex++)
+        [temp appendString:@" "];
+    
+    NSSize tempSize = [temp sizeWithAttributes:[WCSyntaxHighlighter defaultAttributes]];
+    
+    for (id tabStop in retval.tabStops)
+        [retval removeTabStop:tabStop];
+    
+    [retval setDefaultTabInterval:tempSize.width];
     
     return retval;
 }
@@ -207,5 +226,16 @@ static char kWCTextStorageObservingContext;
 
 - (NSParagraphStyle *)paragraphStyle {
     return [self.class defaultParagraphStyle];
+}
+#pragma mark *** Private Methods ***
+- (void)_updateParagraphStyle; {
+    NSParagraphStyle *style = self.paragraphStyle;
+    
+    for (NSLayoutManager *layoutManager in self.layoutManagers) {
+        for (NSTextContainer *textContainer in layoutManager.textContainers)
+            [textContainer.textView setDefaultParagraphStyle:style];
+    }
+    
+    [self addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(0, self.length)];
 }
 @end
