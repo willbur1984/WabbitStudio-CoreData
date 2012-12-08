@@ -68,7 +68,9 @@
     id value;
     
     while (range.length) {
+        [(WCTextStorage *)self.textStorage setFolding:YES];
         value = [self.textStorage attribute:WCTextStorageFoldAttributeName atIndex:range.location longestEffectiveRange:&foldRange inRange:range];
+        [(WCTextStorage *)self.textStorage setFolding:NO];
         
         if (![value boolValue]) {
             NSRange highlightRange = foldRange;
