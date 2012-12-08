@@ -34,6 +34,8 @@ NSString *const kSymbolAttributeName = @"kSymbolAttributeName";
 
 - (void)dealloc {
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_textStorage setDelegate:nil];
 }
 #pragma mark NSTextStorageDelegate
 
