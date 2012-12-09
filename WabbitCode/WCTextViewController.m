@@ -44,7 +44,7 @@
 #import "WCHUDStatusWindow.h"
 #import "CalledLabel.h"
 
-@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate>
+@interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate,NSLayoutManagerDelegate>
 
 @property (readwrite,unsafe_unretained,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
@@ -80,6 +80,7 @@
     
     // text view
     [self.textView.textContainer replaceLayoutManager:[[WCLayoutManager alloc] init]];
+    [self.textView.textContainer.layoutManager setDelegate:self];
     [self.textView setTypingAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView setMarkedTextAttributes:[WCSyntaxHighlighter defaultAttributes]];
     [self.textView setDefaultParagraphStyle:[WCTextStorage defaultParagraphStyle]];
@@ -228,7 +229,27 @@
     *action = NULL;
     return NO;
 }
-
+#pragma mark NSLayoutManagerDelegate
+- (NSDictionary *)layoutManager:(NSLayoutManager *)layoutManager shouldUseTemporaryAttributes:(NSDictionary *)attrs forDrawingToScreen:(BOOL)toScreen atCharacterIndex:(NSUInteger)charIndex effectiveRange:(NSRangePointer)effectiveCharRange {
+    if (toScreen) {
+        NSMutableDictionary *temp = [attrs mutableCopy];
+        
+        if ([[attrs objectForKey:WCSymbolHighlighterMacroTemporaryAttributeName] boolValue]) {
+            [temp setObject:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] forKey:NSForegroundColorAttributeName];
+        }
+        else if ([[attrs objectForKey:WCSymbolHighlighterDefineTemporaryAttributeName] boolValue]) {
+            [temp setObject:[NSColor brownColor] forKey:NSForegroundColorAttributeName];
+        }
+        else if ([[attrs objectForKey:WCSymbolHighlighterEquateTemporaryAttributeName] boolValue]) {
+            [temp setObject:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] forKey:NSForegroundColorAttributeName];
+        }
+        else if ([[attrs objectForKey:WCSymbolHighlighterLabelTemporaryAttributeName] boolValue]) {
+            [temp setObject:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] forKey:NSForegroundColorAttributeName];
+        }
+        return temp;
+    }
+    return nil;
+}
 #pragma mark NSTextViewDelegate
 - (void)textViewDidChangeSelection:(NSNotification *)note {
     [self.jumpBarControl reloadSymbolPathComponentCell];

@@ -14,6 +14,11 @@
 #import <Foundation/Foundation.h>
 #import "WCSymbolsProvider.h"
 
+extern NSString *const WCSymbolHighlighterMacroTemporaryAttributeName;
+extern NSString *const WCSymbolHighlighterDefineTemporaryAttributeName;
+extern NSString *const WCSymbolHighlighterEquateTemporaryAttributeName;
+extern NSString *const WCSymbolHighlighterLabelTemporaryAttributeName;
+
 @protocol WCSymbolHighlighterDelegate;
 
 @interface WCSymbolHighlighter : NSObject

@@ -21,6 +21,11 @@
 #import "WCSymbolIndex.h"
 #import "Label.h"
 
+NSString *const WCSymbolHighlighterMacroTemporaryAttributeName = @"WCSymbolHighlighterMacroTemporaryAttributeName";
+NSString *const WCSymbolHighlighterDefineTemporaryAttributeName = @"WCSymbolHighlighterDefineTemporaryAttributeName";
+NSString *const WCSymbolHighlighterEquateTemporaryAttributeName = @"WCSymbolHighlighterEquateTemporaryAttributeName";
+NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighlighterLabelTemporaryAttributeName";
+
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
 @end
@@ -60,9 +65,14 @@
     if (!range.length)
         return;
     
-    id <WCSymbolsProvider> symbolsProvider = [self.delegate symbolsProviderForSymbolHighlighter:self];
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+        [layoutManager removeTemporaryAttribute:WCSymbolHighlighterMacroTemporaryAttributeName forCharacterRange:range];
+        [layoutManager removeTemporaryAttribute:WCSymbolHighlighterDefineTemporaryAttributeName forCharacterRange:range];
+        [layoutManager removeTemporaryAttribute:WCSymbolHighlighterEquateTemporaryAttributeName forCharacterRange:range];
+        [layoutManager removeTemporaryAttribute:WCSymbolHighlighterLabelTemporaryAttributeName forCharacterRange:range];
+    }
     
-    [self.textStorage beginEditing];
+    id <WCSymbolsProvider> symbolsProvider = [self.delegate symbolsProviderForSymbolHighlighter:self];
     
     NSRange foldRange;
     id value;
@@ -84,23 +94,31 @@
                     
                     switch (symbol.type.intValue) {
                         case SymbolTypeLabel:
-                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:symbolRange];
-                            
-                            if ([(Label *)symbol isCalledValue])
-                                [self.textStorage addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle|NSUnderlinePatternSolid) range:symbolRange];
+//                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0.75 green:0.75 blue:0 alpha:1] range:symbolRange];
+//                            
+//                            if ([(Label *)symbol isCalledValue])
+//                                [self.textStorage addAttribute:NSUnderlineStyleAttributeName value:@(NSUnderlineStyleSingle|NSUnderlinePatternSolid) range:symbolRange];
+                            for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers)
+                                [layoutManager addTemporaryAttribute:WCSymbolHighlighterLabelTemporaryAttributeName value:@true forCharacterRange:symbolRange];
                             break;
                         case SymbolTypeEquate:
-                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:symbolRange];
+//                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:0 green:0.5 blue:0.5 alpha:1] range:symbolRange];
+                            for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers)
+                                [layoutManager addTemporaryAttribute:WCSymbolHighlighterEquateTemporaryAttributeName value:@true forCharacterRange:symbolRange];
                             break;
                         case SymbolTypeDefine:
-                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:symbolRange];
+//                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor brownColor] range:symbolRange];
+                            for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers)
+                                [layoutManager addTemporaryAttribute:WCSymbolHighlighterDefineTemporaryAttributeName value:@true forCharacterRange:symbolRange];
                             break;
                         case SymbolTypeMacro:
-                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:symbolRange];
+//                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] range:symbolRange];
+                            for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers)
+                                [layoutManager addTemporaryAttribute:WCSymbolHighlighterMacroTemporaryAttributeName value:@true forCharacterRange:symbolRange];
                             break;
                         default:
-                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:symbolRange];
-                            [self.textStorage removeAttribute:NSUnderlineStyleAttributeName range:symbolRange];
+//                            [self.textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blackColor] range:symbolRange];
+//                            [self.textStorage removeAttribute:NSUnderlineStyleAttributeName range:symbolRange];
                             break;
                     }
                 }
@@ -111,15 +129,13 @@
         
         range = NSMakeRange(NSMaxRange(foldRange), NSMaxRange(range) - NSMaxRange(foldRange));
     }
-    
-    [self.textStorage endEditing];
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
     if (!([note.object editedMask] & NSTextStorageEditedCharacters))
         return;
     
-    [self performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
 }
 
 @end
