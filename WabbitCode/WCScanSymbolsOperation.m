@@ -81,18 +81,13 @@
         
         FileContainer *fileContainer = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
         
-        if (!fileContainer) {
-            fileContainer = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:weakSelf.managedObjectContext];
-            
-            [fileContainer setUuid:weakSelf.fileContainerUUID];
-        }
+        if (fileContainer)
+            [weakSelf.managedObjectContext deleteObject:fileContainer];
         
+        fileContainer = [NSEntityDescription insertNewObjectForEntityForName:@"FileContainer" inManagedObjectContext:weakSelf.managedObjectContext];
+        
+        [fileContainer setUuid:weakSelf.fileContainerUUID];
         [fileContainer setPath:weakSelf.fileURL.path];
-        
-        for (CalledLabel *calledLabel in fileContainer.calledLabels)
-            [weakSelf.managedObjectContext deleteObject:calledLabel];
-        
-        NSMutableSet *oldSymbols = [NSMutableSet setWithSet:fileContainer.symbols];
         
         do {
             NSRegularExpression *commentRegex = [NSRegularExpression regularExpressionWithPattern:@"(?:#comment.*?#endcomment)|(?:;+.*?$)" options:NSRegularExpressionDotMatchesLineSeparators|NSRegularExpressionAnchorsMatchLines error:NULL];
@@ -116,27 +111,13 @@
             if (weakSelf.isCancelled)
                 break;
             
-            NSPredicate *equatePredicate = [NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.range == $RANGE AND self.name ==[cd] $NAME",fileContainer];
-            
             [[WCSyntaxHighlighter equateRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
                 
-                NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
-                
-                [fetchRequest setPredicate:[equatePredicate predicateWithSubstitutionVariables:@{@"RANGE" : NSStringFromRange([result rangeAtIndex:1]), @"NAME" : [weakSelf.string substringWithRange:[result rangeAtIndex:1]]}]];
-                [fetchRequest setFetchLimit:1];
-                
-                Equate *entity = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
-                
-                if (entity) {
-                    [oldSymbols removeObject:entity];
-                }
-                else {
-                    entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:weakSelf.managedObjectContext];
-                }
+                Equate *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Equate" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeEquate)];
                 [entity setLocation:@(result.range.location)];
@@ -153,7 +134,6 @@
             if (weakSelf.isCancelled)
                 break;
             
-            NSPredicate *labelPredicate = [NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.range == $RANGE AND self.name ==[cd] $NAME",fileContainer];
             NSPredicate *duplicatePredicate = [NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.location == $LOCATION",fileContainer];
             
             [[WCSyntaxHighlighter labelRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
@@ -169,27 +149,12 @@
                 
                 NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Equate"];
                 
-                [fetchRequest setResultType:NSCountResultType];
                 [fetchRequest setPredicate:[duplicatePredicate predicateWithSubstitutionVariables:@{@"LOCATION" : @(result.range.location)}]];
                 
-                NSArray *fetchResult = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-                
-                if ([fetchResult.lastObject unsignedIntegerValue] > 0)
+                if ([weakSelf.managedObjectContext countForFetchRequest:fetchRequest error:NULL] > 0)
                     return;
                 
-                fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Label"];
-                
-                [fetchRequest setPredicate:[labelPredicate predicateWithSubstitutionVariables:@{@"RANGE" : NSStringFromRange(result.range), @"NAME" : [weakSelf.string substringWithRange:result.range]}]];
-                [fetchRequest setFetchLimit:1];
-                
-                Label *entity = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
-                
-                if (entity) {
-                    [oldSymbols removeObject:entity];
-                }
-                else {
-                    entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:weakSelf.managedObjectContext];
-                }
+                Label *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Label" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeLabel)];
                 [entity setLocation:@(result.range.location)];
@@ -202,27 +167,13 @@
             if (weakSelf.isCancelled)
                 break;
             
-            NSPredicate *definePredicate = [NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.range == $RANGE AND self.name ==[cd] $NAME",fileContainer];
-            
             [[WCSyntaxHighlighter defineRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
                 
-                NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Define"];
-                
-                [fetchRequest setPredicate:[definePredicate predicateWithSubstitutionVariables:@{@"RANGE" : NSStringFromRange([result rangeAtIndex:1]), @"NAME" : [weakSelf.string substringWithRange:[result rangeAtIndex:1]]}]];
-                [fetchRequest setFetchLimit:1];
-                
-                Define *entity = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
-                
-                if (entity) {
-                    [oldSymbols removeObject:entity];
-                }
-                else {
-                    entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:weakSelf.managedObjectContext];
-                }
+                Define *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Define" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeDefine)];
                 [entity setLocation:@(result.range.location)];
@@ -246,27 +197,13 @@
             if (weakSelf.isCancelled)
                 break;
             
-            NSPredicate *macroPredicate = [NSPredicate predicateWithFormat:@"self.fileContainer == %@ AND self.range == $RANGE AND self.name ==[cd] $NAME",fileContainer];
-            
             [[WCSyntaxHighlighter macroRegex] enumerateMatchesInString:weakSelf.string options:0 range:NSMakeRange(0, weakSelf.string.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
                 NSRange commentRange = [comments WC_rangeForRange:result.range];
                 
                 if (NSLocationInRange(result.range.location, commentRange))
                     return;
-               
-                NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Macro"];
                 
-                [fetchRequest setPredicate:[macroPredicate predicateWithSubstitutionVariables:@{@"RANGE" : NSStringFromRange([result rangeAtIndex:1]), @"NAME" : [weakSelf.string substringWithRange:[result rangeAtIndex:1]]}]];
-                [fetchRequest setFetchLimit:1];
-                
-                Macro *entity = [weakSelf.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
-                
-                if (entity) {
-                    [oldSymbols removeObject:entity];
-                }
-                else {
-                    entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:weakSelf.managedObjectContext];
-                }
+                Macro *entity = [NSEntityDescription insertNewObjectForEntityForName:@"Macro" inManagedObjectContext:weakSelf.managedObjectContext];
                 
                 [entity setType:@(SymbolTypeMacro)];
                 [entity setLocation:@(result.range.location)];
@@ -354,9 +291,6 @@
         } while (0);
         
         if (!weakSelf.isCancelled) {
-            for (Symbol *symbol in oldSymbols)
-                [weakSelf.managedObjectContext deleteObject:symbol];
-            
             if ([weakSelf.managedObjectContext save:NULL]) {
                 __weak NSManagedObjectContext *parentContext = weakSelf.managedObjectContext.parentContext;
                 
