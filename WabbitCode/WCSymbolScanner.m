@@ -54,10 +54,11 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.operationQueue setMaxConcurrentOperationCount:1];
     [self.operationQueue setName:kWCSymbolScannerOperationQueueName];
     
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
+    
+    [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
+    
     if (!sourceFileDocument.projectDocument) {
-        NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Symbols" withExtension:@"momd"];
-        
-        [self setManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL]];
         [self setPersistentStoreCoordinator:[[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:self.managedObjectModel]];
         [self.persistentStoreCoordinator addPersistentStoreWithType:NSInMemoryStoreType configuration:nil URL:nil options:nil error:NULL];
     }
@@ -87,11 +88,6 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self.operationQueue cancelAllOperations];
     
     WCScanSymbolsOperation *operation = [[WCScanSymbolsOperation alloc] initWithSymbolScanner:self];
-    __weak typeof (self) weakSelf = self;
-    
-    [operation setCompletionBlock:^{
-        [weakSelf.symbolNamesToSymbolArrays removeAllObjects];
-    }];
     
     [self.operationQueue addOperation:operation];
 }
@@ -110,9 +106,8 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     NSArray *retval = [self.symbolNamesToSymbolArrays objectForKey:name];
     
     if (!retval) {
-        NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Symbol"];
+        NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"SymbolsWithName" substitutionVariables:@{@"NAME" : name}];
         
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.name ==[cd] %@",name]];
         [fetchRequest setSortDescriptors:@[ [NSSortDescriptor sortDescriptorWithKey:@"type" ascending:NO] ]];
         
         retval = [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
@@ -206,6 +201,8 @@ static NSString *const kWCSymbolScannerOperationQueueName = @"org.revsoft.wabbit
     [self scanSymbols];
 }
 - (void)_managedObjectContextDidSave:(NSNotificationCenter *)note {
+    [self.symbolNamesToSymbolArrays removeAllObjects];
+    
     [[NSNotificationCenter defaultCenter] postNotificationName:WCSymbolScannerDidFinishScanningSymbolsNotification object:self];
 }
 
