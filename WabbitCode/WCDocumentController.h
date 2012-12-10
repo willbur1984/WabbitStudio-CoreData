@@ -22,10 +22,13 @@ extern NSString *const kProjectEntityName;
 extern NSString *const kFileEntityName;
 extern NSString *const kProjectSettingEntityName;
 
+@class WCProjectDocument;
+
 @interface WCDocumentController : NSDocumentController
 
 @property (readonly,nonatomic) NSArray *unsavedDocumentURLs;
 @property (readonly,nonatomic) NSSet *sourceFileUTIs;
+@property (readonly,nonatomic) WCProjectDocument *currentProjectDocument;
 
 - (BOOL)makeProjectDocumentForURL:(NSURL *)documentURL withContentsOfURL:(NSURL *)directoryURL error:(NSError *__autoreleasing *)outError;
 

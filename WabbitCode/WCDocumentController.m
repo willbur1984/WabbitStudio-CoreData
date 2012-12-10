@@ -107,5 +107,10 @@ NSString *const kProjectSettingEntityName = @"ProjectSetting";
 - (NSSet *)sourceFileUTIs {
     return [NSSet setWithObjects:kAssemblyFileUTI,kIncludeFileUTI,kActiveServerIncludeFileUTI, nil];
 }
+- (WCProjectDocument *)currentProjectDocument {
+    id document = self.currentDocument;
+    
+    return ([document isKindOfClass:[WCProjectDocument class]]) ? document : nil;
+}
 
 @end
