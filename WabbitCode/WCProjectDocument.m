@@ -25,6 +25,8 @@
 #import "WCOpenQuicklyWindowController.h"
 #import "ProjectSetting.h"
 #import "WCAddToProjectAccessoryViewController.h"
+#import "WCTabViewController.h"
+#import "WCTabView.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
@@ -60,7 +62,17 @@
 + (BOOL)autosavesInPlace {
     return YES;
 }
+
+- (void)saveDocument:(id)sender {
+    [super saveDocument:nil];
+    
+    [self.projectWindowController.tabViewController.tabView.selectedTabViewItem.identifier saveDocument:nil];
+}
 #pragma mark NSPersistentDocument
+- (id)managedObjectModel {
+    return [[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"Projects" withExtension:@"momd"]];
+}
+
 - (void)setManagedObjectContext:(NSManagedObjectContext *)managedObjectContext {
     [super setManagedObjectContext:managedObjectContext];
     
