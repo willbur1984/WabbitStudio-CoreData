@@ -32,6 +32,7 @@
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
 @property (strong,nonatomic) NSMutableSet *mutableSourceFileDocuments;
 @property (readwrite,strong,nonatomic) WCSymbolIndex *symbolIndex;
+@property (strong,nonatomic) NSCountedSet *openFileUUIDs;
 @end
 
 @implementation WCProjectDocument
@@ -329,6 +330,16 @@
     [fetchRequest setPropertiesToFetch:@[@"path"]];
     
     return [NSSet setWithArray:[[self.managedObjectContext executeFetchRequest:fetchRequest error:NULL] valueForKey:@"path"]];
+}
+- (NSArray *)unsavedSourceFileDocuments {
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:0];
+    
+    for (WCSourceFileDocument *document in self.mutableSourceFileDocuments) {
+        if (document.isDocumentEdited)
+            [retval addObject:document];
+    }
+    
+    return retval;
 }
 
 @end

@@ -23,6 +23,7 @@
 @property (readonly,nonatomic) Project *project;
 @property (readonly,nonatomic) ProjectSetting *projectSetting;
 @property (readonly,nonatomic) NSSet *filePaths;
+@property (readonly,nonatomic) NSArray *unsavedSourceFileDocuments;
 
 - (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
 
