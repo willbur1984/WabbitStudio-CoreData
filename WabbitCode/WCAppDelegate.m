@@ -17,6 +17,9 @@
 #import "WCTextView.h"
 #import "WCFoldView.h"
 #import "WCNewProjectWindowController.h"
+#import "WCProjectDocument.h"
+#import "WCUnsavedFilesWindowController.h"
+#import "WCDocumentController.h"
 
 @interface WCAppDelegate () <NSApplicationDelegate>
 @property (strong,nonatomic) WCPreferencesWindowController *preferencesWindowController;
@@ -27,9 +30,20 @@
 - (void)applicationWillFinishLaunching:(NSNotification *)notification {
     [[NSUserDefaults standardUserDefaults] registerDefaults:@{ WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey : @true, WCTextViewPageGuideColumnUserDefaultsKey : @80, WCTextViewWrapLinesUserDefaultsKey : @true, WCTextViewIndentWrappedLinesUserDefaultsKey : @false, WCTextViewIndentWrappedLinesNumberOfSpacesUserDefaultsKey : @0, WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey : @true, WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey : @0.35, WCFoldViewLineNumbersUserDefaultsKey : @true, WCFoldViewCodeFoldingRibbonUserDefaultsKey : @true, WCTextViewTabWidthUserDefaultsKey : @4 }];
 }
-
 - (BOOL)applicationShouldOpenUntitledFile:(NSApplication *)sender {
     return NO;
+}
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
+    WCProjectDocument *currentProjectDocument = [[WCDocumentController sharedDocumentController] currentProjectDocument];
+    
+    if (currentProjectDocument) {
+        if (currentProjectDocument.unsavedSourceFileDocuments.count > 0) {
+            [[WCUnsavedFilesWindowController sharedWindowController] showUnsavedFilesWindowForProjectDocument:currentProjectDocument];
+            
+            return NSTerminateLater;
+        }
+    }
+    return NSTerminateNow;
 }
 
 - (IBAction)newProjectAction:(id)sender; {

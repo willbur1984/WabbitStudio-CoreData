@@ -150,6 +150,8 @@
 		79AFA4321646E0B800876655 /* WCTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4311646E0B800876655 /* WCTabViewController.m */; };
 		79AFA4391646E53A00876655 /* WCDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA4371646E53A00876655 /* WCDocument.m */; };
 		79AFA43E1646E85A00876655 /* WCSymbolIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 79AFA43D1646E85A00876655 /* WCSymbolIndex.m */; };
+		79B0A45916757CDE0092EA7B /* WCUnsavedFilesWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79B0A45816757CDE0092EA7B /* WCUnsavedFilesWindowController.m */; };
+		79B0A45C16757F900092EA7B /* WCUnsavedFilesWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 79B0A45A16757F900092EA7B /* WCUnsavedFilesWindow.xib */; };
 		79BEFEAA1652A198001B4C96 /* Define.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BEFE9F1652A198001B4C96 /* Define.m */; };
 		79BEFEAB1652A198001B4C96 /* Equate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BEFEA11652A198001B4C96 /* Equate.m */; };
 		79BEFEAC1652A198001B4C96 /* FileContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 79BEFEA31652A198001B4C96 /* FileContainer.m */; };
@@ -490,6 +492,9 @@
 		79AFA4371646E53A00876655 /* WCDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCDocument.m; sourceTree = "<group>"; };
 		79AFA43C1646E85A00876655 /* WCSymbolIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCSymbolIndex.h; sourceTree = "<group>"; };
 		79AFA43D1646E85A00876655 /* WCSymbolIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCSymbolIndex.m; sourceTree = "<group>"; };
+		79B0A45716757CDE0092EA7B /* WCUnsavedFilesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCUnsavedFilesWindowController.h; sourceTree = "<group>"; };
+		79B0A45816757CDE0092EA7B /* WCUnsavedFilesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCUnsavedFilesWindowController.m; sourceTree = "<group>"; };
+		79B0A45B16757F900092EA7B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = WCUnsavedFilesWindow.xib; sourceTree = "<group>"; };
 		79BEFE9E1652A198001B4C96 /* Define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Define.h; sourceTree = "<group>"; };
 		79BEFE9F1652A198001B4C96 /* Define.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Define.m; sourceTree = "<group>"; };
 		79BEFEA01652A198001B4C96 /* Equate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Equate.h; sourceTree = "<group>"; };
@@ -974,6 +979,7 @@
 				799F6CC81653128200C33C61 /* WCOpenQuicklyWindow.xib */,
 				79CFE8F9165C24960044D345 /* WCTabView.xib */,
 				79CFE8FF165D880D0044D345 /* WCAddToProjectAccessoryView.xib */,
+				79B0A45A16757F900092EA7B /* WCUnsavedFilesWindow.xib */,
 			);
 			name = Xibs;
 			path = en.lproj;
@@ -1085,6 +1091,15 @@
 			name = Symbols;
 			sourceTree = "<group>";
 		};
+		79B0A45616757CAA0092EA7B /* Unsaved Files */ = {
+			isa = PBXGroup;
+			children = (
+				79B0A45716757CDE0092EA7B /* WCUnsavedFilesWindowController.h */,
+				79B0A45816757CDE0092EA7B /* WCUnsavedFilesWindowController.m */,
+			);
+			name = "Unsaved Files";
+			sourceTree = "<group>";
+		};
 		79BEFE921652A0B1001B4C96 /* machine */ = {
 			isa = PBXGroup;
 			children = (
@@ -1118,6 +1133,7 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				79B0A45616757CAA0092EA7B /* Unsaved Files */,
 				799F6CC4165311A600C33C61 /* Open Quickly */,
 				79AFA43B1646E84200876655 /* Symbols */,
 				79AFA42F1646E09300876655 /* View Controllers */,
@@ -1550,6 +1566,7 @@
 				799F6CCA1653128200C33C61 /* WCOpenQuicklyWindow.xib in Resources */,
 				79CFE8FB165C24960044D345 /* WCTabView.xib in Resources */,
 				79CFE901165D880D0044D345 /* WCAddToProjectAccessoryView.xib in Resources */,
+				79B0A45C16757F900092EA7B /* WCUnsavedFilesWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1743,6 +1760,7 @@
 				798088F816630BEB0025B1CB /* CalledLabel.m in Sources */,
 				798088FB16630BF80025B1CB /* _CalledLabel.m in Sources */,
 				790AFB2A1672F51100DEF234 /* WCTabWindow.m in Sources */,
+				79B0A45916757CDE0092EA7B /* WCUnsavedFilesWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1897,6 +1915,14 @@
 				79AFA40F1645BF4000876655 /* en */,
 			);
 			name = WCSearchView.xib;
+			sourceTree = "<group>";
+		};
+		79B0A45A16757F900092EA7B /* WCUnsavedFilesWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79B0A45B16757F900092EA7B /* en */,
+			);
+			name = WCUnsavedFilesWindow.xib;
 			sourceTree = "<group>";
 		};
 		79CFE8F9165C24960044D345 /* WCTabView.xib */ = {
