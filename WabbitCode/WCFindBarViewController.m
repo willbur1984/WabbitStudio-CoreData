@@ -299,7 +299,7 @@ static const CGFloat kReplaceViewHeight = 44;
 }
 
 + (NSDictionary *)findRangeAttributes; {
-    return @{NSBackgroundColorAttributeName : [[NSColor WC_colorWithHexadecimalString:@"f1f0e2"] colorWithAlphaComponent:0.5], NSUnderlineColorAttributeName : [[NSColor WC_colorWithHexadecimalString:@"f1d454"] colorWithAlphaComponent:0.6], NSUnderlineStyleAttributeName : @(NSUnderlineStyleThick|NSUnderlinePatternSolid)};
+    return @{NSBackgroundColorAttributeName : [[NSColor yellowColor] colorWithAlphaComponent:0.5], NSUnderlineColorAttributeName : [[NSColor orangeColor] colorWithAlphaComponent:0.6], NSUnderlineStyleAttributeName : @(NSUnderlineStyleThick|NSUnderlinePatternSolid)};
 }
 #pragma mark Properties
 - (void)setViewMode:(WCFindBarViewControllerViewMode)viewMode {
