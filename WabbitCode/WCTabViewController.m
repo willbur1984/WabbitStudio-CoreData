@@ -42,6 +42,7 @@
 
 - (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
 - (void)_removeAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
+- (void)_updateOpenTabFiles;
 @end
 
 @implementation WCTabViewController
@@ -129,17 +130,7 @@
     if (self.ignoreChanges)
         return;
     
-    WCProjectDocument *projectDocument = [self.delegate projectDocumentForTabViewController:self];
-    NSMutableArray *files = [NSMutableArray arrayWithCapacity:tabView.numberOfTabViewItems];
-    
-    for (NSTabViewItem *item in tabView.tabViewItems) {
-        File *file = [projectDocument fileForSourceFileDocument:item.identifier];
-        
-        [files addObject:file];
-    }
-    
-    [projectDocument.projectSetting setProjectOpenTabFiles:[NSOrderedSet orderedSetWithArray:files]];
-    [projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+    [self _updateOpenTabFiles];
 }
 - (void)tabView:(NSTabView *)aTabView didCloseTabViewItem:(NSTabViewItem *)tabViewItem {
     [self removeTabBarItemForSourceFileDocument:tabViewItem.identifier];
@@ -153,6 +144,12 @@
     
     [projectDocument.projectSetting setProjectSelectedTabFile:file];
     [projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+}
+- (NSDragOperation)tabView:(NSTabView *)aTabView validateSlideOfProposedItem:(NSTabViewItem *)tabViewItem proposedIndex:(NSUInteger)proposedIndex inTabBarView:(MMTabBarView *)tabBarView {
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_updateOpenTabFiles) object:nil];
+    [self performSelector:@selector(_updateOpenTabFiles) withObject:nil afterDelay:0];
+    
+    return NSDragOperationMove;
 }
 - (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem {
     WCSourceFileDocument *sourceFileDocument = tabViewItem.identifier;
@@ -419,6 +416,19 @@
     
     if (currentAssistantTextViewController == [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController])
         [self.textViewControllersToAssistantTextViewControllers setObject:textViewController forKey:currentTextViewController];
+}
+- (void)_updateOpenTabFiles {
+    WCProjectDocument *projectDocument = [self.delegate projectDocumentForTabViewController:self];
+    NSMutableArray *files = [NSMutableArray arrayWithCapacity:self.tabView.numberOfTabViewItems];
+    
+    for (NSTabViewItem *item in self.tabView.tabViewItems) {
+        File *file = [projectDocument fileForSourceFileDocument:item.identifier];
+        
+        [files addObject:file];
+    }
+    
+    [projectDocument.projectSetting setProjectOpenTabFiles:[NSOrderedSet orderedSetWithArray:files]];
+    [projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
 }
 #pragma mark Properties
 - (WCTextViewController *)currentTextViewController {
