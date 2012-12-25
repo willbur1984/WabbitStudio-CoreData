@@ -52,6 +52,10 @@
 - (void)loadView {
     [super loadView];
     
+    [self.outlineView registerForDraggedTypes:@[NSPasteboardTypeString,(__bridge NSString *)kUTTypeFileURL,(__bridge NSString *)kUTTypeDirectory]];
+    [self.outlineView setVerticalMotionCanBeginDrag:YES];
+    [self.outlineView setDraggingSourceOperationMask:NSDragOperationMove forLocal:YES];
+    [self.outlineView setDraggingSourceOperationMask:NSDragOperationCopy forLocal:NO];
     [self.outlineView setEmptyString:NSLocalizedString(@"No Filter Results", nil)];
     [self.outlineView setTarget:self];
     [self.outlineView setDoubleAction:@selector(_outlineViewDoubleAction:)];
@@ -96,6 +100,97 @@
     [cell setOutlineView:outlineView];
     
     return cell;
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id<NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)index {
+    if (!item || index == NSOutlineViewDropOnItemIndex)
+        return NSDragOperationNone;
+    else if ([info draggingSource] == outlineView) {
+        __unsafe_unretained typeof (self) weakSelf = self;
+        __block NSDragOperation retval = NSDragOperationMove;
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:0];
+        
+        [info enumerateDraggingItemsWithOptions:0 forView:outlineView classes:@[[NSString class]] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
+            NSString *uuid = draggingItem.item;
+            File *file = [weakSelf.projectDocument fileWithUUID:uuid];
+            
+            WCAssert(file,@"file cannot be nil!");
+            
+            [files addObject:file];
+            
+            if (!file.file) {
+                retval = NSDragOperationNone;
+                *stop = YES;
+            }
+        }];
+        
+        for (File *file in files) {
+            // cannot drag an item onto itself
+            if (file == item) {
+                retval = NSDragOperationNone;
+                break;
+            }
+            // cannot drag an item onto one of its children
+            else if ([[file flattenedFilesAndGroups] containsObject:item]) {
+                retval = NSDragOperationNone;
+                break;
+            }
+            // if its a single item moving within its parent, require it to move one index up or down
+            else if (files.count == 1 &&
+                     item == file.file &&
+                     ([file.file.files indexOfObject:file] == index || [file.file.files indexOfObject:file] == index - 1)) {
+                
+                retval = NSDragOperationNone;
+                break;
+            }
+        }
+        
+        return retval;
+    }
+    else {
+        
+        return NSDragOperationCopy;
+    }
+}
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id<NSDraggingInfo>)info item:(id)item childIndex:(NSInteger)index {
+    if ([info draggingSource] == outlineView) {
+        __unsafe_unretained typeof (self) weakSelf = self;
+        __block NSInteger indexCopy = index;
+        NSMutableArray *files = [NSMutableArray arrayWithCapacity:0];
+        File *projectFile = self.projectDocument.project.file;
+        
+        [info enumerateDraggingItemsWithOptions:0 forView:outlineView classes:@[[NSString class]] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
+            NSString *uuid = draggingItem.item;
+            File *file = [weakSelf.projectDocument fileWithUUID:uuid];
+            
+            WCAssert(file,@"file cannot be nil!");
+            
+            [files addObject:file];
+            
+            if (file.file == projectFile && [projectFile.files indexOfObject:file] < index)
+                indexCopy--;
+        }];
+        
+        File *file = (File *)item;
+        
+        [file.filesSet removeObjectsInArray:files];
+        [file.filesSet insertObjects:files atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(indexCopy, files.count)]];
+        
+        [self.outlineView reloadData];
+        [self.outlineView WC_setSelectedItems:files];
+        
+        [self.projectDocument updateChangeCount:NSChangeDone];
+    }
+    else {
+        
+    }
+    return YES;
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard {
+    [pasteboard clearContents];
+    
+    return [pasteboard writeObjects:[items valueForKey:@"uuid"]];
 }
 #pragma mark NSOutlineViewDelegate
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {

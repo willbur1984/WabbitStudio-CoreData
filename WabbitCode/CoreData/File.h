@@ -7,6 +7,8 @@
 
 @property (readonly,nonatomic) NSArray *flattenedFiles;
 @property (readonly,nonatomic) NSArray *flattenedFilesInclusive;
+@property (readonly,nonatomic) NSArray *flattenedFilesAndGroups;
+@property (readonly,nonatomic) NSArray *flattenedFilesAndGroupsInclusive;
 
 - (void)sortChildrenUsingComparator:(NSComparator)comparator recursively:(BOOL)recursively;
 

@@ -37,6 +37,20 @@
     
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
 }
+- (NSArray *)flattenedFilesAndGroups {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:self.entity.name];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.file == %@ OR self.file IN %@",self,self.files]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
+- (NSArray *)flattenedFilesAndGroupsInclusive {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:self.entity.name];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self == %@ OR self.file == %@ OR self.file IN %@",self,self,self.files]];
+    
+    return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+}
 
 - (NSImage *)image {
     return [[NSWorkspace sharedWorkspace] iconForFileType:self.uti];
