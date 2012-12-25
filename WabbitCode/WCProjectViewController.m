@@ -193,7 +193,18 @@
         [self.projectDocument updateChangeCount:NSChangeDone];
     }
     else {
+        NSMutableArray *fileURLs = [NSMutableArray arrayWithCapacity:0];
         
+        [info enumerateDraggingItemsWithOptions:0 forView:outlineView classes:@[[NSURL class]] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
+            [fileURLs addObject:draggingItem.item];
+        }];
+        
+        NSAlert *alert = [NSAlert alertWithMessageText:[NSString stringWithFormat:NSLocalizedString(@"Add Files to \"%@\"", nil),self.projectDocument.displayName] defaultButton:NSLocalizedString(@"Add", nil) alternateButton:NSLocalizedString(@"Cancel", nil) otherButton:nil informativeTextWithFormat:NSLocalizedString(@"Choose options for the files to be added to the project.", nil)];
+        
+        [self setAccessoryViewController:[[WCAddToProjectAccessoryViewController alloc] init]];
+        [alert setAccessoryView:self.accessoryViewController.view];
+        
+        [alert beginSheetModalForWindow:self.view.window modalDelegate:self didEndSelector:@selector(_alertDidEnd:code:context:) contextInfo:(void *)CFBridgingRetain(@{@"item" : item,@"index" : @(index),@"urls" : fileURLs})];
     }
     return YES;
 }
@@ -549,6 +560,29 @@
         if (sfDocument && [sfDocument isKindOfClass:[WCSourceFileDocument class]])
             [self.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sfDocument];
     }
+}
+#pragma mark Callbacks
+- (void)_alertDidEnd:(NSAlert *)alert code:(NSInteger)code context:(void *)context {
+    NSDictionary *info = (NSDictionary *)CFBridgingRelease((CFDictionaryRef)context);
+    
+    [alert.window orderOut:nil];
+    
+    if (code != NSAlertDefaultReturn)
+        return;
+    
+    [self setFilePaths:self.projectDocument.filePaths];
+    
+    File *file = [info objectForKey:@"item"];
+    NSMutableArray *urls = [[info objectForKey:@"urls"] mutableCopy];
+    
+    [urls filterUsingPredicate:[NSPredicate predicateWithFormat:@"NOT %@ CONTAINS self.path",self.filePaths]];
+    
+    NSArray *files = [self.projectDocument addFilesForURLs:urls toParentFile:file atIndex:[[info objectForKey:@"index"] integerValue]];
+    
+    [self.outlineView reloadItem:file reloadChildren:YES];
+    [self.outlineView WC_setSelectedItems:files];
+    
+    [self setFilePaths:nil];
 }
 
 @end
