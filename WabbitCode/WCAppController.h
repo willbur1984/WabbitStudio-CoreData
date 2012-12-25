@@ -17,6 +17,7 @@
 
 @property (readonly,nonatomic) NSURL *applicationSupportDirectoryURL;
 @property (readonly,nonatomic) NSURL *derivedDataDirectoryURL;
+@property (readonly,nonatomic) NSRegularExpression *uuidRegularExpression;
 
 + (WCAppController *)sharedController;
 

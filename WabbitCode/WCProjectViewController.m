@@ -28,6 +28,7 @@
 #import "ProjectSetting.h"
 #import "NSURL+WCExtensions.h"
 #import "WCAddToProjectAccessoryViewController.h"
+#import "WCAppController.h"
 
 @interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations,NSOpenSavePanelDelegate>
 
@@ -109,9 +110,14 @@
         __unsafe_unretained typeof (self) weakSelf = self;
         __block NSDragOperation retval = NSDragOperationMove;
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:0];
+        NSRegularExpression *uuidRegex = [[WCAppController sharedController] uuidRegularExpression];
         
         [info enumerateDraggingItemsWithOptions:0 forView:outlineView classes:@[[NSString class]] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
             NSString *uuid = draggingItem.item;
+            
+            if (![uuidRegex firstMatchInString:uuid options:0 range:NSMakeRange(0, uuid.length)])
+                return;
+            
             File *file = [weakSelf.projectDocument fileWithUUID:uuid];
             
             WCAssert(file,@"file cannot be nil!");
@@ -157,10 +163,15 @@
         __unsafe_unretained typeof (self) weakSelf = self;
         __block NSInteger indexCopy = index;
         NSMutableArray *files = [NSMutableArray arrayWithCapacity:0];
+        NSRegularExpression *uuidRegex = [[WCAppController sharedController] uuidRegularExpression];
         File *projectFile = self.projectDocument.project.file;
         
         [info enumerateDraggingItemsWithOptions:0 forView:outlineView classes:@[[NSString class]] searchOptions:nil usingBlock:^(NSDraggingItem *draggingItem, NSInteger idx, BOOL *stop) {
             NSString *uuid = draggingItem.item;
+            
+            if (![uuidRegex firstMatchInString:uuid options:0 range:NSMakeRange(0, uuid.length)])
+                return;
+            
             File *file = [weakSelf.projectDocument fileWithUUID:uuid];
             
             WCAssert(file,@"file cannot be nil!");
@@ -190,7 +201,16 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray *)items toPasteboard:(NSPasteboard *)pasteboard {
     [pasteboard clearContents];
     
-    return [pasteboard writeObjects:[items valueForKey:@"uuid"]];
+    NSMutableArray *fileURLs = [NSMutableArray arrayWithCapacity:items.count];
+    
+    for (File *file in items) {
+        if (!file.isGroupValue)
+            [fileURLs addObject:[NSURL fileURLWithPath:file.path isDirectory:NO]];
+    }
+    
+    [fileURLs insertObjects:[items valueForKey:@"uuid"] atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
+    
+    return [pasteboard writeObjects:fileURLs];
 }
 #pragma mark NSOutlineViewDelegate
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {

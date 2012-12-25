@@ -65,4 +65,13 @@
     return directoryURL;
 }
 
+- (NSRegularExpression *)uuidRegularExpression {
+    static NSRegularExpression *retval;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        retval = [[NSRegularExpression alloc] initWithPattern:@"[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}" options:0 error:NULL];
+    });
+    return retval;
+}
+
 @end
