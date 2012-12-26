@@ -50,8 +50,6 @@
         id item = [self WC_selectedItem];
         
         if ([self.dataSource outlineView:self numberOfChildrenOfItem:item] > 0) {
-            WCLogObject(@([self.dataSource outlineView:self numberOfChildrenOfItem:item]));
-            
             if ([self isItemExpanded:item] && [theEvent WC_isOnlyOptionKeyPressed])
                 [self collapseItem:item collapseChildren:YES];
             else if ([self isItemExpanded:item])
