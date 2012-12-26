@@ -949,6 +949,13 @@ static char kWCTextViewObservingContext;
 //        return;
 //    }
     
+    // skip the temp label
+    if ([symbolName isEqualToString:@"_"]) {
+        [self setCountOfSymbolRangesToHighlight:0];
+        [self setSymbolRangesToHighlight:nil];
+        return;
+    }
+    
     __block NSUInteger countOfSymbolRanges = 0;
     NSMutableIndexSet *temp = [NSMutableIndexSet indexSet];
     
