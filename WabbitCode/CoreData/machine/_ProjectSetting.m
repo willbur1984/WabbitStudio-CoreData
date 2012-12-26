@@ -4,6 +4,7 @@
 #import "_ProjectSetting.h"
 
 const struct ProjectSettingAttributes ProjectSettingAttributes = {
+	.projectFilterString = @"projectFilterString",
 	.shortUserName = @"shortUserName",
 };
 
@@ -47,6 +48,13 @@ const struct ProjectSettingFetchedProperties ProjectSettingFetchedProperties = {
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic projectFilterString;
+
+
 
 
 

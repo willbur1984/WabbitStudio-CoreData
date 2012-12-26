@@ -5,6 +5,7 @@
 
 
 extern const struct ProjectSettingAttributes {
+	__unsafe_unretained NSString *projectFilterString;
 	__unsafe_unretained NSString *shortUserName;
 } ProjectSettingAttributes;
 
@@ -27,6 +28,7 @@ extern const struct ProjectSettingFetchedProperties {
 
 
 
+
 @interface ProjectSettingID : NSManagedObjectID {}
 @end
 
@@ -35,6 +37,14 @@ extern const struct ProjectSettingFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (ProjectSettingID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSString* projectFilterString;
+
+
+//- (BOOL)validateProjectFilterString:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -106,6 +116,12 @@ extern const struct ProjectSettingFetchedProperties {
 @end
 
 @interface _ProjectSetting (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSString*)primitiveProjectFilterString;
+- (void)setPrimitiveProjectFilterString:(NSString*)value;
+
+
 
 
 - (NSString*)primitiveShortUserName;

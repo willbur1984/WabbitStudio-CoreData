@@ -43,6 +43,7 @@
 @property (strong,nonatomic) NSSet *filePaths;
 @property (strong,nonatomic) WCAddToProjectAccessoryViewController *accessoryViewController;
 @property (strong,nonatomic) NSArray *filteredFiles;
+@property (strong,nonatomic) NSMapTable *filteredParentFilesToChildFiles;
 
 - (void)_setupOutlineViewContextualMenu;
 - (void)_restoreFromProjectSetting;
@@ -58,12 +59,11 @@
 - (void)loadView {
     [super loadView];
     
-    [self.glassGradientView setEdges:WCGlassGradientViewEdgesNone|WCGlassGradientViewEdgesMaxY];
+    [self.glassGradientView setEdges:WCGlassGradientViewEdgesMaxY];
     
     [(NSSearchFieldCell *)self.filterSearchField.cell setPlaceholderString:NSLocalizedString(@"Filter Files", nil)];
     [[(NSSearchFieldCell *)self.filterSearchField.cell searchButtonCell] setImage:[NSImage imageNamed:@"Filter.png"]];
     [[(NSSearchFieldCell *)self.filterSearchField.cell searchButtonCell] setAlternateImage:nil];
-    
     
     [self.outlineView registerForDraggedTypes:@[NSPasteboardTypeString,(__bridge NSString *)kUTTypeFileURL,(__bridge NSString *)kUTTypeDirectory]];
     [self.outlineView setVerticalMotionCanBeginDrag:YES];
@@ -75,25 +75,44 @@
     [self.outlineView setDataSource:self];
     [self.outlineView setDelegate:self];
     
+    __unsafe_unretained typeof (self) weakSelf = self;
+    
+    [self.outlineView setShouldDrawEmptyStringPredicate:^BOOL(WCOutlineView *outlineView) {
+        if (weakSelf.filteredFiles)
+            return (weakSelf.filteredFiles.count == 0 && outlineView.emptyAttributedString.length > 0);
+        return (outlineView.numberOfRows == 0 && outlineView.emptyAttributedString.length > 0);
+    }];
+    
     [self _setupOutlineViewContextualMenu];
     [self _restoreFromProjectSetting];
+    
+    if (self.projectDocument.projectSetting.projectFilterString.length > 0) {
+        [self.filterSearchField setStringValue:self.projectDocument.projectSetting.projectFilterString];
+        [self _filterSearchFieldAction:self.filterSearchField];
+    }
 }
 #pragma mark NSOutlineViewDataSource
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(File *)item {
     if (item) {
-        return (item.isGroup.boolValue || item.files.count > 0);
+        return item.isGroupValue;
     }
     return YES;
 }
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(File *)item {
     if (item) {
-        return (self.filteredFiles && item.isGroupValue) ? self.filteredFiles.count : item.files.count;
+        if (self.filteredFiles) {
+            return [[self.filteredParentFilesToChildFiles objectForKey:item] count];
+        }
+        return item.files.count;
     }
     return 1;
 }
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(File *)item {
     if (item) {
-        return (self.filteredFiles && item.isGroupValue) ? [self.filteredFiles objectAtIndex:index] : [item.files objectAtIndex:index];
+        if (self.filteredFiles) {
+            return [[self.filteredParentFilesToChildFiles objectForKey:item] objectAtIndex:index];
+        }
+        return [item.files objectAtIndex:index];
     }
     return self.projectDocument.project.file;
 }
@@ -116,7 +135,7 @@
 }
 
 - (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id<NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(NSInteger)index {
-    if (!item || index == NSOutlineViewDropOnItemIndex)
+    if (!item || index == NSOutlineViewDropOnItemIndex || self.filteredFiles)
         return NSDragOperationNone;
     else if ([info draggingSource] == outlineView) {
         __unsafe_unretained typeof (self) weakSelf = self;
@@ -280,7 +299,19 @@
 
 #pragma mark NSUserInterfaceValidations
 - (BOOL)validateUserInterfaceItem:(id<NSValidatedUserInterfaceItem>)anItem {
-    if ([anItem action] == @selector(sortByNameAction:) ||
+    if (self.filteredFiles &&
+        ([anItem action] == @selector(newGroupAction:) ||
+         [anItem action] == @selector(newGroupFromSelection:) ||
+         [anItem action] == @selector(ungroupSelectionAction:) ||
+         [anItem action] == @selector(sortByNameAction:) ||
+         [anItem action] == @selector(sortByTypeAction:) ||
+         [anItem action] == @selector(addFilesToProjectAction:) ||
+         [anItem action] == @selector(deleteAction:) ||
+         [anItem action] == @selector(renameAction:))) {
+            
+        return NO;
+    }
+    else if ([anItem action] == @selector(sortByNameAction:) ||
         [anItem action] == @selector(sortByTypeAction:) ||
         [anItem action] == @selector(ungroupSelectionAction:)) {
         
@@ -583,8 +614,14 @@
     }
 }
 - (IBAction)_filterSearchFieldAction:(NSSearchField *)sender; {
+    [self.projectDocument.projectSetting setProjectFilterString:sender.stringValue];
+    [self.projectDocument updateChangeCount:NSChangeDone|NSChangeDiscardable];
+    
     if (sender.stringValue.length <= 1) {
+        [self setFilteredParentFilesToChildFiles:nil];
         [self setFilteredFiles:nil];
+        [self.outlineView collapseItem:nil collapseChildren:YES];
+        [self _restoreFromProjectSetting];
         [self setIgnoreChanges:NO];
         return;
     }
@@ -597,8 +634,33 @@
     [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)]]];
     
     NSArray *files = [self.projectDocument.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    NSMapTable *filteredParentFilesToChildFiles = [NSMapTable mapTableWithStrongToStrongObjects];
     
+    for (File *file in files) {
+        File *parentFile = file.file;
+        File *childFile = file;
+        
+        do {
+            
+            NSMutableOrderedSet *childFiles = [filteredParentFilesToChildFiles objectForKey:parentFile];
+            
+            if (!childFiles) {
+                childFiles = [NSMutableOrderedSet orderedSetWithCapacity:0];
+                
+                [filteredParentFilesToChildFiles setObject:childFiles forKey:parentFile];
+            }
+            
+            [childFiles addObject:childFile];
+            
+            childFile = parentFile;
+            parentFile = parentFile.file;
+            
+        } while (parentFile);
+    }
+    
+    [self setFilteredParentFilesToChildFiles:filteredParentFilesToChildFiles];
     [self setFilteredFiles:files];
+    [self.outlineView expandItem:nil expandChildren:YES];
 }
 #pragma mark Callbacks
 - (void)_alertDidEnd:(NSAlert *)alert code:(NSInteger)code context:(void *)context {

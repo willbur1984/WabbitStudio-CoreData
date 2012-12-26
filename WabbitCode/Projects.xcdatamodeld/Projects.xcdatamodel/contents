@@ -47,6 +47,7 @@
         <relationship name="targets" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Target" inverseName="project" inverseEntity="Target" syncable="YES"/>
     </entity>
     <entity name="ProjectSetting" representedClassName="ProjectSetting" syncable="YES">
+        <attribute name="projectFilterString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="shortUserName" attributeType="String" syncable="YES"/>
         <relationship name="project" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="projectSettings" inverseEntity="Project" syncable="YES"/>
         <relationship name="projectExpandedFiles" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="File" inverseName="projectExpandedFilesProjectSettings" inverseEntity="File" syncable="YES"/>
@@ -79,7 +80,7 @@
         <element name="Issue" positionX="108" positionY="225" width="128" height="135"/>
         <element name="Item" positionX="-20" positionY="-144" width="128" height="75"/>
         <element name="Project" positionX="-36" positionY="30" width="128" height="120"/>
-        <element name="ProjectSetting" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="ProjectSetting" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Target" positionX="-236" positionY="108" width="128" height="165"/>
         <element name="TargetDefine" positionX="-423" positionY="297" width="128" height="75"/>
         <element name="TargetInclude" positionX="-272" positionY="387" width="128" height="75"/>
