@@ -49,8 +49,6 @@
     if (theEvent.type == NSLeftMouseDown && theEvent.clickCount == 2) {
         id item = [self WC_selectedItem];
         
-        WCLogObject([item valueForKey:@"name"]);
-        
         if ([self.dataSource outlineView:self numberOfChildrenOfItem:item] > 0) {
             WCLogObject(@([self.dataSource outlineView:self numberOfChildrenOfItem:item]));
             
