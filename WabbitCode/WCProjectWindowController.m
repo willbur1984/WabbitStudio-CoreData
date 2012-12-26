@@ -106,6 +106,15 @@ static NSString *const kProjectWindowToolbar = @"org.revsoft.wabbitcode.project.
     }
     return YES;
 }
+static const CGFloat kLeftSubviewMinWidth = 200;
+static const CGFloat kRightSubviewMinWidth = 350;
+
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    return proposedMaximumPosition - kRightSubviewMinWidth;
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    return proposedMinimumPosition + kLeftSubviewMinWidth;
+}
 #pragma mark NSToolbarDelegate
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar *)toolbar {
     return nil;

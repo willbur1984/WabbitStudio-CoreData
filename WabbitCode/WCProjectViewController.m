@@ -29,19 +29,24 @@
 #import "NSURL+WCExtensions.h"
 #import "WCAddToProjectAccessoryViewController.h"
 #import "WCAppController.h"
+#import "WCGlassGradientView.h"
 
 @interface WCProjectViewController () <NSOutlineViewDataSource,WCOutlineViewDelegate,NSUserInterfaceValidations,NSOpenSavePanelDelegate>
 
 @property (weak,nonatomic) IBOutlet WCOutlineView *outlineView;
+@property (weak,nonatomic) IBOutlet WCGlassGradientView *glassGradientView;
+@property (weak,nonatomic) IBOutlet NSSearchField *filterSearchField;
 
 @property (assign,nonatomic) WCProjectWindowController *projectWindowController;
 @property (readonly,nonatomic) WCProjectDocument *projectDocument;
 @property (assign,nonatomic) BOOL ignoreChanges;
 @property (strong,nonatomic) NSSet *filePaths;
 @property (strong,nonatomic) WCAddToProjectAccessoryViewController *accessoryViewController;
+@property (strong,nonatomic) NSArray *filteredFiles;
 
 - (void)_setupOutlineViewContextualMenu;
 - (void)_restoreFromProjectSetting;
+- (IBAction)_filterSearchFieldAction:(NSSearchField *)sender;
 @end
 
 @implementation WCProjectViewController
@@ -52,6 +57,13 @@
 
 - (void)loadView {
     [super loadView];
+    
+    [self.glassGradientView setEdges:WCGlassGradientViewEdgesNone|WCGlassGradientViewEdgesMaxY];
+    
+    [(NSSearchFieldCell *)self.filterSearchField.cell setPlaceholderString:NSLocalizedString(@"Filter Files", nil)];
+    [[(NSSearchFieldCell *)self.filterSearchField.cell searchButtonCell] setImage:[NSImage imageNamed:@"Filter.png"]];
+    [[(NSSearchFieldCell *)self.filterSearchField.cell searchButtonCell] setAlternateImage:nil];
+    
     
     [self.outlineView registerForDraggedTypes:@[NSPasteboardTypeString,(__bridge NSString *)kUTTypeFileURL,(__bridge NSString *)kUTTypeDirectory]];
     [self.outlineView setVerticalMotionCanBeginDrag:YES];
@@ -75,13 +87,13 @@
 }
 - (NSInteger)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(File *)item {
     if (item) {
-        return item.files.count;
+        return (self.filteredFiles && item.isGroupValue) ? self.filteredFiles.count : item.files.count;
     }
     return 1;
 }
 - (id)outlineView:(NSOutlineView *)outlineView child:(NSInteger)index ofItem:(File *)item {
     if (item) {
-        return [item.files objectAtIndex:index];
+        return (self.filteredFiles && item.isGroupValue) ? [self.filteredFiles objectAtIndex:index] : [item.files objectAtIndex:index];
     }
     return self.projectDocument.project.file;
 }
@@ -552,6 +564,11 @@
 - (WCProjectDocument *)projectDocument {
     return self.projectWindowController.projectDocument;
 }
+- (void)setFilteredFiles:(NSArray *)filteredFiles {
+    _filteredFiles = filteredFiles;
+    
+    [self.outlineView reloadData];
+}
 #pragma mark Actions
 - (IBAction)_outlineViewDoubleAction:(NSOutlineView *)sender {
     for (File *file in [sender WC_selectedItems]) {
@@ -560,6 +577,24 @@
         if (sfDocument && [sfDocument isKindOfClass:[WCSourceFileDocument class]])
             [self.projectWindowController.tabViewController selectTabBarItemForSourceFileDocument:sfDocument];
     }
+}
+- (IBAction)_filterSearchFieldAction:(NSSearchField *)sender; {
+    if (sender.stringValue.length <= 1) {
+        [self setFilteredFiles:nil];
+        [self setIgnoreChanges:NO];
+        return;
+    }
+    
+    [self setIgnoreChanges:YES];
+    
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:kFileEntityName];
+    
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"self.isGroup == NO AND self.name CONTAINS[cd] %@",sender.stringValue]];
+    [fetchRequest setSortDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedStandardCompare:)]]];
+    
+    NSArray *files = [self.projectDocument.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
+    
+    [self setFilteredFiles:files];
 }
 #pragma mark Callbacks
 - (void)_alertDidEnd:(NSAlert *)alert code:(NSInteger)code context:(void *)context {

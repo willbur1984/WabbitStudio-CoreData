@@ -151,11 +151,8 @@
     return [self.managedObjectContext executeFetchRequest:fetchRequest error:NULL].lastObject;
 }
 - (NSImage *)imageForFile:(File *)file; {
-    if (file.isGroupValue)
-        return [NSImage imageNamed:@"Group.tiff"];
-    
     WCSourceFileDocument *sourceFileDocument = [self sourceFileDocumentForFile:file];
-    NSImage *retval = [[NSWorkspace sharedWorkspace] iconForFileType:file.uti];
+    NSImage *retval = file.image;
     
     if (sourceFileDocument.isDocumentEdited && file.project == nil)
         retval = [retval WC_unsavedImageIcon];

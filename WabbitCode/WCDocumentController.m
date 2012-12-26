@@ -69,12 +69,16 @@ NSString *const kProjectSettingEntityName = @"ProjectSetting";
     [projectFile setName:documentURL.lastPathComponent];
     [projectFile setPath:documentURL.path];
     [projectFile setUti:kProjectDocumentUTI];
+    [projectFile setIsGroup:@true];
     
     [project setFile:projectFile];
     
     [URLsToFiles setObject:projectFile forKey:directoryURL];
     
     for (NSURL *url in directoryEnumerator) {
+        if ([url isEqual:documentURL])
+            continue;
+        
         File *parentFile = [URLsToFiles objectForKey:[url WC_parentDirectory]];
         File *file = [NSEntityDescription insertNewObjectForEntityForName:kFileEntityName inManagedObjectContext:managedObjectContext];
         

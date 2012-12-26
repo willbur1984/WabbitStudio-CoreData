@@ -105,6 +105,8 @@
 		79813E611643816100D0F184 /* Group.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 79813E601643816100D0F184 /* Group.tiff */; };
 		79813E64164382D100D0F184 /* WCOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E63164382D100D0F184 /* WCOutlineView.m */; };
 		79813E67164383F100D0F184 /* NSOutlineView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */; };
+		7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7986041B168A74FF00D92224 /* WCGlassGradientView.m */; };
+		7986041E168AC9D500D92224 /* Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 7986041D168AC9D500D92224 /* Filter.png */; };
 		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
 		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
 		798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */; };
@@ -411,6 +413,9 @@
 		79813E63164382D100D0F184 /* WCOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCOutlineView.m; sourceTree = "<group>"; };
 		79813E65164383F100D0F184 /* NSOutlineView+WCExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSOutlineView+WCExtensions.h"; sourceTree = "<group>"; };
 		79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSOutlineView+WCExtensions.m"; sourceTree = "<group>"; };
+		7986041A168A74FF00D92224 /* WCGlassGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCGlassGradientView.h; sourceTree = "<group>"; };
+		7986041B168A74FF00D92224 /* WCGlassGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGlassGradientView.m; sourceTree = "<group>"; };
+		7986041D168AC9D500D92224 /* Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filter.png; sourceTree = "<group>"; };
 		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
 		798DB7761641ACA5007B4176 /* _Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Breakpoint.m; sourceTree = "<group>"; };
 		798DB7791641ACA5007B4176 /* _File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _File.h; sourceTree = "<group>"; };
@@ -632,6 +637,7 @@
 		7903F1E5160EBF1F000D3F3D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7986041D168AC9D500D92224 /* Filter.png */,
 				79E3843C1645A2B9009B0DF1 /* Issue.png */,
 				79E3843D1645A2B9009B0DF1 /* Search.png */,
 				79E3843716459837009B0DF1 /* Folder.tiff */,
@@ -1263,6 +1269,8 @@
 				7961CF4E164CAAE6005D5060 /* WCSplitView.m */,
 				7961CF53164CB86B005D5060 /* WCTabView.h */,
 				7961CF54164CB86B005D5060 /* WCTabView.m */,
+				7986041A168A74FF00D92224 /* WCGlassGradientView.h */,
+				7986041B168A74FF00D92224 /* WCGlassGradientView.m */,
 				79FE3607161943AF00DB7C6D /* Jump Bar */,
 			);
 			name = Views;
@@ -1567,6 +1575,7 @@
 				79CFE8FB165C24960044D345 /* WCTabView.xib in Resources */,
 				79CFE901165D880D0044D345 /* WCAddToProjectAccessoryView.xib in Resources */,
 				79B0A45C16757F900092EA7B /* WCUnsavedFilesWindow.xib in Resources */,
+				7986041E168AC9D500D92224 /* Filter.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1761,6 +1770,7 @@
 				798088FB16630BF80025B1CB /* _CalledLabel.m in Sources */,
 				790AFB2A1672F51100DEF234 /* WCTabWindow.m in Sources */,
 				79B0A45916757CDE0092EA7B /* WCUnsavedFilesWindowController.m in Sources */,
+				7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -30,11 +30,7 @@
     if (objectValue) {
         [self.textField setStringValue:self.file.name];
         [self.textField setToolTip:self.file.path];
-        
-        if (self.file.isGroupValue)
-            [self.imageView setImage:[NSImage imageNamed:@"Group.tiff"]];
-        else
-            [self.imageView setImage:[[NSWorkspace sharedWorkspace] iconForFileType:self.file.uti]];
+        [self.imageView setImage:self.file.image];
     }
 }
 

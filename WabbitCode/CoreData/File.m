@@ -53,7 +53,7 @@
 }
 
 - (NSImage *)image {
-    return [[NSWorkspace sharedWorkspace] iconForFileType:self.uti];
+    return (self.isGroupValue && self.file) ? [NSImage imageNamed:@"Group.tiff"] : [[NSWorkspace sharedWorkspace] iconForFileType:self.uti];
 }
 - (NSString *)fileUUID; {
     return self.uuid;
