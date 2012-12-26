@@ -107,6 +107,7 @@
 		79813E67164383F100D0F184 /* NSOutlineView+WCExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79813E66164383F100D0F184 /* NSOutlineView+WCExtensions.m */; };
 		7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7986041B168A74FF00D92224 /* WCGlassGradientView.m */; };
 		7986041E168AC9D500D92224 /* Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 7986041D168AC9D500D92224 /* Filter.png */; };
+		79860422168ADF4D00D92224 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860421168ADF4D00D92224 /* iCarousel.m */; };
 		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
 		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
 		798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */; };
@@ -416,6 +417,8 @@
 		7986041A168A74FF00D92224 /* WCGlassGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCGlassGradientView.h; sourceTree = "<group>"; };
 		7986041B168A74FF00D92224 /* WCGlassGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCGlassGradientView.m; sourceTree = "<group>"; };
 		7986041D168AC9D500D92224 /* Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filter.png; sourceTree = "<group>"; };
+		79860420168ADF4D00D92224 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = iCarousel/iCarousel.h; sourceTree = "<group>"; };
+		79860421168ADF4D00D92224 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCarousel.m; path = iCarousel/iCarousel.m; sourceTree = "<group>"; };
 		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
 		798DB7761641ACA5007B4176 /* _Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Breakpoint.m; sourceTree = "<group>"; };
 		798DB7791641ACA5007B4176 /* _File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _File.h; sourceTree = "<group>"; };
@@ -873,9 +876,19 @@
 			name = "Find Bar";
 			sourceTree = "<group>";
 		};
+		7986041F168ADF3C00D92224 /* iCarousel */ = {
+			isa = PBXGroup;
+			children = (
+				79860420168ADF4D00D92224 /* iCarousel.h */,
+				79860421168ADF4D00D92224 /* iCarousel.m */,
+			);
+			path = iCarousel;
+			sourceTree = "<group>";
+		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
+				7986041F168ADF3C00D92224 /* iCarousel */,
 				79AFA4111646DD6D00876655 /* MMTabBarView */,
 				79BF21C21645B1E700E79CBA /* DMTabBar */,
 				79DF87A6162A8C6500818741 /* MASPreferences */,
@@ -1771,6 +1784,7 @@
 				790AFB2A1672F51100DEF234 /* WCTabWindow.m in Sources */,
 				79B0A45916757CDE0092EA7B /* WCUnsavedFilesWindowController.m in Sources */,
 				7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */,
+				79860422168ADF4D00D92224 /* iCarousel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
