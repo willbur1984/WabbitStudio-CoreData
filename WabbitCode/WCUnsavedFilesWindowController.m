@@ -66,13 +66,16 @@
 }
 
 - (IBAction)_dontSaveAction:(id)sender; {
-    
+    [self closeUnsavedFilesWindow];
+    [[NSApplication sharedApplication] replyToApplicationShouldTerminate:YES];
 }
 - (IBAction)_saveSelectedAction:(id)sender; {
-    
+    [self closeUnsavedFilesWindow];
+    [[NSApplication sharedApplication] replyToApplicationShouldTerminate:YES];
 }
 - (IBAction)_cancelAction:(id)sender; {
-    
+    [self closeUnsavedFilesWindow];
+    [[NSApplication sharedApplication] replyToApplicationShouldTerminate:NO];
 }
 
 @end
