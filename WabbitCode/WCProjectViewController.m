@@ -523,6 +523,10 @@
 - (IBAction)openInSeparateEditorAction:(id)sender {
     
 }
+
+- (IBAction)filterInNavigatorAction:(id)sender; {
+    [self.view.window makeFirstResponder:self.filterSearchField];
+}
 #pragma mark *** Private Methods ***
 - (void)_setupOutlineViewContextualMenu; {
     NSMenu *menu = [[NSMenu alloc] initWithTitle:@"org.revsoft.wabbitcode.navigator.project.menu"];

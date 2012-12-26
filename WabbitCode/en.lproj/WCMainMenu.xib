@@ -521,6 +521,29 @@
 										</array>
 									</object>
 								</object>
+								<object class="NSMenuItem" id="448056489">
+									<reference key="NSMenu" ref="789758025"/>
+									<string key="NSTitle">Filter</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+									<string key="NSAction">submenuAction:</string>
+									<object class="NSMenu" key="NSSubmenu" id="368613216">
+										<string key="NSTitle">Filter</string>
+										<array class="NSMutableArray" key="NSMenuItems">
+											<object class="NSMenuItem" id="900967020">
+												<reference key="NSMenu" ref="368613216"/>
+												<string key="NSTitle">Filter in Navigator</string>
+												<string key="NSKeyEquiv">j</string>
+												<int key="NSKeyEquivModMask">1572864</int>
+												<int key="NSMnemonicLoc">2147483647</int>
+												<reference key="NSOnImage" ref="1033313550"/>
+												<reference key="NSMixedImage" ref="310636482"/>
+											</object>
+										</array>
+									</object>
+								</object>
 							</array>
 						</object>
 					</object>
@@ -1456,6 +1479,14 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
+						<string key="label">filterInNavigatorAction:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="900967020"/>
+					</object>
+					<int key="connectionID">622</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
 						<string key="label">preferencesAction:</string>
 						<reference key="source" ref="933371885"/>
 						<reference key="destination" ref="609285721"/>
@@ -1663,6 +1694,7 @@
 							<reference ref="790794224"/>
 							<reference ref="892235320"/>
 							<reference ref="763435172"/>
+							<reference ref="448056489"/>
 						</array>
 						<reference key="parent" ref="952259628"/>
 					</object>
@@ -2234,6 +2266,27 @@
 						<reference key="object" ref="829650667"/>
 						<reference key="parent" ref="835318025"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">619</int>
+						<reference key="object" ref="448056489"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="368613216"/>
+						</array>
+						<reference key="parent" ref="789758025"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">620</int>
+						<reference key="object" ref="368613216"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="900967020"/>
+						</array>
+						<reference key="parent" ref="448056489"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">621</int>
+						<reference key="object" ref="900967020"/>
+						<reference key="parent" ref="368613216"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2340,6 +2393,9 @@
 				<string key="611.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="612.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="613.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="619.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="620.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="621.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2356,7 +2412,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">615</int>
+			<int key="maxID">622</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2441,6 +2497,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCFindableTextView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">WCGlassGradientView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/WCGlassGradientView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2531,8 +2595,11 @@
 					<string key="className">WCProjectViewController</string>
 					<string key="superclassName">WCViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="_filterSearchFieldAction:">NSSearchField</string>
+						<string key="_outlineViewDoubleAction:">NSOutlineView</string>
 						<string key="addFilesToProjectAction:">id</string>
 						<string key="deleteAction:">id</string>
+						<string key="filterInNavigatorAction:">id</string>
 						<string key="newGroupAction:">id</string>
 						<string key="newGroupFromSelection:">id</string>
 						<string key="openInSeparateEditorAction:">id</string>
@@ -2544,12 +2611,24 @@
 						<string key="ungroupSelectionAction:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="_filterSearchFieldAction:">
+							<string key="name">_filterSearchFieldAction:</string>
+							<string key="candidateClassName">NSSearchField</string>
+						</object>
+						<object class="IBActionInfo" key="_outlineViewDoubleAction:">
+							<string key="name">_outlineViewDoubleAction:</string>
+							<string key="candidateClassName">NSOutlineView</string>
+						</object>
 						<object class="IBActionInfo" key="addFilesToProjectAction:">
 							<string key="name">addFilesToProjectAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="deleteAction:">
 							<string key="name">deleteAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="filterInNavigatorAction:">
+							<string key="name">filterInNavigatorAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="newGroupAction:">
@@ -2589,17 +2668,25 @@
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">outlineView</string>
-						<string key="NS.object.0">WCOutlineView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">outlineView</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="filterSearchField">NSSearchField</string>
+						<string key="glassGradientView">WCGlassGradientView</string>
+						<string key="outlineView">WCOutlineView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="filterSearchField">
+							<string key="name">filterSearchField</string>
+							<string key="candidateClassName">NSSearchField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="glassGradientView">
+							<string key="name">glassGradientView</string>
+							<string key="candidateClassName">WCGlassGradientView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="outlineView">
 							<string key="name">outlineView</string>
 							<string key="candidateClassName">WCOutlineView</string>
 						</object>
-					</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCProjectViewController.h</string>

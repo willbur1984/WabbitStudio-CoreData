@@ -32,4 +32,6 @@
 - (IBAction)renameAction:(id)sender;
 - (IBAction)openInSeparateEditorAction:(id)sender;
 
+- (IBAction)filterInNavigatorAction:(id)sender;
+
 @end
