@@ -20,10 +20,27 @@
 #import "NSBezierPath+MCAdditions.h"
 
 @interface WCOutlineView () <NSUserInterfaceValidations>
-
+- (void)_WCOutlineView_init;
 @end
 
 @implementation WCOutlineView
+
+- (id)initWithFrame:(NSRect)frameRect {
+    if (!(self = [super initWithFrame:frameRect]))
+        return nil;
+    
+    [self _WCOutlineView_init];
+    
+    return self;
+}
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (!(self = [super initWithCoder:aDecoder]))
+        return nil;
+    
+    [self _WCOutlineView_init];
+    
+    return self;
+}
 
 - (void)keyDown:(NSEvent *)theEvent {
     switch (theEvent.keyCode) {
@@ -69,7 +86,7 @@
 - (void)drawBackgroundInClipRect:(NSRect)clipRect {
     [super drawBackgroundInClipRect:clipRect];
     
-    if (self.numberOfRows == 0 && self.emptyAttributedString.length > 0) {
+    if (self.shouldDrawEmptyStringPredicate && self.shouldDrawEmptyStringPredicate(self)) {
         static NSTextStorage *kTextStorage;
         static NSLayoutManager *kLayoutManager;
         static NSTextContainer *kTextContainer;
@@ -133,6 +150,7 @@
     [super setDelegate:delegate];
 }
 
+@dynamic emptyString;
 - (NSString *)emptyString {
     return self.emptyAttributedString.string;
 }
@@ -148,11 +166,23 @@
     [self setNeedsDisplay:YES];
 }
 
+- (void)setShouldDrawEmptyStringPredicate:(BOOL (^)(WCOutlineView *outlineView))shouldDrawEmptyStringPredicate {
+    _shouldDrawEmptyStringPredicate = shouldDrawEmptyStringPredicate;
+    
+    [self setNeedsDisplay:YES];
+}
+
 - (IBAction)delete:(id)sender; {
     if ([self.delegate respondsToSelector:@selector(deleteActionInOutlineView:)])
         [self.delegate deleteActionInOutlineView:self];
     else
         NSBeep();
+}
+
+- (void)_WCOutlineView_init; {
+    [self setShouldDrawEmptyStringPredicate:^BOOL(WCOutlineView *outlineView) {
+        return (outlineView.numberOfRows == 0 && outlineView.attributedStringValue.length > 0);
+    }];
 }
 
 @end

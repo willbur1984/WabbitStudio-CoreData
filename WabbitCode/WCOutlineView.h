@@ -22,6 +22,8 @@
 @property (copy,nonatomic) NSString *emptyString;
 @property (copy,nonatomic) NSAttributedString *emptyAttributedString;
 
+@property (copy,nonatomic) BOOL (^shouldDrawEmptyStringPredicate)(WCOutlineView *outlineView);
+
 - (IBAction)delete:(id)sender;
 
 @end
