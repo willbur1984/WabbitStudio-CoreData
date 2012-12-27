@@ -19,6 +19,8 @@
 #import "WCEditorFocusCell.h"
 #import "WCTabViewController.h"
 #import "WCTabView.h"
+#import "WCTextViewController.h"
+#import "WCTextView.h"
 
 @interface WCEditorFocusWindowController () <iCarouselDataSource,iCarouselDelegate,WCEditorFocusCellDelegate>
 @property (weak,nonatomic) WCProjectDocument *projectDocument;
@@ -89,7 +91,12 @@
         [tabViewController.tabView selectTabViewItemAtIndex:cell.highlightedTabIndex];
     }
     else if (cell.highlightedTextViewControllerIndex != -1) {
+        [tabViewController.tabView selectTabViewItemAtIndex:cell.selectedTabIndex];
         
+        NSArray *textViewControllers = [cell.tabViewController textViewControllersForTabViewItemAtIndex:cell.selectedTabIndex];
+        WCTextViewController *textViewController = [textViewControllers objectAtIndex:cell.highlightedTextViewControllerIndex];
+        
+        [textViewController.view.window makeFirstResponder:textViewController.textView];
     }
     
     [self hideEditorFocusWindow];

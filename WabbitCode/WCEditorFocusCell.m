@@ -64,6 +64,7 @@
         NSInteger temp = MAX(0, self.highlightedTabIndex - 1);
         
         [self setHighlightedTabIndex:temp];
+        [self setSelectedTabIndex:temp];
     }
 }
 - (void)moveRight:(id)sender {
@@ -72,18 +73,30 @@
         NSInteger temp = MIN(numberOfTabs - 1, self.highlightedTabIndex + 1);
         
         [self setHighlightedTabIndex:temp];
+        [self setSelectedTabIndex:temp];
     }
 }
 - (void)moveUp:(id)sender {
     if (self.highlightedTextViewControllerIndex == 0) {
-        [self setHighlightedTabIndex:0];
+        [self setHighlightedTabIndex:self.selectedTabIndex];
         [self setHighlightedTextViewControllerIndex:-1];
+    }
+    else {
+        NSInteger temp = MAX(-1, self.highlightedTextViewControllerIndex - 1);
+        
+        [self setHighlightedTextViewControllerIndex:temp];
     }
 }
 - (void)moveDown:(id)sender {
     if (self.highlightedTextViewControllerIndex == -1) {
         [self setHighlightedTabIndex:-1];
         [self setHighlightedTextViewControllerIndex:0];
+    }
+    else {
+        NSUInteger numberOfTextViewControllers = [[self.tabViewController textViewControllersForTabViewItemAtIndex:self.selectedTabIndex] count];
+        NSInteger temp = MIN(numberOfTextViewControllers - 1, self.highlightedTextViewControllerIndex + 1);
+        
+        [self setHighlightedTextViewControllerIndex:temp];
     }
 }
 - (void)insertNewline:(id)sender {
@@ -125,7 +138,7 @@
                 [[NSColor alternateSelectedControlColor] setFill];
                 NSRectFill(NSMakeRect(frameX - width + 1, NSMaxY(self.bounds) - height, width - 1, height));
             }
-            else if (self.selectedTabIndex == index) {
+            if (self.selectedTabIndex == index) {
                 [[NSBezierPath bezierPathWithRect:NSMakeRect(frameX - width + 1, NSMaxY(self.bounds) - height, width - 1, height)] fillWithInnerShadow:[[NSShadow alloc] initWithColor:[NSColor blackColor] offset:NSZeroSize blurRadius:15]];
             }
             
@@ -137,10 +150,21 @@
         
         [[NSColor blackColor] setFill];
         NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMaxY(self.bounds) - height, NSWidth(self.frame), 1));
+
+        NSArray *textViewControllers = [self.tabViewController textViewControllersForTabViewItemAtIndex:self.selectedTabIndex];
+        CGFloat tvcHeight = ceil((NSHeight(self.frame) - height) / (CGFloat)textViewControllers.count);
+        CGFloat frameY = NSMaxY(self.bounds) - height - tvcHeight;
         
-        if (self.highlightedTabIndex == -1 && self.highlightedTextViewControllerIndex != -1) {
-            [[NSColor alternateSelectedControlColor] setFill];
-            NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMinY(self.bounds), NSWidth(self.frame), NSHeight(self.frame) - height));
+        for (NSUInteger index=0; index<textViewControllers.count; index++) {
+            if (self.highlightedTextViewControllerIndex == index) {
+                [[NSColor alternateSelectedControlColor] setFill];
+                NSRectFill(NSMakeRect(NSMinX(self.bounds), frameY, NSWidth(self.frame), tvcHeight));
+            }
+            
+            [[NSColor blackColor] setFill];
+            NSRectFill(NSMakeRect(NSMinX(self.bounds), frameY, NSWidth(self.frame), 1));
+            
+            frameY -= tvcHeight;
         }
     }
     

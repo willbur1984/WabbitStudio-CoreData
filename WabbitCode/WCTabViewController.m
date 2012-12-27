@@ -304,7 +304,7 @@
     [splitView setDividerStyle:(vertical)?NSSplitViewDividerStyleThin:NSSplitViewDividerStylePaneSplitter];
     [splitView setDelegate:self];
     
-    NSMutableSet *temp = [NSMutableSet setWithCapacity:0];
+    NSMutableOrderedSet *temp = [NSMutableOrderedSet orderedSetWithCapacity:0];
     
     [temp addObject:splitView];
     
@@ -314,7 +314,7 @@
     
     [textViewController setDelegate:self];
     
-    temp = [NSMutableSet setWithCapacity:0];
+    temp = [NSMutableOrderedSet orderedSetWithCapacity:0];
     
     [temp addObject:textViewController];
     
@@ -364,7 +364,11 @@
     
     [textViewController setDelegate:self];
     
-    [[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] addObject:textViewController];
+    NSMutableOrderedSet *assistantTextViewControllers = [self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController];
+    
+    [assistantTextViewControllers removeObject:currentAssistantTextViewController];
+    [assistantTextViewControllers addObject:currentAssistantTextViewController];
+    [assistantTextViewControllers addObject:textViewController];
     
     [splitView addSubview:currentAssistantTextViewController.view];
     [splitView addSubview:textViewController.view];
@@ -423,7 +427,12 @@
     [textViewController.textView WC_makeFirstResponder];
     
     [[self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController] removeObject:currentSplitView];
-    [[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController] removeObject:currentAssistantTextViewController];
+    
+    NSMutableOrderedSet *assistantTextViewControllers = [self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:currentTextViewController];
+    
+    [assistantTextViewControllers removeObject:currentAssistantTextViewController];
+    [assistantTextViewControllers removeObject:textViewController];
+    [assistantTextViewControllers addObject:textViewController];
     
     if (currentAssistantTextViewController == [self.textViewControllersToAssistantTextViewControllers objectForKey:currentTextViewController])
         [self.textViewControllersToAssistantTextViewControllers setObject:textViewController forKey:currentTextViewController];
