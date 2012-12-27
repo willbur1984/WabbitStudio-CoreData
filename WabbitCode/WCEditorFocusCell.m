@@ -22,6 +22,10 @@
 #import "NSBezierPath+MCAdditions.h"
 #import "NSShadow+MCAdditions.h"
 
+@interface WCEditorFocusCell ()
+
+@end
+
 @implementation WCEditorFocusCell
 
 - (id)initWithFrame:(NSRect)frameRect {
@@ -176,20 +180,23 @@
     _tabViewController = tabViewController;
     
     if (tabViewController.tabBarView.numberOfTabViewItems == 0) {
-        _selectedTabIndex = -1;
-        _highlightedTabIndex = -1;
-        _highlightedTextViewControllerIndex = -1;
+        [self setSelectedTabIndex:-1];
+        [self setHighlightedTabIndex:-1];
+        [self setHighlightedTextViewControllerIndex:-1];
     }
     else {
-        _selectedTabIndex = [tabViewController.tabBarView.tabView indexOfTabViewItem:tabViewController.tabBarView.tabView.selectedTabViewItem];
-        _highlightedTabIndex = -1;
-        _highlightedTextViewControllerIndex = 0;
+        [self setSelectedTabIndex:[tabViewController.tabBarView.tabView indexOfTabViewItem:tabViewController.tabBarView.tabView.selectedTabViewItem]];
+        [self setHighlightedTabIndex:-1];
+        [self setHighlightedTextViewControllerIndex:0];
     }
     
     [self setNeedsDisplay:YES];
 }
 - (void)setSelectedTabIndex:(NSInteger)selectedTabIndex {
     _selectedTabIndex = selectedTabIndex;
+    
+    if ([self.delegate respondsToSelector:@selector(editorFocusCell:didChangeSelectedTabIndex:)])
+        [self.delegate editorFocusCell:self didChangeSelectedTabIndex:selectedTabIndex];
     
     [self setNeedsDisplay:YES];
 }

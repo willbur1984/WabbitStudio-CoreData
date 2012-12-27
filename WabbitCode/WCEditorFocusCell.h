@@ -31,4 +31,5 @@
 @optional
 - (void)editorFocusCellDidPressReturn:(WCEditorFocusCell *)cell;
 - (void)editorFocusCellDidDoubleClick:(WCEditorFocusCell *)cell;
+- (void)editorFocusCell:(WCEditorFocusCell *)cell didChangeSelectedTabIndex:(NSInteger)index;
 @end

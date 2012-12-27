@@ -26,6 +26,7 @@
 @property (weak,nonatomic) WCProjectDocument *projectDocument;
 @property (weak,nonatomic) id eventMonitor;
 @property (strong,nonatomic) iCarousel *carouselView;
+@property (strong,nonatomic) NSTextField *textField;
 @end
 
 @implementation WCEditorFocusWindowController
@@ -42,6 +43,17 @@
     [self.carouselView setDelegate:self];
     [self.window.contentView addSubview:self.carouselView];
     
+    [self setTextField:[[NSTextField alloc] initWithFrame:NSZeroRect]];
+    [self.textField setBackgroundColor:[NSColor clearColor]];
+    [self.textField setBordered:NO];
+    [self.textField setFont:[NSFont boldSystemFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]]];
+    [self.textField setTextColor:[NSColor whiteColor]];
+    [self.textField setAlignment:NSCenterTextAlignment];
+    [self.textField setStringValue:NSLocalizedString(@"Move focus to", nil)];
+    [self.textField sizeToFit];
+    [self.textField setFrame:NSMakeRect(0, floor(NSHeight(self.textField.frame) * 0.5), NSWidth(self.carouselView.frame), NSHeight(self.textField.frame))];
+    [self.carouselView addSubview:self.textField];
+    
     return self;
 }
 
@@ -52,11 +64,6 @@
         retval = [[[self class] alloc] initWithWindow:[[WCEditorFocusWindow alloc] initWithContentRect:NSMakeRect(0, 0, 400, 200)]];
     });
     return retval;
-}
-
-- (void)showWindow:(id)sender {
-    [super showWindow:nil];
-    [self.window center];
 }
 
 - (NSUInteger)numberOfItemsInCarousel:(iCarousel *)carousel {
@@ -101,6 +108,11 @@
     
     [self hideEditorFocusWindow];
 }
+- (void)editorFocusCell:(WCEditorFocusCell *)cell didChangeSelectedTabIndex:(NSInteger)index {
+    NSTabViewItem *tabViewItem = [cell.tabViewController.tabView tabViewItemAtIndex:index];
+    
+    [self.textField setStringValue:[NSString stringWithFormat:NSLocalizedString(@"Move focus to %@", nil),tabViewItem.label]];
+}
 
 - (void)showEditorFocusWindowForProjectDocument:(WCProjectDocument *)projectDocument; {
     [self setProjectDocument:projectDocument];
@@ -111,7 +123,8 @@
         [self.window.animator setAlphaValue:1];
     } completionHandler:nil];
     
-    [self showWindow:nil];
+    [self.window center];
+    [self.window makeKeyAndOrderFront:nil];
     
     __unsafe_unretained typeof (self) weakSelf = self;
     
