@@ -27,6 +27,7 @@
 #import "WCAddToProjectAccessoryViewController.h"
 #import "WCTabViewController.h"
 #import "WCTabView.h"
+#import "WCEditorFocusWindowController.h"
 
 @interface WCProjectDocument ()
 @property (strong,nonatomic) NSMapTable *mutableFileUUIDsToSourceFileDocuments;
@@ -285,6 +286,9 @@
 #pragma mark Actions
 - (IBAction)openQuicklyAction:(id)sender; {
     [[WCOpenQuicklyWindowController sharedWindowController] showOpenQuicklyWindowForProjectDocument:self];
+}
+- (IBAction)moveFocusToEditorAction:(id)sender; {
+    [[WCEditorFocusWindowController sharedWindowController] showEditorFocusWindowForProjectDocument:self];
 }
 #pragma mark Properties
 - (NSString *)UUID {

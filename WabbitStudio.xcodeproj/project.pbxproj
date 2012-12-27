@@ -108,6 +108,10 @@
 		7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7986041B168A74FF00D92224 /* WCGlassGradientView.m */; };
 		7986041E168AC9D500D92224 /* Filter.png in Resources */ = {isa = PBXBuildFile; fileRef = 7986041D168AC9D500D92224 /* Filter.png */; };
 		79860422168ADF4D00D92224 /* iCarousel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860421168ADF4D00D92224 /* iCarousel.m */; };
+		7986042A168B9D9000D92224 /* WCEditorFocusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860429168B9D9000D92224 /* WCEditorFocusWindowController.m */; };
+		79860430168B9E9F00D92224 /* WCEditorFocusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7986042F168B9E9F00D92224 /* WCEditorFocusWindow.m */; };
+		79860437168BA4ED00D92224 /* WCEditorFocusContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860436168BA4ED00D92224 /* WCEditorFocusContentView.m */; };
+		7986043A168BB41400D92224 /* WCEditorFocusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860439168BB41400D92224 /* WCEditorFocusCell.m */; };
 		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
 		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
 		798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */; };
@@ -419,6 +423,14 @@
 		7986041D168AC9D500D92224 /* Filter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Filter.png; sourceTree = "<group>"; };
 		79860420168ADF4D00D92224 /* iCarousel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = iCarousel.h; path = iCarousel/iCarousel.h; sourceTree = "<group>"; };
 		79860421168ADF4D00D92224 /* iCarousel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = iCarousel.m; path = iCarousel/iCarousel.m; sourceTree = "<group>"; };
+		79860428168B9D9000D92224 /* WCEditorFocusWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEditorFocusWindowController.h; sourceTree = "<group>"; };
+		79860429168B9D9000D92224 /* WCEditorFocusWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusWindowController.m; sourceTree = "<group>"; };
+		7986042E168B9E9F00D92224 /* WCEditorFocusWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEditorFocusWindow.h; sourceTree = "<group>"; };
+		7986042F168B9E9F00D92224 /* WCEditorFocusWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusWindow.m; sourceTree = "<group>"; };
+		79860435168BA4ED00D92224 /* WCEditorFocusContentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEditorFocusContentView.h; sourceTree = "<group>"; };
+		79860436168BA4ED00D92224 /* WCEditorFocusContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusContentView.m; sourceTree = "<group>"; };
+		79860438168BB41400D92224 /* WCEditorFocusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEditorFocusCell.h; sourceTree = "<group>"; };
+		79860439168BB41400D92224 /* WCEditorFocusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusCell.m; sourceTree = "<group>"; };
 		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
 		798DB7761641ACA5007B4176 /* _Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Breakpoint.m; sourceTree = "<group>"; };
 		798DB7791641ACA5007B4176 /* _File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _File.h; sourceTree = "<group>"; };
@@ -885,6 +897,21 @@
 			path = iCarousel;
 			sourceTree = "<group>";
 		};
+		79860427168B9CF200D92224 /* Editor Focus */ = {
+			isa = PBXGroup;
+			children = (
+				79860428168B9D9000D92224 /* WCEditorFocusWindowController.h */,
+				79860429168B9D9000D92224 /* WCEditorFocusWindowController.m */,
+				7986042E168B9E9F00D92224 /* WCEditorFocusWindow.h */,
+				7986042F168B9E9F00D92224 /* WCEditorFocusWindow.m */,
+				79860435168BA4ED00D92224 /* WCEditorFocusContentView.h */,
+				79860436168BA4ED00D92224 /* WCEditorFocusContentView.m */,
+				79860438168BB41400D92224 /* WCEditorFocusCell.h */,
+				79860439168BB41400D92224 /* WCEditorFocusCell.m */,
+			);
+			name = "Editor Focus";
+			sourceTree = "<group>";
+		};
 		79968C981608DB4600F139BC = {
 			isa = PBXGroup;
 			children = (
@@ -1152,6 +1179,7 @@
 		79DE43401638C046003D56EA /* Project */ = {
 			isa = PBXGroup;
 			children = (
+				79860427168B9CF200D92224 /* Editor Focus */,
 				79B0A45616757CAA0092EA7B /* Unsaved Files */,
 				799F6CC4165311A600C33C61 /* Open Quickly */,
 				79AFA43B1646E84200876655 /* Symbols */,
@@ -1785,6 +1813,10 @@
 				79B0A45916757CDE0092EA7B /* WCUnsavedFilesWindowController.m in Sources */,
 				7986041C168A74FF00D92224 /* WCGlassGradientView.m in Sources */,
 				79860422168ADF4D00D92224 /* iCarousel.m in Sources */,
+				7986042A168B9D9000D92224 /* WCEditorFocusWindowController.m in Sources */,
+				79860430168B9E9F00D92224 /* WCEditorFocusWindow.m in Sources */,
+				79860437168BA4ED00D92224 /* WCEditorFocusContentView.m in Sources */,
+				7986043A168BB41400D92224 /* WCEditorFocusCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -30,6 +30,8 @@
 - (WCTextViewController *)selectTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (void)removeTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 
+- (NSArray *)textViewControllersForTabViewItemAtIndex:(NSInteger)index;
+
 - (IBAction)showStandardEditorAction:(id)sender;
 
 - (IBAction)showAssistantEditorAction:(id)sender;

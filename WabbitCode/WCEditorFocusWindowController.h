@@ -1,8 +1,8 @@
 //
-//  WCProjectDocument.h
+//  WCEditorFocusWindowController.h
 //  WabbitStudio
 //
-//  Created by William Towe on 10/26/12.
+//  Created by William Towe on 12/26/12.
 //  Copyright (c) 2012 William Towe. All rights reserved.
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -13,28 +13,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class WCSymbolIndex,WCProjectWindowController,WCSourceFileDocument,File,ProjectSetting,Project;
+@class WCProjectDocument;
 
-@interface WCProjectDocument : NSPersistentDocument
+@interface WCEditorFocusWindowController : NSWindowController
 
-@property (readonly,nonatomic) NSString *UUID;
-@property (readonly,strong,nonatomic) WCSymbolIndex *symbolIndex;
-@property (readonly,nonatomic) WCProjectWindowController *projectWindowController;
-@property (readonly,nonatomic) Project *project;
-@property (readonly,nonatomic) ProjectSetting *projectSetting;
-@property (readonly,nonatomic) NSSet *filePaths;
-@property (readonly,nonatomic) NSArray *unsavedSourceFileDocuments;
++ (WCEditorFocusWindowController *)sharedWindowController;
 
-- (WCSourceFileDocument *)sourceFileDocumentForFile:(File *)file;
-
-- (File *)fileForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
-- (File *)fileWithUUID:(NSString *)UUID;
-- (NSImage *)imageForFile:(File *)file;
-
-- (NSArray *)addFilesForURLs:(NSArray *)URLs toParentFile:(File *)parentFile atIndex:(NSUInteger)index;
-- (void)removeFiles:(NSArray *)files moveToTrash:(BOOL)moveToTrash;
-
-- (IBAction)openQuicklyAction:(id)sender;
-- (IBAction)moveFocusToEditorAction:(id)sender;
+- (void)showEditorFocusWindowForProjectDocument:(WCProjectDocument *)projectDocument;
+- (void)hideEditorFocusWindow;
 
 @end

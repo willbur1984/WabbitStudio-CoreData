@@ -521,7 +521,7 @@
 										</array>
 									</object>
 								</object>
-								<object class="NSMenuItem" id="448056489">
+								<object class="NSMenuItem" id="467430486">
 									<reference key="NSMenu" ref="789758025"/>
 									<string key="NSTitle">Filter</string>
 									<string key="NSKeyEquiv"/>
@@ -529,11 +529,11 @@
 									<reference key="NSOnImage" ref="1033313550"/>
 									<reference key="NSMixedImage" ref="310636482"/>
 									<string key="NSAction">submenuAction:</string>
-									<object class="NSMenu" key="NSSubmenu" id="368613216">
+									<object class="NSMenu" key="NSSubmenu" id="228912993">
 										<string key="NSTitle">Filter</string>
 										<array class="NSMutableArray" key="NSMenuItems">
-											<object class="NSMenuItem" id="900967020">
-												<reference key="NSMenu" ref="368613216"/>
+											<object class="NSMenuItem" id="107635772">
+												<reference key="NSMenu" ref="228912993"/>
 												<string key="NSTitle">Filter in Navigator</string>
 												<string key="NSKeyEquiv">j</string>
 												<int key="NSKeyEquivModMask">1572864</int>
@@ -750,6 +750,25 @@
 									</object>
 								</object>
 								<object class="NSMenuItem" id="1034397694">
+									<reference key="NSMenu" ref="833568504"/>
+									<bool key="NSIsDisabled">YES</bool>
+									<bool key="NSIsSeparator">YES</bool>
+									<string key="NSTitle"/>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="604169732">
+									<reference key="NSMenu" ref="833568504"/>
+									<string key="NSTitle">Move Focus to Editor…</string>
+									<string key="NSKeyEquiv">j</string>
+									<int key="NSKeyEquivModMask">1048576</int>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="1033313550"/>
+									<reference key="NSMixedImage" ref="310636482"/>
+								</object>
+								<object class="NSMenuItem" id="638485406">
 									<reference key="NSMenu" ref="833568504"/>
 									<bool key="NSIsDisabled">YES</bool>
 									<bool key="NSIsSeparator">YES</bool>
@@ -1481,9 +1500,17 @@
 					<object class="IBActionConnection" key="connection">
 						<string key="label">filterInNavigatorAction:</string>
 						<reference key="source" ref="1014"/>
-						<reference key="destination" ref="900967020"/>
+						<reference key="destination" ref="107635772"/>
 					</object>
 					<int key="connectionID">622</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">moveFocusToEditorAction:</string>
+						<reference key="source" ref="1014"/>
+						<reference key="destination" ref="604169732"/>
+					</object>
+					<int key="connectionID">625</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1694,7 +1721,7 @@
 							<reference ref="790794224"/>
 							<reference ref="892235320"/>
 							<reference ref="763435172"/>
-							<reference ref="448056489"/>
+							<reference ref="467430486"/>
 						</array>
 						<reference key="parent" ref="952259628"/>
 					</object>
@@ -1999,6 +2026,8 @@
 							<reference ref="757578495"/>
 							<reference ref="180315805"/>
 							<reference ref="909404796"/>
+							<reference ref="638485406"/>
+							<reference ref="604169732"/>
 						</array>
 						<reference key="parent" ref="945790431"/>
 					</object>
@@ -2268,24 +2297,34 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">619</int>
-						<reference key="object" ref="448056489"/>
+						<reference key="object" ref="467430486"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="368613216"/>
+							<reference ref="228912993"/>
 						</array>
 						<reference key="parent" ref="789758025"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">620</int>
-						<reference key="object" ref="368613216"/>
+						<reference key="object" ref="228912993"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="900967020"/>
+							<reference ref="107635772"/>
 						</array>
-						<reference key="parent" ref="448056489"/>
+						<reference key="parent" ref="467430486"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">621</int>
-						<reference key="object" ref="900967020"/>
-						<reference key="parent" ref="368613216"/>
+						<reference key="object" ref="107635772"/>
+						<reference key="parent" ref="228912993"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">623</int>
+						<reference key="object" ref="638485406"/>
+						<reference key="parent" ref="833568504"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">624</int>
+						<reference key="object" ref="604169732"/>
+						<reference key="parent" ref="833568504"/>
 					</object>
 				</array>
 			</object>
@@ -2396,6 +2435,8 @@
 				<string key="619.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="620.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="621.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="623.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="624.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="72.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="73.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="74.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2412,7 +2453,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">622</int>
+			<int key="maxID">625</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2575,17 +2616,20 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">WCProjectDocument</string>
 					<string key="superclassName">NSPersistentDocument</string>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">openQuicklyAction:</string>
-						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">openQuicklyAction:</string>
-						<object class="IBActionInfo" key="NS.object.0">
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="moveFocusToEditorAction:">id</string>
+						<string key="openQuicklyAction:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="moveFocusToEditorAction:">
+							<string key="name">moveFocusToEditorAction:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openQuicklyAction:">
 							<string key="name">openQuicklyAction:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-					</object>
+					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/WCProjectDocument.h</string>
@@ -2596,7 +2640,6 @@
 					<string key="superclassName">WCViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="_filterSearchFieldAction:">NSSearchField</string>
-						<string key="_outlineViewDoubleAction:">NSOutlineView</string>
 						<string key="addFilesToProjectAction:">id</string>
 						<string key="deleteAction:">id</string>
 						<string key="filterInNavigatorAction:">id</string>
@@ -2614,10 +2657,6 @@
 						<object class="IBActionInfo" key="_filterSearchFieldAction:">
 							<string key="name">_filterSearchFieldAction:</string>
 							<string key="candidateClassName">NSSearchField</string>
-						</object>
-						<object class="IBActionInfo" key="_outlineViewDoubleAction:">
-							<string key="name">_outlineViewDoubleAction:</string>
-							<string key="candidateClassName">NSOutlineView</string>
 						</object>
 						<object class="IBActionInfo" key="addFilesToProjectAction:">
 							<string key="name">addFilesToProjectAction:</string>

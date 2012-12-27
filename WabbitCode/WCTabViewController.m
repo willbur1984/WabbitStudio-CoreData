@@ -251,6 +251,17 @@
     [self.sourceFileDocumentsToTextViewControllers removeObjectForKey:sourceFileDocument];
     [self.textViewControllersToSourceFileDocuments removeObjectForKey:textViewController];
 }
+
+- (NSArray *)textViewControllersForTabViewItemAtIndex:(NSInteger)index; {
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:0];
+    NSTabViewItem *tabViewItem = [self.tabBarView.tabView tabViewItemAtIndex:index];
+    WCTextViewController *textViewController = [self.sourceFileDocumentsToTextViewControllers objectForKey:tabViewItem.identifier];
+    
+    [retval addObject:textViewController];
+    [retval addObjectsFromArray:[[self.textViewControllersToAssistantTextViewControllerMutableSets objectForKey:textViewController] allObjects]];
+    
+    return retval;
+}
 #pragma mark Actions
 - (IBAction)showStandardEditorAction:(id)sender; {
     WCTextViewController *currentTextViewController = self.currentTextViewController;
