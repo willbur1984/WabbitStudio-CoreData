@@ -20,4 +20,6 @@
 - (NSViewController *)WC_viewController;
 - (void)WC_setViewController:(NSViewController *)viewController;
 
+- (NSArray *)WC_flattenedSubviews;
+
 @end

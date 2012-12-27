@@ -166,4 +166,15 @@ static char kViewControllerKey;
     }
 }
 
+- (NSArray *)WC_flattenedSubviews; {
+    NSMutableOrderedSet *retval = [NSMutableOrderedSet orderedSetWithCapacity:0];
+    
+    for (NSView *subview in self.subviews) {
+        [retval addObject:subview];
+        [retval addObjectsFromArray:[subview WC_flattenedSubviews]];
+    }
+    
+    return retval.array;
+}
+
 @end
