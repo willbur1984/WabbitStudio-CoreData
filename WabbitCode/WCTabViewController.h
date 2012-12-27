@@ -24,6 +24,10 @@
 
 @property (readonly,strong,nonatomic) MMTabBarView *tabBarView;
 
+@property (readonly,nonatomic) WCSourceFileDocument *currentSourceFileDocument;
+@property (readonly,nonatomic) WCTextViewController *currentTextViewController;
+@property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
+
 - (id)initWithTabBarView:(MMTabBarView *)tabBarView;
 
 - (WCTextViewController *)addTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;

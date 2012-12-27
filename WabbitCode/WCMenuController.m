@@ -20,6 +20,11 @@
 #import "WCTextViewController.h"
 #import "WCTextView.h"
 #import "NSString+WCExtensions.h"
+#import "WCProjectDocument.h"
+#import "WCTabViewController.h"
+#import "WCProjectWindowController.h"
+#import "WCDefines.h"
+#import "NSView+WCExtensions.h"
 
 @interface WCMenuController () <NSMenuDelegate>
 @property (weak,nonatomic) IBOutlet NSMenu *goToBookmarkMenu;
@@ -36,8 +41,11 @@
         if (!currentDocument) {
             [menu addItemWithTitle:NSLocalizedString(@"No Bookmarks", nil) action:NULL keyEquivalent:@""];
         }
-        else if ([currentDocument isKindOfClass:[WCSourceFileDocument class]]) {
-            WCTextStorage *textStorage = [(WCSourceFileDocument *)currentDocument textStorage];
+        else if ([currentDocument isKindOfClass:[WCSourceFileDocument class]] ||
+                 [currentDocument isKindOfClass:[WCProjectDocument class]]) {
+            
+            WCSourceFileDocument *sourceFileDocument = ([currentDocument isKindOfClass:[WCSourceFileDocument class]]) ? (WCSourceFileDocument *)currentDocument : [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentSourceFileDocument];
+            WCTextStorage *textStorage = sourceFileDocument.textStorage;
             WCBookmarkManager *bookmarkManager = textStorage.bookmarkManager;
             NSArray *bookmarks = bookmarkManager.bookmarksSortedByLocation;
             
@@ -73,11 +81,24 @@
 }
 #pragma mark Actions
 - (IBAction)_goToBookmarkMenuItemAction:(NSMenuItem *)sender {
-    WCSourceFileDocument *currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
-    WCBookmarkManager *bookmarkManager = currentDocument.textStorage.bookmarkManager;
+    id currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
+    WCSourceFileDocument *sourceFileDocument = ([currentDocument isKindOfClass:[WCSourceFileDocument class]]) ? (WCSourceFileDocument *)currentDocument : [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentSourceFileDocument];
+    WCBookmarkManager *bookmarkManager = sourceFileDocument.textStorage.bookmarkManager;
     NSArray *bookmarks = bookmarkManager.bookmarksSortedByLocation;
     Bookmark *bookmark = [bookmarks objectAtIndex:sender.tag];
-    WCTextViewController *textViewController = currentDocument.sourceFileWindowController.currentTextViewController;
+    WCTextViewController *textViewController = nil;
+    
+    if ([currentDocument isKindOfClass:[WCSourceFileDocument class]]) {
+        textViewController = sourceFileDocument.sourceFileWindowController.currentTextViewController;
+    }
+    else {
+        id firstResponder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+        
+        if ([firstResponder isKindOfClass:[WCTextView class]])
+            textViewController = (WCTextViewController *)[firstResponder WC_viewController];
+        else
+            textViewController = [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentTextViewController];
+    }
     
     if (!textViewController)
         return;
@@ -86,10 +107,11 @@
     [textViewController.textView scrollRangeToVisible:textViewController.textView.selectedRange];
 }
 - (IBAction)_removeAllBookmarksAction:(id)sender {
-    WCSourceFileDocument *currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
+    id currentDocument = [[NSDocumentController sharedDocumentController] currentDocument];
+    WCSourceFileDocument *sourceFileDocument = ([currentDocument isKindOfClass:[WCSourceFileDocument class]]) ? (WCSourceFileDocument *)currentDocument : [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentSourceFileDocument];
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:WCBookmarkManagerShowRemoveAllWarningUserDefaultsKey]) {
-        [currentDocument.textStorage.bookmarkManager removeAllBookmarks];
+        [sourceFileDocument.textStorage.bookmarkManager removeAllBookmarks];
         return;
     }
     
@@ -98,7 +120,7 @@
     [alert setAlertStyle:NSWarningAlertStyle];
     [alert setShowsSuppressionButton:YES];
     
-    [alert beginSheetModalForWindow:currentDocument.windowForSheet modalDelegate:self didEndSelector:@selector(_removeAllBookmarksAlert:code:context:) contextInfo:(__bridge void *)currentDocument];
+    [alert beginSheetModalForWindow:sourceFileDocument.windowForSheet modalDelegate:self didEndSelector:@selector(_removeAllBookmarksAlert:code:context:) contextInfo:(__bridge void *)sourceFileDocument];
 }
 #pragma mark Callbacks
 - (void)_removeAllBookmarksAlert:(NSAlert *)alert code:(NSInteger)code context:(void *)context {

@@ -25,6 +25,7 @@
 #import "WCDefines.h"
 #import "NSEvent+WCExtensions.h"
 #import "ProjectSetting.h"
+#import "NSView+WCExtensions.h"
 
 @interface WCTabViewController () <MMTabBarViewDelegate,WCTextViewControllerDelegate,NSSplitViewDelegate>
 
@@ -36,8 +37,6 @@
 @property (strong,nonatomic) NSMapTable *textViewControllersToAssistantTextViewControllers;
 @property (strong,nonatomic) NSMapTable *textViewControllersToAssistantTextViewControllerMutableSets;
 @property (strong,nonatomic) NSMapTable *textViewControllersToAssistantSplitViewMutableSets;
-@property (readonly,nonatomic) WCTextViewController *currentTextViewController;
-@property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
 @property (assign,nonatomic) BOOL ignoreChanges;
 
 - (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController;
@@ -344,6 +343,10 @@
 - (IBAction)resetEditorAction:(id)sender; {
     // TODO: i don't really know what this method is supposed to do :(
 }
+#pragma mark Properties
+- (WCSourceFileDocument *)currentSourceFileDocument {
+    return [self.textViewControllersToSourceFileDocuments objectForKey:self.currentTextViewController];
+}
 #pragma mark *** Private Methods ***
 - (void)_addAssistantEditorForTextViewController:(WCTextViewController *)currentAssistantTextViewController; {
     NSSplitView *currentSplitView = (NSSplitView *)currentAssistantTextViewController.view.superview;
@@ -357,8 +360,9 @@
     [splitView setDelegate:self];
     
     WCTextViewController *currentTextViewController = self.currentTextViewController;
+    NSMutableOrderedSet *assistantSplitViews = [self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController];
     
-    [[self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController] addObject:splitView];
+    [assistantSplitViews addObject:splitView];
     
     WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:[self.textViewControllersToSourceFileDocuments objectForKey:currentTextViewController]];
     
@@ -397,14 +401,14 @@
     NSSplitView *parentSplitView = nil;
     
     for (NSSplitView *splitView in [self.textViewControllersToAssistantSplitViewMutableSets objectForKey:currentTextViewController]) {
-        for (NSView *view in splitView.subviews) {
-            if ([view WC_viewController] == currentAssistantTextViewController) {
-                currentSplitView = splitView;
+        for (NSView *view in [splitView WC_flattenedSubviews]) {
+            if (currentAssistantTextViewController == [view WC_viewController]) {
+                currentSplitView = (NSSplitView *)view;
                 parentSplitView = (NSSplitView *)currentSplitView.superview;
                 
-                for (NSView *sView in splitView.subviews) {
-                    if ([sView WC_viewController] != currentAssistantTextViewController) {
-                        textViewController = (WCTextViewController *)[sView WC_viewController];
+                for (NSView *view in [view WC_flattenedSubviews]) {
+                    if (currentAssistantTextViewController != [view WC_viewController]) {
+                        textViewController = (WCTextViewController *)[view WC_viewController];
                         break;
                     }
                 }
@@ -417,7 +421,7 @@
             break;
     }
     
-    NSParameterAssert(textViewController);
+    WCAssert(textViewController,@"textViewController cannot be nil!");
     
     [currentSplitView removeFromSuperviewWithoutNeedingDisplay];
     [currentAssistantTextViewController cleanup];
