@@ -52,6 +52,8 @@ NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsKey = @"
 NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey = @"WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey";
 NSString *const WCTextViewTabWidthUserDefaultsKey = @"WCTextViewTabWidthUserDefaultsKey";
 
+NSString *const WCTextViewHoverLinkTemporaryAttributeName = @"WCTextViewHoverLinkTemporaryAttributeName";
+
 static NSString *const kHoverLinkTrackingAreaRangeUserInfoKey = @"kHoverLinkTrackingAreaRangeUserInfoKey";
 
 static char kWCTextViewObservingContext;
@@ -159,7 +161,7 @@ static char kWCTextViewObservingContext;
     if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
         NSRange range = [[theEvent.trackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
-        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:range];
+        [self.layoutManager addTemporaryAttribute:WCTextViewHoverLinkTemporaryAttributeName value:@true forCharacterRange:range];
         [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:range];
         
         [self setCurrentHoverLinkTrackingArea:theEvent.trackingArea];
@@ -174,8 +176,7 @@ static char kWCTextViewObservingContext;
     if ([self.hoverLinkTrackingAreas containsObject:theEvent.trackingArea]) {
         NSRange range = [[theEvent.trackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
-        [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-        [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
+        [self.layoutManager removeTemporaryAttribute:WCTextViewHoverLinkTemporaryAttributeName forCharacterRange:range];
         [self.textStorage removeAttribute:NSCursorAttributeName range:range];
         
         [self setCurrentHoverLinkTrackingArea:nil];
@@ -260,7 +261,7 @@ static char kWCTextViewObservingContext;
                     if (NSPointInRect(point, rect)) {
                         options |= NSTrackingAssumeInside;
                         
-                        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:effectiveRange];
+                        [self.layoutManager addTemporaryAttribute:WCTextViewHoverLinkTemporaryAttributeName value:@true forCharacterRange:effectiveRange];
                         [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:effectiveRange];
                     }
                     
@@ -431,7 +432,7 @@ static char kWCTextViewObservingContext;
                     if (NSPointInRect(point, rect)) {
                         options |= NSTrackingAssumeInside;
                         
-                        [self.layoutManager addTemporaryAttributes:@{NSForegroundColorAttributeName : [NSColor blueColor],NSUnderlineStyleAttributeName : @(NSUnderlineStyleSingle|NSUnderlinePatternSolid)} forCharacterRange:effectiveRange];
+                        [self.layoutManager addTemporaryAttribute:WCTextViewHoverLinkTemporaryAttributeName value:@true forCharacterRange:effectiveRange];
                         [self.textStorage addAttribute:NSCursorAttributeName value:[NSCursor pointingHandCursor] range:effectiveRange];
                     }
                     
@@ -1224,8 +1225,7 @@ static char kWCTextViewObservingContext;
     if (_currentHoverLinkTrackingArea) {
         NSRange range = [[_currentHoverLinkTrackingArea.userInfo objectForKey:kHoverLinkTrackingAreaRangeUserInfoKey] rangeValue];
         
-        [self.layoutManager removeTemporaryAttribute:NSForegroundColorAttributeName forCharacterRange:range];
-        [self.layoutManager removeTemporaryAttribute:NSUnderlineStyleAttributeName forCharacterRange:range];
+        [self.layoutManager removeTemporaryAttribute:WCTextViewHoverLinkTemporaryAttributeName forCharacterRange:range];
         [self.textStorage removeAttribute:NSCursorAttributeName range:range];
     }
     

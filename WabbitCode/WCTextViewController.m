@@ -234,7 +234,11 @@
     if (toScreen) {
         NSMutableDictionary *temp = [attrs mutableCopy];
         
-        if ([[attrs objectForKey:WCSymbolHighlighterMacroTemporaryAttributeName] boolValue]) {
+        if ([[attrs objectForKey:WCTextViewHoverLinkTemporaryAttributeName] boolValue]) {
+            [temp setObject:[NSColor blueColor] forKey:NSForegroundColorAttributeName];
+            [temp setObject:@(NSUnderlineStyleSingle|NSUnderlinePatternSolid) forKey:NSUnderlineStyleAttributeName];
+        }
+        else if ([[attrs objectForKey:WCSymbolHighlighterMacroTemporaryAttributeName] boolValue]) {
             [temp setObject:[NSColor colorWithCalibratedRed:1 green:0.4 blue:0.4 alpha:1] forKey:NSForegroundColorAttributeName];
         }
         else if ([[attrs objectForKey:WCSymbolHighlighterDefineTemporaryAttributeName] boolValue]) {

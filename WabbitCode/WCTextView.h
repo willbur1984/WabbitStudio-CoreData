@@ -23,6 +23,8 @@ extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolUserDefaultsK
 extern NSString *const WCTextViewHighlightInstancesOfSelectedSymbolDelayUserDefaultsKey;
 extern NSString *const WCTextViewTabWidthUserDefaultsKey;
 
+extern NSString *const WCTextViewHoverLinkTemporaryAttributeName;
+
 @class Fold;
 @protocol WCTextViewDelegate;
 
