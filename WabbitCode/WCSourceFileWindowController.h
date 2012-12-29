@@ -22,11 +22,4 @@
 
 - (id)initWithTextStorage:(WCTextStorage *)textStorage;
 
-- (IBAction)showStandardEditorAction:(id)sender;
-
-- (IBAction)showAssistantEditorAction:(id)sender;
-- (IBAction)addAssistantEditorAction:(id)sender;
-- (IBAction)removeAssistantEditorAction:(id)sender;
-- (IBAction)resetEditorAction:(id)sender;
-
 @end

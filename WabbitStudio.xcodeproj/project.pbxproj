@@ -112,6 +112,7 @@
 		79860430168B9E9F00D92224 /* WCEditorFocusWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 7986042F168B9E9F00D92224 /* WCEditorFocusWindow.m */; };
 		79860437168BA4ED00D92224 /* WCEditorFocusContentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860436168BA4ED00D92224 /* WCEditorFocusContentView.m */; };
 		7986043A168BB41400D92224 /* WCEditorFocusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860439168BB41400D92224 /* WCEditorFocusCell.m */; };
+		79860448168CE7E500D92224 /* WCStandardTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79860447168CE7E500D92224 /* WCStandardTextViewController.m */; };
 		798DB78B1641ACA5007B4176 /* _Breakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB7761641ACA5007B4176 /* _Breakpoint.m */; };
 		798DB78D1641ACA5007B4176 /* _File.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77A1641ACA5007B4176 /* _File.m */; };
 		798DB78E1641ACA5007B4176 /* _FileBreakpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 798DB77C1641ACA5007B4176 /* _FileBreakpoint.m */; };
@@ -431,6 +432,8 @@
 		79860436168BA4ED00D92224 /* WCEditorFocusContentView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusContentView.m; sourceTree = "<group>"; };
 		79860438168BB41400D92224 /* WCEditorFocusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCEditorFocusCell.h; sourceTree = "<group>"; };
 		79860439168BB41400D92224 /* WCEditorFocusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCEditorFocusCell.m; sourceTree = "<group>"; };
+		79860446168CE7E500D92224 /* WCStandardTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WCStandardTextViewController.h; sourceTree = "<group>"; };
+		79860447168CE7E500D92224 /* WCStandardTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WCStandardTextViewController.m; sourceTree = "<group>"; };
 		798DB7751641ACA5007B4176 /* _Breakpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _Breakpoint.h; sourceTree = "<group>"; };
 		798DB7761641ACA5007B4176 /* _Breakpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _Breakpoint.m; sourceTree = "<group>"; };
 		798DB7791641ACA5007B4176 /* _File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _File.h; sourceTree = "<group>"; };
@@ -1366,6 +1369,8 @@
 				7973D6D3160CF7F4004EDE62 /* WCViewController.m */,
 				7973D6D6160CF83A004EDE62 /* WCTextViewController.h */,
 				7973D6D7160CF83A004EDE62 /* WCTextViewController.m */,
+				79860446168CE7E500D92224 /* WCStandardTextViewController.h */,
+				79860447168CE7E500D92224 /* WCStandardTextViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1817,6 +1822,7 @@
 				79860430168B9E9F00D92224 /* WCEditorFocusWindow.m in Sources */,
 				79860437168BA4ED00D92224 /* WCEditorFocusContentView.m in Sources */,
 				7986043A168BB41400D92224 /* WCEditorFocusCell.m in Sources */,
+				79860448168CE7E500D92224 /* WCStandardTextViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

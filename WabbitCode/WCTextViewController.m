@@ -46,6 +46,7 @@
 
 @interface WCTextViewController () <WCTextViewDelegate,WCJumpBarControlDataSource,WCJumpBarControlDelegate,WCFoldViewDelegate,WCBookmarkScrollerDelegate,WCJumpInWindowControllerDelegate,NSMenuDelegate,NSLayoutManagerDelegate>
 
+@property (readwrite,strong,nonatomic) IBOutlet NSView *containerView;
 @property (readwrite,unsafe_unretained,nonatomic) IBOutlet WCTextView *textView;
 @property (weak,nonatomic) IBOutlet WCJumpBarControl *jumpBarControl;
 @property (weak,nonatomic) IBOutlet NSPopUpButton *relatedFilesPopUpButton;
@@ -53,7 +54,7 @@
 @property (weak,nonatomic) IBOutlet NSButton *removeButton;
 @property (weak,nonatomic) IBOutlet NSImageView *addRemoveDividerImageView;
 
-@property (weak,nonatomic) WCSourceFileDocument *sourceFileDocument;
+@property (readwrite,weak,nonatomic) WCSourceFileDocument *sourceFileDocument;
 @property (weak,nonatomic) WCTextStorage *textStorage;
 
 @property (strong,nonatomic) NSArray *jumpBarControlMenuSymbols;
@@ -160,6 +161,7 @@
     [self.textView setDelegate:nil];
     [(WCFoldView *)self.textView.enclosingScrollView.verticalRulerView setDelegate:nil];
     [(WCBookmarkScroller *)self.textView.enclosingScrollView.verticalScroller setDelegate:nil];
+    [self setContainerView:nil];
 }
 
 #pragma mark NSMenuDelegate
