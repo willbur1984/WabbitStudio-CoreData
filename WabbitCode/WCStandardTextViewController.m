@@ -187,6 +187,8 @@
         return;
     }
     
+    // FIXME: this doesnt work all the time, deeply nested splits trigger the assert
+    
     NSSplitView *currentSplitView = (NSSplitView *)textViewController.view.superview;
     NSSplitView *parentSplitView = (NSSplitView *)currentSplitView.superview;
     WCTextViewController *textViewControllerToKeep = nil;

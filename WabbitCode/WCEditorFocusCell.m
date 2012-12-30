@@ -118,6 +118,8 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
+    // TODO: draw according to the split views, so it looks like xcodes view
+    
     static NSGradient *gradient;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
