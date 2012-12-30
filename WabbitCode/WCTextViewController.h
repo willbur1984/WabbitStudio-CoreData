@@ -37,6 +37,7 @@
 @end
 
 @protocol WCTextViewControllerDelegate <NSObject>
+@optional
 - (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
 - (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController;
 @end

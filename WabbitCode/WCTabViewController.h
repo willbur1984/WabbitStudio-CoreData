@@ -13,10 +13,10 @@
 
 #import "WCViewController.h"
 
-@class WCSourceFileDocument,WCTextViewController,MMTabBarView,WCProjectDocument,WCTabView;
+@class WCSourceFileDocument,WCTextViewController,WCStandardTextViewController,MMTabBarView,WCProjectDocument,WCTabView;
 @protocol WCTabViewControllerDelegate;
 
-@interface WCTabViewController : WCViewController <NSUserInterfaceValidations>
+@interface WCTabViewController : WCViewController
 
 @property (readonly,weak,nonatomic) IBOutlet WCTabView *tabView;
 
@@ -25,8 +25,7 @@
 @property (readonly,strong,nonatomic) MMTabBarView *tabBarView;
 
 @property (readonly,nonatomic) WCSourceFileDocument *currentSourceFileDocument;
-@property (readonly,nonatomic) WCTextViewController *currentTextViewController;
-@property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
+@property (readonly,nonatomic) WCStandardTextViewController *currentStandardTextViewController;
 
 - (id)initWithTabBarView:(MMTabBarView *)tabBarView;
 
@@ -34,14 +33,7 @@
 - (WCTextViewController *)selectTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 - (void)removeTabBarItemForSourceFileDocument:(WCSourceFileDocument *)sourceFileDocument;
 
-- (NSArray *)textViewControllersForTabViewItemAtIndex:(NSInteger)index;
-
-- (IBAction)showStandardEditorAction:(id)sender;
-
-- (IBAction)showAssistantEditorAction:(id)sender;
-- (IBAction)addAssistantEditorAction:(id)sender;
-- (IBAction)removeAssistantEditorAction:(id)sender;
-- (IBAction)resetEditorAction:(id)sender;
+- (WCStandardTextViewController *)standardTextViewControllerForTabViewItemAtIndex:(NSInteger)index;
 
 @end
 

@@ -18,8 +18,8 @@
 #import "WCDefines.h"
 
 @interface WCStandardTextViewController () <WCTextViewControllerDelegate,NSSplitViewDelegate>
-@property (strong,nonatomic) NSMutableOrderedSet *assistantTextViewControllers;
-@property (strong,nonatomic) NSMutableOrderedSet *assistantSplitViews;
+@property (strong,nonatomic) NSMutableOrderedSet *mutableAssistantTextViewControllers;
+@property (strong,nonatomic) NSMutableOrderedSet *mutableAssistantSplitViews;
 @property (readonly,nonatomic) WCTextViewController *currentTextViewController;
 @property (readonly,nonatomic) WCTextViewController *currentAssistantTextViewController;
 
@@ -28,11 +28,11 @@
 @end
 
 @implementation WCStandardTextViewController
-
+#pragma mark *** Subclass Overrides ***
 - (void)cleanup {
     [super cleanup];
     
-    for (WCTextViewController *textViewController in self.assistantTextViewControllers)
+    for (WCTextViewController *textViewController in self.mutableAssistantTextViewControllers)
         [textViewController cleanup];
 }
 
@@ -41,19 +41,36 @@
         return nil;
     
     [self setShowAddRemoveAssistantEditorButtons:NO];
-    [self setAssistantSplitViews:[NSMutableOrderedSet orderedSetWithCapacity:0]];
-    [self setAssistantTextViewControllers:[NSMutableOrderedSet orderedSetWithCapacity:0]];
+    [self setMutableAssistantSplitViews:[NSMutableOrderedSet orderedSetWithCapacity:0]];
+    [self setMutableAssistantTextViewControllers:[NSMutableOrderedSet orderedSetWithCapacity:0]];
     
     return self;
 }
 
+#pragma mark NSSplitViewDelegate
+- (BOOL)splitView:(NSSplitView *)splitView canCollapseSubview:(NSView *)subview {
+    return NO;
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    return proposedMinimumPosition + floor(amount * 0.25);
+}
+- (CGFloat)splitView:(NSSplitView *)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex {
+    CGFloat amount = (splitView.isVertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
+    
+    return proposedMaximumPosition - floor(amount * 0.25);
+}
+#pragma mark WCTextViewControllerDelegate
 - (void)addAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
     [self _addAssistantEditorForTextViewController:textViewController];
 }
 - (void)removeAssistantEditorForTextViewController:(WCTextViewController *)textViewController {
     [self _removeAssistantEditorForTextViewController:textViewController];
 }
+#pragma mark *** Public Methods ***
 
+#pragma mark Actions
 - (IBAction)showStandardEditorAction:(id)sender; {
     if (self.assistantTextViewControllers.count == 0) {
         [self.textView WC_makeFirstResponder];
@@ -65,8 +82,8 @@
     for (NSSplitView *splitView in self.assistantSplitViews)
         [splitView removeFromSuperviewWithoutNeedingDisplay];
     
-    [self.assistantSplitViews removeAllObjects];
-    [self.assistantTextViewControllers removeAllObjects];
+    [self.mutableAssistantSplitViews removeAllObjects];
+    [self.mutableAssistantTextViewControllers removeAllObjects];
     
     [self.containerView setFrame:self.view.bounds];
     [self.view addSubview:self.containerView];
@@ -87,13 +104,13 @@
     [splitView setDividerStyle:(vertical) ? NSSplitViewDividerStyleThin : NSSplitViewDividerStylePaneSplitter];
     [splitView setDelegate:self];
     
-    [self.assistantSplitViews addObject:splitView];
+    [self.mutableAssistantSplitViews addObject:splitView];
     
     WCTextViewController *textViewController = [[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument];
     
     [textViewController setDelegate:self];
     
-    [self.assistantTextViewControllers addObject:textViewController];
+    [self.mutableAssistantTextViewControllers addObject:textViewController];
     
     [splitView addSubview:self.containerView];
     [splitView addSubview:textViewController.view];
@@ -116,7 +133,22 @@
 - (IBAction)resetEditorAction:(id)sender; {
     
 }
-
+#pragma mark Properties
+- (NSArray *)textViewControllers {
+    NSMutableArray *retval = [NSMutableArray arrayWithCapacity:0];
+    
+    [retval addObject:self];
+    [retval addObjectsFromArray:self.assistantTextViewControllers.array];
+    
+    return retval;
+}
+- (NSOrderedSet *)assistantTextViewControllers {
+    return [self.mutableAssistantTextViewControllers copy];
+}
+- (NSOrderedSet *)assistantSplitViews {
+    return [self.mutableAssistantSplitViews copy];
+}
+#pragma mark *** Private Methods ***
 - (void)_addAssistantEditorForTextViewController:(WCTextViewController *)textViewController; {
     WCAssert(textViewController,@"textViewController cannot be nil!");
     
@@ -129,22 +161,23 @@
     [splitView setDividerStyle:(vertical) ? NSSplitViewDividerStyleThin : NSSplitViewDividerStylePaneSplitter];
     [splitView setDelegate:self];
     
-    [self.assistantSplitViews insertObject:splitView atIndex:[self.assistantSplitViews indexOfObject:currentSplitView]];
+    [self.mutableAssistantSplitViews insertObject:splitView atIndex:[self.assistantSplitViews indexOfObject:currentSplitView]];
     
     WCTextViewController *newTextViewController = [[WCTextViewController alloc] initWithSourceFileDocument:self.sourceFileDocument];
     
     [newTextViewController setDelegate:self];
     
-    [self.assistantTextViewControllers insertObject:newTextViewController atIndex:[self.assistantTextViewControllers indexOfObject:textViewController] + 1];
+    [self.mutableAssistantTextViewControllers insertObject:newTextViewController atIndex:[self.assistantTextViewControllers indexOfObject:textViewController] + 1];
     
-    [splitView addSubview:newTextViewController.view];
+    [currentSplitView replaceSubview:textViewController.view with:splitView];
+    
     [splitView addSubview:textViewController.view];
+    [splitView addSubview:newTextViewController.view];
     [splitView adjustSubviews];
     
     CGFloat amount = (vertical) ? NSWidth(splitView.frame) : NSHeight(splitView.frame);
     
     [splitView setPosition:floor((amount - splitView.dividerThickness) * 0.5) ofDividerAtIndex:0];
-    [currentSplitView addSubview:splitView];
     
     [newTextViewController.textView WC_makeFirstResponder];
 }
@@ -172,9 +205,10 @@
     
     [textViewControllerToKeep.textView WC_makeFirstResponder];
     
-    [self.assistantSplitViews removeObject:currentSplitView];
-    [self.assistantTextViewControllers removeObject:textViewController];
+    [self.mutableAssistantSplitViews removeObject:currentSplitView];
+    [self.mutableAssistantTextViewControllers removeObject:textViewController];
 }
+#pragma mark Properties
 - (WCTextViewController *)currentTextViewController {
     id firstResponder = self.view.window.firstResponder;
     

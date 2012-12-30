@@ -19,7 +19,7 @@
 #import "WCEditorFocusCell.h"
 #import "WCTabViewController.h"
 #import "WCTabView.h"
-#import "WCTextViewController.h"
+#import "WCStandardTextViewController.h"
 #import "WCTextView.h"
 
 @interface WCEditorFocusWindowController () <iCarouselDataSource,iCarouselDelegate,WCEditorFocusCellDelegate>
@@ -100,7 +100,7 @@
     else if (cell.highlightedTextViewControllerIndex != -1) {
         [tabViewController.tabView selectTabViewItemAtIndex:cell.selectedTabIndex];
         
-        NSArray *textViewControllers = [cell.tabViewController textViewControllersForTabViewItemAtIndex:cell.selectedTabIndex];
+        NSArray *textViewControllers = [cell.tabViewController standardTextViewControllerForTabViewItemAtIndex:cell.selectedTabIndex].textViewControllers;
         WCTextViewController *textViewController = [textViewControllers objectAtIndex:cell.highlightedTextViewControllerIndex];
         
         [textViewController.view.window makeFirstResponder:textViewController.textView];

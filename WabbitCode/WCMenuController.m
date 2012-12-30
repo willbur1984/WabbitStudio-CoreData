@@ -17,7 +17,7 @@
 #import "WCBookmarkManager.h"
 #import "Bookmark.h"
 #import "WCSourceFileWindowController.h"
-#import "WCTextViewController.h"
+#import "WCStandardTextViewController.h"
 #import "WCTextView.h"
 #import "NSString+WCExtensions.h"
 #import "WCProjectDocument.h"
@@ -97,7 +97,7 @@
         if ([firstResponder isKindOfClass:[WCTextView class]])
             textViewController = (WCTextViewController *)[firstResponder WC_viewController];
         else
-            textViewController = [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentTextViewController];
+            textViewController = [[[(WCProjectDocument *)currentDocument projectWindowController] tabViewController] currentStandardTextViewController];
     }
     
     if (!textViewController)

@@ -15,6 +15,10 @@
 
 @interface WCStandardTextViewController : WCTextViewController
 
+@property (readonly,nonatomic) NSArray *textViewControllers;
+@property (readonly,nonatomic) NSOrderedSet *assistantSplitViews;
+@property (readonly,nonatomic) NSOrderedSet *assistantTextViewControllers;
+
 - (IBAction)showStandardEditorAction:(id)sender;
 - (IBAction)showAssistantEditorAction:(id)sender;
 - (IBAction)addAssistantEditorAction:(id)sender;

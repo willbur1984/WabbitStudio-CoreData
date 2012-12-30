@@ -17,7 +17,7 @@
 #import "WCTabViewController.h"
 #import "MMTabBarView.h"
 #import "WCDefines.h"
-#import "WCTextViewController.h"
+#import "WCStandardTextViewController.h"
 #import "WCTextView.h"
 #import "NSBezierPath+MCAdditions.h"
 #import "NSShadow+MCAdditions.h"
@@ -56,7 +56,6 @@
     return YES;
 }
 - (BOOL)becomeFirstResponder {
-    [self setNeedsDisplay:YES];
     return YES;
 }
 
@@ -97,7 +96,8 @@
         [self setHighlightedTextViewControllerIndex:0];
     }
     else {
-        NSUInteger numberOfTextViewControllers = [[self.tabViewController textViewControllersForTabViewItemAtIndex:self.selectedTabIndex] count];
+        WCStandardTextViewController *textViewController = [self.tabViewController standardTextViewControllerForTabViewItemAtIndex:self.selectedTabIndex];
+        NSUInteger numberOfTextViewControllers = [textViewController.textViewControllers count];
         NSInteger temp = MIN(numberOfTextViewControllers - 1, self.highlightedTextViewControllerIndex + 1);
         
         [self setHighlightedTextViewControllerIndex:temp];
@@ -155,7 +155,7 @@
         [[NSColor blackColor] setFill];
         NSRectFill(NSMakeRect(NSMinX(self.bounds), NSMaxY(self.bounds) - height, NSWidth(self.frame), 1));
 
-        NSArray *textViewControllers = [self.tabViewController textViewControllersForTabViewItemAtIndex:self.selectedTabIndex];
+        NSArray *textViewControllers = [self.tabViewController standardTextViewControllerForTabViewItemAtIndex:self.selectedTabIndex].textViewControllers;
         CGFloat tvcHeight = ceil((NSHeight(self.frame) - height) / (CGFloat)textViewControllers.count);
         CGFloat frameY = NSMaxY(self.bounds) - height - tvcHeight;
         
