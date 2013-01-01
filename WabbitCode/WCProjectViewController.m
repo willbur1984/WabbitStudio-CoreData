@@ -441,7 +441,18 @@
     [self.projectDocument updateChangeCount:NSChangeDone];
 }
 - (IBAction)ungroupSelectionAction:(id)sender {
+    File *file = [self.outlineView WC_selectedItem];
+    File *parentFile = file.file;
+    NSUInteger insertIndex = [parentFile.files indexOfObject:file];
+    NSRange insertRange = NSMakeRange(insertIndex, file.files.count);
     
+    [parentFile.filesSet insertObjects:file.files.array atIndexes:[NSIndexSet indexSetWithIndexesInRange:insertRange]];
+    
+    [file.managedObjectContext deleteObject:file];
+    [self.outlineView reloadData];
+    [self.outlineView WC_setSelectedItems:[parentFile.files.array subarrayWithRange:insertRange]];
+    
+    [self.projectDocument updateChangeCount:NSChangeDone];
 }
 - (IBAction)sortByNameAction:(id)sender; {
     NSArray *files = [self.outlineView WC_clickedOrSelectedItems];
