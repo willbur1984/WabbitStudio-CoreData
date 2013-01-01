@@ -441,7 +441,7 @@ static char kWCTextViewObservingContext;
                     [self addTrackingArea:trackingArea];
                     [self.hoverLinkTrackingAreas addObject:trackingArea];
                     
-                    if (options & NSTrackingAssumeInside)
+                    if ((options & NSTrackingAssumeInside) != 0)
                         [self setCurrentHoverLinkTrackingArea:trackingArea];
                 }
             }
