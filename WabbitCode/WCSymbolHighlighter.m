@@ -124,7 +124,6 @@ NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighl
 }
 
 - (void)_symbolHighlightInVisibleRange {
-    WCLog();
     NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
     
     for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
