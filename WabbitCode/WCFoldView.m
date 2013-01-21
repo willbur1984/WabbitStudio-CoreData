@@ -356,7 +356,7 @@ static char kWCFoldViewObservingContext;
         [path closePath];
     }
     
-    [[NSColor alternateSelectedControlColor] setFill];
+    [[NSColor darkGrayColor] setFill];
     [path fill];
 }
 - (void)_updateCodeFoldingTrackingRect; {
