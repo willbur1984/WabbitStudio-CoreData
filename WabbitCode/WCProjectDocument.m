@@ -64,6 +64,13 @@
 + (BOOL)autosavesInPlace {
     return YES;
 }
++ (BOOL)preservesVersions {
+	return NO;
+}
+
+- (BOOL)checkAutosavingSafetyAndReturnError:(NSError *__autoreleasing *)outError {
+    return YES;
+}
 
 - (void)saveDocument:(id)sender {
     [super saveDocument:nil];
