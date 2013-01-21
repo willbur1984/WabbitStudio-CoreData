@@ -632,10 +632,7 @@
     [self.textView setNeedsDisplay:YES];
 }
 - (void)_viewBoundsDidChange:(NSNotification *)note {
-    WCSymbolHighlighter *symbolHighlighter = self.sourceFileDocument.symbolHighlighter;
-    
-    [NSObject cancelPreviousPerformRequestsWithTarget:symbolHighlighter selector:@selector(symbolHighlightInVisibleRange) object:nil];
-    [symbolHighlighter performSelector:@selector(symbolHighlightInVisibleRange) withObject:nil afterDelay:0];
+    [self.sourceFileDocument.symbolHighlighter symbolHighlightInVisibleRange];
 }
 
 @end

@@ -28,6 +28,8 @@ NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighl
 
 @interface WCSymbolHighlighter ()
 @property (weak,nonatomic) NSTextStorage *textStorage;
+
+- (void)_symbolHighlightInVisibleRange;
 @end
 
 @implementation WCSymbolHighlighter
@@ -48,18 +50,8 @@ NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighl
 }
 
 - (void)symbolHighlightInVisibleRange; {
-    NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
-    
-    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
-        for (NSTextContainer *textContainer in layoutManager.textContainers) {
-            if (!textContainer.textView.isHidden)
-                [ranges addIndexesInRange:[textContainer.textView WC_visibleRange]];
-        }
-    }
-    
-    [ranges enumerateRangesWithOptions:0 usingBlock:^(NSRange range, BOOL *stop) {
-        [self symbolHighlightInRange:range];
-    }];
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_symbolHighlightInVisibleRange) object:nil];
+    [self performSelector:@selector(_symbolHighlightInVisibleRange) withObject:nil afterDelay:0.01];
 }
 - (void)symbolHighlightInRange:(NSRange)range; {
     if (!range.length)
@@ -129,6 +121,22 @@ NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighl
         
         range = NSMakeRange(NSMaxRange(foldRange), NSMaxRange(range) - NSMaxRange(foldRange));
     }
+}
+
+- (void)_symbolHighlightInVisibleRange {
+    WCLog();
+    NSMutableIndexSet *ranges = [NSMutableIndexSet indexSet];
+    
+    for (NSLayoutManager *layoutManager in self.textStorage.layoutManagers) {
+        for (NSTextContainer *textContainer in layoutManager.textContainers) {
+            if (!textContainer.textView.isHidden)
+                [ranges addIndexesInRange:[textContainer.textView WC_visibleRange]];
+        }
+    }
+    
+    [ranges enumerateRangesWithOptions:0 usingBlock:^(NSRange range, BOOL *stop) {
+        [self symbolHighlightInRange:range];
+    }];
 }
 
 - (void)_textStorageDidProcessEditing:(NSNotification *)note {
