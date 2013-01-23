@@ -51,7 +51,7 @@ NSString *const WCSymbolHighlighterLabelTemporaryAttributeName = @"WCSymbolHighl
 
 - (void)symbolHighlightInVisibleRange; {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_symbolHighlightInVisibleRange) object:nil];
-    [self performSelector:@selector(_symbolHighlightInVisibleRange) withObject:nil afterDelay:0.01];
+    [self performSelector:@selector(_symbolHighlightInVisibleRange) withObject:nil afterDelay:0.05 inModes:@[NSRunLoopCommonModes]];
 }
 - (void)symbolHighlightInRange:(NSRange)range; {
     if (!range.length)
