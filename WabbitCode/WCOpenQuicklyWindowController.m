@@ -106,16 +106,16 @@ static char kWCOpenQuicklyWindowControllerObservingContext;
             __unsafe_unretained typeof (self) weakSelf = self;
             
             if (operationCount == 0) {
-                [self WC_performBlockOnMainThread:^{
+                dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.progressIndicator stopAnimation:nil];
                     [weakSelf.statusTextField setHidden:YES];
-                }];
+                });
             }
             else {
-                [self WC_performBlockOnMainThread:^{
+                dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.progressIndicator startAnimation:nil];
                     [weakSelf.statusTextField setHidden:NO];
-                }];
+                });
             }
         }
     }

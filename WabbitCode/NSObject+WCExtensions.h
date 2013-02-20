@@ -22,7 +22,4 @@
 - (void)WC_startObservingUserDefaultsKeysWithOptions:(NSKeyValueObservingOptions)options context:(void *)context;
 - (void)WC_stopObservingUserDefaultsKeysWithContext:(void *)context;
 
-- (void)WC_performBlockOnMainThread:(void (^)(void))block;
-- (void)WC_performBlockOnMainThread:(void (^)(void))block synchronous:(BOOL)synchronous;
-
 @end

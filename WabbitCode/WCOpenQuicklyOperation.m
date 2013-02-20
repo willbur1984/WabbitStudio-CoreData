@@ -190,9 +190,9 @@
         } while (0);
         
         if (!weakSelf.isCancelled) {
-            [weakSelf WC_performBlockOnMainThread:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.windowController setOpenQuicklyItems:items];
-            }];
+            });
         }
         
         [weakSelf willChangeValueForKey:@"isExecuting"];
